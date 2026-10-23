@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>QR Factorization – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/qr.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li class="current"><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="preconditioners.html" rel="previous" accesskey="p">← Preconditioners</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="accuracy.html" rel="next" accesskey="n">Numerical Accuracy and Reproducibility →</a></span>
+</nav>
+<h1 data-number="11" id="qr"><span class="header-section-number">11</span> QR Factorization</h1>
+<p>This chapter describes the QR factorization algorithms (orthogonalization of a set of vectors) used in this library. In the linear solvers, the algorithm is selected by passing one of the following constants to <code>set_qr_algo()</code>. The notation follows the conventions given at the beginning of the <a href="linear-solvers.html#linear-solvers">Linear Solvers chapter</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Method</th>
+<th>Available solvers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">parcel::qr::QR_CGS</span></code> (0)</td>
+<td>Classical Gram-Schmidt method</td>
+<td><code><span class="tok">pgmres</span></code>, <code><span class="tok">pcagmres</span></code> (except <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">parcel::qr::QR_MGS</span></code> (1)</td>
+<td>Modified Gram-Schmidt method</td>
+<td><code><span class="tok">pgmres</span></code>, <code><span class="tok">pcagmres</span></code> (except <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">parcel::qr::QR_CHOLESKYQR</span></code> (2)</td>
+<td>Cholesky QR method</td>
+<td><code><span class="tok">pcagmres</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">parcel:<wbr />:<wbr />qr:<wbr />:<wbr />QR_CAGMRES_CHOLESKYQR</span></code> (202)</td>
+<td>Cholesky QR method by the <a href="glossary.html#g-moment">moment method</a> (only for symmetric matrices without <a href="glossary.html#g-precon">preconditioning</a>)</td>
+<td><code><span class="tok">pcagmres</span></code> (only with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Passing a value that the solver does not support to <code>set_qr_algo()</code> throws <code>std::invalid_argument</code>. The combination with how <code>pcagmres</code> forms <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> (<code>set_explicit_q()</code>) is checked at the entry of <code>solver()</code> (<a href="linear-solvers.html#alg-pcagmres-q">Linear Solvers chapter</a>).</p>
+<p>CGS2, which repeats the classical Gram-Schmidt method twice, is used within the Arnoldi process of the Krylov-Schur method (<code>ks_arnoldi</code>) (in <code>ks_arnoldi</code>, <code>set_qr_algo(parcel::qr::QR_CGS)</code> means CGS2, which is the default; <code>QR_CGS</code> of <code>pgmres</code> and <code>pcagmres</code> applies the classical Gram-Schmidt method only once, so CGS2 cannot be selected for these two solvers). The algorithms below orthogonalize <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>v</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>v</mi><mi>p</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">V = [v_1, \ldots, v_p]</annotation></semantics></math>, consisting of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> vectors, to obtain <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> with columns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mi>i</mi></msub><annotation encoding="application/x-tex">q_i</annotation></semantics></math> and an upper triangular matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> (entries <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mrow><mi>k</mi><mo>,</mo><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">R_{k,i}</annotation></semantics></math>).</p>
+<p><br />
+</p>
+<h2 data-number="11.1" id="classical-gram-schmidt-method-1"><span class="header-section-number">11.1</span> Classical Gram-Schmidt Method [1]</h2>
+<p>QR factorization by Gram-Schmidt orthogonalization. Since the inner products for the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-th column can be computed together, it requires few <a href="glossary.html#g-collective">collective communications</a> and offers high parallelism, but the loss of orthogonality grows in proportion to the square of the condition number of the matrix. <code>QR_CGS</code> does not reorthogonalize (a single pass only).</p>
+<ul>
+<li>Algorithm</li>
+</ul>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mspace width="0.222em"></mspace><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">\mathrm{for}\ i = 1,\ldots,p</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mspace width="0.222em"></mspace><mi>k</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{for}\ k = 1,\ldots,i - 1</annotation></semantics></math></li>
+<li>　　　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>k</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><mo stretchy="false" form="prefix">⟨</mo><msub><mi>q</mi><mi>k</mi></msub><mo>,</mo><msub><mi>v</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">R_{k,i} = \langle q_{k},v_{i} \rangle</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><annotation encoding="application/x-tex">\mathrm{end}</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mspace width="0.222em"></mspace><mi>k</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{for}\ k = 1,\ldots,i - 1</annotation></semantics></math></li>
+<li>　　　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mo>−</mo><msub><mi>R</mi><mrow><mi>k</mi><mo>,</mo><mi>i</mi></mrow></msub><msub><mi>q</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">v_{i} = v_{i} - R_{k,i}q_{k}</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><annotation encoding="application/x-tex">\mathrm{end}</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>i</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>v</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">R_{i,i} = \|v_{i}\|</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><msub><mi>R</mi><mrow><mi>i</mi><mo>,</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">q_{i} = v_{i}\ /\ R_{i,i}</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><annotation encoding="application/x-tex">\mathrm{end}</annotation></semantics></math></li>
+</ol>
+<p><br />
+</p>
+<h2 data-number="11.2" id="modified-gram-schmidt-method-1"><span class="header-section-number">11.2</span> Modified Gram-Schmidt Method [1]</h2>
+<p>A QR factorization that modifies the classical Gram-Schmidt algorithm to reduce errors. Since the already orthogonalized components are subtracted one at a time before the next inner product is computed, it gives better orthogonality than the classical Gram-Schmidt method, but requires a <a href="glossary.html#g-collective">collective communication</a> for each inner product.</p>
+<ul>
+<li>Algorithm</li>
+</ul>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mspace width="0.222em"></mspace><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">\mathrm{for}\ i = 1,\ldots,p</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mspace width="0.222em"></mspace><mi>k</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{for}\ k = 1,\ldots,i - 1</annotation></semantics></math></li>
+<li>　　　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>k</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><mo stretchy="false" form="prefix">⟨</mo><msub><mi>q</mi><mi>k</mi></msub><mo>,</mo><msub><mi>v</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">R_{k,i} = \langle q_{k},v_{i} \rangle</annotation></semantics></math></li>
+<li>　　　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mo>−</mo><msub><mi>R</mi><mrow><mi>k</mi><mo>,</mo><mi>i</mi></mrow></msub><msub><mi>q</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">v_{i} = v_{i} - R_{k,i}q_{k}</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><annotation encoding="application/x-tex">\mathrm{end}</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>i</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>v</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">R_{i,i} = \|v_{i}\|</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><msub><mi>R</mi><mrow><mi>i</mi><mo>,</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">q_{i} = v_{i}\ /\ R_{i,i}</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><annotation encoding="application/x-tex">\mathrm{end}</annotation></semantics></math></li>
+</ol>
+<p><br />
+</p>
+<h2 data-number="11.3" id="classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="header-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</h2>
+<p>This method repeats the orthogonalization of the classical Gram-Schmidt method once more. Since the second pass removes the components in the directions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>q</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">q_1, \ldots, q_{i-1}</annotation></semantics></math> left by rounding errors in the first pass, the loss of orthogonality is kept at the level of machine precision as long as the numerical rank of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math> has not dropped (“twice is enough”). The amount of computation for inner products and updates is twice that of the classical Gram-Schmidt method, but since the inner products of each pass can be computed together, only two <a href="glossary.html#g-collective">collective communications</a> per column are needed, fewer than the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i - 1</annotation></semantics></math> of the modified Gram-Schmidt method.</p>
+<p>The Arnoldi process of the Krylov-Schur method (<code>ks_arnoldi</code>) uses this method by default. At each Arnoldi step, the new basis vector is orthogonalized against the existing basis. The Krylov-Schur method assumes that the orthogonality of the basis is preserved across <a href="glossary.html#g-restart">restarts</a>; if orthogonality is lost, spurious eigenvalues (ghost eigenvalues) appear for repeated eigenvalues. CGS2 prevents this.</p>
+<ul>
+<li>Algorithm (column <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>)</li>
+</ul>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mn>1</mn><mo>:</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">R_{1:i - 1,i} = 0</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mspace width="0.222em"></mspace><mi>p</mi><mi>a</mi><mi>s</mi><mi>s</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\mathrm{for}\ pass = 1,2</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi><mo>=</mo><msubsup><mi>Q</mi><mrow><mn>1</mn><mo>:</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow><mi>T</mi></msubsup><msub><mi>v</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\xi = Q_{1:i - 1}^{T}v_{i}</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mo>−</mo><msub><mi>Q</mi><mrow><mn>1</mn><mo>:</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mi>ξ</mi></mrow><annotation encoding="application/x-tex">v_{i} = v_{i} - Q_{1:i - 1}\xi</annotation></semantics></math></li>
+<li>　　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mn>1</mn><mo>:</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><msub><mi>R</mi><mrow><mn>1</mn><mo>:</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>+</mo><mi>ξ</mi></mrow><annotation encoding="application/x-tex">R_{1:i - 1,i} = R_{1:i - 1,i} + \xi</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><annotation encoding="application/x-tex">\mathrm{end}</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>i</mi><mo>,</mo><mi>i</mi></mrow></msub><mo>=</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>v</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">R_{i,i} = \|v_{i}\|</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mspace width="0.222em"></mspace><mi>/</mi><mspace width="0.222em"></mspace><msub><mi>R</mi><mrow><mi>i</mi><mo>,</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">q_{i} = v_{i}\ /\ R_{i,i}</annotation></semantics></math></li>
+</ol>
+<p><br />
+</p>
+<h2 data-number="11.4" id="cholesky-qr-method-7"><span class="header-section-number">11.4</span> Cholesky QR Method [7]</h2>
+<p>Cholesky QR is a QR factorization consisting of a matrix product and a Cholesky factorization. It has high arithmetic intensity and can be computed with a single <a href="glossary.html#g-collective">collective communication</a>, but the loss of orthogonality grows in proportion to the square of the condition number of the matrix. PARCEL performs it only once; the repeated variant (CholeskyQR2) is not implemented. The Gram matrix is computed on the <a href="glossary.html#g-device">device</a>, and the Cholesky factorization is performed on the host.</p>
+<ul>
+<li>Algorithm</li>
+</ul>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><msup><mi>V</mi><mi>T</mi></msup><mi>V</mi></mrow><annotation encoding="application/x-tex">G = V^{T}V</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mrow><mspace width="0.222em"></mspace><mi>R</mi><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi></mrow><mspace width="0.222em"></mspace><mi>G</mi><mo>=</mo><msup><mi>R</mi><mi>T</mi></msup><mi>R</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">k</mi><mi mathvariant="normal">y</mi></mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{Compute}\ R\ \mathrm{from}\ G = R^{T}R\ (\mathrm{Cholesky}\ \mathrm{decomposition})</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo>=</mo><mi>V</mi><msup><mi>R</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">Q = VR^{-1}</annotation></semantics></math></li>
+</ol>
+<p><br />
+</p>
+<p><br />
+</p>
+<h2 data-number="11.5" id="qr-cagmres-choleskyqr"><span class="header-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</h2>
+<p>This is a Cholesky QR method specific to CA-GMRES, used only for the first block (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">k = 0</annotation></semantics></math>) when <code>pcagmres</code> does not form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> (<code>CAGMRES_Q_IMPLICIT</code>; <a href="linear-solvers.html#alg-pcagmres-implicit">Linear Solvers chapter</a>). For the monomial basis without <a href="glossary.html#g-precon">preconditioning</a>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>=</mo><msup><mi>A</mi><mi>i</mi></msup><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">v_{i} = A^{i}v_{0}</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>s</mi></mrow><annotation encoding="application/x-tex">i = 0,\ldots,s</annotation></semantics></math>), if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is symmetric then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msub><mi>v</mi><mi>i</mi></msub><mo>,</mo><msub><mi>v</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">⟩</mo><mo>=</mo><msubsup><mi>v</mi><mn>0</mn><mi>T</mi></msubsup><msup><mi>A</mi><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow></msup><msub><mi>v</mi><mn>0</mn></msub><mo>=</mo><msub><mi>μ</mi><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\langle v_{i},v_{j} \rangle = v_{0}^{T}A^{i+j}v_{0} = \mu_{i+j}</annotation></semantics></math> (the moments), and the Gram matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><msup><mi>V</mi><mi>T</mi></msup><mi>V</mi></mrow><annotation encoding="application/x-tex">G = V^{T}V</annotation></semantics></math> is a Hankel matrix (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>G</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mi>μ</mi><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">G_{ij} = \mu_{i+j}</annotation></semantics></math>). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mn>0</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>μ</mi><mrow><mn>2</mn><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mu_{0},\ldots,\mu_{2s}</annotation></semantics></math> are obtained from the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mi>/</mi><mn>2</mn><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">4 \times (s/2+1)</annotation></semantics></math> dot products of the four vectors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>v</mi><mn>0</mn></msub><mo>,</mo><msub><mi>v</mi><mn>1</mn></msub><mo>,</mo><msub><mi>v</mi><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>v</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[v_{0},v_{1},v_{s-1},v_{s}]</annotation></semantics></math> with the even-numbered basis vectors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><msub><mi>v</mi><mn>0</mn></msub><mo>,</mo><msub><mi>v</mi><mn>2</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>v</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[v_{0},v_{2},\ldots,v_{s}]</annotation></semantics></math>, so the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">(s+1)^{2}</annotation></semantics></math> dot products need not be computed. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed; only <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is returned.</p>
+<ul>
+<li>Algorithm</li>
+</ul>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>v</mi><mn>0</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>v</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">V = [v_{0},\ldots,v_{s}]</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> is an even number of 2 or more).</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>v</mi><mn>0</mn></msub><mo>,</mo><msub><mi>v</mi><mn>1</mn></msub><mo>,</mo><msub><mi>v</mi><mrow><mi>s</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>v</mi><mi>s</mi></msub><msup><mo stretchy="false" form="postfix">]</mo><mi>T</mi></msup><mo stretchy="false" form="prefix">[</mo><msub><mi>v</mi><mn>0</mn></msub><mo>,</mo><msub><mi>v</mi><mn>2</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>v</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">C = [v_{0},v_{1},v_{s-1},v_{s}]^{T}[v_{0},v_{2},\ldots,v_{s}]</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">t</mi></mrow><mspace width="0.222em"></mspace><msub><mi>μ</mi><mn>0</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>μ</mi><mrow><mn>2</mn><mi>s</mi></mrow></msub><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi></mrow><mspace width="0.222em"></mspace><mi>C</mi></mrow><annotation encoding="application/x-tex">\mathrm{Set}\ \mu_{0},\ldots,\mu_{2s}\ \mathrm{from}\ C</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>G</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mi>μ</mi><mrow><mi>i</mi><mo>+</mo><mi>j</mi></mrow></msub><mspace width="0.222em"></mspace><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>≤</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>≤</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">G_{ij} = \mu_{i+j}\ \ (0 \leq i,j \leq s)</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mrow><mspace width="0.222em"></mspace><mi>R</mi><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi></mrow><mspace width="0.222em"></mspace><mi>G</mi><mo>=</mo><msup><mi>R</mi><mi>T</mi></msup><mi>R</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">k</mi><mi mathvariant="normal">y</mi></mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{Compute}\ R\ \mathrm{from}\ G = R^{T}R\ (\mathrm{Cholesky}\ \mathrm{decomposition})</annotation></semantics></math></li>
+</ol>
+<p>The matrix product in line 1 is computed on the <a href="glossary.html#g-device">device</a>, and with <a href="glossary.html#g-mpi">MPI</a> the local values are reduced (one <a href="glossary.html#g-collective">collective communication</a>). The Cholesky factorization is performed on the host. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is not symmetric, or for a preconditioned basis, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math> is not a Hankel matrix and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is wrong. <code>pcagmres</code> checks at the entry that there is no preconditioning and that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> is even, but does not check the symmetry of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>.</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="preconditioners.html" rel="previous">← Preconditioners</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="accuracy.html" rel="next">Numerical Accuracy and Reproducibility →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

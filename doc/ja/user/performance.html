@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>性能 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/performance.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li class="current"><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="kernel-opt.html" rel="previous" accesskey="p">← 最適化</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="versions.html" rel="next" accesskey="n">版と互換性 →</a></span>
+</nav>
+<h1 data-number="14" id="performance"><span class="header-section-number">14</span> 性能</h1>
+<p>　v1.2 を試験環境 8 つ (CPU は <a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-odyssey">Odyssey</a>, GPU は <a href="glossary.html#g-s86">s86 GPU</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-aquarius">Aquarius</a>, <a href="glossary.html#g-ps-b">PS-B</a>) で測った結果を示す. <a href="glossary.html#g-nx">NX</a>=512 の 3 次元の問題を収束まで解いた時間, <a href="glossary.html#g-precon">前処理</a>のデータ精度だけを下げた混合精度の効果, PETSc / SLEPc との比較, v1.0 との比較, メモリ使用量である. 値はいずれも同梱の検証用サンプル <code>tests/verify/parcel_krylov_sample_verify.cpp</code> による実測値であり, 利用者の問題での性能を保証するものではない. v1.2 は既定の設定と<a href="installation.html#install-recommended-flags">推奨オプション</a>で測った. 条件は配布パッケージの性能試験 (<code>tests/perf/</code>) と同じであり, 同じ条件で自分の環境を測る方法は<a href="performance.html#perf-howto">「自分の環境で測る」</a>に示す.</p>
+<p><br />
+</p>
+<h2 data-number="14.1" id="perf-conditions"><span class="header-section-number">14.1</span> 測定条件</h2>
+<p>　本章のグラフはすべて次の条件で測った.</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">問題</td>
+<td>3 次元 7 点差分, <a href="glossary.html#g-nx">NX</a>=512 (未知数 n = 134,217,728). <code><span class="tok">pcg</span></code>・<code><span class="tok">pbicgstab</span></code>と固有値ソルバは Poisson 方程式 (検証用サンプルの行列<code><span class="tok">poisson</span></code>. 対称), 非対称向けの<code><span class="tok">pgmres</span></code>・<code><span class="tok">pcagmres</span></code>は移流拡散方程式 (<code><span class="tok">convdiff</span></code>, 移流係数 c = 0.05. 非対称). 右辺 b = 1, 初期値 x = 0 (<code><span class="tok">PARCEL_VERIFY=0</span></code>), 倍精度</td>
+</tr>
+<tr>
+<td class="nowrap">線形ソルバ</td>
+<td><a href="glossary.html#g-precon">前処理</a>なしと Jacobi 前処理 (<code><span class="tok">PARCEL_PRECON=4</span></code>, 反復 1 回) の 2 通り. 収束判定値 1.0e-8 (<a href="glossary.html#g-relres">相対残差</a>), 最大反復回数 10000. パラメータはライブラリの既定 (<code><span class="tok">PARCEL_LIB_DEFAULTS=1</span></code>) で, 指定したのは<code><span class="tok">pgmres</span></code>の<a href="glossary.html#g-restart">リスタート</a>周期<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 60 (既定 30) と<code><span class="tok">pcagmres</span></code>の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>8</mn><mo>,</mo><mn>8</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s, t) = (8, 8)</annotation></semantics></math> (既定<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>8</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(8, 4)</annotation></semantics></math>) だけである. <code><span class="tok">pcagmres</span></code>は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る方式 (EXPLICIT, QR は<code><span class="tok">QR_MGS</span></code>) と作らない方式 (IMPLICIT, <code><span class="tok">QR_CHOLESKYQR</span></code>) の 2 通り</td>
+</tr>
+<tr>
+<td class="nowrap">固有値ソルバ</td>
+<td>前処理なし, 収束判定値 1.0e-8. <code><span class="tok">power</span></code>は最大反復回数 20000. <code><span class="tok">inverse_power</span></code>は外側の最大反復回数 200, 内部線形ソルバは<code><span class="tok">pcg</span></code>と Jacobi 前処理 (<code><span class="tok">PARCEL_LINSOLVE_SOLVER=pcg</span> <span class="tok">PARCEL_LINSOLVE_PRECON=4</span></code>) で収束判定値 1.0e-10, 最大反復回数 5000 (既定の<code><span class="tok">pgmres</span></code> (周期 30) では Poisson 方程式の内部の解法が上限に達し, 遅くなるため). <code><span class="tok">ks_arnoldi</span></code>は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 40, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math> = 10, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> = 1, 最大リスタート回数 200 (既定), 直交化は各環境のビルドの既定で, <a href="glossary.html#g-ps-a">PS-A</a> は MGS2 (<code><span class="tok">PARCEL_KS_ORTHO_DEFAULT=mgs</span></code>), ほかの 7 環境は CGS2 (配布パッケージの性能試験<code><span class="tok">tests/perf</span></code>も同じ)</td>
+</tr>
+<tr>
+<td class="nowrap">装置数</td>
+<td>4 / 8 / 16. 「1 装置」は CPU では 1 ソケット (<a href="glossary.html#g-odyssey">Odyssey</a> は <a href="glossary.html#g-a64fx">A64FX</a> 1 基 = 1 ノード), GPU では 1 台 (<a href="glossary.html#g-gh200">GH200</a>, <a href="glossary.html#g-mi300a">MI300A</a> は 1 基)</td>
+</tr>
+<tr>
+<td class="nowrap">繰り返し</td>
+<td>各構成 3 回. 時間は 3 回の最短</td>
+</tr>
+<tr>
+<td class="nowrap">計測区間</td>
+<td>各ソルバが表示する<code><span class="tok">&lt;ソルバ名&gt;</span> <span class="tok">time</span> <span class="tok">=</span> <span class="tok">...</span> <span class="tok">(total</span> <span class="tok">solver</span> <span class="tok">wall</span> <span class="tok">time)</span></code> (<a href="glossary.html#g-rank">ランク</a> 0 の壁時計). 前処理の準備と初期残差の計算を含み, 行列の設定 (<code><span class="tok">set_crsMat()</span></code>) とサンプルの行列生成を含まない</td>
+</tr>
+<tr>
+<td class="nowrap">ビルド</td>
+<td><a href="installation.html#install-recommended-flags">推奨オプション</a>のフラグ (NVIDIA の GPU は<a href="kernel-opt.html#kopt-ladder">梯子分割</a>なしで, <a href="glossary.html#g-v100">V100</a> だけ<code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code>. <a href="glossary.html#g-mi300a">MI300A</a> は梯子分割あり, <a href="glossary.html#g-a64fx">A64FX</a> は全カーネルの<a href="kernel-opt.html#kopt-blocking">ブロック化</a>と SpMV だけの梯子分割に <a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の A〜F (B は実行時の環境変数), その他の CPU は縮約のブロック化). 配布パッケージの <a href="glossary.html#g-spack">spack</a> の手順で入れた環境で, 同梱のコードからビルドした</td>
+</tr>
+<tr>
+<td class="nowrap">既定の設定</td>
+<td>ライブラリの既定 (Jacobi 前処理の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持しない. <a href="glossary.html#g-a64fx">A64FX</a> 向けのビルドは保持する. <code><span class="tok">PARCEL_PSTEP</span></code> 1). 混合精度の<code><span class="tok">precon_dataF</span></code>だけは<code><span class="tok">-DPARCEL_JACOBI_ONTHEFLY=0</span></code>でビルドした</td>
+</tr>
+</tbody>
+</table>
+<p>　環境ごとの 1 装置のランク数とスレッド数を次に示す (PETSc / SLEPc との比較で用いた PETSc のランク数も併記する). CPU の PETSc は 1 ソケット (Odyssey は 1 ノード) の全コアを 1 コア 1 ランクで使う (フラット MPI). GPU の PETSc は PARCEL と同じく 1 装置 1 ランクで, 各ランクに割り当てる CPU コアも PARCEL と同じにした (担当の GPU と同じソケットのコア).</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>1 装置</th>
+<th style="text-align: right;">PARCEL のランク数 × スレッド数 (1 装置)</th>
+<th style="text-align: right;">4 / 8 / 16 装置のランク数</th>
+<th style="text-align: right;">PETSc のランク数 (1 装置)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td><a href="glossary.html#g-xeon">Xeon</a> Gold 6242R 1 ソケット</td>
+<td style="text-align: right;" class="nowrap">4 × 5</td>
+<td style="text-align: right;" class="nowrap">16 / 32 / 64</td>
+<td style="text-align: right;" class="nowrap">20</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td><a href="glossary.html#g-xeon">Xeon</a> 6980P 1 ソケット</td>
+<td style="text-align: right;" class="nowrap">9 × 14</td>
+<td style="text-align: right;" class="nowrap">36 / 72 / 144</td>
+<td style="text-align: right;" class="nowrap">128</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td><a href="glossary.html#g-xeon">Xeon</a> CPU Max 9480 1 ソケット</td>
+<td style="text-align: right;" class="nowrap">4 × 14</td>
+<td style="text-align: right;" class="nowrap">16 / 32 / 64</td>
+<td style="text-align: right;" class="nowrap">56</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><a href="glossary.html#g-a64fx">A64FX</a> 1 基 (1 ノード)</td>
+<td style="text-align: right;" class="nowrap">4 × 12</td>
+<td style="text-align: right;" class="nowrap">16 / 32 / 64</td>
+<td style="text-align: right;" class="nowrap">48</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a></td>
+<td><a href="glossary.html#g-v100">V100</a> 1 台</td>
+<td style="text-align: right;" class="nowrap">1 × 12</td>
+<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
+<td style="text-align: right;" class="nowrap">1</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-g">Miyabi-G</a></td>
+<td><a href="glossary.html#g-gh200">GH200</a> 1 基</td>
+<td style="text-align: right;" class="nowrap">1 × 72</td>
+<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
+<td style="text-align: right;" class="nowrap">1</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-aquarius">Aquarius</a></td>
+<td><a href="glossary.html#g-a100">A100</a> 1 台</td>
+<td style="text-align: right;" class="nowrap">1 × 9</td>
+<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
+<td style="text-align: right;" class="nowrap">1</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td><a href="glossary.html#g-mi300a">MI300A</a> 1 基</td>
+<td style="text-align: right;" class="nowrap">1 × 6</td>
+<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
+<td style="text-align: right;" class="nowrap">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>　<a href="glossary.html#g-ps-a">PS-A</a> は 1 ソケット 128 コアを使い切るため, 1 <a href="glossary.html#g-numa">NUMA</a> に 3 ランク (14 スレッド) を置いた. このためランク数が他の CPU 環境と異なる. <a href="glossary.html#g-odyssey">Odyssey</a> は 1 <a href="glossary.html#g-cmg">CMG</a> に 1 ランクを置いた. Odyssey の 4 装置のうち 1 ノードのメモリに収まらない構成 (PARCEL の<code>pgmres</code>・<code>pcagmres</code>・<code>ks_arnoldi</code>と, PETSc の<code>pgmres</code>) は, ランク数を保ったまま 8 ノードに広げた (1 ノード 2 ランク). PETSc / SLEPc の<code>ks_arnoldi</code>は 4 ノードのままなので, Odyssey の 4 装置の<code>ks_arnoldi</code>の比較はノード数が異なる. また, 8 ノードに広げた PETSc の<code>pgmres</code> (1 ノード 24 ランク) は, ランクを 1 ノードの 2 つの CMG に固定し, PARCEL (1 ノード 2 ランク) と同じ CMG 数で測った. 富士通 MPI の既定の配置では PETSc のランクが 1 ノードの 4 つの CMG すべてに散らばり, PARCEL の 2 倍のメモリ帯域を使うためである (既定の配置のままでは PETSc の時間 ÷ PARCEL の時間は 1.04 ではなく 0.71 になる). PETSc のメモリの測定は既定の配置で行った.</p>
+<p><br />
+</p>
+<h2 data-number="14.2" id="perf-conv512"><span class="header-section-number">14.2</span> 収束までの時間</h2>
+<p>　全ての構成が収束した. 反復回数は次のとおりである. 線形ソルバの反復回数は収束判定の時点の値である.</p>
+<ul>
+<li><code>pcg</code>は<a href="glossary.html#g-precon">前処理</a>なしで 1225 反復, Jacobi 前処理で 611 反復であり, 8 環境・全装置数で一致した.</li>
+<li><code>pbicgstab</code>は前処理なしで 776〜1040 反復, Jacobi 前処理で 397〜466 反復であり, 環境・装置数によって変わった.</li>
+<li><code>pgmres</code>は前処理なしで 1920 反復, Jacobi 前処理で 1140 反復, <code>pcagmres</code>の EXPLICIT は前処理なしで 1984 反復, Jacobi 前処理で 1152 反復であり, 全環境・全装置数で一致した. <code>pcagmres</code>の IMPLICIT は前処理なしで 1920〜1984 反復, Jacobi 前処理で 1152〜1216 反復であり, 環境・装置数によって変わった.</li>
+<li><code>power</code>は 15002〜15004 反復で収束した.</li>
+<li><code>inverse_power</code>は外側 9 反復で収束した. 内部の<code>pcg</code>は 9 回の解法の合計で 3816 反復であった (全環境・全装置数で同じ).</li>
+<li><code>ks_arnoldi</code>は 122 回の<a href="glossary.html#g-restart">リスタート</a>で収束した.</li>
+</ul>
+<p>　16 装置の時間 [秒] を, 線形ソルバと固有値ソルバに分けて環境ごとに示す (3 回の最短. <code>pgmres</code>と<code>pcagmres</code>は移流拡散方程式, ほかは Poisson 方程式). 環境ごとにソルバを縦に並べ, 線形ソルバでは前処理なしと Jacobi 前処理の 2 本を示す. 横軸は処理時間の対数目盛で, 全環境で共通である. 棒の端の数値は秒である.</p>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 1444" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="線形ソルバの処理時間 [秒] (16 装置)">
+<text x="0" y="16" font-size="13" fill="#222">線形ソルバの処理時間 [秒] (16 装置)</text>
+<line x1="206.6" y1="42" x2="206.6" y2="1390" stroke="#eee"/>
+<line x1="281.4" y1="42" x2="281.4" y2="1390" stroke="#eee"/>
+<line x1="394.6" y1="42" x2="394.6" y2="1390" stroke="#eee"/>
+<line x1="469.4" y1="42" x2="469.4" y2="1390" stroke="#eee"/>
+<line x1="582.6" y1="42" x2="582.6" y2="1390" stroke="#eee"/>
+<line x1="657.4" y1="42" x2="657.4" y2="1390" stroke="#eee"/>
+<line x1="150.0" y1="42" x2="150.0" y2="1390" stroke="#ccc"/>
+<text x="150.0" y="38" font-size="11" fill="#555" text-anchor="middle">1</text>
+<text x="150.0" y="1404" font-size="11" fill="#555" text-anchor="middle">1</text>
+<line x1="338.0" y1="42" x2="338.0" y2="1390" stroke="#ccc"/>
+<text x="338.0" y="38" font-size="11" fill="#555" text-anchor="middle">10</text>
+<text x="338.0" y="1404" font-size="11" fill="#555" text-anchor="middle">10</text>
+<line x1="526.0" y1="42" x2="526.0" y2="1390" stroke="#ccc"/>
+<text x="526.0" y="38" font-size="11" fill="#555" text-anchor="middle">100</text>
+<text x="526.0" y="1404" font-size="11" fill="#555" text-anchor="middle">100</text>
+<line x1="714.0" y1="42" x2="714.0" y2="1390" stroke="#ccc"/>
+<text x="714.0" y="38" font-size="11" fill="#555" text-anchor="middle">1000</text>
+<text x="714.0" y="1404" font-size="11" fill="#555" text-anchor="middle">1000</text>
+<text x="432.0" y="1418" font-size="11" fill="#555" text-anchor="middle">処理時間 [秒] (対数目盛)</text>
+<text x="0" y="58" font-size="12" font-weight="bold" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<text x="12" y="79" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="63" width="279.8" height="11" fill="#9ecae1"/>
+<text x="432.8" y="74" font-size="10" fill="#222">30.8</text>
+<rect x="150" y="75" width="260.2" height="11" fill="#1f77b4"/>
+<text x="413.2" y="86" font-size="10" fill="#222">24.2</text>
+<text x="12" y="107" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="91" width="312.1" height="11" fill="#9ecae1"/>
+<text x="465.1" y="102" font-size="10" fill="#222">45.7</text>
+<rect x="150" y="103" width="288.3" height="11" fill="#1f77b4"/>
+<text x="441.3" y="114" font-size="10" fill="#222">34.2</text>
+<text x="12" y="135" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="119" width="425.3" height="11" fill="#9ecae1"/>
+<text x="578.3" y="130" font-size="10" fill="#222">183</text>
+<rect x="150" y="131" width="394.6" height="11" fill="#1f77b4"/>
+<text x="547.6" y="142" font-size="10" fill="#222">126</text>
+<text x="12" y="163" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="147" width="400.9" height="11" fill="#9ecae1"/>
+<text x="553.9" y="158" font-size="10" fill="#222">136</text>
+<rect x="150" y="159" width="373.1" height="11" fill="#1f77b4"/>
+<text x="526.1" y="170" font-size="10" fill="#222">96.5</text>
+<text x="12" y="191" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="175" width="383.8" height="11" fill="#9ecae1"/>
+<text x="536.8" y="186" font-size="10" fill="#222">110</text>
+<rect x="150" y="187" width="361.1" height="11" fill="#1f77b4"/>
+<text x="514.1" y="198" font-size="10" fill="#222">83.3</text>
+<text x="0" y="227" font-size="12" font-weight="bold" fill="#222">Odyssey (A64FX)</text>
+<text x="12" y="248" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="232" width="203.2" height="11" fill="#9ecae1"/>
+<text x="356.2" y="243" font-size="10" fill="#222">12.1</text>
+<rect x="150" y="244" width="185.0" height="11" fill="#1f77b4"/>
+<text x="338.0" y="255" font-size="10" fill="#222">9.64</text>
+<text x="12" y="276" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="260" width="213.1" height="11" fill="#9ecae1"/>
+<text x="366.1" y="271" font-size="10" fill="#222">13.6</text>
+<rect x="150" y="272" width="199.6" height="11" fill="#1f77b4"/>
+<text x="352.6" y="283" font-size="10" fill="#222">11.5</text>
+<text x="12" y="304" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="288" width="317.4" height="11" fill="#9ecae1"/>
+<text x="470.4" y="299" font-size="10" fill="#222">48.8</text>
+<rect x="150" y="300" width="292.0" height="11" fill="#1f77b4"/>
+<text x="445.0" y="311" font-size="10" fill="#222">35.7</text>
+<text x="12" y="332" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="316" width="339.4" height="11" fill="#9ecae1"/>
+<text x="492.4" y="327" font-size="10" fill="#222">63.9</text>
+<rect x="150" y="328" width="309.2" height="11" fill="#1f77b4"/>
+<text x="462.2" y="339" font-size="10" fill="#222">44.1</text>
+<text x="12" y="360" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="344" width="315.6" height="11" fill="#9ecae1"/>
+<text x="468.6" y="355" font-size="10" fill="#222">47.7</text>
+<rect x="150" y="356" width="294.6" height="11" fill="#1f77b4"/>
+<text x="447.6" y="367" font-size="10" fill="#222">36.9</text>
+<text x="0" y="396" font-size="12" font-weight="bold" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<text x="12" y="417" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="401" width="175.6" height="11" fill="#9ecae1"/>
+<text x="328.6" y="412" font-size="10" fill="#222">8.59</text>
+<rect x="150" y="413" width="156.7" height="11" fill="#1f77b4"/>
+<text x="309.7" y="424" font-size="10" fill="#222">6.82</text>
+<text x="12" y="445" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="429" width="182.1" height="11" fill="#9ecae1"/>
+<text x="335.1" y="440" font-size="10" fill="#222">9.30</text>
+<rect x="150" y="441" width="176.2" height="11" fill="#1f77b4"/>
+<text x="329.2" y="452" font-size="10" fill="#222">8.65</text>
+<text x="12" y="473" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="457" width="288.9" height="11" fill="#9ecae1"/>
+<text x="441.9" y="468" font-size="10" fill="#222">34.4</text>
+<rect x="150" y="469" width="266.4" height="11" fill="#1f77b4"/>
+<text x="419.4" y="480" font-size="10" fill="#222">26.1</text>
+<text x="12" y="501" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="485" width="299.4" height="11" fill="#9ecae1"/>
+<text x="452.4" y="496" font-size="10" fill="#222">39.1</text>
+<rect x="150" y="497" width="271.7" height="11" fill="#1f77b4"/>
+<text x="424.7" y="508" font-size="10" fill="#222">27.9</text>
+<text x="12" y="529" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="513" width="277.9" height="11" fill="#9ecae1"/>
+<text x="430.9" y="524" font-size="10" fill="#222">30.1</text>
+<rect x="150" y="525" width="253.9" height="11" fill="#1f77b4"/>
+<text x="406.9" y="536" font-size="10" fill="#222">22.4</text>
+<text x="0" y="565" font-size="12" font-weight="bold" fill="#222">PS-A (Xeon 6980P)</text>
+<text x="12" y="586" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="570" width="153.4" height="11" fill="#9ecae1"/>
+<text x="306.4" y="581" font-size="10" fill="#222">6.55</text>
+<rect x="150" y="582" width="142.5" height="11" fill="#1f77b4"/>
+<text x="295.5" y="593" font-size="10" fill="#222">5.73</text>
+<text x="12" y="614" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="598" width="163.9" height="11" fill="#9ecae1"/>
+<text x="316.9" y="609" font-size="10" fill="#222">7.44</text>
+<rect x="150" y="610" width="167.6" height="11" fill="#1f77b4"/>
+<text x="320.6" y="621" font-size="10" fill="#222">7.79</text>
+<text x="12" y="642" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="626" width="250.9" height="11" fill="#9ecae1"/>
+<text x="403.9" y="637" font-size="10" fill="#222">21.6</text>
+<rect x="150" y="638" width="234.4" height="11" fill="#1f77b4"/>
+<text x="387.4" y="649" font-size="10" fill="#222">17.7</text>
+<text x="12" y="670" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="654" width="267.8" height="11" fill="#9ecae1"/>
+<text x="420.8" y="665" font-size="10" fill="#222">26.6</text>
+<rect x="150" y="666" width="239.0" height="11" fill="#1f77b4"/>
+<text x="392.0" y="677" font-size="10" fill="#222">18.7</text>
+<text x="12" y="698" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="682" width="228.8" height="11" fill="#9ecae1"/>
+<text x="381.8" y="693" font-size="10" fill="#222">16.5</text>
+<rect x="150" y="694" width="217.0" height="11" fill="#1f77b4"/>
+<text x="370.0" y="705" font-size="10" fill="#222">14.3</text>
+<text x="0" y="734" font-size="12" font-weight="bold" fill="#222">s86 GPU (V100)</text>
+<text x="12" y="755" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="739" width="172.4" height="11" fill="#9ecae1"/>
+<text x="325.4" y="750" font-size="10" fill="#222">8.26</text>
+<rect x="150" y="751" width="161.0" height="11" fill="#1f77b4"/>
+<text x="314.0" y="762" font-size="10" fill="#222">7.18</text>
+<text x="12" y="783" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="767" width="201.0" height="11" fill="#9ecae1"/>
+<text x="354.0" y="778" font-size="10" fill="#222">11.7</text>
+<rect x="150" y="779" width="180.5" height="11" fill="#1f77b4"/>
+<text x="333.5" y="790" font-size="10" fill="#222">9.12</text>
+<text x="12" y="811" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="795" width="299.9" height="11" fill="#9ecae1"/>
+<text x="452.9" y="806" font-size="10" fill="#222">39.4</text>
+<rect x="150" y="807" width="275.1" height="11" fill="#1f77b4"/>
+<text x="428.1" y="818" font-size="10" fill="#222">29.0</text>
+<text x="12" y="839" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="823" width="294.0" height="11" fill="#9ecae1"/>
+<text x="447.0" y="834" font-size="10" fill="#222">36.6</text>
+<rect x="150" y="835" width="269.7" height="11" fill="#1f77b4"/>
+<text x="422.7" y="846" font-size="10" fill="#222">27.2</text>
+<text x="12" y="867" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="851" width="269.0" height="11" fill="#9ecae1"/>
+<text x="422.0" y="862" font-size="10" fill="#222">27.0</text>
+<rect x="150" y="863" width="256.7" height="11" fill="#1f77b4"/>
+<text x="409.7" y="874" font-size="10" fill="#222">23.2</text>
+<text x="0" y="903" font-size="12" font-weight="bold" fill="#222">Miyabi-G (GH200)</text>
+<text x="12" y="924" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="908" width="46.6" height="11" fill="#9ecae1"/>
+<text x="199.6" y="919" font-size="10" fill="#222">1.77</text>
+<rect x="150" y="920" width="24.2" height="11" fill="#1f77b4"/>
+<text x="177.2" y="931" font-size="10" fill="#222">1.34</text>
+<text x="12" y="952" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="936" width="61.1" height="11" fill="#9ecae1"/>
+<text x="214.1" y="947" font-size="10" fill="#222">2.11</text>
+<rect x="150" y="948" width="34.8" height="11" fill="#1f77b4"/>
+<text x="187.8" y="959" font-size="10" fill="#222">1.53</text>
+<text x="12" y="980" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="964" width="200.4" height="11" fill="#9ecae1"/>
+<text x="353.4" y="975" font-size="10" fill="#222">11.6</text>
+<rect x="150" y="976" width="166.5" height="11" fill="#1f77b4"/>
+<text x="319.5" y="987" font-size="10" fill="#222">7.69</text>
+<text x="12" y="1008" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="992" width="203.8" height="11" fill="#9ecae1"/>
+<text x="356.8" y="1003" font-size="10" fill="#222">12.1</text>
+<rect x="150" y="1004" width="168.8" height="11" fill="#1f77b4"/>
+<text x="321.8" y="1015" font-size="10" fill="#222">7.91</text>
+<text x="12" y="1036" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="1020" width="176.2" height="11" fill="#9ecae1"/>
+<text x="329.2" y="1031" font-size="10" fill="#222">8.66</text>
+<rect x="150" y="1032" width="151.1" height="11" fill="#1f77b4"/>
+<text x="304.1" y="1043" font-size="10" fill="#222">6.37</text>
+<text x="0" y="1072" font-size="12" font-weight="bold" fill="#222">Aquarius (A100)</text>
+<text x="12" y="1093" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="1077" width="126.0" height="11" fill="#9ecae1"/>
+<text x="279.0" y="1088" font-size="10" fill="#222">4.68</text>
+<rect x="150" y="1089" width="111.6" height="11" fill="#1f77b4"/>
+<text x="264.6" y="1100" font-size="10" fill="#222">3.92</text>
+<text x="12" y="1121" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="1105" width="150.7" height="11" fill="#9ecae1"/>
+<text x="303.7" y="1116" font-size="10" fill="#222">6.33</text>
+<rect x="150" y="1117" width="131.1" height="11" fill="#1f77b4"/>
+<text x="284.1" y="1128" font-size="10" fill="#222">4.98</text>
+<text x="12" y="1149" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="1133" width="260.6" height="11" fill="#9ecae1"/>
+<text x="413.6" y="1144" font-size="10" fill="#222">24.3</text>
+<rect x="150" y="1145" width="233.6" height="11" fill="#1f77b4"/>
+<text x="386.6" y="1156" font-size="10" fill="#222">17.5</text>
+<text x="12" y="1177" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="1161" width="254.0" height="11" fill="#9ecae1"/>
+<text x="407.0" y="1172" font-size="10" fill="#222">22.4</text>
+<rect x="150" y="1173" width="227.1" height="11" fill="#1f77b4"/>
+<text x="380.1" y="1184" font-size="10" fill="#222">16.1</text>
+<text x="12" y="1205" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="1189" width="234.7" height="11" fill="#9ecae1"/>
+<text x="387.7" y="1200" font-size="10" fill="#222">17.7</text>
+<rect x="150" y="1201" width="211.7" height="11" fill="#1f77b4"/>
+<text x="364.7" y="1212" font-size="10" fill="#222">13.4</text>
+<text x="0" y="1241" font-size="12" font-weight="bold" fill="#222">PS-B (MI300A)</text>
+<text x="12" y="1262" font-size="11" fill="#222">pcg</text>
+<rect x="150" y="1246" width="84.4" height="11" fill="#9ecae1"/>
+<text x="237.4" y="1257" font-size="10" fill="#222">2.81</text>
+<rect x="150" y="1258" width="61.1" height="11" fill="#1f77b4"/>
+<text x="214.1" y="1269" font-size="10" fill="#222">2.11</text>
+<text x="12" y="1290" font-size="11" fill="#222">pbicgstab</text>
+<rect x="150" y="1274" width="99.7" height="11" fill="#9ecae1"/>
+<text x="252.7" y="1285" font-size="10" fill="#222">3.39</text>
+<rect x="150" y="1286" width="83.6" height="11" fill="#1f77b4"/>
+<text x="236.6" y="1297" font-size="10" fill="#222">2.78</text>
+<text x="12" y="1318" font-size="11" fill="#222">pgmres</text>
+<rect x="150" y="1302" width="220.8" height="11" fill="#9ecae1"/>
+<text x="373.8" y="1313" font-size="10" fill="#222">14.9</text>
+<rect x="150" y="1314" width="189.6" height="11" fill="#1f77b4"/>
+<text x="342.6" y="1325" font-size="10" fill="#222">10.2</text>
+<text x="12" y="1346" font-size="11" fill="#222">pcagmres (explicit)</text>
+<rect x="150" y="1330" width="235.1" height="11" fill="#9ecae1"/>
+<text x="388.1" y="1341" font-size="10" fill="#222">17.8</text>
+<rect x="150" y="1342" width="205.5" height="11" fill="#1f77b4"/>
+<text x="358.5" y="1353" font-size="10" fill="#222">12.4</text>
+<text x="12" y="1374" font-size="11" fill="#222">pcagmres (implicit)</text>
+<rect x="150" y="1358" width="205.1" height="11" fill="#9ecae1"/>
+<text x="358.1" y="1369" font-size="10" fill="#222">12.3</text>
+<rect x="150" y="1370" width="176.2" height="11" fill="#1f77b4"/>
+<text x="329.2" y="1381" font-size="10" fill="#222">8.65</text>
+<rect x="150" y="1432" width="12" height="12" fill="#9ecae1"/>
+<text x="166" y="1442" font-size="12" fill="#222">前処理なし</text>
+<rect x="250" y="1432" width="12" height="12" fill="#1f77b4"/>
+<text x="266" y="1442" font-size="12" fill="#222">Jacobi 前処理</text>
+</svg></figure>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 708" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="固有値ソルバの処理時間 [秒] (16 装置)">
+<text x="0" y="16" font-size="13" fill="#222">固有値ソルバの処理時間 [秒] (16 装置)</text>
+<line x1="206.6" y1="42" x2="206.6" y2="654" stroke="#eee"/>
+<line x1="281.4" y1="42" x2="281.4" y2="654" stroke="#eee"/>
+<line x1="394.6" y1="42" x2="394.6" y2="654" stroke="#eee"/>
+<line x1="469.4" y1="42" x2="469.4" y2="654" stroke="#eee"/>
+<line x1="582.6" y1="42" x2="582.6" y2="654" stroke="#eee"/>
+<line x1="657.4" y1="42" x2="657.4" y2="654" stroke="#eee"/>
+<line x1="150.0" y1="42" x2="150.0" y2="654" stroke="#ccc"/>
+<text x="150.0" y="38" font-size="11" fill="#555" text-anchor="middle">1</text>
+<text x="150.0" y="668" font-size="11" fill="#555" text-anchor="middle">1</text>
+<line x1="338.0" y1="42" x2="338.0" y2="654" stroke="#ccc"/>
+<text x="338.0" y="38" font-size="11" fill="#555" text-anchor="middle">10</text>
+<text x="338.0" y="668" font-size="11" fill="#555" text-anchor="middle">10</text>
+<line x1="526.0" y1="42" x2="526.0" y2="654" stroke="#ccc"/>
+<text x="526.0" y="38" font-size="11" fill="#555" text-anchor="middle">100</text>
+<text x="526.0" y="668" font-size="11" fill="#555" text-anchor="middle">100</text>
+<line x1="714.0" y1="42" x2="714.0" y2="654" stroke="#ccc"/>
+<text x="714.0" y="38" font-size="11" fill="#555" text-anchor="middle">1000</text>
+<text x="714.0" y="668" font-size="11" fill="#555" text-anchor="middle">1000</text>
+<text x="432.0" y="682" font-size="11" fill="#555" text-anchor="middle">処理時間 [秒] (対数目盛)</text>
+<text x="0" y="58" font-size="12" font-weight="bold" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<text x="12" y="73" font-size="11" fill="#222">power</text>
+<rect x="150" y="63" width="467.5" height="11" fill="#2ca02c"/>
+<text x="620.5" y="74" font-size="10" fill="#222">307</text>
+<text x="12" y="89" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="79" width="411.5" height="11" fill="#2ca02c"/>
+<text x="564.5" y="90" font-size="10" fill="#222">154</text>
+<text x="12" y="105" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="95" width="496.0" height="11" fill="#2ca02c"/>
+<text x="649.0" y="106" font-size="10" fill="#222">435</text>
+<text x="0" y="135" font-size="12" font-weight="bold" fill="#222">Odyssey (A64FX)</text>
+<text x="12" y="150" font-size="11" fill="#222">power</text>
+<rect x="150" y="140" width="393.0" height="11" fill="#2ca02c"/>
+<text x="546.0" y="151" font-size="10" fill="#222">123</text>
+<text x="12" y="166" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="156" width="336.6" height="11" fill="#2ca02c"/>
+<text x="489.6" y="167" font-size="10" fill="#222">61.7</text>
+<text x="12" y="182" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="172" width="377.0" height="11" fill="#2ca02c"/>
+<text x="530.0" y="183" font-size="10" fill="#222">101</text>
+<text x="0" y="212" font-size="12" font-weight="bold" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<text x="12" y="227" font-size="11" fill="#222">power</text>
+<rect x="150" y="217" width="356.9" height="11" fill="#2ca02c"/>
+<text x="509.9" y="228" font-size="10" fill="#222">79.2</text>
+<text x="12" y="243" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="233" width="308.0" height="11" fill="#2ca02c"/>
+<text x="461.0" y="244" font-size="10" fill="#222">43.5</text>
+<text x="12" y="259" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="249" width="368.4" height="11" fill="#2ca02c"/>
+<text x="521.4" y="260" font-size="10" fill="#222">91.1</text>
+<text x="0" y="289" font-size="12" font-weight="bold" fill="#222">PS-A (Xeon 6980P)</text>
+<text x="12" y="304" font-size="11" fill="#222">power</text>
+<rect x="150" y="294" width="339.6" height="11" fill="#2ca02c"/>
+<text x="492.6" y="305" font-size="10" fill="#222">64.0</text>
+<text x="12" y="320" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="310" width="292.1" height="11" fill="#2ca02c"/>
+<text x="445.1" y="321" font-size="10" fill="#222">35.8</text>
+<text x="12" y="336" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="326" width="323.7" height="11" fill="#2ca02c"/>
+<text x="476.7" y="337" font-size="10" fill="#222">52.7</text>
+<text x="0" y="366" font-size="12" font-weight="bold" fill="#222">s86 GPU (V100)</text>
+<text x="12" y="381" font-size="11" fill="#222">power</text>
+<rect x="150" y="371" width="366.6" height="11" fill="#2ca02c"/>
+<text x="519.6" y="382" font-size="10" fill="#222">89.1</text>
+<text x="12" y="397" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="387" width="311.5" height="11" fill="#2ca02c"/>
+<text x="464.5" y="398" font-size="10" fill="#222">45.4</text>
+<text x="12" y="413" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="403" width="367.5" height="11" fill="#2ca02c"/>
+<text x="520.5" y="414" font-size="10" fill="#222">90.1</text>
+<text x="0" y="443" font-size="12" font-weight="bold" fill="#222">Miyabi-G (GH200)</text>
+<text x="12" y="458" font-size="11" fill="#222">power</text>
+<rect x="150" y="448" width="233.4" height="11" fill="#2ca02c"/>
+<text x="386.4" y="459" font-size="10" fill="#222">17.4</text>
+<text x="12" y="474" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="464" width="174.7" height="11" fill="#2ca02c"/>
+<text x="327.7" y="475" font-size="10" fill="#222">8.49</text>
+<text x="12" y="490" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="480" width="276.5" height="11" fill="#2ca02c"/>
+<text x="429.5" y="491" font-size="10" fill="#222">29.6</text>
+<text x="0" y="520" font-size="12" font-weight="bold" fill="#222">Aquarius (A100)</text>
+<text x="12" y="535" font-size="11" fill="#222">power</text>
+<rect x="150" y="525" width="317.9" height="11" fill="#2ca02c"/>
+<text x="470.9" y="536" font-size="10" fill="#222">49.1</text>
+<text x="12" y="551" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="541" width="263.0" height="11" fill="#2ca02c"/>
+<text x="416.0" y="552" font-size="10" fill="#222">25.1</text>
+<text x="12" y="567" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="557" width="329.4" height="11" fill="#2ca02c"/>
+<text x="482.4" y="568" font-size="10" fill="#222">56.5</text>
+<text x="0" y="597" font-size="12" font-weight="bold" fill="#222">PS-B (MI300A)</text>
+<text x="12" y="612" font-size="11" fill="#222">power</text>
+<rect x="150" y="602" width="275.9" height="11" fill="#2ca02c"/>
+<text x="428.9" y="613" font-size="10" fill="#222">29.3</text>
+<text x="12" y="628" font-size="11" fill="#222">inverse_power</text>
+<rect x="150" y="618" width="217.9" height="11" fill="#2ca02c"/>
+<text x="370.9" y="629" font-size="10" fill="#222">14.4</text>
+<text x="12" y="644" font-size="11" fill="#222">ks_arnoldi</text>
+<rect x="150" y="634" width="297.8" height="11" fill="#2ca02c"/>
+<text x="450.8" y="645" font-size="10" fill="#222">38.4</text>
+</svg></figure>
+<ul>
+<li>線形ソルバでは, 8 環境とも Jacobi 前処理の<code>pcg</code>が最も速い. 非対称向けの<code>pgmres</code>・<code>pcagmres</code>は移流拡散方程式を解いたので, <code>pcg</code>・<code>pbicgstab</code>とは問題が異なる.</li>
+<li>Jacobi 前処理は反復回数を 5〜6 割に減らし, 多くの構成で前処理なしより 1.1〜1.5 倍速い. <a href="glossary.html#g-ps-a">PS-A</a> の<code>pbicgstab</code>では前処理なしの方がわずかに速い.</li>
+<li><code>pcagmres</code>の IMPLICIT は, 8 環境とも EXPLICIT より速く, <a href="glossary.html#g-odyssey">Odyssey</a> を除く 7 環境で<code>pgmres</code>より速い (Jacobi 前処理で 1.2〜1.5 倍). EXPLICIT は環境によって<code>pgmres</code>より速い場合と遅い場合がある.</li>
+<li>固有値ソルバでは, 8 環境とも<code>inverse_power</code> (内部の<code>pcg</code>と Jacobi 前処理) が最も速い. 求める固有値が違うので (<code>power</code>と<code>ks_arnoldi</code>は絶対値最大, <code>inverse_power</code>は絶対値最小), 速さは問題の固有値の分布で変わる. この問題では<code>power</code>が 15000 回を超える反復を要した.</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="14.3" id="perf-mixed"><span class="header-section-number">14.3</span> 混合精度 (precon_dataF)</h2>
+<p>　<a href="glossary.html#g-precon">前処理</a>のデータ精度だけを単精度にした構成 (<code>precon_dataF</code>) と倍精度の時間を, Jacobi 前処理の<code>pcg</code> (Poisson 方程式, 16 装置) で比べる. 時間はソルバの前処理以外の部分 (左) と前処理 (前処理の準備と適用. 右) に分けて積み上げた. 横軸は各環境の倍精度の総時間を 1 とする比であり, 全環境で共通の線形目盛である. 棒の全長が倍精度に対する総時間の比, 左右の部分の長さがそれぞれの時間の割合を表す. 棒の後に総時間 [秒], 倍精度に対する比 (括弧. 1 未満なら<code>precon_dataF</code>が速い) と前処理の時間を書く. 反復回数は全構成で倍精度と同じ (611) である.</p>
+<p>　<code>precon_dataF</code>は Jacobi 前処理の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持する設定 (その場計算なし. <a href="kernel-opt.html#perf-memory-options">「H なし」</a>, <code>-DPARCEL_JACOBI_ONTHEFLY=0</code>) でビルドし, ライブラリの既定のビルドの倍精度と比べた. 既定 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>を保持しない) のままでは, 前処理行列を単精度にしても適用のたびに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の倍精度の値を読むので, 単精度にした効果が出にくいためである. <a href="glossary.html#g-a64fx">A64FX</a> 向けのビルドは既定で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持するので, <a href="glossary.html#g-odyssey">Odyssey</a> では倍精度も値を保持している.</p>
+<figure class="topchart perfchart"><svg viewBox="0 0 820 426" width="100%" style="max-width:820px;font-family:sans-serif;" role="img" aria-label="pcg (Jacobi 前処理) の処理時間の内訳 (16 装置. 倍精度の総時間を 1 とする)">
+<text x="0" y="16" font-size="13" fill="#222">pcg (Jacobi 前処理) の処理時間の内訳 (16 装置. 倍精度の総時間を 1 とする)</text>
+<line x1="292.0" y1="42" x2="292.0" y2="358" stroke="#e3e3e3"/>
+<text x="292.0" y="38" font-size="11" fill="#555" text-anchor="middle">0</text>
+<text x="292.0" y="372" font-size="11" fill="#555" text-anchor="middle">0</text>
+<line x1="371.5" y1="42" x2="371.5" y2="358" stroke="#e3e3e3"/>
+<text x="371.5" y="38" font-size="11" fill="#555" text-anchor="middle">0.25</text>
+<text x="371.5" y="372" font-size="11" fill="#555" text-anchor="middle">0.25</text>
+<line x1="451.0" y1="42" x2="451.0" y2="358" stroke="#e3e3e3"/>
+<text x="451.0" y="38" font-size="11" fill="#555" text-anchor="middle">0.5</text>
+<text x="451.0" y="372" font-size="11" fill="#555" text-anchor="middle">0.5</text>
+<line x1="530.5" y1="42" x2="530.5" y2="358" stroke="#e3e3e3"/>
+<text x="530.5" y="38" font-size="11" fill="#555" text-anchor="middle">0.75</text>
+<text x="530.5" y="372" font-size="11" fill="#555" text-anchor="middle">0.75</text>
+<line x1="610.0" y1="42" x2="610.0" y2="358" stroke="#bbb"/>
+<text x="610.0" y="38" font-size="11" fill="#555" text-anchor="middle">1</text>
+<text x="610.0" y="372" font-size="11" fill="#555" text-anchor="middle">1</text>
+<text x="451.0" y="386" font-size="11" fill="#555" text-anchor="middle">倍精度の総時間に対する比</text>
+<text x="0" y="64" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<text x="228" y="57" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="46" width="198.5" height="12" fill="#1f77b4"/>
+<rect x="490.5" y="46" width="119.5" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="57" font-size="11" fill="#222">24.2 秒, 前処理 9.10</text>
+<text x="228" y="71" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="60" width="198.3" height="12" fill="#1f77b4"/>
+<rect x="490.3" y="60" width="79.9" height="12" fill="#ff7f0e"/>
+<text x="574.2" y="71" font-size="11" fill="#222">21.2 秒 (0.87), 前処理 6.09</text>
+<text x="0" y="104" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<text x="228" y="97" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="86" width="210.4" height="12" fill="#1f77b4"/>
+<rect x="502.4" y="86" width="107.6" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="97" font-size="11" fill="#222">9.64 秒, 前処理 3.26</text>
+<text x="228" y="111" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="100" width="203.9" height="12" fill="#1f77b4"/>
+<rect x="495.9" y="100" width="111.9" height="12" fill="#ff7f0e"/>
+<text x="611.7" y="111" font-size="11" fill="#222">9.57 秒 (0.99), 前処理 3.39</text>
+<text x="0" y="144" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<text x="228" y="137" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="126" width="214.8" height="12" fill="#1f77b4"/>
+<rect x="506.8" y="126" width="103.2" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="137" font-size="11" fill="#222">6.82 秒, 前処理 2.21</text>
+<text x="228" y="151" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="140" width="201.3" height="12" fill="#1f77b4"/>
+<rect x="493.3" y="140" width="82.9" height="12" fill="#ff7f0e"/>
+<text x="580.2" y="151" font-size="11" fill="#222">6.09 秒 (0.89), 前処理 1.78</text>
+<text x="0" y="184" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<text x="228" y="177" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="166" width="227.4" height="12" fill="#1f77b4"/>
+<rect x="519.4" y="166" width="90.6" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="177" font-size="11" fill="#222">5.73 秒, 前処理 1.63</text>
+<text x="228" y="191" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="180" width="213.5" height="12" fill="#1f77b4"/>
+<rect x="505.5" y="180" width="62.4" height="12" fill="#ff7f0e"/>
+<text x="572.0" y="191" font-size="11" fill="#222">4.97 秒 (0.87), 前処理 1.13</text>
+<text x="0" y="224" font-size="12" fill="#222">s86 GPU (V100)</text>
+<text x="228" y="217" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="206" width="199.9" height="12" fill="#1f77b4"/>
+<rect x="491.9" y="206" width="118.1" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="217" font-size="11" fill="#222">7.18 秒, 前処理 2.67</text>
+<text x="228" y="231" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="220" width="205.2" height="12" fill="#1f77b4"/>
+<rect x="497.2" y="220" width="96.4" height="12" fill="#ff7f0e"/>
+<text x="597.6" y="231" font-size="11" fill="#222">6.81 秒 (0.95), 前処理 2.18</text>
+<text x="0" y="264" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<text x="228" y="257" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="246" width="207.7" height="12" fill="#1f77b4"/>
+<rect x="499.7" y="246" width="110.3" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="257" font-size="11" fill="#222">1.34 秒, 前処理 0.467</text>
+<text x="228" y="271" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="260" width="205.6" height="12" fill="#1f77b4"/>
+<rect x="497.6" y="260" width="83.0" height="12" fill="#ff7f0e"/>
+<text x="584.7" y="271" font-size="11" fill="#222">1.22 秒 (0.91), 前処理 0.351</text>
+<text x="0" y="304" font-size="12" fill="#222">Aquarius (A100)</text>
+<text x="228" y="297" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="286" width="213.6" height="12" fill="#1f77b4"/>
+<rect x="505.6" y="286" width="104.4" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="297" font-size="11" fill="#222">3.92 秒, 前処理 1.29</text>
+<text x="228" y="311" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="300" width="201.4" height="12" fill="#1f77b4"/>
+<rect x="493.4" y="300" width="83.5" height="12" fill="#ff7f0e"/>
+<text x="580.9" y="311" font-size="11" fill="#222">3.52 秒 (0.90), 前処理 1.03</text>
+<text x="0" y="344" font-size="12" fill="#222">PS-B (MI300A)</text>
+<text x="228" y="337" font-size="11" fill="#555">倍精度</text>
+<rect x="292.0" y="326" width="224.5" height="12" fill="#1f77b4"/>
+<rect x="516.5" y="326" width="93.5" height="12" fill="#ff7f0e"/>
+<text x="614.0" y="337" font-size="11" fill="#222">2.16 秒, 前処理 0.635</text>
+<text x="228" y="351" font-size="11" fill="#555">混合精度</text>
+<rect x="292.0" y="340" width="227.8" height="12" fill="#1f77b4"/>
+<rect x="519.8" y="340" width="69.5" height="12" fill="#ff7f0e"/>
+<text x="593.3" y="351" font-size="11" fill="#222">2.02 秒 (0.93), 前処理 0.472</text>
+<rect x="292" y="414" width="12" height="12" fill="#1f77b4"/>
+<text x="308" y="424" font-size="12" fill="#222">ソルバ (前処理以外)</text>
+<rect x="448" y="414" width="12" height="12" fill="#ff7f0e"/>
+<text x="464" y="424" font-size="12" fill="#222">前処理</text>
+</svg></figure>
+<p>　条件: <a href="glossary.html#g-nx">NX</a>=512, 収束まで解いた時間 (各 3 回の最短), グラフは 16 装置. <code>precon_dataF</code>はその場計算なし (<code>-DPARCEL_JACOBI_ONTHEFLY=0</code>), 倍精度はライブラリの既定である. 反復回数は全構成で倍精度と同じ (<code>pcg</code> 611, 移流拡散方程式の<code>pgmres</code> 1140) である. ほかの条件は<a href="performance.html#perf-conditions">「測定条件」</a>と同じである. 下の比の範囲は<code>pcg</code>と<code>pgmres</code>, 4・8・16 装置のすべての構成のものである.</p>
+<ul>
+<li><a href="glossary.html#g-odyssey">Odyssey</a> を除く 7 環境では<code>precon_dataF</code>が速い. 倍精度に対する総時間の比は<code>pcg</code>で 0.86〜0.95, <code>pgmres</code>で 0.91〜0.98 である. 前処理の時間は 0.63〜0.84 倍になり, それ以外の部分はほぼ変わらない.</li>
+<li>前処理が総時間に占める割合は 3〜4 割であり, 総時間の短縮はその範囲にとどまる. 直交化の時間が大きい<code>pgmres</code>では, 総時間の比は 1 に近い.</li>
+<li><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>) では混合精度の利点はほぼない. 総時間の比は 0.99〜1.03, 前処理の時間の比は 1.03〜1.10 である. <a href="glossary.html#g-a64fx">A64FX</a> の前処理はメモリ帯域ではなく命令の実行で決まっており, 単精度の前処理行列は型変換の命令の分だけ命令が多い (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の E・F).</li>
+<li>PARCEL が確保するメモリは, 7 環境では倍精度 (既定) より 1 装置あたり 0.61〜0.62 GiB (4 装置. 16 装置では 0.14〜0.15 GiB) 多い. 単精度の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零 1 個あたり 4 バイト) を持つためである. <a href="glossary.html#g-odyssey">Odyssey</a> では倍精度も<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を倍精度で持つので, 逆に 1 装置あたり 1.13 GiB (4 装置. 16 装置では 0.29 GiB) 少ない.</li>
+</ul>
+<p>　混合精度で速くしたい場合は, <code>precon_dataF</code>をその場計算なし (<code>-DPARCEL_JACOBI_ONTHEFLY=0</code>) でビルドして使う. NVIDIA の GPU では <a href="glossary.html#g-v100">V100</a> も含めて同じであり, 梯子分割は付けない (<a href="installation.html#install-recommended-flags">推奨オプション</a>). その代わり GPU 1 台あたりのメモリが約 0.6〜0.9 GiB 増える (NX=512 の<code>pcg</code>を <a href="glossary.html#g-v100">V100</a> 4 台で解くと, PARCEL が確保する 1 台のメモリのピークは 6,340 MiB で, 倍精度の既定の 5,703 MiB より 0.62 GiB, その場計算ありの<code>precon_dataF</code>の 5,445 MiB より 0.87 GiB 多い).</p>
+<p><br />
+</p>
+<h2 data-number="14.4" id="perf-compare"><span class="header-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</h2>
+<p><span id="perf-petsc"></span><span id="perf-v10"></span><span id="perf-memory"></span></p>
+<p>　Jacobi <a href="glossary.html#g-precon">前処理</a>の<code>pcg</code> (Poisson 方程式) と<code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 60, 移流拡散方程式), 前処理なしの<code>ks_arnoldi</code> (Poisson 方程式) について, v1.2 の処理時間とメモリ使用量を PETSc 3.22 / SLEPc 3.22 と公開版 v1.0 と比べる (16 装置). 棒の長さは各環境の v1.2 に対する比で, v1.2 の棒 (破線の位置) を基準とする. 尺度は 6 つの図で共通であり, 比が 3 を超える棒は途中を省略して描く (二重斜線). 処理時間の図は青系, メモリの図は緑系の色で示す. 数値の後の括弧は v1.2 に対する比であり, 1 を超えると v1.2 が速い (メモリでは少ない). v1.0 には固有値ソルバが無いので, <code>ks_arnoldi</code>は SLEPc とだけ比べる.</p>
+<ul>
+<li>PETSc / SLEPc: 同じ行列・同じ条件で解いた. <code>pgmres</code>は右前処理・修正 Gram-Schmidt 法, Jacobi 前処理は PETSc の<code>PCKSP</code> (内側の Richardson 反復 + <code>PCJACOBI</code>) で PARCEL の<code>PRECON_JACOBI</code>と同じ作用にし, 収束判定は前処理なしの残差ノルム (<code>KSP_NORM_UNPRECONDITIONED</code>) で<a href="glossary.html#g-relres">相対残差</a> 1.0e-8 にそろえた. <code>ks_arnoldi</code>は SLEPc の Krylov-Schur 法 (ncv 40・保持 10・nev 1, 最大<a href="glossary.html#g-restart">リスタート</a> 200) と比べた. PETSc は CPU では 1 コア 1 <a href="glossary.html#g-rank">ランク</a> (フラット MPI. ランク数は PARCEL の 5〜14 倍), GPU では 1 台 1 ランクで実行した (NVIDIA の GPU は cuSPARSE / cuBLAS, <a href="glossary.html#g-ps-b">PS-B</a> は HIP). 反復回数は<code>pcg</code> 611 (両者同じ), <code>ks_arnoldi</code> 122 リスタート (同じ), <code>pgmres</code>は PARCEL 1140, PETSc 1132〜1133 である (<code>pgmres</code>の収束判定を, PARCEL はリスタートの先頭の真の残差で, PETSc は毎反復の残差の推定値で行うため).</li>
+<li>v1.0: 公開版 v1.0 のライブラリで同じ条件・同じランク数で解いた. 反復回数は v1.2 と同じである. GPU の 4 環境では, v1.0 を SpMV の作業配列 (1 行あたり 1,792 バイト. GPU の SpMV では使われない) を確保しない設定でビルドして測った (ソースは同じで, この配列を確保しないマクロを足しただけである). 元の設定では作業配列が 4 装置で 1 台あたり約 60 GB になり, <a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a> 32 GB) の 4・8 装置では GPU のメモリが足りず実行できない. CPU の 4 環境は元の設定で測った (<a href="glossary.html#g-odyssey">Odyssey</a> の <a href="glossary.html#g-a64fx">A64FX</a> 版の SpMV はこの配列を実際に使う).</li>
+<li>メモリ: 反復回数を固定して測った (<code>pcg</code>・<code>pgmres</code>は 60 反復. <code>pgmres</code>は 1 <a href="glossary.html#g-restart">リスタート</a>分, <code>ks_arnoldi</code>は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 40 の 1 サイクル. 各 3 回の最大). 1 装置あたりの値 (全装置の合計 ÷ 装置数) であり, CPU はホスト (全ランクのピーク常駐メモリ<code>VmHWM</code>. PETSc は<code>PetscMemoryGetMaximumUsage</code>), GPU はデバイスのメモリ (100 ミリ秒ごとの<code>nvidia-smi</code>, <a href="glossary.html#g-ps-b">PS-B</a> は<code>amd-smi</code>の VRAM のピーク) である. <a href="glossary.html#g-odyssey">Odyssey</a> はノード全体の使用量の増分 (各ノードの<code>/proc/meminfo</code>の使用量の起動前からの増分の最大を 0.5 秒おきに取り, 全ノードで足した値) である. 富士通のコンパイラで作ったプログラムはヒープが大きいページ (HugeTLB) に載り, PARCEL が確保したメモリが<code>VmHWM</code>に現れないためである (検証用サンプルは<code>HugetlbPages</code>も出す. <a href="performance.html#perf-howto">「自分の環境で測る」</a>の出力の例を参照). この値は OS やほかのプロセスの揺れも含むので, ほかの CPU 環境の値とは測り方が異なる.</li>
+</ul>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pcg の処理時間 [秒] (16 装置. 括弧は v1.2 に対する比)">
+<text x="0" y="16" font-size="13" fill="#222">pcg の処理時間 [秒] (16 装置. 括弧は v1.2 に対する比)</text>
+<line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<rect x="230" y="34" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="43" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">24.2 秒</text>
+<rect x="230" y="47" width="162.9" height="11" fill="#4292c6"/>
+<text x="396.9" y="56" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">30.3 秒 (1.25)</text>
+<rect x="230" y="60" width="228.8" height="11" fill="#9ecae1"/>
+<text x="462.8" y="69" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">42.6 秒 (1.76)</text>
+<text x="0" y="108" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="230" y="85" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="94" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.64 秒</text>
+<rect x="230" y="98" width="202.1" height="11" fill="#4292c6"/>
+<text x="436.1" y="107" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">15.0 秒 (1.55)</text>
+<rect x="230" y="111" width="155.3" height="11" fill="#9ecae1"/>
+<text x="389.3" y="120" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">11.5 秒 (1.19)</text>
+<text x="0" y="159" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="230" y="136" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="145" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.82 秒</text>
+<rect x="230" y="149" width="139.5" height="11" fill="#4292c6"/>
+<text x="373.5" y="158" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.32 秒 (1.07)</text>
+<rect x="230" y="162" width="148.2" height="11" fill="#9ecae1"/>
+<text x="382.2" y="171" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.77 秒 (1.14)</text>
+<text x="0" y="210" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<rect x="230" y="187" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="196" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.73 秒</text>
+<rect x="230" y="200" width="150.1" height="11" fill="#4292c6"/>
+<text x="384.1" y="209" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.62 秒 (1.15)</text>
+<rect x="230" y="213" width="130.6" height="11" fill="#9ecae1"/>
+<text x="364.6" y="222" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.76 秒 (1.00)</text>
+<text x="0" y="261" font-size="12" fill="#222">s86 GPU (V100)</text>
+<rect x="230" y="238" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="247" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.18 秒</text>
+<rect x="230" y="251" width="171.3" height="11" fill="#4292c6"/>
+<text x="405.3" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.47 秒 (1.32)</text>
+<rect x="230" y="264" width="138.8" height="11" fill="#9ecae1"/>
+<text x="372.8" y="273" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.67 秒 (1.07)</text>
+<text x="0" y="312" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="230" y="289" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="298" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.34 秒</text>
+<rect x="230" y="302" width="142.2" height="11" fill="#4292c6"/>
+<text x="376.2" y="311" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.47 秒 (1.09)</text>
+<rect x="230" y="315" width="130.9" height="11" fill="#9ecae1"/>
+<text x="364.9" y="324" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.35 秒 (1.01)</text>
+<text x="0" y="363" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="230" y="340" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="349" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.92 秒</text>
+<rect x="230" y="353" width="133.1" height="11" fill="#4292c6"/>
+<text x="367.1" y="362" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.02 秒 (1.02)</text>
+<rect x="230" y="366" width="147.3" height="11" fill="#9ecae1"/>
+<text x="381.3" y="375" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.45 秒 (1.13)</text>
+<text x="0" y="414" font-size="12" fill="#222">PS-B (MI300A)</text>
+<rect x="230" y="391" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="400" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.11 秒</text>
+<rect x="230" y="404" width="202.3" height="11" fill="#4292c6"/>
+<text x="436.3" y="413" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.29 秒 (1.56)</text>
+<rect x="230" y="417" width="131.2" height="11" fill="#9ecae1"/>
+<text x="365.2" y="426" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.13 秒 (1.01)</text>
+<rect x="230" y="444" width="12" height="12" fill="#08519c"/>
+<text x="246" y="454" font-size="12" fill="#222">v1.2</text>
+<rect x="297" y="444" width="12" height="12" fill="#4292c6"/>
+<text x="313" y="454" font-size="12" fill="#222">v1.0</text>
+<rect x="364" y="444" width="12" height="12" fill="#9ecae1"/>
+<text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pcg の 1 装置あたりのメモリ [GiB] (16 装置. 括弧は v1.2 に対する比)">
+<text x="0" y="16" font-size="13" fill="#222">pcg の 1 装置あたりのメモリ [GiB] (16 装置. 括弧は v1.2 に対する比)</text>
+<line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<rect x="230" y="34" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="43" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.89 GiB</text>
+<rect x="230" y="47" width="153.1" height="11" fill="#41ab5d"/>
+<text x="387.1" y="56" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.41 GiB (1.18)</text>
+<rect x="230" y="60" width="278.7" height="11" fill="#a1d99b"/>
+<text x="512.7" y="69" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.20 GiB (2.14)</text>
+<text x="0" y="108" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="230" y="85" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="94" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.97 GiB</text>
+<rect x="230" y="98" width="172.2" height="11" fill="#41ab5d"/>
+<text x="406.2" y="107" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.93 GiB (1.32)</text>
+<rect x="230" y="111" width="199.4" height="11" fill="#a1d99b"/>
+<text x="433.4" y="120" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.55 GiB (1.53)</text>
+<text x="0" y="159" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="230" y="136" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="145" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.37 GiB</text>
+<rect x="230" y="149" width="160.3" height="11" fill="#41ab5d"/>
+<text x="394.3" y="158" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.93 GiB (1.23)</text>
+<rect x="230" y="162" width="390.0" height="11" fill="#a1d99b"/>
+<polygon points="604.0,175 607.0,175 611.0,160 608.0,160" fill="#fff"/>
+<polygon points="610.0,175 613.0,175 617.0,160 614.0,160" fill="#fff"/>
+<text x="624.0" y="171" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.39 GiB (3.95)</text>
+<text x="0" y="210" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<rect x="230" y="187" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="196" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.74 GiB</text>
+<rect x="230" y="200" width="127.6" height="11" fill="#41ab5d"/>
+<text x="361.6" y="209" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.65 GiB (0.98)</text>
+<rect x="230" y="213" width="390.0" height="11" fill="#a1d99b"/>
+<polygon points="604.0,226 607.0,226 611.0,211 608.0,211" fill="#fff"/>
+<polygon points="610.0,226 613.0,226 617.0,211 614.0,211" fill="#fff"/>
+<text x="624.0" y="222" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">23.9 GiB (5.05)</text>
+<text x="0" y="261" font-size="12" fill="#222">s86 GPU (V100)</text>
+<rect x="230" y="238" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="247" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.73 GiB</text>
+<rect x="230" y="251" width="210.9" height="11" fill="#41ab5d"/>
+<text x="444.9" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.80 GiB (1.62)</text>
+<rect x="230" y="264" width="117.3" height="11" fill="#a1d99b"/>
+<text x="351.3" y="273" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.56 GiB (0.90)</text>
+<text x="0" y="312" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="230" y="289" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="298" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.97 GiB</text>
+<rect x="230" y="302" width="201.1" height="11" fill="#41ab5d"/>
+<text x="435.1" y="311" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.05 GiB (1.55)</text>
+<rect x="230" y="315" width="119.8" height="11" fill="#a1d99b"/>
+<text x="353.8" y="324" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.82 GiB (0.92)</text>
+<text x="0" y="363" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="230" y="340" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="349" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.84 GiB</text>
+<rect x="230" y="353" width="205.9" height="11" fill="#41ab5d"/>
+<text x="439.9" y="362" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.92 GiB (1.58)</text>
+<rect x="230" y="366" width="119.4" height="11" fill="#a1d99b"/>
+<text x="353.4" y="375" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.69 GiB (0.92)</text>
+<text x="0" y="414" font-size="12" fill="#222">PS-B (MI300A)</text>
+<rect x="230" y="391" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="400" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.46 GiB</text>
+<rect x="230" y="404" width="237.4" height="11" fill="#41ab5d"/>
+<text x="471.4" y="413" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.67 GiB (1.83)</text>
+<rect x="230" y="417" width="133.6" height="11" fill="#a1d99b"/>
+<text x="367.6" y="426" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.50 GiB (1.03)</text>
+<rect x="230" y="444" width="12" height="12" fill="#006d2c"/>
+<text x="246" y="454" font-size="12" fill="#222">v1.2</text>
+<rect x="297" y="444" width="12" height="12" fill="#41ab5d"/>
+<text x="313" y="454" font-size="12" fill="#222">v1.0</text>
+<rect x="364" y="444" width="12" height="12" fill="#a1d99b"/>
+<text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pgmres の処理時間 [秒] (16 装置. 括弧は v1.2 に対する比)">
+<text x="0" y="16" font-size="13" fill="#222">pgmres の処理時間 [秒] (16 装置. 括弧は v1.2 に対する比)</text>
+<line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<rect x="230" y="34" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="43" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">126 秒</text>
+<rect x="230" y="47" width="282.3" height="11" fill="#4292c6"/>
+<text x="516.3" y="56" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">273 秒 (2.17)</text>
+<rect x="230" y="60" width="165.7" height="11" fill="#9ecae1"/>
+<text x="399.7" y="69" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">160 秒 (1.27)</text>
+<text x="0" y="108" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="230" y="85" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="94" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">35.7 秒</text>
+<rect x="230" y="98" width="255.5" height="11" fill="#4292c6"/>
+<text x="489.5" y="107" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">70.2 秒 (1.97)</text>
+<rect x="230" y="111" width="128.3" height="11" fill="#9ecae1"/>
+<text x="362.3" y="120" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">35.3 秒 (0.99)</text>
+<text x="0" y="159" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="230" y="136" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="145" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">26.1 秒</text>
+<rect x="230" y="149" width="219.3" height="11" fill="#4292c6"/>
+<text x="453.3" y="158" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">44.1 秒 (1.69)</text>
+<rect x="230" y="162" width="119.1" height="11" fill="#9ecae1"/>
+<text x="353.1" y="171" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">23.9 秒 (0.92)</text>
+<text x="0" y="210" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<rect x="230" y="187" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="196" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">17.7 秒</text>
+<rect x="230" y="200" width="252.5" height="11" fill="#4292c6"/>
+<text x="486.5" y="209" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">34.3 秒 (1.94)</text>
+<rect x="230" y="213" width="114.8" height="11" fill="#9ecae1"/>
+<text x="348.8" y="222" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">15.6 秒 (0.88)</text>
+<text x="0" y="261" font-size="12" fill="#222">s86 GPU (V100)</text>
+<rect x="230" y="238" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="247" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">29.0 秒</text>
+<rect x="230" y="251" width="166.7" height="11" fill="#4292c6"/>
+<text x="400.7" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">37.2 秒 (1.28)</text>
+<rect x="230" y="264" width="130.8" height="11" fill="#9ecae1"/>
+<text x="364.8" y="273" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">29.2 秒 (1.01)</text>
+<text x="0" y="312" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="230" y="289" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="298" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.69 秒</text>
+<rect x="230" y="302" width="180.3" height="11" fill="#4292c6"/>
+<text x="414.3" y="311" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.7 秒 (1.39)</text>
+<rect x="230" y="315" width="125.6" height="11" fill="#9ecae1"/>
+<text x="359.6" y="324" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.43 秒 (0.97)</text>
+<text x="0" y="363" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="230" y="340" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="349" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">17.5 秒</text>
+<rect x="230" y="353" width="148.1" height="11" fill="#4292c6"/>
+<text x="382.1" y="362" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">19.9 秒 (1.14)</text>
+<rect x="230" y="366" width="136.5" height="11" fill="#9ecae1"/>
+<text x="370.5" y="375" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">18.3 秒 (1.05)</text>
+<text x="0" y="414" font-size="12" fill="#222">PS-B (MI300A)</text>
+<rect x="230" y="391" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="400" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.2 秒</text>
+<rect x="230" y="404" width="266.7" height="11" fill="#4292c6"/>
+<text x="500.7" y="413" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">20.9 秒 (2.05)</text>
+<rect x="230" y="417" width="132.9" height="11" fill="#9ecae1"/>
+<text x="366.9" y="426" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.4 秒 (1.02)</text>
+<rect x="230" y="444" width="12" height="12" fill="#08519c"/>
+<text x="246" y="454" font-size="12" fill="#222">v1.2</text>
+<rect x="297" y="444" width="12" height="12" fill="#4292c6"/>
+<text x="313" y="454" font-size="12" fill="#222">v1.0</text>
+<rect x="364" y="444" width="12" height="12" fill="#9ecae1"/>
+<text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pgmres の 1 装置あたりのメモリ [GiB] (16 装置. 括弧は v1.2 に対する比)">
+<text x="0" y="16" font-size="13" fill="#222">pgmres の 1 装置あたりのメモリ [GiB] (16 装置. 括弧は v1.2 に対する比)</text>
+<line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<rect x="230" y="34" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="43" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.27 GiB</text>
+<rect x="230" y="47" width="143.1" height="11" fill="#41ab5d"/>
+<text x="377.1" y="56" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">8.01 GiB (1.10)</text>
+<rect x="230" y="60" width="179.1" height="11" fill="#a1d99b"/>
+<text x="413.1" y="69" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0 GiB (1.38)</text>
+<text x="0" y="108" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="230" y="85" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="94" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.53 GiB</text>
+<rect x="230" y="98" width="148.2" height="11" fill="#41ab5d"/>
+<text x="382.2" y="107" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">8.59 GiB (1.14)</text>
+<rect x="230" y="111" width="143.8" height="11" fill="#a1d99b"/>
+<text x="377.8" y="120" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">8.33 GiB (1.11)</text>
+<text x="0" y="159" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="230" y="136" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="145" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.74 GiB</text>
+<rect x="230" y="149" width="145.0" height="11" fill="#41ab5d"/>
+<text x="379.0" y="158" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.52 GiB (1.12)</text>
+<rect x="230" y="162" width="254.9" height="11" fill="#a1d99b"/>
+<text x="488.9" y="171" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">13.2 GiB (1.96)</text>
+<text x="0" y="210" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<rect x="230" y="187" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="196" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.5 GiB</text>
+<rect x="230" y="200" width="128.5" height="11" fill="#41ab5d"/>
+<text x="362.5" y="209" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.4 GiB (0.99)</text>
+<rect x="230" y="213" width="346.5" height="11" fill="#a1d99b"/>
+<text x="580.5" y="222" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">28.0 GiB (2.67)</text>
+<text x="0" y="261" font-size="12" fill="#222">s86 GPU (V100)</text>
+<rect x="230" y="238" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="247" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.63 GiB</text>
+<rect x="230" y="251" width="154.9" height="11" fill="#41ab5d"/>
+<text x="388.9" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.71 GiB (1.19)</text>
+<rect x="230" y="264" width="122.6" height="11" fill="#a1d99b"/>
+<text x="356.6" y="273" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.31 GiB (0.94)</text>
+<text x="0" y="312" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="230" y="289" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="298" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.88 GiB</text>
+<rect x="230" y="302" width="153.8" height="11" fill="#41ab5d"/>
+<text x="387.8" y="311" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.95 GiB (1.18)</text>
+<rect x="230" y="315" width="119.8" height="11" fill="#a1d99b"/>
+<text x="353.8" y="324" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.41 GiB (0.92)</text>
+<text x="0" y="363" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="230" y="340" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="349" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.75 GiB</text>
+<rect x="230" y="353" width="154.4" height="11" fill="#41ab5d"/>
+<text x="388.4" y="362" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.82 GiB (1.19)</text>
+<rect x="230" y="366" width="123.2" height="11" fill="#a1d99b"/>
+<text x="357.2" y="375" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.45 GiB (0.95)</text>
+<text x="0" y="414" font-size="12" fill="#222">PS-B (MI300A)</text>
+<rect x="230" y="391" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="400" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.50 GiB</text>
+<rect x="230" y="404" width="155.5" height="11" fill="#41ab5d"/>
+<text x="389.5" y="413" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.58 GiB (1.20)</text>
+<rect x="230" y="417" width="123.5" height="11" fill="#a1d99b"/>
+<text x="357.5" y="426" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.22 GiB (0.95)</text>
+<rect x="230" y="444" width="12" height="12" fill="#006d2c"/>
+<text x="246" y="454" font-size="12" fill="#222">v1.2</text>
+<rect x="297" y="444" width="12" height="12" fill="#41ab5d"/>
+<text x="313" y="454" font-size="12" fill="#222">v1.0</text>
+<rect x="364" y="444" width="12" height="12" fill="#a1d99b"/>
+<text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 368" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="ks_arnoldi の処理時間 [秒] (16 装置. 括弧は v1.2 に対する比)">
+<text x="0" y="16" font-size="13" fill="#222">ks_arnoldi の処理時間 [秒] (16 装置. 括弧は v1.2 に対する比)</text>
+<line x1="360.0" y1="28" x2="360.0" y2="328" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="51" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<rect x="230" y="34" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="43" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">435 秒</text>
+<rect x="230" y="47" width="166.5" height="11" fill="#9ecae1"/>
+<text x="400.5" y="56" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">557 秒 (1.28)</text>
+<text x="0" y="89" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="230" y="72" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="81" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">101 秒</text>
+<rect x="230" y="85" width="142.3" height="11" fill="#9ecae1"/>
+<text x="376.3" y="94" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">111 秒 (1.09)</text>
+<text x="0" y="127" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="230" y="110" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="119" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">91.1 秒</text>
+<rect x="230" y="123" width="111.2" height="11" fill="#9ecae1"/>
+<text x="345.2" y="132" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">78.0 秒 (0.86)</text>
+<text x="0" y="165" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<rect x="230" y="148" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="157" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">52.7 秒</text>
+<rect x="230" y="161" width="111.1" height="11" fill="#9ecae1"/>
+<text x="345.1" y="170" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">45.0 秒 (0.85)</text>
+<text x="0" y="203" font-size="12" fill="#222">s86 GPU (V100)</text>
+<rect x="230" y="186" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="195" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">90.1 秒</text>
+<rect x="230" y="199" width="159.3" height="11" fill="#9ecae1"/>
+<text x="393.3" y="208" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">110 秒 (1.23)</text>
+<text x="0" y="241" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="230" y="224" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="233" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">29.6 秒</text>
+<rect x="230" y="237" width="152.2" height="11" fill="#9ecae1"/>
+<text x="386.2" y="246" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">34.6 秒 (1.17)</text>
+<text x="0" y="279" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="230" y="262" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="271" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">56.5 秒</text>
+<rect x="230" y="275" width="169.2" height="11" fill="#9ecae1"/>
+<text x="403.2" y="284" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">73.5 秒 (1.30)</text>
+<text x="0" y="317" font-size="12" fill="#222">PS-B (MI300A)</text>
+<rect x="230" y="300" width="130.0" height="11" fill="#08519c"/>
+<text x="364.0" y="309" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">38.4 秒</text>
+<rect x="230" y="313" width="187.8" height="11" fill="#9ecae1"/>
+<text x="421.8" y="322" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">55.4 秒 (1.44)</text>
+<rect x="230" y="340" width="12" height="12" fill="#08519c"/>
+<text x="246" y="350" font-size="12" fill="#222">v1.2</text>
+<rect x="297" y="340" width="12" height="12" fill="#9ecae1"/>
+<text x="313" y="350" font-size="12" fill="#222">SLEPc 3.22</text>
+</svg></figure>
+<figure class="topchart perfchart"><svg viewBox="0 0 760 368" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="ks_arnoldi の 1 装置あたりのメモリ [GiB] (16 装置. 括弧は v1.2 に対する比)">
+<text x="0" y="16" font-size="13" fill="#222">ks_arnoldi の 1 装置あたりのメモリ [GiB] (16 装置. 括弧は v1.2 に対する比)</text>
+<line x1="360.0" y1="28" x2="360.0" y2="328" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="51" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
+<rect x="230" y="34" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="43" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.72 GiB</text>
+<rect x="230" y="47" width="194.0" height="11" fill="#a1d99b"/>
+<text x="428.0" y="56" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">8.53 GiB (1.49)</text>
+<text x="0" y="89" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="230" y="72" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="81" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.92 GiB</text>
+<rect x="230" y="85" width="154.8" height="11" fill="#a1d99b"/>
+<text x="388.8" y="94" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.04 GiB (1.19)</text>
+<text x="0" y="127" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="230" y="110" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="119" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.18 GiB</text>
+<rect x="230" y="123" width="291.1" height="11" fill="#a1d99b"/>
+<text x="525.1" y="132" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">11.6 GiB (2.24)</text>
+<text x="0" y="165" font-size="12" fill="#222">PS-A (Xeon 6980P)</text>
+<rect x="230" y="148" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="157" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">8.55 GiB</text>
+<rect x="230" y="161" width="332.4" height="11" fill="#a1d99b"/>
+<text x="566.4" y="170" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">21.9 GiB (2.56)</text>
+<text x="0" y="203" font-size="12" fill="#222">s86 GPU (V100)</text>
+<rect x="230" y="186" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="195" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.17 GiB</text>
+<rect x="230" y="199" width="119.7" height="11" fill="#a1d99b"/>
+<text x="353.7" y="208" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.84 GiB (0.92)</text>
+<text x="0" y="241" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="230" y="224" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="233" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.42 GiB</text>
+<rect x="230" y="237" width="121.6" height="11" fill="#a1d99b"/>
+<text x="355.6" y="246" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.13 GiB (0.94)</text>
+<text x="0" y="279" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="230" y="262" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="271" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.29 GiB</text>
+<rect x="230" y="275" width="119.8" height="11" fill="#a1d99b"/>
+<text x="353.8" y="284" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.95 GiB (0.92)</text>
+<text x="0" y="317" font-size="12" fill="#222">PS-B (MI300A)</text>
+<rect x="230" y="300" width="130.0" height="11" fill="#006d2c"/>
+<text x="364.0" y="309" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.08 GiB</text>
+<rect x="230" y="313" width="121.8" height="11" fill="#a1d99b"/>
+<text x="355.8" y="322" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.82 GiB (0.94)</text>
+<rect x="230" y="340" width="12" height="12" fill="#006d2c"/>
+<text x="246" y="350" font-size="12" fill="#222">v1.2</text>
+<rect x="297" y="340" width="12" height="12" fill="#a1d99b"/>
+<text x="313" y="350" font-size="12" fill="#222">SLEPc 3.22</text>
+</svg></figure>
+<ul>
+<li>時間: v1.2 は 8 環境とも v1.0 より速い (<code>pcg</code> 1.02〜1.56 倍, <code>pgmres</code> 1.14〜2.17 倍). PETSc に対しては, <code>pcg</code>は 7 環境で速いか同程度で (<a href="glossary.html#g-s86">s86 CPU</a> 1.76 倍, <a href="glossary.html#g-odyssey">Odyssey</a> 1.19 倍, <a href="glossary.html#g-miyabi-c">Miyabi-C</a> 1.14 倍, <a href="glossary.html#g-aquarius">Aquarius</a> 1.13 倍など), <a href="glossary.html#g-ps-a">PS-A</a> で同じ (1.00) である. <code>pgmres</code>は <a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-odyssey">Odyssey</a> と GPU で速いか同程度で, <a href="glossary.html#g-ps-a">PS-A</a> と <a href="glossary.html#g-miyabi-c">Miyabi-C</a> では PETSc が速い. <code>ks_arnoldi</code>は GPU の 4 環境と <a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-odyssey">Odyssey</a> で SLEPc より速く, <a href="glossary.html#g-ps-a">PS-A</a> と <a href="glossary.html#g-miyabi-c">Miyabi-C</a> では SLEPc が速い.</li>
+<li>メモリ: GPU では v1.2 が v1.0 の 0.55〜0.65 倍 (<code>pcg</code>), 0.83〜0.85 倍 (<code>pgmres</code>) である. PETSc / SLEPc に対しては 0.97〜1.11 倍で, ほぼ同じである. CPU では, PETSc がフラット MPI で多くのランクを使うので v1.2 の方が少ない (PETSc は v1.2 の 1.1〜5.1 倍. <a href="glossary.html#g-odyssey">Odyssey</a> は 1.1〜1.5 倍). CPU の比較は並列化の方式 (フラット MPI と MPI + スレッド) とランク数の違いを含む.</li>
+<li>v1.2 の既定は Jacobi 前処理の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持せず, 適用のたびに計算してメモリを減らしている. メモリを使って速くする設定は<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>に示す.</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="14.5" id="perf-howto"><span class="header-section-number">14.5</span> 自分の環境で測る</h2>
+<p>　本章と同じ条件で測るには, 検証用サンプルを<a href="installation.html#install-recommended-flags">推奨オプション</a>でビルドし (<code>verify_double</code>), 検証を省いて (<code>PARCEL_VERIFY=0</code>) 実行する. 検証を省くと右辺は b = 1 になり, 各<a href="glossary.html#g-rank">ランク</a>は担当する行だけを作る. 実行時オプションは<a href="usage.html#usage-verify-options">検証用サンプルの実行時オプション</a>に示す.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pgmres (m = 60, Jacobi 前処理)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./verify_double PARCEL_NX=512 PARCEL_SOLVER=pgmres PARCEL_PRECON=4 <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  PARCEL_GMRES_RESTART=60 PARCEL_VERIFY=0 PARCEL_TOL=1.0e-8 PARCEL_MAX_ITER=10000</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_arnoldi (m = 40, 保持 10, nev = 1)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./verify_double PARCEL_NX=512 PARCEL_SOLVER=ks_arnoldi PARCEL_PRECON=0 <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  PARCEL_KS_M=40 PARCEL_KS_K_KEEP=10 PARCEL_KS_NEV=1 PARCEL_KS_RESTART=default <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  PARCEL_VERIFY=0 PARCEL_TOL=1.0e-8</span></code></pre></div>
+<p>　<a href="glossary.html#g-rank">ランク</a>の配置は<a href="performance.html#perf-conditions">「測定条件」</a>に合わせ, CPU では<code>mpirun</code>のバインド (<code>--map-by ppr:&lt;1 ソケットのランク数&gt;:socket:PE=&lt;スレッド数&gt; --bind-to core</code>など) でランクをソケットに固定する. <a href="glossary.html#g-s86">s86 CPU</a> と <a href="glossary.html#g-ps-a">PS-A</a> では<code>OMP_PROC_BIND</code>を設定しない (<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」</a>). メモリ使用量も見る場合は<code>PARCEL_MEM_REPORT=1</code>を付ける.</p>
+<p>　ソルバの終了時に rank 0 が次の形の時間を出力する (<code>pcg</code>の例. 値は上の測定のうち <a href="glossary.html#g-s86">s86 GPU</a> の 4 装置, 3 回のうち最短の回のもの. 末尾の<code>[MEM]</code>・<code>[MEMG]</code>の行は<code>PARCEL_MEM_REPORT</code>を付けたときだけ出る). 同じ内容は<code>parcel_result.txt</code> (<code>PARCEL_OUTPUT</code>で変更) にも書かれる. <code>loop gemv</code>の<code>pstep=1</code>は, 既定の<code>pcg</code>が解を毎反復更新することを示す (<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>の「G なし」では<code>pstep=4</code>).</p>
+<pre class="text"><code> finish : residual true norm  || b - Ax || = 9.5999802982e-09
+
+ -----------------
+pcg time              = 1.5333772000e+01 [sec]  (total solver wall time)
+  init time           = 4.3617000000e-02 [sec]  (before main loop)
+    init precon       = 1.0722000000e-02 [sec]
+    init convert      = 3.3840000000e-03 [sec]
+    init other        = 2.9511000000e-02 [sec]  (vec alloc/zero, init SpMV/dot/precon)
+  main loop time      = 1.5277877000e+01 [sec]  (sum over all CG iterations)
+    loop dot          = 2.6397240000e+00 [sec]  calls = 1832
+      dot comm        = 9.7834400000e-01 [sec]  (MPI_Allreduce)
+      dot kernel      = 1.6613800000e+00 [sec]  (局所内積)
+    loop axpy         = 4.2147000000e-02 [sec]  calls = 1222
+    loop gemv         = 6.7014200000e-01 [sec]  calls = 611  (pstep=1 本まとめた x の更新)
+    loop SpMV         = 5.9033560000e+00 [sec]  calls = 611
+      SpMV comm       = 1.5370920000e+00 [sec]  (ハロ交換)
+      SpMV kernel     = 4.3662640000e+00 [sec]  (局所行列ベクトル積)
+    loop precon       = 5.9604370000e+00 [sec]  calls = 610
+    loop other        = 6.2071000000e-02 [sec]  (kernel launch/sync, cout per iter)
+  post-loop time      = 1.2278000000e-02 [sec]  (final r_true compute, finish print)
+ converged_reason = 1 (CONVERGED_RTOL) , its = 611 , residual = 9.599865e-09 , true_residual = 9.599980e-09
+[MEM] rank 0 solver 後 peak RSS = 5068 MiB
+[MEM] rank 0 solver 後 device memory used = 3900 MiB
+[MEM] rank 0 solver 後 PARCEL device peak = 5679 MiB
+[MEMG] nranks=4 host_mib=5068,5083,5085,5068 dev_mib=3900,3910,3910,3900 parcel_devpeak_mib=5679,5703,5703,5679</code></pre>
+<ul>
+<li>1 行目の<code>&lt;ソルバ名&gt; time</code>が本章のグラフの値 (総時間) である. <code>init time</code>は反復に入る前の準備 (<a href="glossary.html#g-precon">前処理</a>の準備を含む), <code>main loop time</code>は反復全体, <code>post-loop time</code>は最後の真の残差の計算である.</li>
+<li><code>loop dot</code>などは反復中の各区間の時間と呼び出し回数である. <code>dot comm</code>と<code>SpMV comm</code>はランク間の通信 (<a href="glossary.html#g-halo">袖</a>交換を含む) の時間である.</li>
+<li>時間は rank 0 が測った値である. 各区間はホスト側の時計で測るので, 完了を待たずに戻るカーネルの時間は次の区間に計上されることがある. 既定では内積の時間計測の前後で<a href="glossary.html#g-device">デバイス</a>を同期しないので, <code>loop dot</code>に直前のカーネル (<code>pgmres</code>の修正 Gram-Schmidt 法の axpy など) の時間が入る. 内訳を正確に取るには<code>PARCEL_TIMER_SYNC=1</code>を付ける (ソルバ全体の時間は少し延びる).</li>
+<li><code>[MEM]</code>の行は rank 0 のホストのピーク常駐メモリ, ソルバの後の GPU の使用量 (<code>nvidia-smi</code>. NVIDIA GPU のみ), PARCEL が確保した<a href="glossary.html#g-device">デバイス</a>メモリのピーク (ソルバの作業域を含む) である. <code>[MEMG]</code>の行は同じ値を全ランクについて並べる. 今の検証用サンプルは, ピーク常駐メモリの後に各ランクの大きいページ (HugeTLB) の量 (<code>/proc/self/status</code>の<code>HugetlbPages</code>. 出力した時点の値で, ピークではない) を, <code>[MEMG]</code>の末尾に<code>host_hugetlb_mib=</code>として出す. <a href="glossary.html#g-a64fx">A64FX</a> (富士通のコンパイラ) ではヒープが大きいページに載り, ピーク常駐メモリに数えられないので, ホストのメモリは両者の和で見る. 大きいページを使わない環境では 0 である.</li>
+<li>最後の収束状態 (<code>converged_reason</code>) と反復回数 (<code>its</code>) を確かめる. 同じ構成を 3 回以上測り, 最短か中央値を用いる.</li>
+</ul>
+<p>　配布パッケージの性能試験 (<code>tests/perf/gen_perf.py</code>, 混合精度は <code>gen_perf_prec.py</code>) は, 本章の測定をまとめて行うジョブスクリプトを作る (使い方は <code>tests/perf/README.ja.md</code>). 条件は本章と同じである. 1 ジョブで 1 ソルバ × 1 装置数を測り, 各構成 3 回, 集計 (<code>tests/perf/parse_perf.py</code>) は最短の回である. 混合精度の<code>precon_dataF</code>は<code>tests/perf/sub_build_prec_&lt;環境&gt;.sh</code>が<code>-DPARCEL_JACOBI_ONTHEFLY=0</code>付きで<code>bin/&lt;環境&gt;/perf_prec/</code>にビルドする (比べる相手の倍精度と, 回帰試験の<code>precon_dataF</code>は既定のままである).</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="kernel-opt.html" rel="previous">← 最適化</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="versions.html" rel="next">版と互換性 →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

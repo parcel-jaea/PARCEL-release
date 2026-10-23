@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Optimization – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/kernel-opt.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li class="current"><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="accuracy.html" rel="previous" accesskey="p">← Numerical Accuracy and Reproducibility</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="performance.html" rel="next" accesskey="n">Performance →</a></span>
+</nav>
+<h1 data-number="13" id="kernel-opt"><span class="header-section-number">13</span> Optimization</h1>
+<p>PARCEL has two kinds of optimizations that increase speed without changing the computation (the algorithm and the number of iterations): optimizations that change the loop structure of the kernels to suit the environment (<a href="kernel-opt.html#kopt-blocking">blocking</a>, <a href="kernel-opt.html#kopt-ladder">ladder splitting</a>, <a href="kernel-opt.html#kopt-gemv">decomposing gemv</a>, <a href="kernel-opt.html#kopt-a64fx">optimizations for A64FX</a>), and optimization options that make the solvers faster by using more memory (<a href="kernel-opt.html#perf-memory-options">“Choosing Between Memory and Speed”</a>). Both are selected with macros at build time or environment variables at run time.</p>
+<p>The effects in the following sections were measured with the code of the distribution package (the verification sample): executables that differ only in the optimization were run alternately in the same job, the number of iterations was fixed, and the time per iteration was compared. The problem is the same 3D Poisson equation as in the performance tests (<a href="glossary.html#g-nx">NX</a>=512) on 4 devices (4 sockets on CPUs, 4 nodes on <a href="glossary.html#g-odyssey">Odyssey</a>, 4 GPUs; the placement of <a href="glossary.html#g-rank">ranks</a> and threads is the same as in the <a href="performance.html#perf-conditions">measurement conditions of the performance chapter</a>). The solvers are mainly <code>pcg</code> (100 iterations) and <code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 60, 60 iterations; 120 iterations for blocking on <a href="glossary.html#g-s86">s86 CPU</a> and ladder splitting on <a href="glossary.html#g-ps-b">PS-B</a>) with the Jacobi <a href="glossary.html#g-precon">preconditioner</a>. The time per iteration is the time of the iteration part excluding initialization (the main loop) ÷ the number of iterations (the number of restarts for <code>ks_arnoldi</code>), averaged over 2 to 5 rounds. The times of the sections in the text and tables (dot products, SpMV, preconditioner, Gram-Schmidt, etc.) are also per-iteration times within the main loop. The performance ratio in each table is the time without the optimization ÷ the time with it; above 1 means that the optimization makes it faster. The main-effect column shows the sections with large differences as “without → with”.</p>
+<p>The default form of the computational kernels (dot products, <a href="glossary.html#g-axpy">axpy</a>, <a href="glossary.html#g-spmv">SpMV</a>, preconditioners, <a href="glossary.html#g-gemv">gemv</a>, etc.) is a flat loop in which one <a href="glossary.html#g-workitem">work item</a> handles one row, which suits GPUs. PARCEL has optimizations that change the loop structure to suit environments such as CPUs and <a href="glossary.html#g-a64fx">A64FX</a>, selected by macros at build time. The macros are listed in <a href="installation.html#install-kernel-opt">“Optimization” in the Installation chapter</a>, and the compile commands per environment in <a href="installation.html#install-recommended-flags">Recommended Options</a>. The defaults per environment are in the <a href="kernel-opt.html#kopt-defaults">next section</a>, and how each optimization works and its effects in the sections that follow.</p>
+<h2 data-number="13.1" id="kopt-defaults"><span class="header-section-number">13.1</span> Defaults per Environment</h2>
+<p>The optimizations enabled by the recommended build (<a href="installation.html#install-recommended-flags">Recommended Options</a>; the same as <code>kernel=auto</code> of the <a href="glossary.html#g-spack">spack</a> recipe <code>parcel-sycl</code>) are shown per environment. “—” means not used in that environment.</p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Blocking</th>
+<th>Ladder splitting (SpMV / preconditioner)</th>
+<th>gemv decomposition</th>
+<th>For A64FX</th>
+<th>Register limit on V100</th>
+<th>Memory saving G / H</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-mac">Mac</a>, <a href="glossary.html#g-linux-ws">Linux Workstation (CPU)</a></td>
+<td class="nowrap">Reductions only</td>
+<td class="nowrap">No / no</td>
+<td class="nowrap">No</td>
+<td>—</td>
+<td class="nowrap">—</td>
+<td class="nowrap">On / on</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap">All kernels</td>
+<td class="nowrap">Yes / no</td>
+<td class="nowrap">Yes</td>
+<td>A, C, D, E, F (B at run time)</td>
+<td class="nowrap">—</td>
+<td class="nowrap">On / off</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap">No</td>
+<td class="nowrap">No / no</td>
+<td class="nowrap">No</td>
+<td>—</td>
+<td class="nowrap">Specified</td>
+<td class="nowrap">On / on</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>), <a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>), <a href="glossary.html#g-linux-ws">Linux Workstation</a> (<a href="glossary.html#g-rtx-a6000">RTX A6000</a>)</td>
+<td class="nowrap">No</td>
+<td class="nowrap">No / no</td>
+<td class="nowrap">No</td>
+<td>—</td>
+<td class="nowrap">—</td>
+<td class="nowrap">On / on</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap">No</td>
+<td class="nowrap">Yes / yes</td>
+<td class="nowrap">No</td>
+<td>—</td>
+<td class="nowrap">—</td>
+<td class="nowrap">On / on</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>“Reductions only” in the Blocking column is <code>_BLOCKING_LOOP_DOT_=1</code>, and “All kernels” is <code>_BLOCKING_LOOP_=1</code> (<a href="kernel-opt.html#kopt-blocking">Blocking</a>). “For A64FX” refers to <a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX (A to F)</a>, and “Memory saving G / H” to the settings G and H of <a href="kernel-opt.html#perf-memory-options">“Choosing Between Memory and Speed”</a> (separate from the optimizations A to F for A64FX).</li>
+<li>For <a href="glossary.html#g-linux-ws">Linux Workstation</a>, the blocking is reductions only on the CPU (Xeon Gold 6226R) and none on the GPU (<a href="glossary.html#g-rtx-a6000">RTX A6000</a>). Both are the same as the defaults for environments not in the table (next item).</li>
+<li>In environments not in the table, CPUs are the same as <a href="glossary.html#g-s86">s86 CPU</a>, NVIDIA GPUs as <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, and AMD GPUs as <a href="glossary.html#g-ps-b">PS-B</a> (<code>kernel=auto</code> of <a href="glossary.html#g-spack">spack</a>).</li>
+<li>The defaults of the ladder splitting of the preconditioner, the gemv decomposition, C, D and F of the optimizations for A64FX, and memory-saving setting H follow from the blocking and ladder macros (the default of <code>PARCEL_PRECON_LADDER</code> is the value of <code>PARCEL_SPMV_LADDER</code>; those of <code>PARCEL_GEMV_AS_AXPY</code>, <code>PARCEL_CG_FUSED</code> and <code>PARCEL_JACOBI_ROW2</code> are the value of <code>_BLOCKING_LOOP_</code>; that of <code>PARCEL_JACOBI_ONTHEFLY</code> is 0 if <code>_BLOCKING_LOOP_</code> is 1). E (<code>PARCEL_JACOBI_NODIV_UNIT</code>) defaults to 1 and is effective only in <code>_BLOCKING_LOOP_</code> builds. To change them individually, specify the macros in <a href="installation.html#install-kernel-opt">“Optimization” in the Installation chapter</a>.</li>
+<li>A of the optimizations for A64FX (<code>-ffp-contract=fast</code>) is given on the command line, and B (<code>OMP_WAIT_POLICY=ACTIVE</code> and <code>KMP_BLOCKTIME=infinite</code>) by run-time environment variables (<a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>).</li>
+<li>The register limit on V100 is <code>-Xcuda-ptxas -maxrregcount=255</code> (<a href="kernel-opt.html#kopt-v100">Register Limit on V100</a>).</li>
+<li>Memory-saving setting G can be changed at run time with <code>PARCEL_PSTEP</code>, and H at build time with <code>PARCEL_JACOBI_ONTHEFLY</code> (<a href="kernel-opt.html#perf-memory-options">“Choosing Between Memory and Speed”</a>). “Off” means that the values of the Jacobi preconditioner are stored (using memory for speed).</li>
+</ul>
+<h2 data-number="13.2" id="kopt-blocking"><span class="header-section-number">13.2</span> Blocking</h2>
+<p><code>_BLOCKING_LOOP_=1</code> replaces all kernels except <a href="glossary.html#g-spmv">SpMV</a> (dot products, <a href="glossary.html#g-axpy">axpy</a>, preconditioners, etc.) with blocked versions, in which one thread handles a contiguous range of rows. A reduction only sums the partial sums of the threads at the end, so no barrier within a <a href="glossary.html#g-workitem">work group</a> is needed. <code>_BLOCKING_LOOP_DOT_=1</code> replaces only the reductions (dot, dddot, max) with blocked versions.</p>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 720 204" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="Flat loop and blocked loop">
+<defs><marker id="ko-blocking-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="170" y="18" font-size="13" text-anchor="middle" fill="#222">Flat (default): 1 row = 1 work item</text>
+<rect x="20.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="38.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="57.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="76.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="95.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="113.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="132.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="151.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="170.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="188.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="207.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="226.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="245.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="263.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="282.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="301.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<text x="170" y="80" font-size="11" text-anchor="middle" fill="#555">N work items (mapped to GPU threads)</text>
+<text x="170" y="100" font-size="11" text-anchor="middle" fill="#555">Reductions: tree reduction with barriers</text>
+<line x1="355" y1="8" x2="355" y2="196" stroke="#bbb"/>
+<text x="540" y="18" font-size="13" text-anchor="middle" fill="#222">Blocked: 1 block = 1 work item = 1 thread</text>
+<rect x="380" y="32" width="80" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="420" y="50" font-size="11" text-anchor="middle" fill="#222">block 0</text>
+<line x1="420" y1="60" x2="420" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="420" cy="96" r="12" fill="#fff" stroke="#5b7fa6"/>
+<text x="420" y="100" font-size="11" text-anchor="middle" fill="#222">s₀</text>
+<line x1="420" y1="109" x2="525.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<rect x="460" y="32" width="80" height="26" fill="#fde2c8" stroke="#b9772e"/>
+<text x="500" y="50" font-size="11" text-anchor="middle" fill="#222">block 1</text>
+<line x1="500" y1="60" x2="500" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="500" cy="96" r="12" fill="#fff" stroke="#b9772e"/>
+<text x="500" y="100" font-size="11" text-anchor="middle" fill="#222">s₁</text>
+<line x1="500" y1="109" x2="535.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<rect x="540" y="32" width="80" height="26" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="580" y="50" font-size="11" text-anchor="middle" fill="#222">block 2</text>
+<line x1="580" y1="60" x2="580" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="580" cy="96" r="12" fill="#fff" stroke="#5c9a52"/>
+<text x="580" y="100" font-size="11" text-anchor="middle" fill="#222">s₂</text>
+<line x1="580" y1="109" x2="545.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<rect x="620" y="32" width="80" height="26" fill="#efe0f5" stroke="#8e5ea8"/>
+<text x="660" y="50" font-size="11" text-anchor="middle" fill="#222">block 3</text>
+<line x1="660" y1="60" x2="660" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="660" cy="96" r="12" fill="#fff" stroke="#8e5ea8"/>
+<text x="660" y="100" font-size="11" text-anchor="middle" fill="#222">s₃</text>
+<line x1="660" y1="109" x2="555.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="540" cy="148" r="12" fill="#fff" stroke="#444"/>
+<text x="540" y="153" font-size="13" text-anchor="middle" fill="#222">Σ</text>
+<text x="540" y="176" font-size="11" text-anchor="middle" fill="#555">Sum the partial sums (no barrier)</text>
+<text x="540" y="194" font-size="11" text-anchor="middle" fill="#555">nblock = threads per rank (4 in the figure)</text>
+</svg>
+<figcaption>Figure: Flat loop and blocked loop. With blocking, one thread handles a contiguous range of rows, and reductions use partial sums.</figcaption>
+</figure>
+<p>The effect is concentrated in the reductions, because the flat reductions are tree reductions with barriers within work groups, and the fixed cost of a barrier is large on CPUs. The effect of blocking only the reductions (<code>_BLOCKING_LOOP_DOT_=1</code>), recommended for CPUs other than <a href="glossary.html#g-a64fx">A64FX</a>, is shown below.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">Without blocking [ms]</th>
+<th style="text-align: right;">With blocking [ms]</th>
+<th style="text-align: right;">Performance ratio</th>
+<th>Main effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">172.4</td>
+<td style="text-align: right;" class="nowrap">130.5</td>
+<td style="text-align: right;" class="nowrap">1.32</td>
+<td>dot 56.6 ms → 15.0 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">975.0</td>
+<td style="text-align: right;" class="nowrap">422.3</td>
+<td style="text-align: right;" class="nowrap">2.31</td>
+<td>Gram-Schmidt 850.3 ms → 313.1 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">40.3</td>
+<td style="text-align: right;" class="nowrap">28.4</td>
+<td style="text-align: right;" class="nowrap">1.42</td>
+<td>dot 15.0 ms → 4.0 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">220.7</td>
+<td style="text-align: right;" class="nowrap">73.4</td>
+<td style="text-align: right;" class="nowrap">3.01</td>
+<td>Gram-Schmidt 193.0 ms → 49.5 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">24.0</td>
+<td style="text-align: right;" class="nowrap">22.7</td>
+<td style="text-align: right;" class="nowrap">1.06</td>
+<td>dot 4.7 ms → 4.1 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">65.5</td>
+<td style="text-align: right;" class="nowrap">49.0</td>
+<td style="text-align: right;" class="nowrap">1.34</td>
+<td>Gram-Schmidt 46.8 ms → 30.6 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The effect of blocking all kernels (<code>_BLOCKING_LOOP_=1</code>), recommended for <a href="glossary.html#g-a64fx">A64FX</a>, is shown below.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">Without blocking [ms]</th>
+<th style="text-align: right;">With blocking [ms]</th>
+<th style="text-align: right;">Performance ratio</th>
+<th>Main effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">1603.0</td>
+<td style="text-align: right;" class="nowrap">40.0</td>
+<td style="text-align: right;" class="nowrap">40.1</td>
+<td>dot 1546.2 ms → 7.7 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">16437.4</td>
+<td style="text-align: right;" class="nowrap">82.0</td>
+<td style="text-align: right;" class="nowrap">200</td>
+<td>Gram-Schmidt 15848.4 ms → 48.8 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>On CPUs other than <a href="glossary.html#g-a64fx">A64FX</a>, blocking only the reductions is enough. On <a href="glossary.html#g-s86">s86 CPU</a>, blocking all kernels (<code>_BLOCKING_LOOP_=1</code>) gives 134.5 ms per iteration for <code>pcg</code> (1.03 times that with the reductions only) and 421.8 ms for <code>pgmres</code> (1.00 times), no different from the reductions only.</li>
+<li>On <a href="glossary.html#g-a64fx">A64FX</a> (<code>omp.library-only</code> with the Fujitsu compiler), the dot products are extremely slow without blocking and the solvers are not practical. Always specify blocking of all kernels. “With blocking” on <a href="glossary.html#g-odyssey">Odyssey</a> is the recommended build (including A to F of the <a href="kernel-opt.html#kopt-a64fx">optimizations for A64FX</a>).</li>
+<li>On macOS (Apple M4), blocking the reductions is also required. Measured on one machine with one process without MPI, 4 threads and NX=128, the version without blocking is 33.5 times slower than blocking the reductions for <code>pcg</code> (325.1 ms → 9.70 ms; dot 315.7 ms → 1.13 ms) and 112 times for <code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">m = 60</annotation></semantics></math>, 120 iterations; 3311 ms → 29.6 ms, Gram-Schmidt 3193 ms → 21.2 ms). Blocking all kernels gives 0.96 times for <code>pcg</code>, 1.00 times for <code>pgmres</code> and 1.04 times for <code>ks_arnoldi</code> per iteration of the reductions only (0.97 to 0.99 times with 10 threads), a small difference, and uses more memory because it stores the values of the Jacobi preconditioner (352 MiB → 464 MiB allocated by PARCEL for <code>pcg</code> with NX=128), so the reductions only are used.</li>
+<li>Do not use it on GPUs (the flat form suits GPUs).</li>
+</ul>
+<p>The number of blocks is determined at run time: the environment variable <code>PARCEL_NBLOCK</code> if set, otherwise <code>omp_get_max_threads()</code> (the number of threads per <a href="glossary.html#g-rank">rank</a>).</p>
+<p>With blocked reductions, the number of partial sums depends on the run configuration (number of <a href="glossary.html#g-rank">ranks</a> × number of threads), and so does the order of the reduction. This does not affect results in double precision, but when comparing low-precision configurations across environments, use the same setting of this flag and the same run configuration.</p>
+<h2 data-number="13.3" id="kopt-ladder"><span class="header-section-number">13.3</span> Ladder Splitting</h2>
+<p>The iteration count of the inner loop of <a href="glossary.html#g-crs">CRS</a> <a href="glossary.html#g-spmv">SpMV</a> is given by the number of nonzeros of each row, so the compiler does not know it and cannot unroll or prefetch. <code>PARCEL_SPMV_LADDER=1</code> splits the inner loop into fixed-length stages of 4, 2 and 1 elements so that, for any number of nonzeros, all of them go into fixed-length bodies (4+2+1 for 7 nonzeros). The number of nonzeros may differ per row, and no extra memory is needed. <code>PARCEL_PRECON_LADDER</code> applies the same splitting to the iteration loops of the Jacobi preconditioner (<code>PRECON_JACOBI</code>).</p>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 720 148" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="Ladder splitting of the inner loop of SpMV">
+<defs><marker id="ko-ladder-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="20" y="18" font-size="12" text-anchor="start" fill="#222">Default: 7 iterations of 1 element (count unknown until run time)</text>
+<rect x="20" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="40" y="46" font-size="11" text-anchor="middle" fill="#222">1</text>
+<rect x="60" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="80" y="46" font-size="11" text-anchor="middle" fill="#222">2</text>
+<rect x="100" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="120" y="46" font-size="11" text-anchor="middle" fill="#222">3</text>
+<rect x="140" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="160" y="46" font-size="11" text-anchor="middle" fill="#222">4</text>
+<rect x="180" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="200" y="46" font-size="11" text-anchor="middle" fill="#222">5</text>
+<rect x="220" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="240" y="46" font-size="11" text-anchor="middle" fill="#222">6</text>
+<rect x="260" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="280" y="46" font-size="11" text-anchor="middle" fill="#222">7</text>
+<text x="20" y="84" font-size="12" text-anchor="start" fill="#222">Ladder: 4 → 2 → 1</text>
+<rect x="20" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="40" y="112" font-size="11" text-anchor="middle" fill="#222">1</text>
+<rect x="60" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="80" y="112" font-size="11" text-anchor="middle" fill="#222">2</text>
+<rect x="100" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="120" y="112" font-size="11" text-anchor="middle" fill="#222">3</text>
+<rect x="140" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="160" y="112" font-size="11" text-anchor="middle" fill="#222">4</text>
+<rect x="20" y="92" width="160" height="30" fill="none" stroke="#333" stroke-width="2"/>
+<text x="100" y="138" font-size="10" text-anchor="middle" fill="#555">4-element body</text>
+<rect x="180" y="94" width="40" height="26" fill="#fde2c8" stroke="#b9772e"/>
+<text x="200" y="112" font-size="11" text-anchor="middle" fill="#222">5</text>
+<rect x="220" y="94" width="40" height="26" fill="#fde2c8" stroke="#b9772e"/>
+<text x="240" y="112" font-size="11" text-anchor="middle" fill="#222">6</text>
+<rect x="180" y="92" width="80" height="30" fill="none" stroke="#333" stroke-width="2"/>
+<text x="220" y="138" font-size="10" text-anchor="middle" fill="#555">2 elements</text>
+<rect x="260" y="94" width="40" height="26" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="280" y="112" font-size="11" text-anchor="middle" fill="#222">7</text>
+<rect x="260" y="92" width="40" height="30" fill="none" stroke="#333" stroke-width="2"/>
+<text x="280" y="138" font-size="10" text-anchor="middle" fill="#555">1 element</text>
+<text x="330" y="40" font-size="11" text-anchor="start" fill="#555">Example with 7 nonzeros per row.</text>
+<text x="330" y="62" font-size="11" text-anchor="start" fill="#555">Each stage is a loop of fixed length,</text>
+<text x="330" y="84" font-size="11" text-anchor="start" fill="#555">so the compiler can unroll and prefetch it.</text>
+<text x="330" y="106" font-size="11" text-anchor="start" fill="#555">The number of nonzeros may differ per row.</text>
+</svg>
+<figcaption>Figure: Ladder splitting of the inner loop of SpMV. The nonzeros of a row are processed in fixed-length stages of 4, 2 and 1 elements.</figcaption>
+</figure>
+<p>The effect depends on the environment, and it can be slower. The time per iteration with and without ladder splitting is shown for <a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>) and <a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>), where ladder splitting is recommended.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">Without ladder splitting [ms]</th>
+<th style="text-align: right;">With ladder splitting [ms]</th>
+<th style="text-align: right;">Performance ratio</th>
+<th>Main effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">11.62</td>
+<td style="text-align: right;" class="nowrap">6.95</td>
+<td style="text-align: right;" class="nowrap">1.67</td>
+<td>SpMV 4.9 ms → 2.6 ms<br />Preconditioner 4.7 ms → 2.4 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">24.81</td>
+<td style="text-align: right;" class="nowrap">19.88</td>
+<td style="text-align: right;" class="nowrap">1.25</td>
+<td>SpMV 5.1 ms → 2.9 ms<br />Preconditioner 4.9 ms → 2.4 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">49.35</td>
+<td style="text-align: right;" class="nowrap">40.01</td>
+<td style="text-align: right;" class="nowrap">1.23</td>
+<td>SpMV 23.6 ms → 14.3 ms<br />Preconditioner 15.2 ms → 15.3 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">91.41</td>
+<td style="text-align: right;" class="nowrap">82.01</td>
+<td style="text-align: right;" class="nowrap">1.11</td>
+<td>SpMV 24.2 ms → 14.8 ms<br />Preconditioner 15.3 ms → 15.4 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><a href="glossary.html#g-ps-b">PS-B</a> compares with and without ladder splitting of both SpMV and the preconditioner (<code>-DPARCEL_SPMV_LADDER=1 -DPARCEL_PRECON_LADDER=1</code>), and <a href="glossary.html#g-odyssey">Odyssey</a> compares with and without ladder splitting of SpMV with the preconditioner not split. <code>pgmres</code> on <a href="glossary.html#g-ps-b">PS-B</a> was run for 120 iterations (2 cycles).</li>
+<li>On <a href="glossary.html#g-mi300a">MI300A</a>, SpMV and the preconditioner both become about twice as fast, the largest effect. Use it on AMD GPUs.</li>
+<li>On <a href="glossary.html#g-a64fx">A64FX</a>, ladder splitting of SpMV is effective and that of the preconditioner is slower, so <code>PARCEL_PRECON_LADDER=0</code> is set explicitly. Adding ladder splitting of the preconditioner (<code>-DPARCEL_PRECON_LADDER=1</code>) to the recommended build slows one iteration from 39.99 ms to 43.76 ms (0.91 times) for <code>pcg</code> and from 82.43 ms to 85.65 ms (0.96 times) for <code>pgmres</code> (preconditioner section 15.2 ms → 18.9 ms; measured in a separate run under the same conditions).</li>
+<li>Ladder splitting is not used on NVIDIA GPUs. Under the same conditions, one iteration of <code>pcg</code> becomes slower with ladder splitting on <a href="glossary.html#g-v100">V100</a> (25.1 ms → 29.6 ms), and there is no difference on <a href="glossary.html#g-gh200">GH200</a> and <a href="glossary.html#g-a100">A100</a> (4.70 ms → 4.68 ms, 13.15 ms → 13.13 ms).</li>
+</ul>
+<h2 data-number="13.4" id="kopt-gemv"><span class="header-section-number">13.4</span> Decomposing gemv</h2>
+<p><a href="glossary.html#g-gemv">gemv</a> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>y</mi><mo>+</mo><mi>V</mi><mi>c</mi><mo>=</mo><mi>y</mi><mo>+</mo><msub><mo>∑</mo><mi>j</mi></msub><msub><mi>c</mi><mi>j</mi></msub><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y \leftarrow y + Vc = y + \sum_{j} c_j v_j</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math> is a matrix of M columns and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mi>j</mi></msub><annotation encoding="application/x-tex">v_j</annotation></semantics></math> its <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>-th column) reads M columns at the same time and reads and writes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> only once. <code>PARCEL_GEMV_AS_AXPY=1</code> decomposes it into M <a href="glossary.html#g-axpy">axpy</a> operations (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>y</mi><mo>+</mo><msub><mi>c</mi><mi>j</mi></msub><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y \leftarrow y + c_j v_j</annotation></semantics></math>).</p>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 720 174" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="gemv and its decomposition into axpy">
+<defs><marker id="ko-gemv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="170" y="18" font-size="12" text-anchor="middle" fill="#222">gemv (default): y ← y + Σ c<tspan baseline-shift="sub" font-size="8">j</tspan> v<tspan baseline-shift="sub" font-size="8">j</tspan> at once</text>
+<rect x="40" y="34" width="22" height="90" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="51" y="140" font-size="11" text-anchor="middle" fill="#222">v₀</text>
+<rect x="74" y="34" width="22" height="90" fill="#fde2c8" stroke="#b9772e"/>
+<text x="85" y="140" font-size="11" text-anchor="middle" fill="#222">v₁</text>
+<rect x="108" y="34" width="22" height="90" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="119" y="140" font-size="11" text-anchor="middle" fill="#222">v₂</text>
+<rect x="142" y="34" width="22" height="90" fill="#efe0f5" stroke="#8e5ea8"/>
+<text x="153" y="140" font-size="11" text-anchor="middle" fill="#222">v₃</text>
+<line x1="166" y1="79" x2="238" y2="79" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="240" y="34" width="22" height="90" fill="#f3f5f7" stroke="#444"/>
+<text x="251" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="170" y="164" font-size="11" text-anchor="middle" fill="#555">Reads M columns at once; reads/writes y once</text>
+<line x1="355" y1="8" x2="355" y2="172" stroke="#bbb"/>
+<text x="540" y="18" font-size="12" text-anchor="middle" fill="#222">Decomposed into axpy: y ← y + c<tspan baseline-shift="sub" font-size="8">j</tspan> v<tspan baseline-shift="sub" font-size="8">j</tspan>, M times</text>
+<text x="410" y="32" font-size="10" text-anchor="middle" fill="#555">1</text>
+<rect x="378" y="40" width="16" height="84" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="386" y="140" font-size="11" text-anchor="middle" fill="#222">v₀</text>
+<line x1="396" y1="82" x2="422" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="424" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="432" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="495" y="32" font-size="10" text-anchor="middle" fill="#555">2</text>
+<rect x="463" y="40" width="16" height="84" fill="#fde2c8" stroke="#b9772e"/>
+<text x="471" y="140" font-size="11" text-anchor="middle" fill="#222">v₁</text>
+<line x1="481" y1="82" x2="507" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="509" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="517" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="580" y="32" font-size="10" text-anchor="middle" fill="#555">3</text>
+<rect x="548" y="40" width="16" height="84" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="556" y="140" font-size="11" text-anchor="middle" fill="#222">v₂</text>
+<line x1="566" y1="82" x2="592" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="594" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="602" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="665" y="32" font-size="10" text-anchor="middle" fill="#555">4</text>
+<rect x="633" y="40" width="16" height="84" fill="#efe0f5" stroke="#8e5ea8"/>
+<text x="641" y="140" font-size="11" text-anchor="middle" fill="#222">v₃</text>
+<line x1="651" y1="82" x2="677" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="679" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="687" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="540" y="164" font-size="11" text-anchor="middle" fill="#555">Reads one column at a time; reads/writes y M times</text>
+</svg>
+<figcaption>Figure: gemv and its decomposition into axpy (M = 4). The decomposition reads more data, but streams only one column at a time.</figcaption>
+</figure>
+<p>The decomposition reads and writes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> M times, which increases data movement, but only one column is streamed at a time. On <a href="glossary.html#g-a64fx">A64FX</a>, gemv streaming M columns at once can be slow (when the column spacing is a power of 2, the M columns fall into the same cache sets), so gemv is decomposed. On x86 CPUs and GPUs gemv is not decomposed.</p>
+<p>In builds for CPUs (<code>_BLOCKING_LOOP_</code> or <code>_BLOCKING_LOOP_DOT_</code>), the undecomposed gemv is also the row-block version that reads one column at a time within each block of rows (<code>PARCEL_CPU_ROWBLOCK</code>; default 1 on CPUs), and the column spacing of the basis is padded (<code>PARCEL_BASIS_PAD</code>; default 8 elements on CPUs). The cache conflicts of the M columns therefore rarely occur even without the decomposition, and the decomposition speeds up the gemv section of <code>ks_arnoldi</code> by only about 1.1 to 1.2 times (1.11 times for NX=128 and 1.20 times for NX=256 on one node of <a href="glossary.html#g-odyssey">Odyssey</a>).</p>
+<p>On <a href="glossary.html#g-odyssey">Odyssey</a>, the time without the decomposition (<code>-DPARCEL_GEMV_AS_AXPY=0</code>) was compared with the time with it (the default). gemv is used heavily by <code>ks_arnoldi</code> and <code>pcagmres</code> (<code>ks_arnoldi</code> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">m = 40</annotation></semantics></math> for 10 restarts; <code>pcagmres</code> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math> and the Jacobi preconditioner for 64 iterations).</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">Not decomposed [ms]</th>
+<th style="text-align: right;">Decomposed [ms]</th>
+<th style="text-align: right;">Performance ratio</th>
+<th>Main effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">ks_arnoldi</span></code> (per restart)</td>
+<td style="text-align: right;">2760.9</td>
+<td style="text-align: right;">2645.7</td>
+<td style="text-align: right;">1.04</td>
+<td>gemv 888.1 ms → 738.9 ms</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">pcagmres</span></code> (per iteration)</td>
+<td style="text-align: right;">65.9</td>
+<td style="text-align: right;">65.6</td>
+<td style="text-align: right;">1.00</td>
+<td>gemv 0.55 ms → 0.45 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>The block orthogonalization of <code>ks_arnoldi</code> (the default CGS2) performs the projections onto the basis of the subspace with gemv. The gemv section is about 30% of a restart (738.9 ms of 2645.7 ms), and the decomposition makes it 1.20 times faster, so one restart becomes 1.04 times faster.</li>
+<li>In <code>pcagmres</code> the decomposition also makes the gemv section 1.22 times faster, but gemv is less than 1% of an iteration (0.45 ms of 65.6 ms), so one iteration does not change.</li>
+<li>For <code>pcg</code> and <code>pgmres</code> the gemv section is less than 1% of an iteration, and the difference is within 1% (1.00 times for both <code>pcg</code> and <code>pgmres</code>).</li>
+</ul>
+<p>The default is the value of <code>_BLOCKING_LOOP_</code>, so it becomes 1 in builds for <a href="glossary.html#g-a64fx">A64FX</a> without being specified. gemv accumulates first and multiplies by the coefficient once, whereas the decomposed version multiplies each term by the coefficient before adding, so the rounding order changes.</p>
+<h2 data-number="13.5" id="kopt-a64fx"><span class="header-section-number">13.5</span> Optimizations for A64FX (A to F)</h2>
+<p>Builds for <a href="glossary.html#g-a64fx">A64FX</a> (<code>_BLOCKING_LOOP_=1</code>) have the following six optimizations. B to F do not change the computation (the expression and the order of summation for each element), so the results are bit-identical to those without them (checked on <a href="glossary.html#g-odyssey">Odyssey</a>: the residual history agrees over 200 iterations for C and D, and until convergence (306 iterations) for E and F). A fuses multiply-adds into FMA instructions, so the rounding changes. In builds for x86 CPUs and GPUs, the code of C to F is not used and the generated code does not change.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>What it does</th>
+<th>How to enable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">A</td>
+<td>Fuses multiply-adds (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>×</mo><mi>b</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">a \times b + c</annotation></semantics></math>) into FMA instructions. The clang mode of the Fujitsu compiler does not fuse them by default</td>
+<td><code><span class="tok">-ffp-contract=fast</span></code> at build time (<a href="installation.html#install-odyssey">Recommended Options</a>)</td>
+</tr>
+<tr>
+<td class="nowrap">B</td>
+<td>Keeps the <a href="glossary.html#g-openmp">OpenMP</a> threads spinning while they wait between kernels, which reduces the fixed cost of launching and waiting for kernels</td>
+<td>At run time, <code><span class="tok">OMP_WAIT_POLICY=ACTIVE</span></code> and <code><span class="tok">KMP_BLOCKTIME=infinite</span></code> (recommended; not the default)</td>
+</tr>
+<tr>
+<td class="nowrap">C</td>
+<td>Rewrites the <a href="glossary.html#g-axpy">axpy</a> that takes coefficients by value (<code><span class="tok">axpy_value</span></code> / <code><span class="tok">axpby_value</span></code>) and the axpy-decomposed <a href="glossary.html#g-gemv">gemv</a> (<a href="kernel-opt.html#kopt-gemv">Decomposing gemv</a>): splits the vector into contiguous ranges, one per thread, copies the pointers and coefficients to local (restrict) variables, and writes with <code><span class="tok">std::fma</span></code> the fusion <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>β</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>α</mi><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{fma}(\beta, y, \alpha x)</annotation></semantics></math> that the Fujitsu compiler chooses for the original expression <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mi>y</mi><mo>+</mo><mi>α</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\beta y + \alpha x</annotation></semantics></math> (the path for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\beta = 1</annotation></semantics></math> skips the multiplication). Without it, depending on the surrounding code, the other form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>,</mo><mi>x</mi><mo>,</mo><mi>β</mi><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{fma}(\alpha, x, \beta y)</annotation></semantics></math> can be chosen and the rounding changes</td>
+<td>Default (<code><span class="tok">PARCEL_A64FX_AXPY_C</span></code>; disable with <code><span class="tok">-DPARCEL_A64FX_AXPY_C=0</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">D</td>
+<td>Fuses the kernels of one iteration of <code><span class="tok">pcg</span></code> (pstep = 1, the default): the updates of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>←</mo><mi>x</mi><mo>+</mo><mi>α</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">x \leftarrow x + \alpha p</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>←</mo><mi>s</mi><mo>+</mo><mi>β</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">p \leftarrow s + \beta p</annotation></semantics></math>) into one kernel, and the update of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> and the dot product <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><mi>r</mi><mo>,</mo><mi>r</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r, r \rangle</annotation></semantics></math> into one kernel. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> are read and written once each, and the fixed cost of one kernel launch is saved</td>
+<td>Default (<code><span class="tok">PARCEL_CG_FUSED</span></code>; disable with <code><span class="tok">-DPARCEL_CG_FUSED=0</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">E</td>
+<td>In the preparation of the right-hand side of the Jacobi preconditioner (the kernel that forms <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>b</mi></mrow><annotation encoding="application/x-tex">D_A^{-1} b</annotation></semantics></math>), selects a version without the division when there is no vector scaling (the divisor is 1, the default for double and single precision). The SVE division on <a href="glossary.html#g-a64fx">A64FX</a> is not pipelined and took about 30% of the preconditioner section</td>
+<td>Default (<code><span class="tok">PARCEL_JACOBI_NODIV_UNIT</span></code>; disable with <code><span class="tok">-DPARCEL_JACOBI_NODIV_UNIT=0</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">F</td>
+<td>When the preconditioner matrix is single precision (<code><span class="tok">precon_dataF</span></code> etc.), processes two rows alternately in the Jacobi sweep so that the waits of the two dependent multiply-add chains overlap (the summation order within each row is unchanged). Not used for a double-precision preconditioner matrix (the compiler already overlaps rows, and it becomes slower)</td>
+<td>Default (<code><span class="tok">PARCEL_JACOBI_ROW2</span></code>; disable with <code><span class="tok">-DPARCEL_JACOBI_ROW2=0</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<p>The effect of A to F was measured on 4 nodes of <a href="glossary.html#g-odyssey">Odyssey</a> (16 ranks × 12 threads; 8.4 M rows per rank; <code>pcg</code> with the Jacobi preconditioner for 100 iterations and <code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">m = 60</annotation></semantics></math>) for 60 iterations, time per iteration [ms], median of 3 rounds; the value in parentheses is the performance ratio, the time without optimization ÷ the time of that version). “Without optimization” is a build without any of A to F (without <code>-ffp-contract=fast</code>, with <code>-DPARCEL_A64FX_AXPY_C=0 -DPARCEL_CG_FUSED=0 -DPARCEL_JACOBI_NODIV_UNIT=0 -DPARCEL_JACOBI_ROW2=0</code>), run without B; A+B+C+D is the build with only E and F removed, and A+B+C+D+E+F is the recommended build, both run with B. All are the default builds that store the values of the Jacobi preconditioner.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Precision</th>
+<th>Solver</th>
+<th style="text-align: right;">Without optimization [ms]</th>
+<th style="text-align: right;">A+B+C+D [ms] (performance ratio)</th>
+<th style="text-align: right;">A+B+C+D+E+F [ms] (performance ratio)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Double</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">46.64</td>
+<td style="text-align: right;">44.68 (1.04)</td>
+<td style="text-align: right;">39.97 (1.17)</td>
+</tr>
+<tr>
+<td>Double</td>
+<td><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;">90.32</td>
+<td style="text-align: right;">86.85 (1.04)</td>
+<td style="text-align: right;">82.03 (1.10)</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_dataF</span></code></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">50.41</td>
+<td style="text-align: right;">48.10 (1.05)</td>
+<td style="text-align: right;">41.06 (1.23)</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_dataF</span></code></td>
+<td><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;">93.69</td>
+<td style="text-align: right;">90.08 (1.04)</td>
+<td style="text-align: right;">83.21 (1.13)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>A+B+C+D mainly shortens <a href="glossary.html#g-spmv">SpMV</a> (15.87 ms → 14.28 ms, the FMA of A) and the preconditioner (20.96 ms → 19.83 ms) (<code>pcg</code>, double precision). In <code>pcg</code>, D merges the updates of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> into one kernel and removes the gemv section (1.27 ms) and part of the axpy section (3.02 ms → 2.11 ms), but the kernel that fuses the update of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> with the dot product increases the dot-product section from 4.96 ms to 7.82 ms. Whether D pays off depends on the number of rows per rank: in this configuration (8.4 M rows), removing only D is about 3% faster, while with about 2 M rows or fewer D is 1 to 10% faster. The Gram-Schmidt section of <code>pgmres</code> (about 49 ms) is the same in all versions.</li>
+<li>E and F speed up the preconditioner section: 19.83 ms → 15.09 ms in double precision (only E applies) and 23.56 ms → 16.49 ms with <code>precon_dataF</code> (E and F). The residual histories are the same with and without E and F.</li>
+<li>The preconditioner section consists of the preparation of the right-hand side (where E applies), one sweep (where F applies), and the halo exchange.</li>
+<li>The preconditioner section of <code>precon_dataF</code> is 1.09 times that of double precision (both storing the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>; 1.19 times without E and F). The preconditioner on <a href="glossary.html#g-a64fx">A64FX</a> is limited by instruction execution rather than memory bandwidth, and a single-precision preconditioner matrix needs more instructions for type conversion.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>With B, the threads keep using their cores while waiting. This is fine with the recommended placement (one rank per <a href="glossary.html#g-cmg">CMG</a>, 12 threads), but counterproductive when processes compete for cores (several threads per core, or other processes on the same node).</li>
+<li>E removes the division only when the divisor (the maximum of the vector scaling) is 1 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi>/</mi><mn>1</mn><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">x/1 = x</annotation></semantics></math>, so the results are the same). Configurations with scaling enabled (such as half-precision preconditioners) divide as before. F applies only to the version that stores the Jacobi values; it is not used with on-the-fly computation (<code>PARCEL_JACOBI_ONTHEFLY=1</code>) or ladder splitting (<code>PARCEL_PRECON_LADDER=1</code>). <code>PARCEL_JACOBI_ROW2=1</code> can be specified only with <code>_BLOCKING_LOOP_=1</code> and <code>PARCEL_PRECON_LADDER=0</code>; otherwise the compilation stops with <code>#error</code>.</li>
+<li>The fusion of the update of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> and the dot product in D uses the same kernel as the CPU MGS (<code>axpy_dot_value</code>). <code>PARCEL_CG_FUSED</code> can be 1 only in builds with <code>_BLOCKING_LOOP_</code> and <code>PARCEL_GS_FUSED</code>; specifying 1 otherwise stops the compilation with <code>#error</code>. The kernels are not fused for type combinations whose coefficients cannot be passed by value (those including <a href="glossary.html#g-dd">double-double</a>) and with <code>RESIDUAL_REPLACE</code>.</li>
+</ul>
+<h2 data-number="13.6" id="kopt-v100"><span class="header-section-number">13.6</span> Register Limit on V100</h2>
+<p>On <a href="glossary.html#g-v100">V100</a> (<code>cuda:sm_70</code>), <code>-Xcuda-ptxas -maxrregcount=255</code> is added to the build. It raises the per-thread register limit of ptxas (the CUDA assembler); with the default allocation, the loads of the matrix and vectors in kernels such as the Jacobi preconditioner are split and serialized, which is slower. No spills occur and the results do not change. The flag is not used on <a href="glossary.html#g-gh200">GH200</a> and <a href="glossary.html#g-a100">A100</a>.</p>
+<p>The time per iteration with and without the flag, for the recommended build (without ladder splitting) on <a href="glossary.html#g-s86">s86 GPU</a>, is shown below.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">Without the flag [ms]</th>
+<th style="text-align: right;">With the flag [ms]</th>
+<th style="text-align: right;">Performance ratio</th>
+<th>Main effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">45.53</td>
+<td style="text-align: right;" class="nowrap">25.17</td>
+<td style="text-align: right;" class="nowrap">1.81</td>
+<td>SpMV 18.0 ms → 8.7 ms<br />Preconditioner 20.8 ms → 9.9 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">94.63</td>
+<td style="text-align: right;" class="nowrap">74.29</td>
+<td style="text-align: right;" class="nowrap">1.27</td>
+<td>SpMV 18.7 ms → 9.3 ms<br />Preconditioner 21.2 ms → 10.1 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>The SpMV and Jacobi preconditioner kernels both become about twice as fast. In <code>pgmres</code> the Gram-Schmidt section (about 53 ms) does not change with the flag, so the performance ratio per iteration is smaller than for <code>pcg</code>.</li>
+</ul>
+<h2 data-number="13.7" id="perf-memory-options"><span class="header-section-number">13.7</span> Choosing Between Memory and Speed</h2>
+<p>The default settings of v1.2 enable two settings that reduce memory (only G in builds for <a href="glossary.html#g-a64fx">A64FX</a>; see below).</p>
+<ul>
+<li>G: <code>pcg</code> keeps no history of search directions and updates the solution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> at every iteration (default of <code>PARCEL_PSTEP</code> is 1).</li>
+<li>H: The Jacobi preconditioner (<code>PRECON_JACOBI</code>) does not keep the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math> and computes them from the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><annotation encoding="application/x-tex">D_A^{-1}</annotation></semantics></math> at every application (<a href="preconditioners.html#preconditioners">Jacobi preconditioner</a>).</li>
+</ul>
+<p>If memory is available, the following optimization options make the solvers faster by using more memory. Neither changes the algorithm or the number of iterations.</p>
+<div class="minw-c2 minw-c3">
+<table>
+<thead>
+<tr>
+<th>Optimization option</th>
+<th>How to specify</th>
+<th>Additional memory (per rank)</th>
+<th>What becomes faster</th>
+<th>Effect on results</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">Without H</td>
+<td><code><span class="tok">-DPARCEL_JACOBI_ONTHEFLY=0</span></code> at build time</td>
+<td>Values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>: number of nonzeros of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> × size of the preconditioner matrix precision (about 7 vectors for a 7-point stencil in double precision)</td>
+<td>Application of the Jacobi preconditioner; effective on GPUs (almost no change on CPUs)</td>
+<td>Bit-identical with <code><span class="tok">-ffp-contract=off</span></code> (rounding may change in builds that allow fused multiply-add)</td>
+</tr>
+<tr>
+<td class="nowrap">Without G</td>
+<td><code><span class="tok">PARCEL_PSTEP=4</span></code> at run time (or <code><span class="tok">-DPARCEL_PCG_NO_XHIST=0</span></code> at build time)</td>
+<td>History of search directions of <code><span class="tok">pcg</span></code>: 3 vectors with halo</td>
+<td>Solution update of <code><span class="tok">pcg</span></code> (reads and writes of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> drop to 1/4)</td>
+<td>The solution is accumulated differently, so the results differ in the last digits (same number of iterations)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>G affects only <code>pcg</code> (including when the inner linear solver of an eigenvalue solver is <code>pcg</code>). H affects all solvers that use the Jacobi preconditioner (including the default preconditioner of the inner linear solvers of the eigenvalue solvers).</li>
+<li>In the combinations excluded from H (matrix scaling enabled, half-precision preconditioners (scaling is enabled by default), double-double coefficient matrix, preconditioner matrix or preconditioner computation precision), the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are stored even with the default. A configuration in which only the solver computation precision is double-double (<code>calcDD</code>) is included in H.</li>
+<li>In builds for <a href="glossary.html#g-a64fx">A64FX</a> (<code>_BLOCKING_LOOP_</code> or <code>_BLOCKING_LOOP_SPMV_</code> is 1; <a href="installation.html#install-recommended-flags">Recommended Options</a>), H is disabled by default (the default of <code>PARCEL_JACOBI_ONTHEFLY</code> is 0). On <a href="glossary.html#g-a64fx">A64FX</a> the on-the-fly computation is not hidden: on 4 nodes of <a href="glossary.html#g-odyssey">Odyssey</a> (NX=512, <code>pcg</code> + Jacobi preconditioner), “Without H” makes the preconditioner section 0.77 times and one iteration 0.90 times, so speed is chosen at the cost of memory (per rank, the number of nonzeros of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> × the size of the preconditioner matrix precision; 8 bytes per nonzero in double precision). To enable H, specify <code>-DPARCEL_JACOBI_ONTHEFLY=1</code> explicitly.</li>
+</ul>
+<p>The time per iteration of <code>pcg</code> with memory-saving settings G and H switched on and off in the recommended build of each environment is shown below (the conditions are the same as at the <a href="kernel-opt.html#kernel-opt">beginning of the chapter</a>). “G+H” means both G and H enabled, “G” only G enabled (without H), “H” only H enabled (without G), and “off” both disabled. The performance ratio is the time of off ÷ the time of G+H; below 1 means that disabling both is faster.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">G+H [ms]</th>
+<th style="text-align: right;">G [ms]</th>
+<th style="text-align: right;">H [ms]</th>
+<th style="text-align: right;">off [ms]</th>
+<th style="text-align: right;">Performance ratio (off/G+H)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">130.5</td>
+<td style="text-align: right;">129.3</td>
+<td style="text-align: right;">128.6</td>
+<td style="text-align: right;">126.3</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">28.38</td>
+<td style="text-align: right;">27.94</td>
+<td style="text-align: right;">27.93</td>
+<td style="text-align: right;">26.41</td>
+<td style="text-align: right;">0.93</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">22.69</td>
+<td style="text-align: right;">22.31</td>
+<td style="text-align: right;">22.16</td>
+<td style="text-align: right;">21.93</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">44.32</td>
+<td style="text-align: right;">40.01</td>
+<td style="text-align: right;">44.07</td>
+<td style="text-align: right;">39.59</td>
+<td style="text-align: right;">0.89</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">25.17</td>
+<td style="text-align: right;">24.69</td>
+<td style="text-align: right;">24.65</td>
+<td style="text-align: right;">24.04</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">4.72</td>
+<td style="text-align: right;">4.60</td>
+<td style="text-align: right;">4.55</td>
+<td style="text-align: right;">4.55</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">12.91</td>
+<td style="text-align: right;">12.61</td>
+<td style="text-align: right;">12.47</td>
+<td style="text-align: right;">12.36</td>
+<td style="text-align: right;">0.96</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">6.67</td>
+<td style="text-align: right;">6.48</td>
+<td style="text-align: right;">6.59</td>
+<td style="text-align: right;">6.35</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>The default is the G+H column except on <a href="glossary.html#g-odyssey">Odyssey</a>, and the G column (H disabled) on <a href="glossary.html#g-odyssey">Odyssey</a> (the build for <a href="glossary.html#g-a64fx">A64FX</a>). On <a href="glossary.html#g-a64fx">A64FX</a>, enabling H makes the preconditioner section slower (15.3 ms → 19.9 ms).</li>
+<li>Removing G (<code>PARCEL_PSTEP=4</code>) about halves the solution update of <code>pcg</code> (the gemv section) (7.7 ms → 3.7 ms on <a href="glossary.html#g-s86">s86 CPU</a>, 1.10 ms → 0.55 ms on <a href="glossary.html#g-v100">V100</a>).</li>
+<li>Removing H makes the Jacobi preconditioner section faster (52.6 ms → 50.2 ms on <a href="glossary.html#g-s86">s86 CPU</a>, 9.85 ms → 9.39 ms on <a href="glossary.html#g-v100">V100</a>). Disabling both (off) makes one iteration 0.89 to 0.97 times that of G+H.</li>
+</ul>
+<p>The memory per device read in the same measurement is shown below, in the same order as the time table. The memory ratio is the memory of off ÷ the memory of G+H; above 1 means that disabling both uses more memory.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Solver</th>
+<th style="text-align: right;">G+H [GiB]</th>
+<th style="text-align: right;">G [GiB]</th>
+<th style="text-align: right;">H [GiB]</th>
+<th style="text-align: right;">off [GiB]</th>
+<th style="text-align: right;">Memory ratio (off/G+H)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">9.08</td>
+<td style="text-align: right;">9.61</td>
+<td style="text-align: right;">9.08</td>
+<td style="text-align: right;">10.40</td>
+<td style="text-align: right;">1.15</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">8.11</td>
+<td style="text-align: right;">8.64</td>
+<td style="text-align: right;">8.10</td>
+<td style="text-align: right;">9.43</td>
+<td style="text-align: right;">1.16</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">10.31</td>
+<td style="text-align: right;">11.10</td>
+<td style="text-align: right;">10.26</td>
+<td style="text-align: right;">11.91</td>
+<td style="text-align: right;">1.15</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.68</td>
+<td style="text-align: right;">7.42</td>
+<td style="text-align: right;">6.47</td>
+<td style="text-align: right;">8.22</td>
+<td style="text-align: right;">1.45</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.88</td>
+<td style="text-align: right;">7.62</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">8.39</td>
+<td style="text-align: right;">1.43</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.57</td>
+<td style="text-align: right;">7.32</td>
+<td style="text-align: right;">6.33</td>
+<td style="text-align: right;">8.08</td>
+<td style="text-align: right;">1.45</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.99</td>
+<td style="text-align: right;">7.74</td>
+<td style="text-align: right;">6.75</td>
+<td style="text-align: right;">8.50</td>
+<td style="text-align: right;">1.42</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.57</td>
+<td style="text-align: right;">7.32</td>
+<td style="text-align: right;">6.33</td>
+<td style="text-align: right;">8.08</td>
+<td style="text-align: right;">1.45</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>The default is the G+H column except on <a href="glossary.html#g-odyssey">Odyssey</a>, and the G column (H disabled) on <a href="glossary.html#g-odyssey">Odyssey</a> (the build for <a href="glossary.html#g-a64fx">A64FX</a>).</li>
+<li>The measurement differs by environment. CPUs (<a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-ps-a">PS-A</a>) show host memory (the sum of the peak resident memory over all ranks divided by the 4 sockets); <a href="glossary.html#g-s86">s86 GPU</a> and <a href="glossary.html#g-aquarius">Aquarius</a> show device memory (the peak of one GPU read with <code>nvidia-smi</code>); <a href="glossary.html#g-miyabi-g">Miyabi-G</a> and <a href="glossary.html#g-ps-b">PS-B</a> show the peak of device memory allocated by PARCEL (maximum over GPUs). On <a href="glossary.html#g-odyssey">Odyssey</a> the host resident memory cannot be measured correctly this way, so the peak of memory allocated by PARCEL (the sum over all ranks divided by the 4 nodes) is shown. The memory allocated by PARCEL is about 0.4 GiB smaller than the <code>nvidia-smi</code> value (5.56 GiB vs 5.99 GiB with G+H on <a href="glossary.html#g-aquarius">Aquarius</a>).</li>
+<li>The memory increase is, when H is removed, the number of nonzeros of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> × the size of the preconditioner matrix precision per rank, and when G is removed, 3 vectors with halo; it is proportional to the local number of rows per rank (half with twice the number of devices). On CPUs the host memory does not change when G is removed because the peak is reached when the matrix is generated.</li>
+<li>Since the time hardly changes, normally keep the defaults (the memory-saving settings). Specify the options when the GPU has spare memory and even a small speedup matters.</li>
+<li>With mixed precision that lowers the preconditioner matrix precision (<code>precon_dataF</code> etc.), keeping H reads the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> in double precision at every application, so lowering the preconditioner data to single precision has little effect. To make mixed precision faster, combine it with “Without H” (also on NVIDIA GPUs; the additional memory is the number of nonzeros of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> × the size of the preconditioner matrix precision, 4 bytes in single precision; see <a href="performance.html#perf-mixed">“Mixed Precision”</a> for the effect. Builds for <a href="glossary.html#g-a64fx">A64FX</a> are “Without H” by default, but mixed precision does not make them faster). The mixed-precision performance test of the distribution package (<code>tests/perf/gen_perf_prec.py</code>) measures this combination (<a href="performance.html#perf-howto">Measuring Your Own Environment</a>).</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="accuracy.html" rel="previous">← Numerical Accuracy and Reproducibility</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="performance.html" rel="next">Performance →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Basic Structure – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/concepts.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li class="current"><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="quickstart.html" rel="previous" accesskey="p">← Quick Start</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="sycl-compiler.html" rel="next" accesskey="n">Installing a SYCL Compiler →</a></span>
+</nav>
+<h1 data-number="2" id="concepts"><span class="header-section-number">2</span> Basic Structure</h1>
+<h2 data-number="2.1" id="data-structure"><span class="header-section-number">2.1</span> Data Structures</h2>
+<p>In general, programs for sparse iterative methods adopt data structures that store only information on the nonzero elements (value, row position, column position) to save memory. This chapter describes the sparse matrix storage format used in this library.</p>
+<p><br />
+</p>
+<h3 data-number="2.1.1" id="compressed-row-storage-crs-format"><span class="header-section-number">2.1.1</span> Compressed Row Storage (CRS) Format</h3>
+<p>The <a href="glossary.html#g-crs">CRS</a> format (compressed row storage) packs the nonzero elements row by row and stores their values and column indices in one-dimensional arrays. For this purpose, a row pointer (<code>rowptr</code>) recording the starting position of each row in the one-dimensional arrays is used. All indices are 0-based (the C and Fortran APIs can also use 1-based indices; <a href="usage.html#usage-c-matrix">Usage</a>). In parallel processing, the matrix is partitioned by rows, and each process stores a contiguous block of rows (see <a href="usage.html#usage-cpp-mpi">“MPI Decomposition” in “Usage”</a> for details). In this case, <code>rowptr</code> is given in local numbering, with the first owned row of each process as 0, and the column indices (<code>crsCol</code>) are given as global indices of the whole matrix. The column indices within each row are assumed to be in ascending order.</p>
+<hr />
+<ul>
+<li>Matrix structure (row and column indices count from 0)</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>00</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>02</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>20</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>22</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>23</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>31</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>32</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>33</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+A = \left(
+\begin{array}{cccc}
+a_{00} &amp; a_{01} &amp; a_{02} &amp; 0\\
+0 &amp; a_{11} &amp; 0 &amp; 0\\
+a_{20} &amp; 0 &amp; a_{22} &amp; a_{23}\\
+0 &amp; a_{31} &amp; a_{32} &amp; a_{33}
+\end{array}
+\right)
+</annotation></semantics></math></p>
+<hr />
+<h4 class="unnumbered" id="one-process">One Process</h4>
+<ul>
+<li><a href="glossary.html#g-rank">Rank</a> 0 process (rows 0 to 3)</li>
+</ul>
+<p>Nonzero values of the matrix :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>00</mn></msub><mo>,</mo><msub><mi>a</mi><mn>01</mn></msub><mo>,</mo><msub><mi>a</mi><mn>02</mn></msub><mo>,</mo><msub><mi>a</mi><mn>11</mn></msub><mo>,</mo><msub><mi>a</mi><mn>20</mn></msub><mo>,</mo><msub><mi>a</mi><mn>22</mn></msub><mo>,</mo><msub><mi>a</mi><mn>23</mn></msub><mo>,</mo><msub><mi>a</mi><mn>31</mn></msub><mo>,</mo><msub><mi>a</mi><mn>32</mn></msub><mo>,</mo><msub><mi>a</mi><mn>33</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">val=\{a_{00},a_{01},a_{02},a_{11},a_{20},a_{22},a_{23},a_{31},a_{32},a_{33}\}</annotation></semantics></math></p>
+<p>Row pointer :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>w</mi><mi>p</mi><mi>t</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>7</mn><mo>,</mo><mn>10</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">rowptr=\{0,3,4,7,10\}</annotation></semantics></math></p>
+<p>Column indices of nonzero values :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>r</mi><mi>s</mi><mi>C</mi><mi>o</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">crsCol=\{0,1,2,1,0,2,3,1,2,3\}</annotation></semantics></math></p>
+<hr />
+<h4 class="unnumbered" id="two-processes">Two Processes</h4>
+<ul>
+<li><a href="glossary.html#g-rank">Rank</a> 0 process (rows 0 to 1)</li>
+</ul>
+<p>Nonzero values of the matrix :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>00</mn></msub><mo>,</mo><msub><mi>a</mi><mn>01</mn></msub><mo>,</mo><msub><mi>a</mi><mn>02</mn></msub><mo>,</mo><msub><mi>a</mi><mn>11</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">val=\{a_{00},a_{01},a_{02},a_{11}\}</annotation></semantics></math></p>
+<p>Row pointer :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>w</mi><mi>p</mi><mi>t</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">rowptr=\{0,3,4\}</annotation></semantics></math></p>
+<p>Column indices of nonzero values :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>r</mi><mi>s</mi><mi>C</mi><mi>o</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">crsCol=\{0,1,2,1\}</annotation></semantics></math></p>
+<ul>
+<li>Rank 1 process (rows 2 to 3)</li>
+</ul>
+<p>Nonzero values of the matrix :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>20</mn></msub><mo>,</mo><msub><mi>a</mi><mn>22</mn></msub><mo>,</mo><msub><mi>a</mi><mn>23</mn></msub><mo>,</mo><msub><mi>a</mi><mn>31</mn></msub><mo>,</mo><msub><mi>a</mi><mn>32</mn></msub><mo>,</mo><msub><mi>a</mi><mn>33</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">val=\{a_{20},a_{22},a_{23},a_{31},a_{32},a_{33}\}</annotation></semantics></math></p>
+<p>Row pointer :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>w</mi><mi>p</mi><mi>t</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>6</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">rowptr=\{0,3,6\}</annotation></semantics></math></p>
+<p>Column indices of nonzero values :: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>r</mi><mi>s</mi><mi>C</mi><mi>o</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">crsCol=\{0,2,3,1,2,3\}</annotation></semantics></math></p>
+<hr />
+<p><br />
+</p>
+<p><br />
+</p>
+<h2 data-number="2.2" id="gpu-rank-data"><span class="header-section-number">2.2</span> GPUs, MPI Ranks and Data</h2>
+<p>PARCEL assigns one <a href="glossary.html#g-mpi">MPI</a> <a href="glossary.html#g-rank">rank</a> to one computing resource, partitions the coefficient matrix and the vectors by rows, and gives each rank its part. MPI handles the communication between ranks, and <a href="glossary.html#g-sycl">SYCL</a> handles the parallelism within a rank (kernels on the <a href="glossary.html#g-device">device</a> for GPUs, threads of the <a href="glossary.html#g-openmp">OpenMP</a> <a href="glossary.html#g-backend">backend</a> for CPUs). A build with MPI (the default for C++, C and Fortran) uses this structure even when it runs as a single process. A single-process version without MPI can also be built (<a href="installation.html#install-nompi">“Build without MPI”</a>).</p>
+<p>The computing resource assigned to one rank (hereafter the <a href="glossary.html#g-device">device</a>) is one of the following. See the <a href="glossary.html#glossary">glossary</a> for the names of the hardware and environments.</p>
+<ul>
+<li>One GPU</li>
+<li>One partition of a GPU divided by <a href="glossary.html#g-mig">MIG</a> (NVIDIA; <a href="concepts.html#gpu-rank-mig">below</a>)</li>
+<li>The GPU part of an <a href="glossary.html#g-apu">APU</a> (AMD Instinct <a href="glossary.html#g-mi300a">MI300A</a>; <a href="concepts.html#gpu-rank-apu">below</a>)</li>
+<li>A group of CPU cores (OpenMP backend)</li>
+</ul>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 760 346" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="Row-block partitioning with 3 ranks, mapping of ranks to GPUs, and halo communication">
+<defs><marker id="gr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="120" y="20" font-size="14" text-anchor="middle" fill="#222">Global matrix A (n_global rows)</text>
+<rect x="20" y="30" width="200" height="80" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="20" y="110" width="200" height="80" fill="#fde2c8" stroke="#b9772e"/>
+<rect x="20" y="190" width="200" height="80" fill="#dcefd9" stroke="#5c9a52"/>
+<rect x="87" y="110" width="66" height="80" fill="#f5b77a" stroke="#b9772e"/>
+<text x="120" y="155" font-size="11" text-anchor="middle" fill="#222">own columns</text>
+<circle cx="45" cy="130" r="4" fill="#c0392b"/><circle cx="70" cy="172" r="4" fill="#c0392b"/>
+<circle cx="180" cy="125" r="4" fill="#c0392b"/><circle cx="205" cy="160" r="4" fill="#c0392b"/>
+<text x="120" y="290" font-size="11" text-anchor="middle" fill="#c0392b">● columns of other ranks (received by halo exchange)</text>
+<text x="228" y="65" font-size="12" fill="#222">rank 0</text><text x="228" y="80" font-size="11" fill="#555">rows nstart₀–nend₀</text>
+<text x="228" y="145" font-size="12" fill="#222">rank 1</text><text x="228" y="160" font-size="11" fill="#555">rows nstart₁–nend₁</text>
+<text x="228" y="225" font-size="12" fill="#222">rank 2</text><text x="228" y="240" font-size="11" fill="#555">rows nstart₂–nend₂</text>
+<line x1="345" y1="62" x2="378" y2="62" stroke="#444" marker-end="url(#gr-arrow)"/>
+<line x1="345" y1="142" x2="378" y2="142" stroke="#444" marker-end="url(#gr-arrow)"/>
+<line x1="345" y1="222" x2="378" y2="222" stroke="#444" marker-end="url(#gr-arrow)"/>
+<rect x="380" y="40" width="150" height="60" rx="6" fill="#f3f5f7" stroke="#5b7fa6"/>
+<text x="455" y="64" font-size="13" text-anchor="middle" fill="#222">device 0</text><text x="455" y="84" font-size="11" text-anchor="middle" fill="#555">local rows and vectors</text>
+<rect x="380" y="120" width="150" height="60" rx="6" fill="#f3f5f7" stroke="#b9772e"/>
+<text x="455" y="144" font-size="13" text-anchor="middle" fill="#222">device 1</text><text x="455" y="164" font-size="11" text-anchor="middle" fill="#555">local rows and vectors</text>
+<rect x="380" y="200" width="150" height="60" rx="6" fill="#f3f5f7" stroke="#5c9a52"/>
+<text x="455" y="224" font-size="13" text-anchor="middle" fill="#222">device 2</text><text x="455" y="244" font-size="11" text-anchor="middle" fill="#555">local rows and vectors</text>
+<text x="650" y="112" font-size="12" text-anchor="middle" fill="#222">internal vector of rank 1</text>
+<rect x="570" y="122" width="110" height="30" fill="#fde2c8" stroke="#b9772e"/>
+<text x="625" y="142" font-size="11" text-anchor="middle" fill="#222">local n_local entries</text>
+<rect x="680" y="122" width="60" height="30" fill="#fbe3e0" stroke="#c0392b"/>
+<text x="710" y="142" font-size="11" text-anchor="middle" fill="#222">halo</text>
+<text x="625" y="168" font-size="10" text-anchor="middle" fill="#555">0 – n_local−1</text>
+<text x="710" y="168" font-size="10" text-anchor="middle" fill="#555">n_local –</text>
+<path d="M530,70 C640,70 700,90 706,120" fill="none" stroke="#c0392b" stroke-dasharray="4 3" marker-end="url(#gr-arrow)"/>
+<path d="M530,230 C640,230 700,210 712,155" fill="none" stroke="#c0392b" stroke-dasharray="4 3" marker-end="url(#gr-arrow)"/>
+<text x="640" y="62" font-size="11" text-anchor="middle" fill="#c0392b">halo exchange (MPI)</text>
+<text x="640" y="250" font-size="11" text-anchor="middle" fill="#c0392b">halo exchange (MPI)</text>
+<text x="380" y="298" font-size="11" fill="#555">1 rank = 1 device (one GPU, one MIG partition,</text>
+<text x="380" y="314" font-size="11" fill="#555">the GPU part of an APU, or a group of CPU cores).</text>
+<text x="380" y="330" font-size="11" fill="#555">set_crsMat() builds the halo table from the column indices.</text>
+</svg>
+<figcaption>Figure: Row-block partitioning with 3 ranks. Each rank keeps on its device only a contiguous set of rows and the corresponding parts of the vectors.</figcaption>
+</figure>
+<h3 data-number="2.2.1" id="row-block-partitioning"><span class="header-section-number">2.2.1</span> Row-Block Partitioning</h3>
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{global}</annotation></semantics></math> be the global number of rows. <a href="glossary.html#g-rank">Rank</a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> is responsible for the contiguous rows <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><msub><mi>t</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">nstart_p</annotation></semantics></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>n</mi><msub><mi>d</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">nend_p</annotation></semantics></math> (0-based, both ends inclusive), and its local number of rows is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>=</mo><mi>n</mi><mi>e</mi><mi>n</mi><msub><mi>d</mi><mi>p</mi></msub><mo>−</mo><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><msub><mi>t</mi><mi>p</mi></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} = nend_p - nstart_p + 1</annotation></semantics></math>. Each rank holds the following.</p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Part held by each rank</th>
+<th>Length</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coefficient matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></td>
+<td><a href="glossary.html#g-crs">CRS</a> of the owned rows (<code><span class="tok">rowptr</span></code>, column indices, values). Column indices are passed as global indices</td>
+<td><code><span class="tok">rowptr</span></code> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} + 1</annotation></semantics></math>; column indices and values are the number of nonzeros in the owned rows</td>
+</tr>
+<tr>
+<td>Solution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>, right-hand side <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>, eigenvectors</td>
+<td>The part corresponding to the owned rows</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> (<code><span class="tok">EigenVec</span></code> of <code><span class="tok">ks_arnoldi</span></code> is at least <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>×</mo><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">n_{local} \times nev</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>&#8289;</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>,</mo><mtext mathvariant="normal">number of elements</mtext><mi>/</mi><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(k_{keep}, \text{number of elements}/n_{local})</annotation></semantics></math> vectors are written)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-precon">Preconditioner</a> matrix</td>
+<td>The part for the owned rows (built by the solver from the local rows of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The number of rows may differ between ranks (non-uniform partitioning). The row blocks of all ranks together must cover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math> without overlaps or gaps. They need not be in the order of the rank numbers. Each rank must have at least one row (a rank with 0 rows is not supported). <code>set_crsMat()</code> in C++ and the C and Fortran APIs check this (<a href="usage.html#usage-cpp-mpi">“MPI Decomposition” in “Usage”</a>). The local number of rows can be obtained with <code>parcel::matrix::n_local()</code>.</p>
+<h3 data-number="2.2.2" id="gpu-rank-bind"><span class="header-section-number">2.2.2</span> Mapping One Rank to One Device</h3>
+<p>Each <a href="glossary.html#g-rank">rank</a> creates its own <a href="glossary.html#g-sycl">SYCL</a> queue (an <a href="glossary.html#g-inorder">in-order</a> queue) and places the matrix and the vectors on the <a href="glossary.html#g-device">device</a> of that queue. The bundled samples select the default device with <code>sycl::queue q{sycl::default_selector_v, sycl::property::queue::in_order{}};</code>. On a node with several GPUs, all ranks may select the same GPU by default, so restrict the GPUs visible to each rank to one before starting. For example, place the following wrapper between <code>mpirun</code> and the program.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gpu_bind.sh: assign GPU R to the rank R within the node</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">R</span><span class="op">=</span><span class="va">${OMPI_COMM_WORLD_LOCAL_RANK</span><span class="op">:-</span><span class="va">${PMIX_RANK</span><span class="op">:-</span>0<span class="va">}}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CUDA_VISIBLE_DEVICES</span><span class="op">=</span><span class="va">$R</span>      <span class="co"># NVIDIA</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">HIP_VISIBLE_DEVICES</span><span class="op">=</span><span class="va">$R</span>       <span class="co"># AMD (MI300A)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">unset</span> <span class="va">ROCR_VISIBLE_DEVICES</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./gpu_bind.sh ./run</span></code></pre></div>
+<p>On AMD GPUs, do not set <code>HIP_VISIBLE_DEVICES</code> and <code>ROCR_VISIBLE_DEVICES</code> at the same time. The two act in sequence: after <code>ROCR_VISIBLE_DEVICES</code> restricts the GPUs to one, <code>HIP_VISIBLE_DEVICES</code> tries to select the R-th of them and fails, and that rank gets no GPU and runs on the CPU OpenMP <a href="glossary.html#g-backend">backend</a>.</p>
+<p>Check that each rank uses the intended device by its device name (the verification sample <code>parcel_krylov_sample_verify.cpp</code> prints one line with the device name for each rank at the start). If even one rank falls back to the CPU OpenMP backend, the numbers stay correct, but all ranks wait for that rank in the <code>MPI_Allreduce</code> of the dot products and the whole run becomes slower by orders of magnitude. For example, on an environment with one GPU per node (<a href="glossary.html#g-miyabi-g">Miyabi-G</a>), placing two ranks on one node makes the second rank fall back to the CPU. This mistake cannot be noticed from the numerical results alone.</p>
+<h4 data-number="2.2.2.1" id="gpu-rank-mig"><span class="header-section-number">2.2.2.1</span> MIG (NVIDIA Multi-Instance GPU)</h4>
+<p><a href="glossary.html#g-mig">MIG</a> divides one GPU into partitions (instances) by <a href="glossary.html#g-sm">SM</a> and memory, and presents each partition as an independent GPU. From PARCEL’s point of view, one partition is one <a href="glossary.html#g-device">device</a>, and as with a whole GPU, one partition is assigned to one <a href="glossary.html#g-rank">rank</a>. The device name of a partition includes its size (profile), such as <code>NVIDIA GH200 120GB MIG 2g.24gb</code>.</p>
+<p>When several partitions are used, assign each rank to a partition with <code>gpu_bind.sh</code> above. Depending on the allocation, partitions of different sizes (profiles) may be mixed in the same job (<code>2g.24gb</code> and <code>1g.24gb</code> on <a href="glossary.html#g-miyabi-g">Miyabi-G</a>). Partitions of different sizes run at different speeds, and the other ranks wait for the rank on the slower partition in the reduction of the dot products, so for performance measurements use partitions of the same size or whole GPUs.</p>
+<h4 data-number="2.2.2.2" id="gpu-rank-apu"><span class="header-section-number">2.2.2.2</span> APU (AMD Instinct MI300A)</h4>
+<p>The <a href="glossary.html#g-mi300a">MI300A</a> is an <a href="glossary.html#g-apu">APU</a> that places CPU cores and a GPU in one package and shares <a href="glossary.html#g-hbm">HBM</a> between them. On <a href="glossary.html#g-ps-b">PS-B</a>, 1 <a href="glossary.html#g-numa">NUMA</a> node = 1 <a href="glossary.html#g-vnode">vnode</a> = 1 <a href="glossary.html#g-apu">APU</a> (24 cores, one GPU, 124 GB), so assign one <a href="glossary.html#g-apu">APU</a> to one <a href="glossary.html#g-rank">rank</a> and request one chunk per rank in <a href="glossary.html#g-pbs">PBS</a> with <code>select=&lt;number of ranks&gt;:ncpus=24:mpiprocs=1:ngpus=1</code>. With <code>select=1:ngpus=4</code>, only one <a href="glossary.html#g-vnode">vnode</a> is allocated and only one GPU is available.</p>
+<p>From <a href="glossary.html#g-sycl">SYCL</a>, the GPU part of an <a href="glossary.html#g-apu">APU</a> appears as one <a href="glossary.html#g-device">device</a>. As with other GPUs, PARCEL places the matrix and the vectors on the device in SYCL buffers and copies them to and from host buffers for the <a href="glossary.html#g-halo">halo</a> exchange (there is no separate path for <a href="glossary.html#g-apu">APUs</a>). Since the host and device memory is physically the same <a href="glossary.html#g-hbm">HBM</a>, the host-side arrays held by the user’s program (such as the <a href="glossary.html#g-crs">CRS</a> arrays) and the device-side copies are taken from the same capacity of each <a href="glossary.html#g-apu">APU</a>.</p>
+<p>On CPUs, one rank is responsible for a group of OpenMP threads. Place the threads of a rank within one <a href="glossary.html#g-numa">NUMA</a> node (or socket). The number of partitions of the blocked kernels and the default number of blocks of the <a href="glossary.html#g-jacobi">block Jacobi</a> preconditioner are determined by the number of threads per rank (<a href="kernel-opt.html#kopt-blocking">“Blocking” in the “Optimization” chapter</a>).</p>
+<p>The recommended mapping for each environment is shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Assigned to one rank</th>
+<th style="text-align: right;">Threads per rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a> ×4 / node)</td>
+<td>One GPU</td>
+<td style="text-align: right;" class="nowrap">12</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td>One GPU</td>
+<td style="text-align: right;" class="nowrap">9</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>; one GPU / node)</td>
+<td>One GPU (= one node). With <a href="glossary.html#g-mig">MIG</a>, one partition (<code><span class="tok">2g.24gb</span></code> or <code><span class="tok">1g.24gb</span></code>) and 18 cores</td>
+<td style="text-align: right;" class="nowrap">72 (18 with <a href="glossary.html#g-mig">MIG</a>)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a> ×4 / node)</td>
+<td>One <a href="glossary.html#g-apu">APU</a> (one GPU part and 24 cores)</td>
+<td style="text-align: right;" class="nowrap">6</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a> (<a href="glossary.html#g-xeon">Xeon</a> Gold 6242R 20 cores ×2)</td>
+<td>5 cores</td>
+<td style="text-align: right;" class="nowrap">5</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a> (<a href="glossary.html#g-xeon">Xeon</a> Max 9480)</td>
+<td>14 cores</td>
+<td style="text-align: right;" class="nowrap">14</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-a">PS-A</a> (<a href="glossary.html#g-xeon">Xeon</a> 6980P)</td>
+<td>14 cores (pinned to a <a href="glossary.html#g-numa">NUMA</a> node with <code><span class="tok">I_MPI_PIN_DOMAIN</span></code> of Intel MPI)</td>
+<td style="text-align: right;" class="nowrap">14</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td>One <a href="glossary.html#g-cmg">CMG</a> (12 cores)</td>
+<td style="text-align: right;" class="nowrap">12</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="2.2.3" id="what-set_crsmat-does"><span class="header-section-number">2.2.3</span> What set_crsMat() Does</h3>
+<p><code>parcel::matrix::set_crsMat()</code> (the <a href="glossary.html#g-mpi">MPI</a> version) receives the <a href="glossary.html#g-crs">CRS</a> of the owned rows and performs the following (<a href="../reference/matrix.html#api-set-crsmat"><code>set_crsMat()</code> in the API Reference</a>). Both steps are <a href="glossary.html#g-collective">collective operations</a> called on all <a href="glossary.html#g-rank">ranks</a>. Before that, it checks the input (<a href="usage.html#usage-cpp-matrix">“Setting the Matrix” in “Usage”</a>), and if the input is broken, all ranks throw the same <code>std::invalid_argument</code>.</p>
+<ol type="1">
+<li>Renumbers the column indices to local indices. The nonzeros of each row are reordered so that the columns of the own rank (index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>−</mo><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">c - nstart</annotation></semantics></math>, 0 to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} - 1</annotation></semantics></math>) come first and the columns of other ranks come after them. A column of another rank is renumbered to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>+</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">n_{local} + k</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> is its position in the list of column indices of other ranks referenced by the owned rows, sorted in ascending order with duplicates removed. The caller’s arrays of column indices and values are overwritten at this point (<a href="usage.html#usage-cpp-matrix">“Setting the Matrix” in “Usage”</a>).</li>
+<li>Exchanges the ranges owned by all ranks (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">nstart</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>n</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">nend</annotation></semantics></math>) with <code>MPI_Alltoall</code>, compares them with the list from step 1, and builds the table of which rows’ values are sent to which rank and received from which rank (the <a href="glossary.html#g-halo">halo</a> exchange table).</li>
+</ol>
+<p>After this, the values and column indices are transferred to the <a href="glossary.html#g-device">device</a>.</p>
+<h3 data-number="2.2.4" id="sparse-matrix-vector-product-and-halo-exchange"><span class="header-section-number">2.2.4</span> Sparse Matrix-Vector Product and Halo Exchange</h3>
+<p>A vector that is multiplied by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> inside a solver has, after its <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> local entries, an area for the values received from other <a href="glossary.html#g-rank">ranks</a> (the <a href="glossary.html#g-halo">halo</a>). The number of halo entries is the length of the list in step 1 above (<code>pcg</code> and <code>power</code> print it as <code>nadd =</code> at the start). Before every sparse matrix-vector product, the following halo exchange is performed.</p>
+<ol type="1">
+<li>The values to send are packed into a send buffer on the <a href="glossary.html#g-device">device</a> and copied to the host.</li>
+<li><code>MPI_Isend</code> and <code>MPI_Irecv</code> are performed on the host buffers, and their completion is waited for.</li>
+<li>The received values are copied to the device and written into the halo of the vector (entries from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> on).</li>
+</ol>
+<p>Since communication goes through host buffers, a GPU-aware (CUDA-aware, etc.) <a href="glossary.html#g-mpi">MPI</a> is not required. When run with one rank, the halo is empty and no communication occurs. The Jacobi preconditioner performs the same halo exchange in every Jacobi iteration, while the point Jacobi and block Jacobi preconditioners do not communicate (<a href="preconditioners.html#preconditioners">Preconditioners chapter</a>). Dot products and norms reduce the partial sums of the ranks with <code>MPI_Allreduce</code>.</p>
+<p><br />
+</p>
+<h2 data-number="2.3" id="precision-configs"><span class="header-section-number">2.3</span> Precision Configurations</h2>
+<p>PARCEL lets you specify the precision in which data are held (data precision) separately from the precision of arithmetic (computation precision), and further separately for the <a href="glossary.html#g-precon">preconditioner</a> and for the rest. There are four types: <code>parcel_fp16</code> (half precision), <code>parcel_float</code> (single precision), <code>parcel_double</code> (double precision) and <code>parcel_doubledouble</code> (<a href="glossary.html#g-dd">double-double</a> [12,13], equivalent to quadruple precision). The precision template arguments can be omitted, and the default precision is <code>parcel_double</code> (what can be omitted: the types of <code>parcel::matrix&lt;&gt;</code> and <code>parcel::vector&lt;&gt;</code>, the four computation-precision arguments of the classes, and the data-precision arguments of <code>solver()</code> that cannot be deduced from the actual arguments; the defaults of <code>Todd_basis</code> and <code>Teven_basis</code> of <code>pcagmres</code> are the same type as <code>Tbasis</code>). The syntax is shown in <a href="usage.html#usage-cpp-precision">“Specifying Precision” in “Usage”</a>, and the meaning of each template argument in <a href="../reference/solver-common.html#api-class-template">“Class Template Arguments (Computation Precision)”</a> and <a href="../reference/solver-common.html#api-solver-template">“Template Arguments of solver() (Data Precision)”</a> in the API Reference. This section summarizes the overall picture of the specification and the representative configurations.</p>
+<h3 data-number="2.3.1" id="where-precision-is-specified"><span class="header-section-number">2.3.1</span> Where Precision Is Specified</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Where to specify</th>
+<th>Macro in the samples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Computation precision (<a href="glossary.html#g-spmv">SpMV</a>, vector operations, dot products)</td>
+<td>Class template arguments <code><span class="tok">Tspmv</span></code>, <code><span class="tok">Taxpy</span></code>, <code><span class="tok">Tdot</span></code></td>
+<td><code><span class="tok">parcel_solver_calc_type</span></code> (the same type is given to all three)</td>
+</tr>
+<tr>
+<td>Computation precision of the preconditioner</td>
+<td>Class template argument <code><span class="tok">Tprecon</span></code></td>
+<td><code><span class="tok">parcel_solver_calc_precon_type</span></code></td>
+</tr>
+<tr>
+<td>Data precision (matrix, vectors)</td>
+<td><code><span class="tok">T</span></code> of <code><span class="tok">parcel::matrix&lt;T&gt;</span></code> and <code><span class="tok">parcel::vector&lt;T&gt;</span></code>, and the template arguments <code><span class="tok">Tmat</span></code>, <code><span class="tok">Tvecx</span></code>, <code><span class="tok">Tvecb</span></code>, <code><span class="tok">Tvec</span></code> of <code><span class="tok">solver()</span></code> (<code><span class="tok">Teigen_val</span></code>, <code><span class="tok">Teigen_vec</span></code> for the eigenvalue solvers)</td>
+<td><code><span class="tok">parcel_solver_data_type</span></code></td>
+</tr>
+<tr>
+<td>Data precision of the preconditioner</td>
+<td>Template arguments <code><span class="tok">Tprecon_mat</span></code> (preconditioner matrix) and <code><span class="tok">Tprecon_vec</span></code> (preconditioner vectors) of <code><span class="tok">solver()</span></code></td>
+<td><code><span class="tok">parcel_solver_data_precon_mat_type</span></code>, <code><span class="tok">parcel_solver_data_precon_vec_type</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The macros are used by the bundled verification sample (<code>tests/verify/parcel_default.hpp</code>, where all defaults are <code>parcel_double</code>) and by the C and Fortran wrapper (<code>capi/wrapper_parcel_sycl.cpp</code>; defaults in <code>capi/parcel_capi_default.hpp</code>); the library itself looks only at the template arguments. When using C++ directly, different types may be given to the template arguments for each operation. <code>pgmres</code> and <code>pcagmres</code> have additional arguments for the precision of orthogonalization, the basis and the Hessenberg matrix. These are explained in <a href="linear-solvers.html#precision-orthogonality">“Precision of Orthogonalization and of the Basis” in the Linear Solvers chapter</a>.</p>
+<h3 data-number="2.3.2" id="representative-configurations"><span class="header-section-number">2.3.2</span> 13 Representative Configurations</h3>
+<p>The 13 configurations used in the regression tests and their convergence tolerances in the regression tests are shown below. “Lower” and “raise” in the table are relative to double precision (<code>double</code>). Blank cells are <code>parcel_double</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Computation precision</th>
+<th>Computation precision of the preconditioner</th>
+<th>Data precision</th>
+<th>Data precision of the preconditioner</th>
+<th>What is lowered / raised</th>
+<th>Tolerance in the regression tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">double</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>(reference)</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">calcF16</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-fp16">FP16</a></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>Lowers arithmetic to FP16</td>
+<td>1e-3</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">dataF16</span></code></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td>Lowers arithmetic and the storage of the matrix and vectors to FP16</td>
+<td>1e-2</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_calcF16</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>Lowers only the arithmetic of the preconditioner to FP16</td>
+<td>1e-9 (relaxed for some solvers)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_dataF16</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td>Lowers only the storage of the preconditioner matrix and vectors to FP16</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_allF16</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td>Lowers the arithmetic and storage of the preconditioner to FP16</td>
+<td>1e-9 (relaxed for some solvers)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">calcF</span></code></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>Lowers arithmetic to FP32</td>
+<td>1e-6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">dataF</span></code></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td>Lowers arithmetic and storage to FP32</td>
+<td>1e-6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_calcF</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>Lowers only the arithmetic of the preconditioner to FP32</td>
+<td>1e-9 (1e-6 for <code><span class="tok">ks_arnoldi</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_dataF</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td>Lowers only the storage of the preconditioner to FP32</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_allF</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td>Lowers the arithmetic and storage of the preconditioner to FP32</td>
+<td>1e-9 (1e-6 for <code><span class="tok">ks_arnoldi</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">calcDD</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-dd">dd</a></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>Raises arithmetic to double-double</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">dataDD</span></code></td>
+<td class="nowrap">dd</td>
+<td class="nowrap"></td>
+<td class="nowrap">dd</td>
+<td class="nowrap"></td>
+<td>Raises arithmetic and storage to double-double</td>
+<td>1e-9</td>
+</tr>
+</tbody>
+</table>
+<p>The properties of the configurations are as follows. The achievable accuracy and the restrictions are detailed in <a href="accuracy.html#accuracy-lowprec">“Known Limits at Low Precision”</a> and <a href="accuracy.html#accuracy-dd">“double-double”</a>.</p>
+<ul>
+<li>Lowering the data precision reduces the memory of the matrix and vectors and the amount of <a href="glossary.html#g-halo">halo</a> communication and of transfers between the host and the <a href="glossary.html#g-device">device</a>. Lowering only the computation precision does not change the amount of memory. The <code>data*</code> configurations also lower the computation precision to the same type.</li>
+<li>The tolerance differs between configurations because double-precision tolerances cannot be reached at low precision. Only <code>dataF16</code> is one digit looser than <code>calcF16</code> because holding the vectors in FP16 makes the recurrence residual drift away from the true residual (<a href="accuracy.html#accuracy-residual">“Recurrence Residual and True Residual”</a>).</li>
+<li>The six configurations that lower only the preconditioner keep the main computation in double precision and treat the preconditioner as an approximation; most solvers reach the same tolerance as in double precision. However, with FP16 as the computation precision of the preconditioner, <code>pbicgstab</code> and <code>ks_arnoldi</code> do not reach 1e-9 (about 1e-5 for <code>pbicgstab</code> and 1e-3 for <code>ks_arnoldi</code>).</li>
+<li>To lower the preconditioner data to single precision for speed (<code>precon_dataF</code>), build the Jacobi preconditioner without on-the-fly computation (<code>-DPARCEL_JACOBI_ONTHEFLY=0</code>). The same applies to NVIDIA GPUs (including <a href="glossary.html#g-v100">V100</a>), without ladder splitting. The effect and the additional memory are shown in <a href="performance.html#perf-mixed">“Mixed Precision” in the “Performance” chapter</a> (no speedup on <a href="glossary.html#g-a64fx">A64FX</a>).</li>
+<li>double-double is meant to reduce the rounding error of arithmetic; the guideline for the tolerance is the same as in double precision.</li>
+<li>With FP16 data or computation precision, do not use the Cholesky QR variants of <code>pcagmres</code> (the variant that does not form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>, <code>CAGMRES_Q_IMPLICIT</code>, and the <a href="glossary.html#g-moment">moment method</a>). The variants that form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> can be used (<a href="accuracy.html#accuracy-lowprec">“Known Limits at Low Precision”</a>).</li>
+</ul>
+<p>When the verification sample is built with <code>-DPARCEL_RUNTIME_PRECISION</code>, 9 of the above configurations (<code>double</code>, <code>calcF16</code>, <code>dataF16</code>, <code>precon_calcF16</code>, <code>calcF</code>, <code>dataF</code>, <code>precon_calcF</code>, <code>calcDD</code>, <code>dataDD</code>) are put into one executable and selected with the environment variable <code>PARCEL_PRECISION</code> (<a href="usage.html#usage-verify-options">run-time options of the verification sample</a>). The four configurations that change the data precision of the preconditioner are specified with compile-time macros.</p>
+<p><br />
+</p>
+<h3 data-number="2.3.3" id="precision-languages"><span class="header-section-number">2.3.3</span> Precisions Available in Each Language</h3>
+<p>How precision is specified, and which configurations are available, depend on the language.</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>How to specify</th>
+<th>Available precisions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>Template arguments of the classes and <code><span class="tok">solver()</span></code> (<a href="usage.html#usage-cpp-precision">“Specifying Precision” in “Usage”</a>)</td>
+<td>All combinations, including the 13 configurations. Can differ per solver and per call</td>
+</tr>
+<tr>
+<td class="nowrap">C / Fortran</td>
+<td>Compile-time macros of the wrapper <code><span class="tok">capi/wrapper_parcel_sycl.cpp</span></code> (<code><span class="tok">parcel_solver_data_type</span></code>, etc.)</td>
+<td>One configuration per built wrapper; cannot be changed at run time. Input and output arrays are double (<code><span class="tok">double</span></code> / <code><span class="tok">real(c_double)</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td>None</td>
+<td>Double only (data and arithmetic are <code><span class="tok">parcel_double</span></code>). Input and output arrays are float64</td>
+</tr>
+</tbody>
+</table>
+<p>The Python package is double only because precision is decided at build time by C++ template arguments, and only instantiated combinations can be used. The native layer of Python (<code>python/src/parcel_py.cpp</code>) instantiates only the double combination. Making all 13 configurations selectable from Python would require instantiating each of them, increasing the build time and the library size accordingly. In addition, NumPy has no type corresponding to double-double. To use mixed precision from Python, write the solver call in C++, or call the C API built with precision macros through ctypes or the like.</p>
+<h3 data-number="2.3.4" id="precision-int"><span class="header-section-number">2.3.4</span> Integer Type</h3>
+<p>Integers such as row indices, column indices, numbers of rows and numbers of nonzeros are held, separately from the floating-point precisions, in two types: global quantities in <code>PARCEL_INT</code>, and indices within one <a href="glossary.html#g-rank">rank</a> in <code>PARCEL_LINT</code>. There is one width of each per build; it cannot be chosen per solver or per matrix (see <a href="installation.html#install-int-type">“Integer Type” in the Installation chapter</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Default</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">PARCEL_INT</span></code> (global indices)</td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td>The number of global rows, the row range of each rank (<code><span class="tok">nstart</span></code>, <code><span class="tok">nend</span></code>), the row-pointer and column-index arrays passed to <code><span class="tok">set_crsMat()</span></code> (global column indices), allocation of vectors, the global column indices used to build the <a href="glossary.html#g-halo">halo</a>-exchange tables, and the C and Fortran APIs</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_LINT</span></code> (rank-local indices)</td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td>The <a href="glossary.html#g-crs">CRS</a> on the <a href="glossary.html#g-device">device</a> (row pointers and column indices renumbered within the rank), the indices of the elements packed for the halo exchange, and the <a href="glossary.html#g-spmv">SpMV</a> and preconditioner kernels</td>
+</tr>
+</tbody>
+</table>
+<p>User programs deal only with <code>PARCEL_INT</code>. <code>set_crsMat()</code> receives <code>PARCEL_INT</code> arrays, renumbers the column indices within the rank (the own rows as 0 to local rows - 1, the halo after them), copies them into <code>PARCEL_LINT</code> arrays and sends them to the device. During the copy, 4 (n + nnz) extra bytes are used temporarily on the host (n is the number of local rows, nnz the number of nonzeros of the rank). If the row-pointer and column-index arrays of the CRS in the user program are declared with the type <code>PARCEL_INT</code>, the build can be switched without changing the source.</p>
+<p>In the default configuration, the column indices and row pointers of the CRS on the device take 4 bytes per element; one nonzero of a double-precision matrix takes 12 bytes (8 bytes for the value and 4 bytes for the column index), and one grid point of a 3D 7-point stencil matrix takes 88 bytes. Holding the global quantities in 64 bits does not increase the memory traffic of SpMV or of the preconditioners.</p>
+<p>The ranges of matrices that can be handled are as follows.</p>
+<ul>
+<li>The number of global rows and nonzeros: the range of <code>PARCEL_INT</code>. With the default 64 bits there is no practical limit</li>
+<li>The number of nonzeros owned by one rank, and the sum of the local rows and the <a href="glossary.html#g-halo">halo</a> elements: each within the range of <code>PARCEL_LINT</code>, that is, at most <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math> (about 2.1 billion) with the default 32 bits</li>
+</ul>
+<p>If even one rank exceeds the range of <code>PARCEL_LINT</code>, <code>set_crsMat()</code> throws the same <code>std::overflow_error</code> on all ranks and stops. The message asks to rebuild with <code>-DPARCEL_LOCAL_INT64</code> or to use more <a href="glossary.html#g-mpi">MPI</a> ranks. Normally, use more ranks to reduce the nonzeros per rank. If that is not possible, build with <code>-DPARCEL_LOCAL_INT64</code> to make <code>PARCEL_LINT</code> 64-bit. The CRS on the device then takes 8 bytes per index element: 16 bytes per nonzero of a double-precision matrix and 120 bytes per grid point of a 3D 7-point stencil matrix. The memory traffic of SpMV grows, and bandwidth-bound SpMV and the Jacobi preconditioner become slower. <code>std::overflow_error</code> is also thrown when a CRS built by a preconditioner (such as the L and U factors of <a href="glossary.html#g-jacobi">block Jacobi</a>) has more nonzeros than the original matrix and exceeds the range (in this case only the ranks that exceed it throw).</p>
+<p>With <code>-DPARCEL_INT32</code>, both <code>PARCEL_INT</code> and <code>PARCEL_LINT</code> are 32-bit. The arrays passed to <code>set_crsMat()</code> on the host are halved and no copy is made. The CRS on the device and the performance are the same as in the default configuration. The number of global rows (the largest column index) must be at most <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math>; if a larger matrix is passed, <code>set_crsMat()</code> and others throw <code>std::overflow_error</code> (asking to remove <code>-DPARCEL_INT32</code>) and stop.</p>
+<p>The C and Fortran APIs receive these integers as 64-bit integers (<code>parcel_int</code> = <code>int64_t</code> in C, <code>integer(parcel_int_kind)</code> in Fortran) regardless of <code>PARCEL_INT</code> (<a href="usage.html#usage-c-matrix">“Setting the Matrix” for C in “Usage”</a>). If the wrapper is built with <code>-DPARCEL_INT32</code> and a value does not fit in 32 bits, the call returns <code>PARCEL_ERR_ARG</code>.</p>
+<p>For large problems, watch out for integer overflow. A 32-bit signed integer holds values up to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math> (about 2.15 billion). For a 3D 7-point stencil matrix the number of nonzeros is about 7 times the number of rows, so the global number of nonzeros exceeds the 32-bit range at about 310 million rows (<a href="glossary.html#g-nx">NX</a> of about 675), and the global number of rows at about 2.15 billion rows (NX of about 1290). Row pointer values are serial numbers of nonzeros, so they overflow before the row count does. Computed in 32 bits, such values wrap to negative or small numbers, and the program reads or writes out of bounds or silently returns wrong results. For this reason the default of the global index <code>PARCEL_INT</code> is 64 bits in v1.2, and <code>set_crsMat()</code> and others detect out-of-range values with <code>std::overflow_error</code>. In user programs too, keep the global numbers of rows and nonzeros, the row pointers, and index computations using them (<code>nstart + i</code>, grid point numbers <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mi>N</mi><mi>X</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>+</mo><mi>N</mi><mi>X</mi><mspace width="0.167em"></mspace><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">i + NX\,(j + NX\,k)</annotation></semantics></math>, etc.) in <code>PARCEL_INT</code> (64 bits). A product of two 32-bit <code>int</code> values overflows at the multiplication even if it is assigned to a 64-bit variable.</p>
+<p>The index within a <a href="glossary.html#g-rank">rank</a>, <code>PARCEL_LINT</code>, on the other hand stays 32 bits by default, for the speed of the local kernels (<a href="glossary.html#g-spmv">SpMV</a>, preconditioners).</p>
+<ul>
+<li>Less data is read by the bandwidth-bound kernels. A CRS in double takes 12 bytes per nonzero (8 for the value + 4 for the column index), and 16 bytes with 64-bit column indices. For the SpMV of a 3D 7-point stencil matrix, the matrix data read per grid point grows from 88 to 120 bytes (about 1.4 times). The times of SpMV and the Jacobi preconditioner are roughly proportional to the data read, so they become slower accordingly.</li>
+<li>32-bit integer arithmetic is fast on GPUs. The integer units of NVIDIA and AMD GPUs are basically 32-bit, and 64-bit integer multiplications and additions are split into several instructions. In SpMV, where index computations make up much of the instructions, 64-bit indices increase the instruction count and register usage.</li>
+<li>32 bits suffice as long as the number of nonzeros of one rank does not exceed <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math>. For a 3D 7-point stencil, for example, up to about 300 million local rows per rank can be handled. Beyond that, first increase the number of ranks (reduce the rows per rank).</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="quickstart.html" rel="previous">← Quick Start</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="sycl-compiler.html" rel="next">Installing a SYCL Compiler →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

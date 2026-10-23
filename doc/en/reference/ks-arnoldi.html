@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>parcel::krylov::ks_arnoldi – PARCEL SYCL v1.2 API Reference</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API Reference</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/reference/ks-arnoldi.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="function-index.html#function-index">Function Index</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> Common Items</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> Format of the Entries</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> Solvers</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> Symbols and Terms</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> Input Matrix</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> Settings</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> Constants</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> Results</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> Convergence Status</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> Settings and MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> Precision</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> Convergence by Solver</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (Q Not Formed)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> PARCEL SYCL Classes</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> Mapping to the Common Items</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCEL Data Types</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> Constructor</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> Constructor</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> Constructor / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> Items Common to All Solvers</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> Class Template Arguments (Arithmetic Precision)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> Template Arguments of solver() (Data Precision)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> Handling of Settings and Exceptions</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> Constants</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> Common Member Functions</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (class)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (class)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (class)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (class)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (class)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (class)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li class="current" data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (class)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> Mapping to the Common Items</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> Constants</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> Mapping to the Common Items</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> Constants</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> Mapping to the Common Items</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> Exceptions</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="inverse-power.html" rel="previous" accesskey="p">← parcel::krylov::inverse_power</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="Language">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="17" id="ks-arnoldi"><span class="header-section-number">17</span> parcel::krylov::ks_arnoldi</h1>
+<h2 data-number="17.1" id="api-ks-arnoldi"><span class="header-section-number">17.1</span> ks_arnoldi (class)</h2>
+<p><strong>Description</strong> Eigenvalue solver based on the Arnoldi process with Krylov-Schur restarting. It also handles nonsymmetric matrices, and computes several eigenpairs simultaneously at the large-magnitude end of the spectrum of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> when <code>set_precon_spectrum(true)</code> is set), or near <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> in shift-invert mode.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> Tspmv <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tprecon <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Taxpy <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tdot    <span class="op">=</span> parcel_double <span class="op">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ks_arnoldi <span class="op">:</span> <span class="kw">public</span> eigen_param<span class="op">;</span></span></code></pre></div>
+<p><strong>Notes</strong> <code>set_tolerance()</code> applies to the relative residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><mi>θ</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="postfix">∥</mo><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\|\mathrm{Op}\,x-\theta x\|/(|\theta|\|x\|)</annotation></semantics></math> of the Ritz pairs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, x)</annotation></semantics></math> (<a href="common.html#common-symbols">symbols</a>). <code>set_max_iteration()</code> is not used. The convergence check and breakdowns are described in <a href="convergence.html#conv-ks-arnoldi">Convergence by Solver</a>.</p>
+<h2 data-number="17.2" id="api-ks-arnoldi-solver"><span class="header-section-number">17.2</span> solver()</h2>
+<p><strong>Description</strong> Computes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math> eigenpairs. The convergence check applies to the leading <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> pairs.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> Tmat<span class="op">,</span> <span class="kw">class</span> Teigen_val<span class="op">,</span> <span class="kw">class</span> Teigen_vec<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Tprecon_mat <span class="op">=</span> Teigen_vec<span class="op">,</span> <span class="kw">class</span> Tprecon_vec <span class="op">=</span> Teigen_vec <span class="op">&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> solver<span class="op">(</span>parcel<span class="op">::</span>matrix<span class="op">&lt;</span>Tmat<span class="op">&gt;</span> <span class="op">&amp;</span>Mat<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>            parcel<span class="op">::</span>vector<span class="op">&lt;</span>Teigen_val<span class="op">&gt;</span> <span class="op">&amp;</span>EigenValue<span class="op">,</span> parcel<span class="op">::</span>vector<span class="op">&lt;</span>Teigen_vec<span class="op">&gt;</span> <span class="op">&amp;</span>EigenVec<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>            parcel<span class="op">::</span>matrix<span class="op">&lt;</span>Tmat<span class="op">&gt;</span> <span class="op">*</span>ShiftMat <span class="op">=</span> <span class="kw">nullptr</span><span class="op">);</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">Mat</span></code></td>
+<td class="nowrap">In</td>
+<td><code><span class="tok">parcel::matrix&lt;Tmat&gt;</span> <span class="tok">&amp;</span></code></td>
+<td>Coefficient matrix</td>
+<td class="nowrap">none</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">EigenValue</span></code></td>
+<td class="nowrap">Out</td>
+<td><code><span class="tok">parcel::vector&lt;Teigen_val&gt;</span> <span class="tok">&amp;</span></code></td>
+<td>Eigenvalues. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">2 \times k_{keep}</annotation></semantics></math> elements (real and imaginary parts stored alternately)</td>
+<td class="nowrap">none</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">EigenVec</span></code></td>
+<td class="nowrap">In/Out</td>
+<td><code><span class="tok">parcel::vector&lt;Teigen_vec&gt;</span> <span class="tok">&amp;</span></code></td>
+<td>Eigenvectors. At least <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>×</mo><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">n_{local} \times nev</annotation></semantics></math> elements (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> is the number of locally owned rows, <code><span class="tok">Mat.n_local()</span></code>; column <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> holds the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>-th vector). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>&#8289;</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>,</mo><mtext mathvariant="normal">size</mtext><mi>/</mi><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(k_{keep}, \text{size}/n_{local})</annotation></semantics></math> vectors are written (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math> vectors if the size is at least <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>×</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{local} \times k_{keep}</annotation></semantics></math>). On input, the first <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> elements are used as the initial vector</td>
+<td class="nowrap">none</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ShiftMat</span></code></td>
+<td class="nowrap">In</td>
+<td><code><span class="tok">parcel::matrix&lt;Tmat&gt;</span> <span class="tok">*</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math> used for shift-invert (for its handling, see <a href="ks-arnoldi.html#api-ks-set-shift">set_shift()</a>). If <code><span class="tok">set_shift()</span></code> has not been called, it is not used even if passed (not checked)</td>
+<td class="nowrap"><code><span class="tok">nullptr</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> The following are checked at the entry, and <code>std::invalid_argument</code> is thrown on violation. Since a violation may differ between <a href="../user/glossary.html#g-rank">ranks</a>, the judgments are gathered with <code>MPI_Allreduce</code> before all ranks throw.</p>
+<ul>
+<li>An <a href="../user/glossary.html#g-inorder">in-order</a> queue (<a href="solver-common.html#api-settings-mpi">common requirements</a>).</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m \leq n_{global}</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{global}</annotation></semantics></math> is the sum of the numbers of locally owned rows over all ranks).</li>
+<li>The number of elements of <code>EigenVec</code> is at least <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>×</mo><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">n_{local} \times nev</annotation></semantics></math>, and that of <code>EigenValue</code> at least <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub></mrow><annotation encoding="application/x-tex">2k_{keep}</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> is <code>Mat.n_local()</code>).</li>
+</ul>
+<p>The following are not checked.</p>
+<ul>
+<li>Among the <a href="solver-common.html#api-settings-mpi">common requirements</a>, the queues of the vectors.</li>
+<li><code>ShiftMat</code> is registered with <code>set_crsMat()</code> from arrays separate from those of <code>Mat</code> (see the notes of <a href="matrix.html#api-set-crsmat">set_crsMat()</a>).</li>
+</ul>
+<p>If the norm of the initial vector (first <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> elements) is 0 or non-finite, it is replaced by the default initial vector (built from the global row indices, as in <a href="power.html#api-power-solver">solver()</a> of <code>power</code>), and rank 0 prints a message.</p>
+<p><strong>Return Value</strong> None.</p>
+<p><strong>MPI</strong> Collective. All ranks must call it with the same settings.</p>
+<p><strong>Notes</strong> When eigenvalues form a complex conjugate pair, the corresponding eigenvector is stored as two vectors, the real part and the imaginary part. If the Arnoldi process reaches an invariant subspace, convergence is confirmed with the true residual; if it cannot be confirmed, the process continues in a random direction (<a href="../user/eigen-solvers.html">the “Eigenvalue Solvers” chapter</a>). If the solver ends with an effective dimension smaller than <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, the missing eigenpairs are returned as 0. An eigenvalue for which <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><msup><mo stretchy="false" form="prefix">|</mo><mn>2</mn></msup><mo>≤</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>300</mn></mrow></msup></mrow><annotation encoding="application/x-tex">|\theta|^2 \leq 10^{-300}</annotation></semantics></math> in the back transformation of shift-invert is returned as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mi>∞</mi></mrow><annotation encoding="application/x-tex">+\infty</annotation></semantics></math>. The dense-matrix LAPACK computations are done on rank 0, and the results are distributed to all ranks.</p>
+<p><strong>See Also</strong> <a href="ks-arnoldi.html#api-set-ks-subspace">set_ks_subspace()</a>, <a href="ks-arnoldi.html#api-ks-set-shift">set_shift()</a>, <a href="ks-arnoldi.html#api-get-ks-nconv">get_ks_nconv()</a>, <a href="../user/eigen-solvers.html">the “Eigenvalue Solvers” chapter</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>krylov<span class="op">::</span>ks_arnoldi<span class="op">&lt;&gt;</span> ks<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ks<span class="op">.</span>solver<span class="op">(</span>A<span class="op">,</span> eval<span class="op">,</span> evec<span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ks<span class="op">.</span>solver<span class="op">(</span>A<span class="op">,</span> eval<span class="op">,</span> evec<span class="op">,</span> <span class="op">&amp;</span>As<span class="op">);</span>   <span class="co">// shift-invert (As = A - σI)</span></span></code></pre></div>
+<h2 data-number="17.3" id="api-set-ks-subspace"><span class="header-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</h2>
+<p><strong>Description</strong> Sets or gets the maximum dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> of the Krylov subspace, the number <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math> of vectors kept after a restart, and the number <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> of eigenpairs sought.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_ks_subspace<span class="op">(</span>PARCEL_INT m<span class="op">,</span> PARCEL_INT k_keep<span class="op">,</span> PARCEL_INT nev<span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_ks_m<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_ks_k_keep<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_ks_nev<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">m</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Maximum dimension of the Krylov subspace</td>
+<td class="nowrap">30</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">k_keep</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Number of Ritz pairs kept after a restart. This is the number of eigenpairs returned by <code><span class="tok">solver()</span></code></td>
+<td class="nowrap">10</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">nev</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Number of eigenpairs subject to the convergence check</td>
+<td class="nowrap">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m \leq n_{global}</annotation></semantics></math>. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m</annotation></semantics></math> does not hold, <code>std::invalid_argument</code> is thrown (the stored values are not changed). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">m \leq n_{global}</annotation></semantics></math> needs the matrix and is checked at the entry of <code>solver()</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ks<span class="op">.</span>set_ks_subspace<span class="op">(</span><span class="dv">30</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">4</span><span class="op">);</span></span></code></pre></div>
+<h2 data-number="17.4" id="api-set-ks-max-restart"><span class="header-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</h2>
+<p><strong>Description</strong> Sets or gets the maximum number of restarts.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_ks_max_restart<span class="op">(</span>PARCEL_INT R<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_ks_max_restart<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">R</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Maximum number of restarts</td>
+<td class="nowrap">200</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> 1 or greater. 0 or less throws <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ks<span class="op">.</span>set_ks_max_restart<span class="op">(</span><span class="dv">200</span><span class="op">);</span></span></code></pre></div>
+<h2 data-number="17.5" id="api-ks-set-qr-algo"><span class="header-section-number">17.5</span> set_qr_algo() / get_qr_algo()</h2>
+<p><strong>Description</strong> Sets or gets the <a href="common.html#set-ks-qr">orthogonalization method</a> of the Arnoldi process. The constants are the same as for pgmres; ks_arnoldi applies either method twice.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_qr_algo<span class="op">(</span>PARCEL_INT qrdecomposition_algo<span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_qr_algo<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">qrdecomposition_algo</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><code><span class="tok">parcel::qr::QR_CGS</span></code> (0, classical Gram-Schmidt twice = CGS2) or <code><span class="tok">QR_MGS</span></code> (1, modified Gram-Schmidt twice = MGS2)</td>
+<td><code><span class="tok">QR_CGS</span></code>. <code><span class="tok">QR_MGS</span></code> when the library is built with the macro <code><span class="tok">PARCEL_KS_ORTHO_DEFAULT=mgs</span></code> (<a href="../user/installation.html#install-ks-ortho">“Default Orthogonalization of ks_arnoldi” in the User Guide</a>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> <code>QR_CGS</code> or <code>QR_MGS</code>. Other values (including <code>QR_CHOLESKYQR</code>) throw <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> The accuracy of the eigenvalues is equivalent; only the speed differs. MGS2 can be faster on CPU configurations with few local rows per rank, and CGS2 on CPUs with many local rows and on GPUs. The environment variable <code>PARCEL_KS_ORTHO</code> is not read (if it is set, rank 0 prints a one-line warning to standard error at the first <code>solver()</code>).</p>
+<p><strong>See Also</strong> <a href="convergence.html#conv-ks-arnoldi">ks_arnoldi in Convergence of Each Solver</a>, <a href="../user/qr.html">the “QR Factorization” chapter</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ks<span class="op">.</span>set_qr_algo<span class="op">(</span>parcel<span class="op">::</span>qr<span class="op">::</span>QR_MGS<span class="op">);</span>   <span class="co">// MGS2</span></span></code></pre></div>
+<h2 data-number="17.6" id="api-ks-set-shift"><span class="header-section-number">17.6</span> set_shift() / disable_shift()</h2>
+<p><strong>Description</strong> Enables / disables shift-invert mode. When enabled, the Arnoldi process is applied to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(A - \sigma I)^{-1}</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)^{-1}</annotation></semantics></math> when <code>set_precon_spectrum(true)</code> is set), and the eigenvalues near <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> are returned as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mi>σ</mi><mo>+</mo><mn>1</mn><mi>/</mi><mi>θ</mi></mrow><annotation encoding="application/x-tex">\lambda = \sigma + 1/\theta</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is a Ritz value).</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_shift<span class="op">(</span><span class="dt">double</span> sigma<span class="op">);</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> disable_shift<span class="op">();</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">sigma</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">double</span></code></td>
+<td>Shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></td>
+<td class="nowrap">disabled</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> does not coincide with an eigenvalue (not checked).</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> The tolerance, maximum number of iterations, and restart length of the inner <code>pgmres</code> are set with <code>set_linsolve_*</code> (for the defaults, see <a href="common.html#common-settings">the common settings</a>). The preconditioner of the inner <code>pgmres</code> is determined by <code>set_precon_spectrum()</code> and the fourth argument <code>ShiftMat</code> of <code>solver()</code> as follows.</p>
+<ul>
+<li><code>set_precon_spectrum(false)</code> with <code>ShiftMat</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>) passed: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> is built once from <code>ShiftMat</code> according to the settings of <code>set_linsolve_precon_algo()</code>, <code>set_linsolve_blockjacobi()</code>, and <code>set_linsolve_jacobi()</code>.</li>
+<li><code>set_precon_spectrum(false)</code> with <code>ShiftMat</code> omitted: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(A - \sigma I)z = v</annotation></semantics></math> is solved from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and the shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> (there is no need to assemble <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>), and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> is fixed to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>. <code>set_linsolve_precon_algo()</code> and related settings are not used (rank 0 prints a note if a preconditioner other than none was set explicitly; no note is printed when the default Jacobi preconditioning is left as is). To speed up the inner iteration with a preconditioner, pass <code>ShiftMat</code>.</li>
+<li><code>set_precon_spectrum(true)</code>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)z = v</annotation></semantics></math> is solved, and the preconditioner is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> (built from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>). <code>ShiftMat</code> and <code>set_linsolve_precon_algo()</code> and related settings are not used.</li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ks<span class="op">.</span>set_shift<span class="op">(-</span><span class="fl">13.0</span><span class="op">);</span></span></code></pre></div>
+<h2 data-number="17.7" id="api-get-ks-nconv"><span class="header-section-number">17.7</span> get_ks_nconv()</h2>
+<p><strong>Description</strong> Returns the number of eigenpairs that satisfied the tolerance at the last convergence check.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_ks_nconv<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Return Value</strong> The number, among the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> pairs, whose Ritz residual is less than or equal to the value set by <code>set_tolerance()</code> (NaN is not counted; if convergence was confirmed with the true residual, for example at an invariant subspace, that number). Equals <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> on convergence.</p>
+<p><strong>MPI</strong> Local operation. The value is the same on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>printf<span class="op">(</span><span class="st">&quot;converged pairs = </span><span class="sc">%d</span><span class="st"> / </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>ks<span class="op">.</span>get_ks_nconv<span class="op">(),</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>ks<span class="op">.</span>get_ks_nev<span class="op">());</span></span></code></pre></div>
+<h2 data-number="17.8" id="api-set-shift-linsolve"><span class="header-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</h2>
+<p><strong>Description</strong> Old names of <code>set_linsolve_tolerance()</code>, <code>set_linsolve_max_iteration()</code>, and <code>set_linsolve_restart()</code>. Kept for compatibility.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_shift_linsolve_tolerance<span class="op">(</span><span class="dt">double</span> t<span class="op">);</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_shift_linsolve_max_iteration<span class="op">(</span>PARCEL_INT n<span class="op">);</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_shift_linsolve_restart<span class="op">(</span>PARCEL_INT r<span class="op">);</span></span></code></pre></div>
+<p><strong>Arguments</strong> Same as the corresponding <code>set_linsolve_*</code> functions (for the defaults, see <a href="common.html#common-settings">the common settings</a>).</p>
+<p><strong>Notes</strong> New programs should use <code>set_linsolve_*</code>.</p>
+<p><strong>See Also</strong> <a href="eigen-common.html#api-set-linsolve-tolerance">set_linsolve_tolerance()</a></p>
+<p><br />
+</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="inverse-power.html" rel="previous">← parcel::krylov::inverse_power</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'cpp';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

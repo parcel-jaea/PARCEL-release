@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+# Wisteria-Aquarius (ログインノード x86_64 Cascade Lake, 計算ノード Ice Lake + A100): PARCEL をゼロから入れる spack 環境
+#   spack で作るもの: GCC 12 (OS の GCC 8.3.1 は AdaptiveCpp に古い), LLVM 18, AdaptiveCpp (hipsycl), OpenBLAS, binutils,
+#                     Python と numpy / SciPy, PARCEL
+#   既存品を使うもの: GCC 8.3.1 (GCC 12 をビルドするためだけに使う), CUDA 12.2, Open MPI 4.1.1 (サイトの ompi)
+#   @PARCEL_SRC@ と @PARCEL_REPO@ は install_stack.sh が置き換える
+spack:
+  specs:
+  - parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=80
+  - py-parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=80
+  - parcel-sycl@1.2.0 +mpi +cuda cuda_arch=80
+  - py-parcel-sycl@1.2.0 +mpi +cuda cuda_arch=80
+  - py-scipy
+  - py-pip
+  concretizer:
+    unify: when_possible
+  view:
+    default:
+      root: .spack-env/view
+      # parcel は構成違いを並べて入れるのでビューに入れない (spack load parcel-sycl+mpi のように構成を指定して読む)
+      exclude: [parcel-sycl, py-parcel-sycl]
+  repos:
+    parcel: '@PARCEL_REPO@'
+  develop:
+    parcel-sycl:
+      spec: parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+    py-parcel-sycl:
+      spec: py-parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+  packages:
+    all:
+      # GCC 12 は compilers.yaml で先に入れておき (OS の GCC 8.3.1 で作る), 主なものはそれで作る (下の require)
+      prefer: ['%gcc@12.5.0']
+    c:
+      require: [gcc]
+    cxx:
+      require: [gcc]
+    fortran:
+      require: [gcc]
+    gcc:
+      externals:
+      - spec: gcc@8.3.1 languages:='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    tar:
+      # spack の tar 1.35 は RHEL の libacl のヘッダと型が合わずビルドできないことがある。OS の tar を使う
+      buildable: false
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+    cuda:
+      buildable: false
+      externals:
+      - spec: cuda@12.2.140
+        prefix: /work/opt/local/x86_64/cores/cuda/12.2
+    mpi:
+      require: [openmpi]
+    openmpi:
+      buildable: false
+      externals:
+      - spec: openmpi@4.1.1~cuda
+        prefix: /work/opt/local/x86_64/apps/gcc/8.3.1/openmpi/4.1.1
+    hipsycl:
+      require: ['@24.10.0 +cuda %gcc@12.5.0']
+    llvm:
+      # AdaptiveCpp 24.10 は LLVM 14〜18。使わない部品は作らない (lldb, lua, polly, flang, mlir)
+      require: ['@18.1.8 +clang +lld ~lldb ~lua ~polly ~flang ~mlir ~python ~gold targets:=x86,nvptx %gcc@12.5.0']
+    blas:
+      require: [openblas]
+    lapack:
+      require: [openblas]
+    python:
+      require: ['@3.11 %gcc@12.5.0']
+    parcel-sycl:
+      require: ['%gcc@12.5.0']
+    py-numpy:
+      require: ['%gcc@12.5.0']
+    py-scipy:
+      require: ['%gcc@12.5.0']
+    openblas:
+      require: ['%gcc@12.5.0']
+    py-hatchling:
+      # 古い版 (1.13) が選ばれると Python 3.13 の分類子を知らず scikit-build-core のビルドで止まる
+      require: ['@1.21:']

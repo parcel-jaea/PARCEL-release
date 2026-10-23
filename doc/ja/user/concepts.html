@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>基本構成 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/concepts.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li class="current"><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="quickstart.html" rel="previous" accesskey="p">← クイックスタート</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="sycl-compiler.html" rel="next" accesskey="n">SYCL対応コンパイラのインストール方法 →</a></span>
+</nav>
+<h1 data-number="2" id="concepts"><span class="header-section-number">2</span> 基本構成</h1>
+<h2 data-number="2.1" id="data-structure"><span class="header-section-number">2.1</span> データ構造</h2>
+<p>　一般に疎行列反復解法のプログラムでは, メモリ節約のため, 非零要素についての情報(値, 行位置, 列位置) のみを格納するデータ構造を採用する. ここでは, 本ライブラリルーチンで用いている疎行列格納法について説明する.</p>
+<p><br />
+</p>
+<h3 data-number="2.1.1" id="compressed-row-storage-crs形式"><span class="header-section-number">2.1.1</span> Compressed Row Storage (CRS)形式</h3>
+<p>　<a href="glossary.html#g-crs">CRS</a>形式(圧縮行格納形式)は, 非零要素を行ごとに詰めて, その値と列番号を 1 次元配列に格納する方法である. そのため, 1 次元配列中での各行の開始位置を記録した行ポインタ (<code>rowptr</code>) を用いる. 添字はすべて 0 始まりである (C言語・Fortran の API では 1 始まりも選べる. <a href="usage.html#usage-c-matrix">使用方法</a>). 並列処理の場合には行列を行方向に分割し, 各プロセスが連続する行を格納する (詳細は<a href="usage.html#usage-cpp-mpi">使用方法の「MPI 分割」</a>を参照). このとき<code>rowptr</code>は各プロセスの担当行の先頭を 0 とする局所の番号, 列番号 (<code>crsCol</code>) は行列全体での大域の番号で与える. 各行の列番号は昇順を想定している.</p>
+<hr />
+<ul>
+<li>行列構造 (行番号・列番号は 0 から数える)</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>00</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>02</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>20</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>22</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>23</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>31</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>32</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>33</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+A = \left(
+\begin{array}{cccc}
+a_{00} &amp; a_{01} &amp; a_{02} &amp; 0\\
+0 &amp; a_{11} &amp; 0 &amp; 0\\
+a_{20} &amp; 0 &amp; a_{22} &amp; a_{23}\\
+0 &amp; a_{31} &amp; a_{32} &amp; a_{33}
+\end{array}
+\right)
+</annotation></semantics></math></p>
+<hr />
+<h4 class="unnumbered" id="one-process">1プロセスの場合</h4>
+<ul>
+<li><a href="glossary.html#g-rank">ランク</a>0プロセス (行 0〜3)</li>
+</ul>
+<p>行列の非零要素　　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>00</mn></msub><mo>,</mo><msub><mi>a</mi><mn>01</mn></msub><mo>,</mo><msub><mi>a</mi><mn>02</mn></msub><mo>,</mo><msub><mi>a</mi><mn>11</mn></msub><mo>,</mo><msub><mi>a</mi><mn>20</mn></msub><mo>,</mo><msub><mi>a</mi><mn>22</mn></msub><mo>,</mo><msub><mi>a</mi><mn>23</mn></msub><mo>,</mo><msub><mi>a</mi><mn>31</mn></msub><mo>,</mo><msub><mi>a</mi><mn>32</mn></msub><mo>,</mo><msub><mi>a</mi><mn>33</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">val=\{a_{00},a_{01},a_{02},a_{11},a_{20},a_{22},a_{23},a_{31},a_{32},a_{33}\}</annotation></semantics></math></p>
+<p>行ポインタ　　　　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>w</mi><mi>p</mi><mi>t</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>7</mn><mo>,</mo><mn>10</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">rowptr=\{0,3,4,7,10\}</annotation></semantics></math></p>
+<p>非零要素の列番号　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>r</mi><mi>s</mi><mi>C</mi><mi>o</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">crsCol=\{0,1,2,1,0,2,3,1,2,3\}</annotation></semantics></math></p>
+<hr />
+<h4 class="unnumbered" id="two-processes">2プロセスの場合</h4>
+<ul>
+<li><a href="glossary.html#g-rank">ランク</a>0プロセス (行 0〜1)</li>
+</ul>
+<p>行列の非零要素　　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>00</mn></msub><mo>,</mo><msub><mi>a</mi><mn>01</mn></msub><mo>,</mo><msub><mi>a</mi><mn>02</mn></msub><mo>,</mo><msub><mi>a</mi><mn>11</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">val=\{a_{00},a_{01},a_{02},a_{11}\}</annotation></semantics></math></p>
+<p>行ポインタ　　　　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>w</mi><mi>p</mi><mi>t</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">rowptr=\{0,3,4\}</annotation></semantics></math></p>
+<p>非零要素の列番号　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>r</mi><mi>s</mi><mi>C</mi><mi>o</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">crsCol=\{0,1,2,1\}</annotation></semantics></math></p>
+<ul>
+<li>ランク1プロセス (行 2〜3)</li>
+</ul>
+<p>行列の非零要素　　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>20</mn></msub><mo>,</mo><msub><mi>a</mi><mn>22</mn></msub><mo>,</mo><msub><mi>a</mi><mn>23</mn></msub><mo>,</mo><msub><mi>a</mi><mn>31</mn></msub><mo>,</mo><msub><mi>a</mi><mn>32</mn></msub><mo>,</mo><msub><mi>a</mi><mn>33</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">val=\{a_{20},a_{22},a_{23},a_{31},a_{32},a_{33}\}</annotation></semantics></math></p>
+<p>行ポインタ　　　　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>o</mi><mi>w</mi><mi>p</mi><mi>t</mi><mi>r</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>6</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">rowptr=\{0,3,6\}</annotation></semantics></math></p>
+<p>非零要素の列番号　::　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>r</mi><mi>s</mi><mi>C</mi><mi>o</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">crsCol=\{0,2,3,1,2,3\}</annotation></semantics></math></p>
+<hr />
+<p><br />
+</p>
+<p><br />
+</p>
+<h2 data-number="2.2" id="gpu-rank-data"><span class="header-section-number">2.2</span> GPU・MPI ランク・データの対応</h2>
+<p>　PARCEL は <a href="glossary.html#g-mpi">MPI</a> の 1 <a href="glossary.html#g-rank">ランク</a>を 1 つの計算資源に対応させ, 係数行列とベクトルを行方向に分割して各ランクに持たせる. ランク間の通信は MPI が, ランク内の並列化は <a href="glossary.html#g-sycl">SYCL</a> (GPU では<a href="glossary.html#g-device">デバイス</a>のカーネル, CPU では <a href="glossary.html#g-openmp">OpenMP</a> <a href="glossary.html#g-backend">バックエンド</a>のスレッド) が受け持つ. MPI ありのビルド (C++・C言語・Fortran の既定) では, 1 プロセスで実行する場合もこの構成である. MPI を使わない 1 プロセス版もビルドできる (<a href="installation.html#install-nompi">「MPI なしのビルド」</a>).</p>
+<p>　1 ランクが受け持つ計算資源 (以下, <a href="glossary.html#g-device">デバイス</a>) は次のいずれかである. 装置と環境の名前は<a href="glossary.html#glossary">用語集</a>を参照.</p>
+<ul>
+<li>GPU 1 台</li>
+<li><a href="glossary.html#g-mig">MIG</a> で分割した GPU の 1 区画 (NVIDIA. <a href="concepts.html#gpu-rank-mig">下記</a>)</li>
+<li><a href="glossary.html#g-apu">APU</a> の GPU 部 (AMD Instinct <a href="glossary.html#g-mi300a">MI300A</a>. <a href="concepts.html#gpu-rank-apu">下記</a>)</li>
+<li>CPU のコアの一群 (OpenMP バックエンド)</li>
+</ul>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 760 346" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="3 ランクでの行ブロック分割,ランクと GPU の対応,袖通信">
+<defs><marker id="gr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="120" y="20" font-size="14" text-anchor="middle" fill="#222">大域の行列 A (n_global 行)</text>
+<rect x="20" y="30" width="200" height="80" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="20" y="110" width="200" height="80" fill="#fde2c8" stroke="#b9772e"/>
+<rect x="20" y="190" width="200" height="80" fill="#dcefd9" stroke="#5c9a52"/>
+<rect x="87" y="110" width="66" height="80" fill="#f5b77a" stroke="#b9772e"/>
+<text x="120" y="155" font-size="11" text-anchor="middle" fill="#222">自ランクの列</text>
+<circle cx="45" cy="130" r="4" fill="#c0392b"/><circle cx="70" cy="172" r="4" fill="#c0392b"/>
+<circle cx="180" cy="125" r="4" fill="#c0392b"/><circle cx="205" cy="160" r="4" fill="#c0392b"/>
+<text x="120" y="290" font-size="11" text-anchor="middle" fill="#c0392b">● 他ランクの列 (袖通信で値を受け取る)</text>
+<text x="228" y="65" font-size="12" fill="#222">rank 0</text><text x="228" y="80" font-size="11" fill="#555">行 nstart₀〜nend₀</text>
+<text x="228" y="145" font-size="12" fill="#222">rank 1</text><text x="228" y="160" font-size="11" fill="#555">行 nstart₁〜nend₁</text>
+<text x="228" y="225" font-size="12" fill="#222">rank 2</text><text x="228" y="240" font-size="11" fill="#555">行 nstart₂〜nend₂</text>
+<line x1="345" y1="62" x2="378" y2="62" stroke="#444" marker-end="url(#gr-arrow)"/>
+<line x1="345" y1="142" x2="378" y2="142" stroke="#444" marker-end="url(#gr-arrow)"/>
+<line x1="345" y1="222" x2="378" y2="222" stroke="#444" marker-end="url(#gr-arrow)"/>
+<rect x="380" y="40" width="150" height="60" rx="6" fill="#f3f5f7" stroke="#5b7fa6"/>
+<text x="455" y="64" font-size="13" text-anchor="middle" fill="#222">デバイス 0</text><text x="455" y="84" font-size="11" text-anchor="middle" fill="#555">局所の行とベクトル</text>
+<rect x="380" y="120" width="150" height="60" rx="6" fill="#f3f5f7" stroke="#b9772e"/>
+<text x="455" y="144" font-size="13" text-anchor="middle" fill="#222">デバイス 1</text><text x="455" y="164" font-size="11" text-anchor="middle" fill="#555">局所の行とベクトル</text>
+<rect x="380" y="200" width="150" height="60" rx="6" fill="#f3f5f7" stroke="#5c9a52"/>
+<text x="455" y="224" font-size="13" text-anchor="middle" fill="#222">デバイス 2</text><text x="455" y="244" font-size="11" text-anchor="middle" fill="#555">局所の行とベクトル</text>
+<text x="650" y="112" font-size="12" text-anchor="middle" fill="#222">rank 1 の内部ベクトル</text>
+<rect x="570" y="122" width="110" height="30" fill="#fde2c8" stroke="#b9772e"/>
+<text x="625" y="142" font-size="11" text-anchor="middle" fill="#222">局所 n_local 要素</text>
+<rect x="680" y="122" width="60" height="30" fill="#fbe3e0" stroke="#c0392b"/>
+<text x="710" y="142" font-size="11" text-anchor="middle" fill="#222">袖</text>
+<text x="625" y="168" font-size="10" text-anchor="middle" fill="#555">0 〜 n_local−1</text>
+<text x="710" y="168" font-size="10" text-anchor="middle" fill="#555">n_local 〜</text>
+<path d="M530,70 C640,70 700,90 706,120" fill="none" stroke="#c0392b" stroke-dasharray="4 3" marker-end="url(#gr-arrow)"/>
+<path d="M530,230 C640,230 700,210 712,155" fill="none" stroke="#c0392b" stroke-dasharray="4 3" marker-end="url(#gr-arrow)"/>
+<text x="640" y="62" font-size="11" text-anchor="middle" fill="#c0392b">袖通信 (MPI)</text>
+<text x="640" y="250" font-size="11" text-anchor="middle" fill="#c0392b">袖通信 (MPI)</text>
+<text x="380" y="298" font-size="11" fill="#555">1 ランク = 1 デバイス (GPU 1 台,MIG の 1 区画,</text>
+<text x="380" y="314" font-size="11" fill="#555">APU の GPU 部,または CPU のコアの一群).</text>
+<text x="380" y="330" font-size="11" fill="#555">袖通信の表は set_crsMat() が列番号から作る.</text>
+</svg>
+<figcaption>図: 3 ランクでの行ブロック分割.各ランクは連続した行と,それに対応するベクトルの部分だけを自分のデバイスに持つ.</figcaption>
+</figure>
+<h3 data-number="2.2.1" id="行ブロック分割"><span class="header-section-number">2.2.1</span> 行ブロック分割</h3>
+<p>　大域の行数を<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{global}</annotation></semantics></math>とする. <a href="glossary.html#g-rank">ランク</a><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>は連続した行<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><msub><mi>t</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">nstart_p</annotation></semantics></math>〜<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>n</mi><msub><mi>d</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">nend_p</annotation></semantics></math> (0 始まり, 両端を含む) を担当し, その局所行数は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>=</mo><mi>n</mi><mi>e</mi><mi>n</mi><msub><mi>d</mi><mi>p</mi></msub><mo>−</mo><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><msub><mi>t</mi><mi>p</mi></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} = nend_p - nstart_p + 1</annotation></semantics></math>である. 各ランクが持つものは次のとおりである.</p>
+<table>
+<thead>
+<tr>
+<th>データ</th>
+<th>各ランクが持つ部分</th>
+<th>長さ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>係数行列 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></td>
+<td>担当行の <a href="glossary.html#g-crs">CRS</a> (<code><span class="tok">rowptr</span></code>, 列番号, 値). 列番号は大域の番号で渡す</td>
+<td><code><span class="tok">rowptr</span></code> は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} + 1</annotation></semantics></math>, 列番号と値は担当行の非零数</td>
+</tr>
+<tr>
+<td>解ベクトル<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>・右辺<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>・固有ベクトル</td>
+<td>担当行に対応する部分</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> (<code><span class="tok">ks_arnoldi</span></code>の<code><span class="tok">EigenVec</span></code>は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>×</mo><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">n_{local} \times nev</annotation></semantics></math>以上. 書くのは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>&#8289;</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>,</mo><mtext mathvariant="normal">要素数</mtext><mi>/</mi><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(k_{keep}, \text{要素数}/n_{local})</annotation></semantics></math>本)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-precon">前処理</a>行列</td>
+<td>担当行の部分 (ソルバが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の局所行から作る)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>　ランクごとの行数は異なってよい (不均等分割). 行ブロックは全ランクを合わせて<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math>を重複・欠落なく覆わなければならない. ランク番号の順に並んでいる必要はない. 各ランクの行数は 1 以上とする (0 行のランクは扱えない). C++ の<code>set_crsMat()</code>と C言語・Fortran の API はこれを検査する (<a href="usage.html#usage-cpp-mpi">使用方法の「MPI 分割」</a>). 局所行数は<code>parcel::matrix::n_local()</code>で取得できる.</p>
+<h3 data-number="2.2.2" id="gpu-rank-bind"><span class="header-section-number">2.2.2</span> 1 ランクと 1 デバイスの対応</h3>
+<p>　各<a href="glossary.html#g-rank">ランク</a>は自分の <a href="glossary.html#g-sycl">SYCL</a> キュー (<a href="glossary.html#g-inorder">in-order</a> キュー) を 1 つ作り, 行列とベクトルをそのキューの<a href="glossary.html#g-device">デバイス</a>に置く. 同梱のサンプルは<code>sycl::queue q{sycl::default_selector_v, sycl::property::queue::in_order{}};</code>で既定のデバイスを選ぶ. GPU が複数あるノードでは, 既定のままだと全ランクが同じ GPU を選びうるので, 起動前にランクごとに見える GPU を 1 台に絞る. 例えば次のラッパを<code>mpirun</code>とプログラムの間に挟む.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gpu_bind.sh: ノード内のランク番号 R に GPU R を割り当てる</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">R</span><span class="op">=</span><span class="va">${OMPI_COMM_WORLD_LOCAL_RANK</span><span class="op">:-</span><span class="va">${PMIX_RANK</span><span class="op">:-</span>0<span class="va">}}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CUDA_VISIBLE_DEVICES</span><span class="op">=</span><span class="va">$R</span>      <span class="co"># NVIDIA</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">HIP_VISIBLE_DEVICES</span><span class="op">=</span><span class="va">$R</span>       <span class="co"># AMD (MI300A)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">unset</span> <span class="va">ROCR_VISIBLE_DEVICES</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./gpu_bind.sh ./run</span></code></pre></div>
+<p>　AMD の GPU では<code>HIP_VISIBLE_DEVICES</code>と<code>ROCR_VISIBLE_DEVICES</code>を同時に設定しない. 2 つは多段に効き, <code>ROCR_VISIBLE_DEVICES</code>で 1 台に絞った後で<code>HIP_VISIBLE_DEVICES</code>がその中の R 番目を選ぼうとして失敗し, そのランクは GPU を取れずに CPU の OpenMP <a href="glossary.html#g-backend">バックエンド</a>で動く.</p>
+<p>　各ランクが意図したデバイスを使っているかは, デバイス名で確かめる (検証用サンプル<code>parcel_krylov_sample_verify.cpp</code>は, 開始時に各ランクがデバイス名を 1 行表示する). 1 ランクでも CPU の OpenMP バックエンドに落ちると, 数値は正しいまま, 内積の<code>MPI_Allreduce</code>で全ランクがそのランクを待ち, 全体が桁違いに遅くなる. 例えば 1 ノードに GPU が 1 台の環境 (<a href="glossary.html#g-miyabi-g">Miyabi-G</a>) で 1 ノードに 2 ランクを載せると, 2 ランク目が CPU に落ちる. 結果の数値だけではこの誤りに気付けない.</p>
+<h4 data-number="2.2.2.1" id="gpu-rank-mig"><span class="header-section-number">2.2.2.1</span> MIG (NVIDIA Multi-Instance GPU)</h4>
+<p>　<a href="glossary.html#g-mig">MIG</a> は 1 台の GPU を <a href="glossary.html#g-sm">SM</a> とメモリごとに区画 (インスタンス) に分け, 各区画を独立した GPU として見せる機能である. PARCEL から見ると 1 区画が 1 <a href="glossary.html#g-device">デバイス</a>であり, GPU 1 台の場合と同じく 1 <a href="glossary.html#g-rank">ランク</a>に 1 区画を対応させる. 区画のデバイス名は<code>NVIDIA GH200 120GB MIG 2g.24gb</code>のように区画の大きさ (プロファイル) を含む.</p>
+<p>　複数の区画を使う場合も, 上の<code>gpu_bind.sh</code>で各ランクを区画に対応させる. 割り当てによっては, 同じジョブの中に大きさ (プロファイル) の異なる区画が混在する (<a href="glossary.html#g-miyabi-g">Miyabi-G</a> では<code>2g.24gb</code>と<code>1g.24gb</code>). 区画の大きさが違えば速さも違い, 遅い区画のランクを他のランクが内積の集約で待つので, 性能を測る場合は区画の大きさをそろえるか GPU 全体を使う.</p>
+<h4 data-number="2.2.2.2" id="gpu-rank-apu"><span class="header-section-number">2.2.2.2</span> APU (AMD Instinct MI300A)</h4>
+<p>　<a href="glossary.html#g-mi300a">MI300A</a> は CPU のコアと GPU を 1 つのパッケージに載せ, <a href="glossary.html#g-hbm">HBM</a> を両者で共有する <a href="glossary.html#g-apu">APU</a> である. <a href="glossary.html#g-ps-b">PS-B</a> では 1 <a href="glossary.html#g-numa">NUMA</a> ノード = 1 <a href="glossary.html#g-vnode">vnode</a> = 1 <a href="glossary.html#g-apu">APU</a> (24 コア, GPU 1 台, 124 GB) として扱われるので, 1 <a href="glossary.html#g-rank">ランク</a>に 1 <a href="glossary.html#g-apu">APU</a> を対応させ, <a href="glossary.html#g-pbs">PBS</a> では<code>select=&lt;ランク数&gt;:ncpus=24:mpiprocs=1:ngpus=1</code>とランクごとに 1 チャンクを取る. <code>select=1:ngpus=4</code>では 1 <a href="glossary.html#g-vnode">vnode</a> しか割り当てられず, GPU は 1 台になる.</p>
+<p>　<a href="glossary.html#g-sycl">SYCL</a> からは <a href="glossary.html#g-apu">APU</a> の GPU 部が 1 <a href="glossary.html#g-device">デバイス</a>として見える. PARCEL は他の GPU と同じく行列とベクトルを SYCL のバッファでデバイスに置き, <a href="glossary.html#g-halo">袖</a>通信ではホストのバッファとの間で複写する (<a href="glossary.html#g-apu">APU</a> 向けの別の経路は無い). ホストとデバイスの記憶領域は物理的には同じ <a href="glossary.html#g-hbm">HBM</a> なので, 利用者のプログラムが持つホスト側の配列 (<a href="glossary.html#g-crs">CRS</a> の配列など) とデバイス側の複製は, 1 <a href="glossary.html#g-apu">APU</a> あたり同じ容量から取られる.</p>
+<p>　CPU では 1 ランクが OpenMP のスレッドの一群を受け持つ. ランクのスレッドを 1 つの <a href="glossary.html#g-numa">NUMA</a> ノード (またはソケット) の中に収めるように配置する. ブロック化カーネルの分割数と<a href="glossary.html#g-jacobi">ブロック Jacobi</a> 前処理の既定のブロック数は, ランクあたりのスレッド数から決まる (<a href="kernel-opt.html#kopt-blocking">「最適化」の章の「ブロック化」</a>).</p>
+<p>　各環境で推奨する対応を次に示す.</p>
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>1 ランクの受け持ち</th>
+<th style="text-align: right;">ランクあたりのスレッド数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a> ×4 / ノード)</td>
+<td>GPU 1 台</td>
+<td style="text-align: right;" class="nowrap">12</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td>GPU 1 台</td>
+<td style="text-align: right;" class="nowrap">9</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>. GPU 1 台 / ノード)</td>
+<td>GPU 1 台 (= 1 ノード). <a href="glossary.html#g-mig">MIG</a> では 1 区画 (<code><span class="tok">2g.24gb</span></code>または<code><span class="tok">1g.24gb</span></code>) と 18 コア</td>
+<td style="text-align: right;" class="nowrap">72 (<a href="glossary.html#g-mig">MIG</a> では 18)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a> ×4 / ノード)</td>
+<td><a href="glossary.html#g-apu">APU</a> 1 基 (GPU 部 1 台と 24 コア)</td>
+<td style="text-align: right;" class="nowrap">6</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a> (<a href="glossary.html#g-xeon">Xeon</a> Gold 6242R 20 コア ×2)</td>
+<td>5 コア</td>
+<td style="text-align: right;" class="nowrap">5</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a> (<a href="glossary.html#g-xeon">Xeon</a> Max 9480)</td>
+<td>14 コア</td>
+<td style="text-align: right;" class="nowrap">14</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-a">PS-A</a> (<a href="glossary.html#g-xeon">Xeon</a> 6980P)</td>
+<td>14 コア (Intel MPI の<code><span class="tok">I_MPI_PIN_DOMAIN</span></code>で <a href="glossary.html#g-numa">NUMA</a> ノードに固定)</td>
+<td style="text-align: right;" class="nowrap">14</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td>1 <a href="glossary.html#g-cmg">CMG</a> (12 コア)</td>
+<td style="text-align: right;" class="nowrap">12</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="2.2.3" id="set_crsmat-が行うこと"><span class="header-section-number">2.2.3</span> set_crsMat() が行うこと</h3>
+<p>　<code>parcel::matrix::set_crsMat()</code> (<a href="glossary.html#g-mpi">MPI</a> 版) は, 担当行の <a href="glossary.html#g-crs">CRS</a> を受け取って次の処理を行う (<a href="../reference/matrix.html#api-set-crsmat">API リファレンスの<code>set_crsMat()</code></a>). いずれも全<a href="glossary.html#g-rank">ランク</a>で呼ぶ<a href="glossary.html#g-collective">集団操作</a>である. その前に入力を検査し (<a href="usage.html#usage-cpp-matrix">使用方法の「行列の設定」</a>), 崩れていれば全ランクが同じ<code>std::invalid_argument</code>を投げる.</p>
+<ol type="1">
+<li>列番号を局所の番号に付け替える. 各行の非零要素を, 自ランクの列 (番号<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>−</mo><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">c - nstart</annotation></semantics></math>. 0〜<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} - 1</annotation></semantics></math>) を先に, 他ランクの列を後に並べ替える. 他ランクの列は, 担当行が参照する他ランクの列番号を昇順に並べて重複を除いた一覧での位置<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>を用いて, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>+</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">n_{local} + k</annotation></semantics></math>と付け替える. このとき呼び出し側の列番号と値の配列を書き換える (<a href="usage.html#usage-cpp-matrix">使用方法の「行列の設定」</a>).</li>
+<li>全ランクの担当範囲 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">nstart</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>n</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">nend</annotation></semantics></math>) を<code>MPI_Alltoall</code>で交換し, 1. の一覧と照らして, どのランクにどの行の値を送り, どのランクから受け取るかの表 (<a href="glossary.html#g-halo">袖</a>通信表) を作る.</li>
+</ol>
+<p>　この後, 値と列番号が<a href="glossary.html#g-device">デバイス</a>に転送される.</p>
+<h3 data-number="2.2.4" id="疎行列ベクトル積と袖通信"><span class="header-section-number">2.2.4</span> 疎行列ベクトル積と袖通信</h3>
+<p>　ソルバの内部で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>を掛けるベクトルは, 局所の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math>要素の後ろに, 他<a href="glossary.html#g-rank">ランク</a>から受け取る値の領域 (<a href="glossary.html#g-halo">袖</a>) を持つ. 袖の要素数は上の 1. の一覧の長さである (<code>pcg</code>と<code>power</code>は開始時に<code>nadd =</code>として表示する). 疎行列ベクトル積の前に毎回次の袖通信を行う.</p>
+<ol type="1">
+<li>送る値を<a href="glossary.html#g-device">デバイス</a>上で送信バッファに詰め, ホストに複写する.</li>
+<li>ホストのバッファで<code>MPI_Isend</code>・<code>MPI_Irecv</code>を行い, 完了を待つ.</li>
+<li>受け取った値をデバイスに複写し, ベクトルの袖 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math>番目以降) に書き込む.</li>
+</ol>
+<p>　通信はホストのバッファを介するので, GPU 対応 (CUDA-aware など) の <a href="glossary.html#g-mpi">MPI</a> は要らない. 1 ランクで実行する場合は袖が空であり, 通信は起こらない. Jacobi 前処理は Jacobi 反復ごとに同じ袖通信を行い, ポイント Jacobi 前処理とブロック Jacobi 前処理は通信しない (<a href="preconditioners.html#preconditioners">前処理の章</a>). 内積とノルムは各ランクの部分和を<code>MPI_Allreduce</code>で集約する.</p>
+<p><br />
+</p>
+<h2 data-number="2.3" id="precision-configs"><span class="header-section-number">2.3</span> 精度構成</h2>
+<p>　PARCEL は, データを保持する精度 (データ精度) と演算の精度 (計算精度) を別々に, さらに<a href="glossary.html#g-precon">前処理</a>とそれ以外を別々に指定できる. 型は<code>parcel_fp16</code> (半精度), <code>parcel_float</code> (単精度), <code>parcel_double</code> (倍精度), <code>parcel_doubledouble</code> (<a href="glossary.html#g-dd">double-double</a> [12,13], 4 倍精度相当) の 4 つである. 精度のテンプレート引数は省略でき, 既定の精度は<code>parcel_double</code>である (省略できるのは<code>parcel::matrix&lt;&gt;</code>・<code>parcel::vector&lt;&gt;</code>の型, クラスの演算精度の 4 引数, <code>solver()</code>のうち実引数から推論できないデータ精度. <code>pcagmres</code>の<code>Todd_basis</code>・<code>Teven_basis</code>の既定は<code>Tbasis</code>と同じ型). 指定の書式は<a href="usage.html#usage-cpp-precision">使用方法の「精度の指定」</a>に, 各テンプレート引数の意味は API リファレンスの<a href="../reference/solver-common.html#api-class-template">「クラステンプレート引数 (演算精度)」</a>と<a href="../reference/solver-common.html#api-solver-template">「solver() のテンプレート引数 (データ精度)」</a>に示す. ここでは指定の全体像と, 代表的な構成をまとめる.</p>
+<h3 data-number="2.3.1" id="精度を指定する箇所"><span class="header-section-number">2.3.1</span> 精度を指定する箇所</h3>
+<table>
+<thead>
+<tr>
+<th>分類</th>
+<th>指定する場所</th>
+<th>サンプルのマクロ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>計算精度 (<a href="glossary.html#g-spmv">SpMV</a>・ベクトル演算・内積)</td>
+<td>クラスのテンプレート引数<code><span class="tok">Tspmv</span></code>, <code><span class="tok">Taxpy</span></code>, <code><span class="tok">Tdot</span></code></td>
+<td><code><span class="tok">parcel_solver_calc_type</span></code> (3 つに同じ型を与える)</td>
+</tr>
+<tr>
+<td>前処理の計算精度</td>
+<td>クラスのテンプレート引数<code><span class="tok">Tprecon</span></code></td>
+<td><code><span class="tok">parcel_solver_calc_precon_type</span></code></td>
+</tr>
+<tr>
+<td>データ精度 (行列・ベクトル)</td>
+<td><code><span class="tok">parcel::matrix&lt;T&gt;</span></code>, <code><span class="tok">parcel::vector&lt;T&gt;</span></code>の<code><span class="tok">T</span></code>と, <code><span class="tok">solver()</span></code>のテンプレート引数<code><span class="tok">Tmat</span></code>, <code><span class="tok">Tvecx</span></code>, <code><span class="tok">Tvecb</span></code>, <code><span class="tok">Tvec</span></code> (固有値ソルバは<code><span class="tok">Teigen_val</span></code>, <code><span class="tok">Teigen_vec</span></code>)</td>
+<td><code><span class="tok">parcel_solver_data_type</span></code></td>
+</tr>
+<tr>
+<td>前処理のデータ精度</td>
+<td><code><span class="tok">solver()</span></code>のテンプレート引数<code><span class="tok">Tprecon_mat</span></code> (前処理行列), <code><span class="tok">Tprecon_vec</span></code> (前処理のベクトル)</td>
+<td><code><span class="tok">parcel_solver_data_precon_mat_type</span></code>, <code><span class="tok">parcel_solver_data_precon_vec_type</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　マクロは同梱の検証用サンプル (<code>tests/verify/parcel_default.hpp</code>で既定値はすべて<code>parcel_double</code>) と C言語・Fortran のラッパ (<code>capi/wrapper_parcel_sycl.cpp</code>. 既定値は<code>capi/parcel_capi_default.hpp</code>) が用いるもので, ライブラリ本体はテンプレート引数だけを見る. C++ から直接使う場合は, テンプレート引数に演算ごとに異なる型を与えてもよい. <code>pgmres</code>・<code>pcagmres</code>には直交化・基底・Hessenberg 行列の精度の引数が加わる. これらは<a href="linear-solvers.html#precision-orthogonality">線形ソルバの章の「直交化の精度と基底の精度」</a>で説明する.</p>
+<h3 data-number="2.3.2" id="代表的な-13-の構成"><span class="header-section-number">2.3.2</span> 代表的な 13 の構成</h3>
+<p>　回帰試験で用いている 13 の構成と, 回帰試験の収束判定値を次に示す. 表の「下げる」「上げる」は倍精度 (<code>double</code>) に対する変化である. 空欄は<code>parcel_double</code>のままである.</p>
+<table>
+<thead>
+<tr>
+<th>構成</th>
+<th>計算精度</th>
+<th>前処理の計算精度</th>
+<th>データ精度</th>
+<th>前処理のデータ精度</th>
+<th>下げる / 上げるもの</th>
+<th>回帰試験の収束判定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">double</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>(基準)</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">calcF16</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-fp16">FP16</a></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>演算を FP16 に下げる</td>
+<td>1e-3</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">dataF16</span></code></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td>演算と行列・ベクトルの保持を FP16 に下げる</td>
+<td>1e-2</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_calcF16</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>前処理の演算だけを FP16 に下げる</td>
+<td>1e-9 (一部のソルバは緩める)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_dataF16</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td>前処理の行列・ベクトルの保持だけを FP16 に下げる</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_allF16</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP16</td>
+<td>前処理の演算と保持を FP16 に下げる</td>
+<td>1e-9 (一部のソルバは緩める)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">calcF</span></code></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>演算を FP32 に下げる</td>
+<td>1e-6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">dataF</span></code></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td>演算と保持を FP32 に下げる</td>
+<td>1e-6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_calcF</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>前処理の演算だけを FP32 に下げる</td>
+<td>1e-9 (<code><span class="tok">ks_arnoldi</span></code>は 1e-6)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_dataF</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td>前処理の保持だけを FP32 に下げる</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_allF</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td class="nowrap"></td>
+<td class="nowrap">FP32</td>
+<td>前処理の演算と保持を FP32 に下げる</td>
+<td>1e-9 (<code><span class="tok">ks_arnoldi</span></code>は 1e-6)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">calcDD</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-dd">dd</a></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>演算を double-double に上げる</td>
+<td>1e-9</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">dataDD</span></code></td>
+<td class="nowrap">dd</td>
+<td class="nowrap"></td>
+<td class="nowrap">dd</td>
+<td class="nowrap"></td>
+<td>演算と保持を double-double に上げる</td>
+<td>1e-9</td>
+</tr>
+</tbody>
+</table>
+<p>　各構成の性質は次のとおりである. 到達できる精度と制約の詳細は<a href="accuracy.html#accuracy-lowprec">「低精度での既知の限界」</a>と<a href="accuracy.html#accuracy-dd">「double-double」</a>に示す.</p>
+<ul>
+<li>データ精度を下げると, 行列・ベクトルのメモリ量と, <a href="glossary.html#g-halo">袖</a>通信・ホストと<a href="glossary.html#g-device">デバイス</a>の間の転送量が減る. 計算精度だけを下げてもメモリ量は変わらない. <code>data*</code>の構成では計算精度も同じ型に下げている.</li>
+<li>収束判定値を構成ごとに変えているのは, 低精度では倍精度の判定値に到達できないためである. <code>dataF16</code>だけ<code>calcF16</code>より 1 桁緩いのは, ベクトルを FP16 で保持すると漸化式の残差が真の残差から離れるためである (<a href="accuracy.html#accuracy-residual">「漸化式の残差と真の残差」</a>).</li>
+<li>前処理だけを下げる 6 構成は, 本体を倍精度のまま前処理を近似として扱うもので, 多くのソルバで倍精度と同じ判定値に到達する. ただし前処理の計算精度を FP16 にすると<code>pbicgstab</code>と<code>ks_arnoldi</code>は 1e-9 に届かない (目安は<code>pbicgstab</code>で 1e-5, <code>ks_arnoldi</code>で 1e-3).</li>
+<li>速さのために前処理のデータを単精度にする (<code>precon_dataF</code>) 場合は, Jacobi 前処理をその場計算なし (<code>-DPARCEL_JACOBI_ONTHEFLY=0</code>) でビルドする. NVIDIA の GPU (<a href="glossary.html#g-v100">V100</a> を含む) でも同じで, 梯子分割は付けない. 効果と増えるメモリは<a href="performance.html#perf-mixed">「性能」の章の「混合精度」</a>に示す (<a href="glossary.html#g-a64fx">A64FX</a> では速くならない).</li>
+<li>double-double は演算の丸め誤差を小さくするための指定であり, 収束判定値の目安は倍精度と同じである.</li>
+<li>FP16 のデータ精度・計算精度では<code>pcagmres</code>の Cholesky QR 系 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない方式<code>CAGMRES_Q_IMPLICIT</code>と<a href="glossary.html#g-moment">モーメント法</a>) を使わない. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る方式は使える (<a href="accuracy.html#accuracy-lowprec">「低精度での既知の限界」</a>).</li>
+</ul>
+<p>　検証用サンプルを<code>-DPARCEL_RUNTIME_PRECISION</code>付きでビルドすると, 上の構成のうち 9 つ (<code>double</code>, <code>calcF16</code>, <code>dataF16</code>, <code>precon_calcF16</code>, <code>calcF</code>, <code>dataF</code>, <code>precon_calcF</code>, <code>calcDD</code>, <code>dataDD</code>) を 1 つの実行ファイルに入れ, 環境変数<code>PARCEL_PRECISION</code>で選べる (<a href="usage.html#usage-verify-options">検証用サンプルの実行時オプション</a>). 前処理のデータ精度を変える 4 構成はコンパイル時のマクロで指定する.</p>
+<p><br />
+</p>
+<h3 data-number="2.3.3" id="precision-languages"><span class="header-section-number">2.3.3</span> 言語ごとに使える精度</h3>
+<p>　精度の指定方法と, 使える構成は言語によって異なる.</p>
+<table>
+<thead>
+<tr>
+<th>言語</th>
+<th>指定の方法</th>
+<th>使える精度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>クラスと<code><span class="tok">solver()</span></code>のテンプレート引数 (<a href="usage.html#usage-cpp-precision">使用方法の「精度の指定」</a>)</td>
+<td>上の 13 の構成を含むすべての組合せ. ソルバごと・呼び出しごとに変えられる</td>
+</tr>
+<tr>
+<td class="nowrap">C言語・Fortran</td>
+<td>ラッパ <code><span class="tok">capi/wrapper_parcel_sycl.cpp</span></code> のコンパイル時のマクロ (<code><span class="tok">parcel_solver_data_type</span></code> など)</td>
+<td>ビルドしたラッパにつき 1 つの構成. 実行時には変えられない. 入出力の配列は倍精度 (<code><span class="tok">double</span></code> / <code><span class="tok">real(c_double)</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td>なし</td>
+<td>倍精度だけ (データ・演算とも<code><span class="tok">parcel_double</span></code>). 入出力の配列は float64</td>
+</tr>
+</tbody>
+</table>
+<p>　Python のパッケージが倍精度だけなのは, 精度が C++ のテンプレート引数としてビルド時に決まり, 実体化した組合せしか使えないためである. Python のネイティブ層 (<code>python/src/parcel_py.cpp</code>) は倍精度の組合せ 1 つだけを実体化している. 13 の構成をすべて Python から選べるようにすると, 構成の数だけ実体化が要り, ビルド時間とライブラリの大きさがその分増える. また NumPy には double-double に当たる型が無い. 混合精度を Python から使う場合は, C++ で書くか, 精度のマクロを付けてビルドした C言語の API を ctypes などで呼ぶ.</p>
+<h3 data-number="2.3.4" id="precision-int"><span class="header-section-number">2.3.4</span> 整数型</h3>
+<p>　行番号・列番号・行数・非零要素数などの整数は, 浮動小数点の精度とは別に, 次の 2 つの型で持つ. 大域の量は<code>PARCEL_INT</code>, 1 つの<a href="glossary.html#g-rank">ランク</a>の中の添字は<code>PARCEL_LINT</code>である. どちらもビルドごとに 1 つで, ソルバや行列ごとには選べない (指定方法は<a href="installation.html#install-int-type">インストールの「整数型」</a>).</p>
+<table>
+<thead>
+<tr>
+<th>型</th>
+<th>既定</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">PARCEL_INT</span></code> (大域の添字)</td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td>大域の行数, 各ランクの行範囲 (<code><span class="tok">nstart</span></code>, <code><span class="tok">nend</span></code>), <code><span class="tok">set_crsMat()</span></code>に渡す行ポインタと列番号 (大域の列番号) の配列, ベクトルの確保, <a href="glossary.html#g-halo">袖</a>通信の表を作るための大域の列番号, C言語・Fortran の API</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_LINT</span></code> (ランク内の添字)</td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td><a href="glossary.html#g-device">デバイス</a>上の <a href="glossary.html#g-crs">CRS</a> (行ポインタと, ランク内の番号に置き換えた列番号), 袖通信で送る要素の番号, <a href="glossary.html#g-spmv">SpMV</a>・前処理のカーネル</td>
+</tr>
+</tbody>
+</table>
+<p>　利用者のプログラムが扱うのは<code>PARCEL_INT</code>だけである. <code>set_crsMat()</code>は<code>PARCEL_INT</code>の配列を受け取り, 列番号をランク内の番号 (自ランクの行が 0 から局所行数 - 1, 袖がその後) に置き換えてから<code>PARCEL_LINT</code>の配列に写してデバイスへ送る. 写す間, ホスト側で一時的に 4 (n + nnz) バイト (n は局所行数, nnz はそのランクの非零要素数) を余分に使う. 利用者のプログラムで CRS の行ポインタ・列番号の配列を<code>PARCEL_INT</code>型で宣言しておけば, ソースを変えずに型を切り替えられる.</p>
+<p>　既定の構成では, デバイス上の CRS の列番号と行ポインタは 1 要素 4 バイトであり, 倍精度の行列では 1 非零要素あたり 12 バイト (値 8 バイトと列番号 4 バイト), 3 次元 7 点ステンシルの行列では 1 格子点あたり 88 バイトである. 大域の量を 64 ビットで持っても, SpMV・前処理の転送量は増えない.</p>
+<p>　扱える行列の範囲は次のとおりである.</p>
+<ul>
+<li>大域の行数と非零要素数: <code>PARCEL_INT</code>の範囲. 既定の 64 ビットでは実用上の制限はない</li>
+<li>1 つのランクが持つ非零要素数, および局所行数と<a href="glossary.html#g-halo">袖</a>の要素数の和: それぞれ<code>PARCEL_LINT</code>の範囲. 既定の 32 ビットでは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math> (約 21 億) 以下</li>
+</ul>
+<p>　1 つのランクでも<code>PARCEL_LINT</code>の範囲を超えると, <code>set_crsMat()</code>は全ランクで同じ<code>std::overflow_error</code>を投げて止まる. メッセージは<code>-DPARCEL_LOCAL_INT64</code>を付けてビルドし直すか, <a href="glossary.html#g-mpi">MPI</a> のランク数を増やすよう求める. 通常は, ランク数を増やして 1 ランクあたりの非零要素数を減らす. ランク数を増やせない場合は<code>-DPARCEL_LOCAL_INT64</code>を付けて<code>PARCEL_LINT</code>を 64 ビットにする. このときデバイス上の CRS は 1 要素 8 バイトになり, 倍精度の行列では 1 非零要素あたり 16 バイト, 3 次元 7 点ステンシルの行列では 1 格子点あたり 120 バイトになる. SpMV のメモリ転送量が増えるので, 帯域律速の SpMV・Jacobi 前処理は遅くなる. 前処理が作る CRS (<a href="glossary.html#g-jacobi">ブロック Jacobi</a> の L・U など) の非零要素数が元の行列より増えて範囲を超えた場合も<code>std::overflow_error</code>を投げる (この場合は超えたランクだけが投げる).</p>
+<p>　<code>-DPARCEL_INT32</code>を付けると, <code>PARCEL_INT</code>と<code>PARCEL_LINT</code>がともに 32 ビットになる. ホスト側で<code>set_crsMat()</code>に渡す配列が半分になり, 写しも作らない. デバイス上の CRS と性能は既定の構成と同じである. 大域の行数 (列番号の最大値) が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math>以下でなければならず, 超える行列を渡すと<code>set_crsMat()</code>などが<code>std::overflow_error</code>を投げて止まる (メッセージは<code>-DPARCEL_INT32</code>を外すよう求める).</p>
+<p>　C言語・Fortran の API は, <code>PARCEL_INT</code>によらず整数を 64 ビット (C の<code>parcel_int</code> = <code>int64_t</code>, Fortran の<code>integer(parcel_int_kind)</code>) で受け取る (<a href="usage.html#usage-c-matrix">使用方法の C言語の「行列の設定」</a>). ラッパを<code>-DPARCEL_INT32</code>でビルドして値が 32 ビットに収まらない場合は<code>PARCEL_ERR_ARG</code>を返す.</p>
+<p>　大規模な問題では, 整数の桁あふれ (オーバーフロー) に注意する. 32 ビットの符号付き整数で表せるのは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math> (約 21.5 億) までである. 3 次元 7 点ステンシルの行列では非零要素数が行数の約 7 倍なので, 大域の非零要素数は行数が約 3.1 億 (<a href="glossary.html#g-nx">NX</a> = 675 程度) で, 大域の行数は約 21.5 億 (NX = 1290 程度) で 32 ビットの範囲を超える. 行ポインタの値は非零要素の通し番号なので, 行数より先に非零要素数で範囲を超える. 32 ビットのまま計算すると負の値や小さな値に化けて, 配列の範囲外を読み書きするか, 誤った結果を黙って返す. このため v1.2 では大域の添字<code>PARCEL_INT</code>の既定を 64 ビットにし, 範囲を超える値は<code>set_crsMat()</code>などが<code>std::overflow_error</code>で検出する. 利用者のプログラムでも, 大域の行数・非零要素数・行ポインタと, それらを使う添字の計算 (<code>nstart + i</code>, 格子点の番号<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mi>N</mi><mi>X</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>+</mo><mi>N</mi><mi>X</mi><mspace width="0.167em"></mspace><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">i + NX\,(j + NX\,k)</annotation></semantics></math>など) は<code>PARCEL_INT</code> (64 ビット) で行う. 32 ビットの<code>int</code>同士の積は, 64 ビットの変数に代入しても, 積の時点で桁あふれする.</p>
+<p>　一方, <a href="glossary.html#g-rank">ランク</a>内の添字<code>PARCEL_LINT</code>は既定で 32 ビットのままにしている. 局所カーネル (<a href="glossary.html#g-spmv">SpMV</a>, 前処理) の速さのためである.</p>
+<ul>
+<li>帯域律速のカーネルで読む量が少ない. 倍精度の CRS は 1 非零要素あたり 12 バイト (値 8 + 列番号 4) で, 64 ビットの列番号では 16 バイトになる. 3 次元 7 点ステンシルの行列の SpMV では, 1 格子点あたりの行列の読み出しが 88 バイトから 120 バイトに増える (約 1.4 倍). SpMV と Jacobi 前処理の時間はおおむね読み出し量に比例するので, その分遅くなる.</li>
+<li>GPU では 32 ビットの整数演算が速い. NVIDIA・AMD の GPU の整数演算器は 32 ビットが基本で, 64 ビットの整数の積や加算は複数の命令に分かれる. 添字の計算がカーネルの命令の多くを占める SpMV では, 64 ビットの添字は命令数とレジスタの使用量を増やす.</li>
+<li>1 ランクの非零要素数が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math>を超えない限り, 32 ビットで足りる. 例えば 3 次元 7 点ステンシルでは, 1 ランクの局所行数が約 3 億まで扱える. これを超える場合は, まずランク数を増やす (1 ランクの行数を減らす) ことを勧める.</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="quickstart.html" rel="previous">← クイックスタート</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="sycl-compiler.html" rel="next">SYCL対応コンパイラのインストール方法 →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>parcel::vector – PARCEL SYCL v1.2 API リファレンス</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API リファレンス</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/reference/vector.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="function-index.html#function-index">関数索引</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> 共通事項</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> 各項目の書式</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> ソルバ</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> 記号と用語</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> 入力の行列</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> 設定</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> 定数</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> 結果</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> 収束状態</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> 設定の扱いと MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> 精度</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> ソルバごとの収束判定</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> SYCL版PARCELクラス</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> 共通事項との対応</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCELデータ型</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> コンストラクタ</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> コンストラクタ</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li class="current" data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> コンストラクタ / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> ソルバ共通の事項</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> クラステンプレート引数 (演算精度)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> solver() のテンプレート引数 (データ精度)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> 設定の扱いと例外</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> 定数</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> 共通メンバ関数</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> 固有値ソルバ共通のメンバ関数</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (クラス)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (クラス)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (クラス)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (クラス)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (クラス)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (クラス)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (クラス)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C言語の API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> 共通事項との対応</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> 定数</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran の API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> 共通事項との対応</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> 定数</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python の API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> 共通事項との対応</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> 例外</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="matrix.html" rel="previous" accesskey="p">← parcel::matrix</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="solver-common.html" rel="next" accesskey="n">ソルバ共通の事項 →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="言語">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C言語</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="7" id="vector"><span class="header-section-number">7</span> parcel::vector</h1>
+<p>　<a href="../user/glossary.html#g-device">デバイス</a>上のベクトルを保持するクラスである. 領域は <a href="../user/glossary.html#g-sycl">SYCL</a> の USM (Unified Shared Memory) のデバイスメモリに確保する. ホストとの転送関数 (<code>setValue</code> / <code>getValue</code> 系) はいずれも転送の完了を待ってから戻る.</p>
+<h2 data-number="7.1" id="api-vector-ctor"><span class="header-section-number">7.1</span> コンストラクタ / resize()</h2>
+<p><strong>概要</strong>　長さ <code>n</code> のベクトルを<a href="../user/glossary.html#g-device">デバイス</a>上に確保する. <code>resize()</code> は長さとキューを変えて確保し直す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> parceltype <span class="op">=</span> parcel_double <span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> vector<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>vector<span class="op">&lt;</span>parceltype<span class="op">&gt;::</span>vector<span class="op">(</span><span class="dt">size_t</span> n<span class="op">,</span> sycl<span class="op">::</span>queue <span class="op">*</span>q<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> resize<span class="op">(</span><span class="dt">size_t</span> n<span class="op">,</span> sycl<span class="op">::</span>queue <span class="op">*</span>q<span class="op">);</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">parceltype</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">PARCELデータ型</td>
+<td>要素を保持する精度</td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">size_t</span></code></td>
+<td>要素数</td>
+<td class="nowrap">なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">q</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">sycl::queue</span> <span class="tok">*</span></code></td>
+<td>ベクトルを置くデバイスのキュー</td>
+<td class="nowrap">なし</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　引数は検査しない. <a href="../user/glossary.html#g-device">デバイス</a>メモリの確保に失敗すると <code>util_sycl::device_bad_alloc</code> (<code>std::bad_alloc</code> の派生) を投げる (<a href="solver-common.html#api-settings-mpi">設定の扱いと例外</a>).</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<p><strong>注意</strong>　確保した領域は 0 で初期化される. <code>resize()</code> はそれまでの内容を捨てる. ソルバに渡すベクトルの長さは担当行数 (固有値ソルバでは各ソルバの項に示す長さ) とする.</p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>vector<span class="op">&lt;</span>parcel_double<span class="op">&gt;</span> x<span class="op">(</span>n<span class="op">,</span> <span class="op">&amp;</span>q<span class="op">),</span> b<span class="op">(</span>n<span class="op">,</span> <span class="op">&amp;</span>q<span class="op">);</span></span></code></pre></div>
+<h2 data-number="7.2" id="api-vector-queue"><span class="header-section-number">7.2</span> queue() / size()</h2>
+<p><strong>概要</strong>　キューへのポインタと要素数を返す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sycl<span class="op">::</span>queue <span class="op">*</span>queue<span class="op">();</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">size_t</span>       size<span class="op">();</span></span></code></pre></div>
+<p><strong>戻り値</strong>　確保に使った <code>sycl::queue</code> のポインタ, 要素数.</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<h2 data-number="7.3" id="api-vector-setvalue"><span class="header-section-number">7.3</span> setValue()</h2>
+<p><strong>概要</strong>　ホスト配列の値をベクトルに写す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> setValue<span class="op">(</span>T <span class="op">*</span>mem<span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> setValue<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">&amp;</span>mem<span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setValue<span class="op">(</span>parcel<span class="op">::</span>scalar val<span class="op">);</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setValue<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>mem_hi<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>mem_lo<span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setValue<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">double</span><span class="op">&gt;</span> <span class="op">&amp;</span>mem_hi<span class="op">,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">double</span><span class="op">&gt;</span> <span class="op">&amp;</span>mem_lo<span class="op">);</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">T</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">数値型</td>
+<td>ホスト配列の型. parceltype の精度へ変換する</td>
+<td class="nowrap">なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">mem</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">T</span> <span class="tok">*</span></code></td>
+<td>長さ <code><span class="tok">size()</span></code> のホスト配列</td>
+<td class="nowrap">なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">val</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">parcel::scalar</span></code></td>
+<td>全要素に設定する値. <code><span class="tok">double</span></code> または <code><span class="tok">float</span></code> を渡せる (<code><span class="tok">b.setValue(1.0)</span></code>)</td>
+<td class="nowrap">なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">mem_hi</span></code>, <code><span class="tok">mem_lo</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">double</span> <span class="tok">*</span></code></td>
+<td><a href="../user/glossary.html#g-dd">double-double</a> の上位・下位 (長さ <code><span class="tok">size()</span></code>)</td>
+<td class="nowrap">なし</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　検査しない. 配列は <code>size()</code> 要素以上なければならない.</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<p><strong>注意</strong>　<code>parcel_doubledouble</code> に <code>setValue(mem)</code> で写すと下位は 0 になる. double-double 以外に <code>setValue(mem_hi, mem_lo)</code> で写すと <code>mem_hi + mem_lo</code> を丸めた値になる.</p>
+<p><strong>関連項目</strong>　<a href="vector.html#api-vector-getvalue">getValue()</a>, <a href="vector.html#api-vector-sethi">setValue_hi()</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">.</span>setValue<span class="op">(</span>x_h<span class="op">.</span>data<span class="op">());</span></span></code></pre></div>
+<h2 data-number="7.4" id="api-vector-sethi"><span class="header-section-number">7.4</span> setValue_hi() / setValue_lo()</h2>
+<p><strong>概要</strong>　<a href="../user/glossary.html#g-dd">double-double</a> 型ベクトルの上位 / 下位の配列だけにホスト配列の値を写す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setValue_hi<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>mem_hi<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setValue_lo<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>mem_lo<span class="op">);</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">mem_hi</span></code> / <code><span class="tok">mem_lo</span></code></td>
+<td>入力</td>
+<td><code><span class="tok">double</span> <span class="tok">*</span></code></td>
+<td>長さ <code><span class="tok">size()</span></code> のホスト配列</td>
+<td>なし</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　<code>parcel::vector&lt;parcel_doubledouble&gt;</code> 専用である. 他の型で呼ぶとコンパイルエラーになる.</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<h2 data-number="7.5" id="api-vector-getvalue"><span class="header-section-number">7.5</span> getValue()</h2>
+<p><strong>概要</strong>　ベクトルの値をホスト配列に写す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> getValue<span class="op">(</span>T <span class="op">*</span>mem<span class="op">);</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> getValue<span class="op">(</span>T <span class="op">*</span>mem_hi<span class="op">,</span> T <span class="op">*</span>mem_lo<span class="op">);</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> getValue<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>mem_hi<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>mem_lo<span class="op">);</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">T</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">数値型</td>
+<td>ホスト配列の型</td>
+<td class="nowrap">なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">mem</span></code></td>
+<td class="nowrap">出力</td>
+<td class="nowrap"><code><span class="tok">T</span> <span class="tok">*</span></code></td>
+<td>長さ <code><span class="tok">size()</span></code> のホスト配列</td>
+<td class="nowrap">なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">mem_hi</span></code>, <code><span class="tok">mem_lo</span></code></td>
+<td class="nowrap">出力</td>
+<td class="nowrap"><code><span class="tok">T</span> <span class="tok">*</span></code></td>
+<td><a href="../user/glossary.html#g-dd">double-double</a> の上位・下位 (長さ <code><span class="tok">size()</span></code>)</td>
+<td class="nowrap">なし</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　検査しない. 配列は <code>size()</code> 要素以上なければならない.</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<p><strong>注意</strong>　double-double から <code>getValue(mem)</code> で受け取ると上位と下位の和を <code>T</code> に丸めた値になる. double-double 以外で <code>getValue(mem_hi, mem_lo)</code> を呼ぶと <code>mem_hi</code> に値が入り, <code>mem_lo</code> には何も書かない.</p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">.</span>getValue<span class="op">(</span>x_h<span class="op">.</span>data<span class="op">());</span></span></code></pre></div>
+<h2 data-number="7.6" id="api-vector-gethi"><span class="header-section-number">7.6</span> getValue_hi() / getValue_lo()</h2>
+<p><strong>概要</strong>　<a href="../user/glossary.html#g-dd">double-double</a> 型ベクトルの上位 / 下位の配列をホスト配列に写す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> getValue_hi<span class="op">(</span>T <span class="op">*</span>mem_hi<span class="op">);</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> getValue_lo<span class="op">(</span>T <span class="op">*</span>mem_lo<span class="op">);</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> getValue_hi<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">&amp;</span>mem_hi<span class="op">);</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> T <span class="op">&gt;</span> <span class="dt">void</span> getValue_lo<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">&amp;</span>mem_lo<span class="op">);</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">mem_hi</span></code> / <code><span class="tok">mem_lo</span></code></td>
+<td>出力</td>
+<td><code><span class="tok">T</span> <span class="tok">*</span></code></td>
+<td>長さ <code><span class="tok">size()</span></code> のホスト配列</td>
+<td>なし</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　検査しない. double-double 以外では <code>T</code> は要素型と同じ型に限る (異なるとコンパイルエラー).</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<p><strong>注意</strong>　double-double 以外では <code>getValue_hi()</code> は <code>getValue()</code> と同じであり, <code>getValue_lo()</code> は何も書かない.</p>
+<h2 data-number="7.7" id="api-vector-data"><span class="header-section-number">7.7</span> data() / data_hi() / data_lo()</h2>
+<p><strong>概要</strong>　<a href="../user/glossary.html#g-device">デバイス</a>上の配列の先頭ポインタを返す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> <span class="op">*</span>data<span class="op">();</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> <span class="op">*</span>data_hi<span class="op">();</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> <span class="op">*</span>data_lo<span class="op">();</span></span></code></pre></div>
+<p><strong>戻り値</strong>　USM デバイスメモリの先頭ポインタ. <a href="../user/glossary.html#g-dd">double-double</a> では <code>data()</code> と <code>data_hi()</code> が上位, <code>data_lo()</code> が下位の <code>double *</code> である. double-double 以外では <code>data()</code> と <code>data_hi()</code> が同じ配列を指し, <code>data_lo()</code> は <code>nullptr</code> である.</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<p><strong>注意</strong>　デバイスメモリなので, ホストから直接参照してはならない (<a href="../user/glossary.html#g-sycl">SYCL</a> カーネルの中で使う).</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="matrix.html" rel="previous">← parcel::matrix</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="solver-common.html" rel="next">ソルバ共通の事項 →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'cpp';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

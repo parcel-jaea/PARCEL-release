@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>GPU とジョブでの実行 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/running.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li class="current"><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="choosing-solver.html" rel="previous" accesskey="p">← ソルバの選び方</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="linear-solvers.html" rel="next" accesskey="n">線形ソルバ →</a></span>
+</nav>
+<h1 data-number="7" id="running"><span class="header-section-number">7</span> GPU とジョブでの実行</h1>
+<p>　ビルドしたプログラムを GPU で動かす方法と, 計算機のジョブスケジューラで流す方法を示す.</p>
+<h2 data-number="7.1" id="run-gpu"><span class="header-section-number">7.1</span> GPU で動かす</h2>
+<h3 data-number="7.1.1" id="run-gpu-target"><span class="header-section-number">7.1.1</span> ターゲットの調べ方</h3>
+<p>　GPU 向けの実行ファイルは, <code>--acpp-targets</code>に GPU の種類 (ターゲット) を指定して作る. プログラムは CPU 向けと同じでよい. ターゲットは GPU の世代で決まり, 計算ノードで次のように調べる.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span> <span class="at">--query-gpu</span><span class="op">=</span>name,compute_cap <span class="at">--format</span><span class="op">=</span>csv    <span class="co"># NVIDIA: 計算能力 (例 7.0) -&gt; cuda:sm_70</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rocminfo</span> <span class="kw">|</span> <span class="fu">grep</span> gfx                                       <span class="co"># AMD: gfx の番号 (例 gfx942) -&gt; hip:gfx942</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>計算能力 / gfx</th>
+<th><code><span class="tok">--acpp-targets</span></code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-v100">V100</a></td>
+<td>7.0</td>
+<td><code><span class="tok">cuda:sm_70</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-a100">A100</a></td>
+<td>8.0</td>
+<td><code><span class="tok">cuda:sm_80</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-rtx-a6000">RTX A6000</a></td>
+<td>8.6</td>
+<td><code><span class="tok">cuda:sm_86</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-h100">H100</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td>9.0</td>
+<td><code><span class="tok">cuda:sm_90</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-mi300a">MI300A</a></td>
+<td>gfx942</td>
+<td><code><span class="tok">hip:gfx942</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は, 使う GPU の<a href="glossary.html#g-backend">バックエンド</a>付きで入れておく (<a href="glossary.html#g-spack">spack</a> では<code>hipsycl+cuda</code>, <code>hipsycl+rocm amdgpu_target=&lt;gfx&gt;</code>. <a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」</a>). spack のレシピ<code>parcel-sycl</code>では<code>+cuda cuda_arch=&lt;n&gt;</code>または<code>+rocm amdgpu_target=&lt;gfx&gt;</code>で指定する (<a href="installation.html#install-spack-select">「構成の選び方」</a>).</p>
+<h3 data-number="7.1.2" id="run-gpu-cuda"><span class="header-section-number">7.1.2</span> CUDA の版とドライバ</h3>
+<p>　NVIDIA の GPU では, AdaptiveCpp が <a href="glossary.html#g-cuda">CUDA</a> を使ってカーネルを作り, 実行する. 使う CUDA は, 計算ノードのドライバが対応する版以下でなければならない. ドライバが対応する最も新しい版は, <code>nvidia-smi</code>の表示の右上 (<code>CUDA Version</code>) に出る. 例えば <a href="glossary.html#g-s86">s86 GPU</a> のドライバは CUDA 12.8 までに対応し, 試験では CUDA 12.6 を用いた. 使う CUDA の場所は環境変数<code>ACPP_CUDA_PATH</code>で与え, ビルドと実行で同じ値にする (各環境の「使用時の設定」. spack のレシピは<code>spack load</code>のときに設定する).</p>
+<h3 data-number="7.1.3" id="run-gpu-bind"><span class="header-section-number">7.1.3</span> 1 ランクに 1 台</h3>
+<p>　PARCEL は 1 <a href="glossary.html#g-rank">ランク</a>に 1 台の GPU を使う (<a href="concepts.html#gpu-rank-data">基本構成の「GPU・MPI ランク・データの対応」</a>). 1 ノードに複数の GPU がある場合は, GPU の数だけランクを起動し, 各ランクに別の GPU を割り当てる. 既定のままでは全ランクが同じ GPU を選びうるので, <code>gpu_bind.sh</code> (<a href="concepts.html#gpu-rank-bind">「1 ランクと 1 デバイスの対応」</a>) を<code>mpirun</code>とプログラムの間に挟む.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_80 <span class="at">-march</span><span class="op">=</span>native <span class="at">-I</span>/usr/include/openblas <span class="at">-o</span> run prog.cpp <span class="at">-lopenblas</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>9            <span class="co"># 1 ランクのスレッド数 (ノードのコア数 ÷ GPU の数を目安に)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./gpu_bind.sh ./run</span></code></pre></div>
+<p>　GPU でも, ホスト側の処理には各ランクの CPU のスレッドを使う. 環境ごとのランクあたりのスレッド数の例は<a href="concepts.html#gpu-rank-data">「GPU・MPI ランク・データの対応」</a>の表に示す. <a href="glossary.html#g-mig">MIG</a> の区画と <a href="glossary.html#g-apu">APU</a> (<a href="glossary.html#g-mi300a">MI300A</a>) の扱いも同じ節に示す.</p>
+<h3 data-number="7.1.4" id="run-gpu-check"><span class="header-section-number">7.1.4</span> 使われたデバイスの確かめ方</h3>
+<p>　GPU の割り当てが誤っていても, あるいは GPU の<a href="glossary.html#g-backend">バックエンド</a>が読めなくても, PARCEL は CPU の <a href="glossary.html#g-openmp">OpenMP</a> バックエンドで動き続け, 正しい数値を返す. 遅くなるだけなので, 結果の数値ではこの誤りに気付けない. 各ランクが使う<a href="glossary.html#g-device">デバイス</a>の名前を表示して確かめる.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// C++: キューのデバイスの名前を表示する</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">&quot;rank &quot;</span> <span class="op">&lt;&lt;</span> comm<span class="op">.</span>mpi_rank<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;: &quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>          <span class="op">&lt;&lt;</span> q<span class="op">.</span>get_device<span class="op">().</span>get_info<span class="op">&lt;</span>sycl<span class="op">::</span>info<span class="op">::</span>device<span class="op">::</span>name<span class="op">&gt;()</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span></code></pre></div>
+<ul>
+<li>Python: <code>parcel.device_name()</code>がこのランクで使われるデバイスの名前を返す.</li>
+<li>C言語・Fortran: <code>opt.verbose = 1</code> (Fortran は<code>opt%verbose = 1</code>) で rank 0 がデバイス名を表示する.</li>
+<li>検証用サンプル (<code>tests/verify/parcel_krylov_sample_verify.cpp</code>) は, 開始時に各ランクがデバイス名を 1 行表示する.</li>
+</ul>
+<p>　名前が GPU の名前 (例えば<code>Tesla V100-SXM2-32GB</code>) でなく CPU の名前になっている場合は, GPU が使われていない. <code>--acpp-targets</code>に GPU が入っているか, AdaptiveCpp が GPU の<a href="glossary.html#g-backend">バックエンド</a>付きで入っているか, <a href="glossary.html#g-cuda">CUDA</a> の場所 (<code>ACPP_CUDA_PATH</code>) と版 (<a href="running.html#run-gpu-cuda">「CUDA の版とドライバ」</a>), ノードの GPU より多いランクを載せていないかを確かめる. AMD の GPU では<code>HIP_VISIBLE_DEVICES</code>と<code>ROCR_VISIBLE_DEVICES</code>を同時に設定しない.</p>
+<h3 data-number="7.1.5" id="run-gpu-flags"><span class="header-section-number">7.1.5</span> 推奨のフラグ</h3>
+<ul>
+<li>NVIDIA の GPU: 梯子分割を付けない (既定のまま). <a href="glossary.html#g-v100">V100</a> では<code>-Xcuda-ptxas -maxrregcount=255</code>を付ける (<a href="kernel-opt.html#kopt-v100">「V100 のレジスタ数の指定」</a>).</li>
+<li>AMD の GPU: <code>-DPARCEL_SPMV_LADDER=1 -DPARCEL_PRECON_LADDER=1</code>を付ける (<a href="kernel-opt.html#kopt-ladder">「梯子分割」</a>).</li>
+<li>ホスト側には<code>-march=native -mtune=native</code>を付けてよい (ログインノードと計算ノードの CPU が同じ世代の場合).</li>
+<li>環境ごとのフラグの一覧は<a href="installation.html#install-recommended-flags">推奨オプション</a>に示す.</li>
+</ul>
+<h2 data-number="7.2" id="run-jobs"><span class="header-section-number">7.2</span> ジョブで流す</h2>
+<p>　計算機の計算ノードは, ジョブスケジューラを通して使う. 本書の試験環境では, <a href="glossary.html#g-pbs">PBS</a> (<a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-ps-b">PS-B</a>) と富士通のジョブ管理システム (<a href="glossary.html#g-pjm">PJM</a>. <a href="glossary.html#g-odyssey">Odyssey</a>, <a href="glossary.html#g-aquarius">Aquarius</a>) を用いた. ジョブスクリプトでは次のことを行う.</p>
+<ol type="1">
+<li>資源 (ノード数, <a href="glossary.html#g-rank">ランク</a>数, ランクあたりのスレッド数, GPU の数, 時間) を指定する. 書き方とキューの名前・課金先は計算機ごとに異なるので, 計算機の利用の手引きで確かめる.</li>
+<li>ビルドと同じ「使用時の設定」(モジュール, <a href="glossary.html#g-spack">spack</a> の環境, <code>LD_LIBRARY_PATH</code>, <code>ACPP_CUDA_PATH</code>) を行う. ジョブはログインのシェルの設定を引き継がないことがある.</li>
+<li><code>OMP_NUM_THREADS</code>にランクあたりのスレッド数を与える.</li>
+<li><code>OMP_PROC_BIND</code>を設定しない. LLVM の <a href="glossary.html#g-openmp">OpenMP</a> ランタイムでは, 設定すると全スレッドが 1 コアに集まって大幅に遅くなる (<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」</a>の冒頭). ランクのコアへの割り当ては<code>mpirun</code>のバインドで行う.</li>
+<li>GPU では<code>mpirun</code>とプログラムの間に<code>gpu_bind.sh</code>を挟む (<a href="running.html#run-gpu-bind">「GPU で動かす」</a>).</li>
+</ol>
+<p>　以下は最小の例である. <code>&lt;...&gt;</code>は計算機に合わせて書き換える.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PBS: 1 ノード, GPU 4 台, 4 ランク x 12 スレッド</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q &lt;キュー名&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=1:ncpus=48:mpiprocs=4:ngpus=4</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=01:00:00</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -W group_list=&lt;課金先&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -j oe</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PBS_O_WORKDIR}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用時の設定 (各環境の節, または . &lt;入れ先&gt;/setup.sh と spack load)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>12</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="bu">unset</span> <span class="va">OMP_PROC_BIND</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./gpu_bind.sh ./run</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PBS: 1 ノード (2 ソケット x 20 コア) の CPU, 8 ランク x 5 スレッド</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q &lt;キュー名&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=1:ncpus=40:mpiprocs=8:ompthreads=5</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=01:00:00</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -j oe</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PBS_O_WORKDIR}</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用時の設定</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>5</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">unset</span> <span class="va">OMP_PROC_BIND</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 8 <span class="at">--map-by</span> ppr:4:socket:PE=5 <span class="at">--bind-to</span> core ./run    <span class="co"># Open MPI の書き方</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 富士通のジョブ管理システム (PJM): A64FX 1 ノード, 4 ランク x 12 スレッド (1 CMG に 1 ランク)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;rscgrp=&lt;資源グループ&gt;&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;node=1&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;elapse=1:00:00&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -g &lt;グループ&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM --mpi &quot;proc=4&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM --omp thread=12</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -j</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PJM_O_WORKDIR}</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用時の設定</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_WAIT_POLICY</span><span class="op">=</span>ACTIVE    <span class="co"># A64FX の推奨 (「A64FX 向けの最適化」)</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_BLOCKTIME</span><span class="op">=</span>infinite</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="ex">mpiexec</span> <span class="at">-n</span> 4 ./run</span></code></pre></div>
+<ul>
+<li>ジョブは<code>qsub &lt;ジョブスクリプト&gt;</code> (PBS) または<code>pjsub &lt;ジョブスクリプト&gt;</code> (PJM) で投入し, <code>qstat</code> / <code>pjstat</code>で状態を見る.</li>
+<li>計算機ごとの注意 (資源の指定の仕方, <a href="glossary.html#g-aquarius">Aquarius</a> の<code>mpirun</code>のセッションディレクトリ, <a href="glossary.html#g-ps-b">PS-B</a> の vnode の取り方など) は<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」</a>の各環境の節と<a href="concepts.html#gpu-rank-data">「GPU・MPI ランク・データの対応」</a>に示す.</li>
+<li>富士通の<code>mpiexec</code>では, 各ランクの標準出力はジョブの標準出力のファイルに書かれ, <code>&gt; ファイル</code>で受けても空になることがある. 検証用サンプルは rank 0 の出力を<code>parcel_result.txt</code>にも書く.</li>
+<li>投入したことはジョブが動いた証拠にならない. 終わったら, 出力のファイルに収束状態の行 (<code>converged_reason = ...</code>) があることを確かめる.</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="choosing-solver.html" rel="previous">← ソルバの選び方</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="linear-solvers.html" rel="next">線形ソルバ →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

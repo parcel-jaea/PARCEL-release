@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Running on GPUs and in Jobs – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/running.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li class="current"><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="choosing-solver.html" rel="previous" accesskey="p">← Choosing a Solver</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="linear-solvers.html" rel="next" accesskey="n">Linear Solvers →</a></span>
+</nav>
+<h1 data-number="7" id="running"><span class="header-section-number">7</span> Running on GPUs and in Jobs</h1>
+<p>This chapter shows how to run a built program on GPUs and how to run it through the job scheduler of a system.</p>
+<h2 data-number="7.1" id="run-gpu"><span class="header-section-number">7.1</span> Running on GPUs</h2>
+<h3 data-number="7.1.1" id="run-gpu-target"><span class="header-section-number">7.1.1</span> Finding the Target</h3>
+<p>An executable for GPUs is built by giving the kind of GPU (the target) to <code>--acpp-targets</code>. The program is the same as for the CPU. The target is determined by the GPU generation; find it on a compute node as follows.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span> <span class="at">--query-gpu</span><span class="op">=</span>name,compute_cap <span class="at">--format</span><span class="op">=</span>csv    <span class="co"># NVIDIA: compute capability (e.g. 7.0) -&gt; cuda:sm_70</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rocminfo</span> <span class="kw">|</span> <span class="fu">grep</span> gfx                                       <span class="co"># AMD: gfx number (e.g. gfx942) -&gt; hip:gfx942</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>Compute capability / gfx</th>
+<th><code><span class="tok">--acpp-targets</span></code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-v100">V100</a></td>
+<td>7.0</td>
+<td><code><span class="tok">cuda:sm_70</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-a100">A100</a></td>
+<td>8.0</td>
+<td><code><span class="tok">cuda:sm_80</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-rtx-a6000">RTX A6000</a></td>
+<td>8.6</td>
+<td><code><span class="tok">cuda:sm_86</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-h100">H100</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td>9.0</td>
+<td><code><span class="tok">cuda:sm_90</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-mi300a">MI300A</a></td>
+<td>gfx942</td>
+<td><code><span class="tok">hip:gfx942</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Install <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> with the <a href="glossary.html#g-backend">backend</a> of the GPU to be used (<code>hipsycl+cuda</code> or <code>hipsycl+rocm amdgpu_target=&lt;gfx&gt;</code> with <a href="glossary.html#g-spack">spack</a>; <a href="sycl-compiler.html#sycl-compiler">Installing a SYCL Compiler</a>). With the spack recipe <code>parcel-sycl</code>, specify <code>+cuda cuda_arch=&lt;n&gt;</code> or <code>+rocm amdgpu_target=&lt;gfx&gt;</code> (<a href="installation.html#install-spack-select">“Choosing a Configuration”</a>).</p>
+<h3 data-number="7.1.2" id="run-gpu-cuda"><span class="header-section-number">7.1.2</span> CUDA Version and Driver</h3>
+<p>On NVIDIA GPUs, AdaptiveCpp builds and runs the kernels with <a href="glossary.html#g-cuda">CUDA</a>. The CUDA used must be a version supported by the driver of the compute nodes or older. The newest version supported by the driver is shown at the upper right of the output of <code>nvidia-smi</code> (<code>CUDA Version</code>). For example, the driver of <a href="glossary.html#g-s86">s86 GPU</a> supports up to CUDA 12.8, and CUDA 12.6 was used in the tests. Give the location of the CUDA used with the environment variable <code>ACPP_CUDA_PATH</code>, with the same value at build and run time (“Settings for use” of each environment; the spack recipe sets it at <code>spack load</code>).</p>
+<h3 data-number="7.1.3" id="run-gpu-bind"><span class="header-section-number">7.1.3</span> One GPU per Rank</h3>
+<p>PARCEL uses one GPU per <a href="glossary.html#g-rank">rank</a> (<a href="concepts.html#gpu-rank-data">“GPUs, MPI Ranks and Data” in “Basic Structure”</a>). If a node has several GPUs, start as many ranks as GPUs and assign a different GPU to each rank. By default all ranks may select the same GPU, so place <code>gpu_bind.sh</code> (<a href="concepts.html#gpu-rank-bind">“Mapping One Rank to One Device”</a>) between <code>mpirun</code> and the program.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_80 <span class="at">-march</span><span class="op">=</span>native <span class="at">-I</span>/usr/include/openblas <span class="at">-o</span> run prog.cpp <span class="at">-lopenblas</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>9            <span class="co"># threads per rank (roughly cores per node / GPUs per node)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./gpu_bind.sh ./run</span></code></pre></div>
+<p>Even on GPUs, each rank uses CPU threads for host-side processing. Examples of the number of threads per rank for each environment are given in the table of <a href="concepts.html#gpu-rank-data">“GPUs, MPI Ranks and Data”</a>. How <a href="glossary.html#g-mig">MIG</a> instances and <a href="glossary.html#g-apu">APUs</a> (<a href="glossary.html#g-mi300a">MI300A</a>) are handled is described in the same section.</p>
+<h3 data-number="7.1.4" id="run-gpu-check"><span class="header-section-number">7.1.4</span> Checking the Device Used</h3>
+<p>Even if the GPU assignment is wrong, or the GPU <a href="glossary.html#g-backend">backend</a> cannot be loaded, PARCEL keeps running on the CPU <a href="glossary.html#g-openmp">OpenMP</a> backend and returns correct numbers. It only becomes slow, so this error cannot be noticed from the numerical results. Print the name of the <a href="glossary.html#g-device">device</a> used by each rank to check.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// C++: print the name of the device of the queue</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">&quot;rank &quot;</span> <span class="op">&lt;&lt;</span> comm<span class="op">.</span>mpi_rank<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;: &quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>          <span class="op">&lt;&lt;</span> q<span class="op">.</span>get_device<span class="op">().</span>get_info<span class="op">&lt;</span>sycl<span class="op">::</span>info<span class="op">::</span>device<span class="op">::</span>name<span class="op">&gt;()</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span></code></pre></div>
+<ul>
+<li>Python: <code>parcel.device_name()</code> returns the name of the device used on this rank.</li>
+<li>C and Fortran: with <code>opt.verbose = 1</code> (<code>opt%verbose = 1</code> in Fortran), rank 0 prints the device name.</li>
+<li>The verification sample (<code>tests/verify/parcel_krylov_sample_verify.cpp</code>) prints one line with the device name of each rank at the start.</li>
+</ul>
+<p>If the name is that of a CPU rather than of a GPU (for example <code>Tesla V100-SXM2-32GB</code>), the GPU is not used. Check that <code>--acpp-targets</code> includes the GPU, that AdaptiveCpp was installed with the GPU <a href="glossary.html#g-backend">backend</a>, the location (<code>ACPP_CUDA_PATH</code>) and version of <a href="glossary.html#g-cuda">CUDA</a> (<a href="running.html#run-gpu-cuda">“CUDA Version and Driver”</a>), and that no more ranks than GPUs of the node are placed. On AMD GPUs, do not set <code>HIP_VISIBLE_DEVICES</code> and <code>ROCR_VISIBLE_DEVICES</code> at the same time.</p>
+<h3 data-number="7.1.5" id="run-gpu-flags"><span class="header-section-number">7.1.5</span> Recommended Flags</h3>
+<ul>
+<li>NVIDIA GPUs: no ladder splitting (the default). On <a href="glossary.html#g-v100">V100</a>, add <code>-Xcuda-ptxas -maxrregcount=255</code> (<a href="kernel-opt.html#kopt-v100">“Register Limit on V100”</a>).</li>
+<li>AMD GPUs: add <code>-DPARCEL_SPMV_LADDER=1 -DPARCEL_PRECON_LADDER=1</code> (<a href="kernel-opt.html#kopt-ladder">“Ladder Splitting”</a>).</li>
+<li><code>-march=native -mtune=native</code> may be added for the host side (when the login and compute nodes have the same CPU generation).</li>
+<li>The flags for each environment are listed in <a href="installation.html#install-recommended-flags">Recommended Options</a>.</li>
+</ul>
+<h2 data-number="7.2" id="run-jobs"><span class="header-section-number">7.2</span> Running in Jobs</h2>
+<p>The compute nodes of a system are used through its job scheduler. The test environments of this manual used <a href="glossary.html#g-pbs">PBS</a> (<a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-ps-b">PS-B</a>) and Fujitsu’s job management system (<a href="glossary.html#g-pjm">PJM</a>; <a href="glossary.html#g-odyssey">Odyssey</a>, <a href="glossary.html#g-aquarius">Aquarius</a>). A job script does the following.</p>
+<ol type="1">
+<li>Specify the resources (nodes, <a href="glossary.html#g-rank">ranks</a>, threads per rank, GPUs, time). The syntax, queue names and accounting groups differ between systems; check the user guide of the system.</li>
+<li>Apply the same “Settings for use” as for the build (modules, <a href="glossary.html#g-spack">spack</a> environment, <code>LD_LIBRARY_PATH</code>, <code>ACPP_CUDA_PATH</code>). Jobs may not inherit the settings of the login shell.</li>
+<li>Set <code>OMP_NUM_THREADS</code> to the number of threads per rank.</li>
+<li>Do not set <code>OMP_PROC_BIND</code>. With the LLVM <a href="glossary.html#g-openmp">OpenMP</a> runtime, setting it gathers all threads onto one core and makes the run much slower (beginning of <a href="sycl-compiler.html#sycl-compiler">Installing a SYCL Compiler</a>). Bind ranks to cores with the binding options of <code>mpirun</code>.</li>
+<li>On GPUs, place <code>gpu_bind.sh</code> between <code>mpirun</code> and the program (<a href="running.html#run-gpu-bind">“Running on GPUs”</a>).</li>
+</ol>
+<p>Minimal examples follow. Replace <code>&lt;...&gt;</code> for your system.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PBS: 1 node, 4 GPUs, 4 ranks x 12 threads</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q &lt;queue&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=1:ncpus=48:mpiprocs=4:ngpus=4</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=01:00:00</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -W group_list=&lt;group&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -j oe</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PBS_O_WORKDIR}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Settings for use (section of each environment, or . &lt;prefix&gt;/setup.sh and spack load)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>12</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="bu">unset</span> <span class="va">OMP_PROC_BIND</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 ./gpu_bind.sh ./run</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PBS: CPU of 1 node (2 sockets x 20 cores), 8 ranks x 5 threads</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q &lt;queue&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=1:ncpus=40:mpiprocs=8:ompthreads=5</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=01:00:00</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -j oe</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PBS_O_WORKDIR}</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Settings for use</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>5</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">unset</span> <span class="va">OMP_PROC_BIND</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 8 <span class="at">--map-by</span> ppr:4:socket:PE=5 <span class="at">--bind-to</span> core ./run    <span class="co"># Open MPI syntax</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Fujitsu job management system (PJM): 1 A64FX node, 4 ranks x 12 threads (one rank per CMG)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;rscgrp=&lt;resource group&gt;&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;node=1&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;elapse=1:00:00&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -g &lt;group&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM --mpi &quot;proc=4&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM --omp thread=12</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -j</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PJM_O_WORKDIR}</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Settings for use</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_WAIT_POLICY</span><span class="op">=</span>ACTIVE    <span class="co"># recommended on A64FX (&quot;Optimizations for A64FX&quot;)</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_BLOCKTIME</span><span class="op">=</span>infinite</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="ex">mpiexec</span> <span class="at">-n</span> 4 ./run</span></code></pre></div>
+<ul>
+<li>Submit a job with <code>qsub &lt;job script&gt;</code> (PBS) or <code>pjsub &lt;job script&gt;</code> (PJM), and check its state with <code>qstat</code> / <code>pjstat</code>.</li>
+<li>Notes for each system (resource syntax, the <code>mpirun</code> session directory on <a href="glossary.html#g-aquarius">Aquarius</a>, how to request vnodes on <a href="glossary.html#g-ps-b">PS-B</a>, etc.) are in each section of <a href="sycl-compiler.html#sycl-compiler">Installing a SYCL Compiler</a> and in <a href="concepts.html#gpu-rank-data">“GPUs, MPI Ranks and Data”</a>.</li>
+<li>With Fujitsu’s <code>mpiexec</code>, the standard output of each rank goes to the standard output file of the job, and redirecting it with <code>&gt; file</code> may give an empty file. The verification sample also writes the output of rank 0 to <code>parcel_result.txt</code>.</li>
+<li>Submitting a job is no evidence that it ran. After it finishes, check that the output file contains the convergence line (<code>converged_reason = ...</code>).</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="choosing-solver.html" rel="previous">← Choosing a Solver</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="linear-solvers.html" rel="next">Linear Solvers →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+# generic: 同梱の 7 環境以外の Linux の計算機に PARCEL をゼロから入れるための雛形
+#   下の「書き換える」の箇所を自分の計算機に合わせてから使う.
+#   Ubuntu 24.04 (WSL2, x86_64, RTX A6000) で, 次の値に書き換えて CPU・GPU × MPI なし・ありの 8 構成を入れて確かめた:
+#     gcc@13.3.0 (prefix /usr), openmpi@4.1.6~cuda (prefix /usr. apt の openmpi-bin libopenmpi-dev),
+#     cuda@12.6.85 (prefix /usr/local/cuda-12.6. NVIDIA の apt リポジトリの cuda-toolkit-12-6), cuda_arch=86
+#   Rocky Linux 9.8 (RHEL 9 互換, WSL2, x86_64, RTX A6000) でも, 次の値で同じ 8 構成を入れて確かめた:
+#     gcc@11.5.0 (prefix /usr), openmpi@4.1.1~cuda (dnf の openmpi-devel. prefix は下の MPI の注のとおりにそろえたディレクトリ),
+#     cuda@12.6.85 (prefix /usr/local/cuda-12.6. NVIDIA の dnf リポジトリ rhel9 の cuda-toolkit-12-6), cuda_arch=86,
+#     site_env.sh に module load mpi/openmpi-x86_64
+#   書き方は同梱の s86 (x86_64 + NVIDIA) と miyc (x86_64, CPU のみ) の定義にならった.
+#
+#   spack で作るもの: LLVM 18, AdaptiveCpp (hipsycl), OpenBLAS, binutils, Python と numpy / SciPy, PARCEL
+#   既存品を使うもの: コンパイラ (GCC), MPI (使う場合), CUDA (使う場合)
+#   @PARCEL_SRC@ と @PARCEL_REPO@ は install_stack.sh が置き換える (書き換えない)
+#
+#   手順:
+#     1. 下の gcc の版と場所を書き換える (gcc --version, which gcc g++ gfortran で調べる)
+#     2. MPI を使う場合は specs: の +mpi の 2 行と packages: の mpi / openmpi の行のコメントを外し, 版と場所を書き換える
+#     3. NVIDIA の GPU を使う場合は specs: の +cuda の行と packages: の cuda の行のコメントを外し,
+#        cuda_arch (nvidia-smi --query-gpu=compute_cap --format=csv の値から小数点を除いたもの. 例 8.0 -> 80),
+#        CUDA の版と場所を書き換え, hipsycl と llvm の行を +cuda 用に替える
+#     4. CPU が x86_64 でなければ llvm の targets: を書き換える (Arm は aarch64)
+#     5. CONCRETIZE_ONLY=1 bash spack/stack/install_stack.sh generic <入れ先> で解決だけを試してから入れる
+spack:
+  specs:
+  - parcel-sycl@1.2.0 ~mpi ~cuda ~rocm
+  - py-parcel-sycl@1.2.0 ~mpi ~cuda ~rocm
+  # MPI を使う場合 (手順 2)
+  # - parcel-sycl@1.2.0 +mpi ~cuda ~rocm
+  # - py-parcel-sycl@1.2.0 +mpi ~cuda ~rocm
+  # NVIDIA の GPU を使う場合 (手順 3. cuda_arch は計算機の GPU に合わせる. MPI ありは ~mpi を +mpi に)
+  # - parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=80
+  # - py-parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=80
+  - py-scipy
+  - py-pip
+  concretizer:
+    unify: when_possible
+  view:
+    default:
+      root: .spack-env/view
+      # parcel は構成違いを並べて入れるのでビューに入れない (spack load parcel-sycl~mpi~cuda~rocm のように構成を指定して読む)
+      exclude: [parcel-sycl, py-parcel-sycl]
+  repos:
+    parcel: '@PARCEL_REPO@'
+  develop:
+    parcel-sycl:
+      spec: parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+    py-parcel-sycl:
+      spec: py-parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+  packages:
+    c:
+      require: [gcc]
+    cxx:
+      require: [gcc]
+    fortran:
+      require: [gcc]
+    gcc:
+      buildable: false
+      externals:
+      # 書き換える (手順 1): 版と場所. 例は OS の GCC 11.4.1 が /usr/bin にある場合
+      - spec: gcc@11.4.1 languages:='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    # MPI を使う場合 (手順 2): 計算機の MPI を 1 つだけ登録する. 版と構成は mpirun --version, ompi_info などで調べる.
+    #   prefix は bin/mpicc がある場所の 1 つ上 (module show <MPI のモジュール> で分かる)
+    #   spack は prefix の下の include/ で MPI のヘッダを探す. RHEL 系の OS の Open MPI (dnf の openmpi-devel) は
+    #   ヘッダが /usr/include/openmpi-x86_64 にあり /usr/lib64/openmpi の下に無いので, そのまま登録すると MPI ありの
+    #   PARCEL のインストールが Query of package 'openmpi' for 'headers' failed で止まる. bin, lib, share, include を
+    #   1 つのディレクトリに並べて (例: O=$HOME/openmpi-rhel; ln -s /usr/lib64/openmpi/{bin,lib,share} $O/;
+    #   ln -s /usr/include/openmpi-x86_64 $O/include) それを prefix にする
+    # mpi:
+    #   require: [openmpi]
+    # openmpi:
+    #   buildable: false
+    #   externals:
+    #   - spec: openmpi@4.1.6~cuda
+    #     prefix: /path/to/openmpi/4.1.6
+    # NVIDIA の GPU を使う場合 (手順 3): ドライバが対応する版以下の CUDA を登録する (nvidia-smi の右上の CUDA Version 以下)
+    # cuda:
+    #   buildable: false
+    #   externals:
+    #   - spec: cuda@12.6.20
+    #     prefix: /path/to/cuda/12.6
+    hipsycl:
+      # GPU を使う場合は ['@24.10.0 +cuda'] にする
+      require: ['@24.10.0 ~cuda ~rocm']
+    llvm:
+      # AdaptiveCpp 24.10 は LLVM 14〜18. 使わない部品は作らない (lldb, lua, polly, flang, mlir)
+      # 書き換える (手順 3, 4): NVIDIA の GPU を使う場合は targets:=x86,nvptx, Arm の CPU では targets:=aarch64 (GPU も使えば aarch64,nvptx)
+      require: ['@18.1.8 +clang +lld ~lldb ~lua ~polly ~flang ~mlir ~python ~gold targets:=x86']
+    blas:
+      require: [openblas]
+    lapack:
+      require: [openblas]
+    python:
+      require: ['@3.11']

@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+# Wisteria-Aquarius: 本体の環境より先に入れるコンパイラ (install_stack.sh が環境 compilers として入れる)。
+#   OS の GCC 8.3.1 は AdaptiveCpp (C++17) に古いので, それで GCC 12 を作る
+spack:
+  specs:
+  - gcc@12.5.0 languages:=c,c++,fortran
+  packages:
+    gcc:
+      externals:
+      - spec: gcc@8.3.1 languages:='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    tar:
+      buildable: false
+      externals:
+      - spec: tar@1.30
+        prefix: /usr

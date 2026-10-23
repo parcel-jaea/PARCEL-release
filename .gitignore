@@ -1,0 +1,14 @@
+# ビルド生成物
+examples/build/
+build/
+_skbuild/
+*.egg-info/
+__pycache__/
+*.pyc
+*.o
+*.so
+*.a
+*.mod
+# 配布物
+*.tar.gz
+*.tar.gz.sha256

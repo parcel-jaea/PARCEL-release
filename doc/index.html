@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>PARCEL SYCL v1.2 マニュアル</title>
+  <link rel="stylesheet" href="assets/parcel.css" />
+  <link rel="stylesheet" href="assets/layout.css" />
+</head>
+<body class="toppage">
+<header class="topbar">
+<a class="home" href="index.html">PARCEL SYCL v1.2</a>
+<span class="spacer"></span>
+<a class="toplink search" href="ja/search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="index_en.html">English</a>
+</header>
+<main>
+<p class="toplogo"><img src="assets/PARCEL_TOP.png" alt="PARCEL: Parallel Computing Elements" /></p>
+<h1>PARCEL SYCL v1.2 マニュアル</h1>
+<p>2 つの文書からなる. 各ページ上部のリンクで日本語版と英語版を切り替えられる.</p>
+<table class="doclist">
+<thead><tr><th>文書</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td><a href="ja/user/index.html"><strong>利用者ガイド</strong></a></td><td>ライブラリを使う人向け. クイックスタート, 基本構成, SYCL 対応コンパイラとインストール (spack, macOS の Homebrew を含む), C++・C言語・Fortran・Python からの使用方法, アルゴリズム (線形ソルバ・固有値ソルバ・前処理・QR 分解), ソルバの選び方, 性能, 版と互換性.</td></tr>
+<tr><td><a href="ja/reference/index.html"><strong>API リファレンス</strong></a></td><td>公開クラスと関数の仕様. 言語によらない共通事項 (ソルバ, 入力の行列, 設定の意味と既定値, 定数, 結果, 収束状態, ソルバごとの収束判定) と, C++ (データ型, comm, matrix, vector, 各ソルバのメンバ関数), C言語, Fortran, Python の API を, 関数ごとに同じ書式で示す. 共通事項と使う言語の章だけで読める. 言語はページの上のタブで切り替える. 関数索引付き.</td></tr>
+<tr><td><a href="ja/search.html"><strong>検索</strong></a></td><td>文書 (利用者ガイド・API リファレンス) 全体のキーワード検索.</td></tr>
+</tbody>
+</table>
+
+<section class="top-section">
+<h2>ダウンロード</h2>
+<p>最新版 (v1.2, 公開日 2026-10-23) は <a href="https://github.com/parcel-jaea/PARCEL-release">PARCEL-release</a> に置く.</p>
+<p>過去のバージョン: SYCL 版の v1.0 は <a href="https://github.com/parcel-jaea/PARCEL-release">PARCEL-release</a>, SYCL 版より前の PARCEL 1.0〜1.2 (Fortran, CUDA) は <a href="https://github.com/parcel-jaea/PARCEL-legacy">PARCEL-legacy</a> に置く.</p>
+</section>
+
+<section class="top-section">
+<h2>ライセンス</h2>
+<p>オープンソースとし, GNU Lesser General Public License (LGPL-3.0) とする.</p>
+</section>
+
+<section class="top-section">
+<h2>プログラム開発の目的及び概要</h2>
+<p>現在の計算環境では, CPU に加え, GPU, FPGA, AI アクセラレータなど, さまざまな種類のハードウェアが活用されている. これらのデバイスはそれぞれ異なるプログラミングモデル (CUDA, OpenCL など) を必要とするため, 個別に開発を行う必要があり, プログラムの移植性や保守性に課題がある. この課題を解決するため, Khronos Group によって策定されたオープンな標準規格 SYCL が登場した. SYCL は C++ をベースとしており, CPU や GPU をはじめとする異種計算プラットフォーム上での並列プログラミングを単一ソースで実現できる.</p>
+<p>PARallel Computing ELements (PARCEL) ライブラリは, 演算性能に優れる一方でノード間通信性能が相対的に低い並列計算機に適した並列 Krylov 部分空間法ソルバを提供するライブラリである. これまで PARCEL は CPU 向けと NVIDIA GPU 向けのバージョンがそれぞれ独立に開発されてきたが, これを SYCL によって再実装することで, 性能可搬性とプログラムの保守性を高めることが可能となった. v1.2 では Intel / Arm CPU (A64FX, Apple M4 を含む) および NVIDIA / AMD GPU の計算環境で動作を確認しており, 将来的にはさらに Intel GPU, FPGA などへの対応も行っていく予定である.</p>
+<p>さらに, ハードウェアごとに演算性能や特性が異なるため, 半精度, 単精度, 倍精度, 4 倍精度相当 (double-double) といった適切な精度の選択が重要である. SYCL 版 PARCEL は計算アルゴリズムやデータ型に応じて異なる精度を柔軟に組み合わせて使用できる混合精度処理をサポートしており, これにより演算精度を維持しつつメモリアクセスのコストを抑えた, 高速かつ数値的に安定なソルバを実現している.</p>
+</section>
+
+<section class="top-section">
+<h2>v1.2 の変更点</h2>
+<ul>
+<li>固有値ソルバを追加: べき乗法 (<code>power</code>), 逆べき乗法 (<code>inverse_power</code>), Krylov-Schur 法 (<code>ks_arnoldi</code>. 非対称行列, shift-invert に対応).</li>
+<li>C言語・Fortran から全 7 ソルバを呼べる API と, Python のパッケージ <code>parcel</code> を追加.</li>
+<li>MPI を使わない 1 プロセス版のビルド (<code>-DPARCEL_MPI=0</code>) を追加.</li>
+<li>spack のレシピと, spack の取得から PARCEL までをゼロから入れるスクリプトを追加. macOS では Homebrew で入れられる.</li>
+<li>環境ごとのカーネル最適化 (CPU の縮約のブロック化, A64FX の全カーネルのブロック化・gemv の分解・SpMV の梯子分割, AMD の GPU の梯子分割) と, メモリを減らす既定の設定.</li>
+<li>混合精度の検証を 13 精度構成 (半精度・単精度・倍精度・double-double の組合せ) × 全ソルバに拡大し, 回帰試験 (C++・C言語・Fortran・Python, MPI あり・なし) と性能試験を整備.</li>
+</ul>
+</section>
+
+<section class="top-section">
+<h2>提供ソルバ</h2>
+<table class="solvertable">
+<thead><tr><th>種類</th><th>ソルバ</th><th>問題</th></tr></thead>
+<tbody>
+<tr><td rowspan="4"><a href="ja/user/linear-solvers.html">線形ソルバ</a></td><td><code>pcg</code>: 前処理付共役勾配法</td><td>対称正定値行列の線形方程式. 最も軽い</td></tr>
+<tr><td><code>pbicgstab</code>: 前処理付安定化双共役勾配法</td><td>非対称行列の線形方程式. 1 反復を軽くしたい場合</td></tr>
+<tr><td><code>pgmres</code>: 前処理付一般化最小残差法</td><td>非対称行列, または対称だが正定値でない行列の線形方程式. 収束を安定させたい場合</td></tr>
+<tr><td><code>pcagmres</code>: 前処理付通信削減型一般化最小残差法</td><td><code>pgmres</code> と同じ問題で, ランク数が多く集団通信が律速する場合</td></tr>
+<tr><td rowspan="3"><a href="ja/user/eigen-solvers.html">固有値ソルバ</a></td><td><code>power</code>: べき乗法</td><td>絶対値最大の固有値 1 個</td></tr>
+<tr><td><code>inverse_power</code>: 逆べき乗法</td><td>絶対値最小の固有値 1 個</td></tr>
+<tr><td><code>ks_arnoldi</code>: Krylov-Schur 法</td><td>複数の固有値, 複素共役対の固有値 (非対称行列), shift-invert によるシフトに近い固有値</td></tr>
+<tr><td rowspan="3"><a href="ja/user/preconditioners.html">前処理</a></td><td>ポイント Jacobi 前処理</td><td>最も安価. 効果は小さい</td></tr>
+<tr><td>ブロック Jacobi 前処理</td><td>CPU 向け. 作用はランク数と分割数で変わる</td></tr>
+<tr><td>Jacobi 前処理</td><td>GPU 向け. 作用は分割によらない</td></tr>
+</tbody>
+</table>
+<p>これらのソルバを C++, C言語, Fortran, Python から呼ぶ API を提供する. C++ はヘッダだけのライブラリとして, C言語・Fortran は API のライブラリとして, Python はパッケージ <code>parcel</code> として使う (<a href="ja/reference/index.html">API リファレンス</a>).</p>
+</section>
+
+<section class="top-section">
+<h2>動作確認環境</h2>
+<table class="envtable">
+<thead><tr><th>マシン名</th><th>CPU / GPU</th><th>OS</th><th>SYCL 環境</th><th>バックエンド環境</th></tr></thead>
+<tbody>
+<tr><td><a href="ja/user/sycl-compiler.html#env-s86">SGI8600 CPU</a></td><td>Intel Xeon Gold 6242R (20 コア)&nbsp;×2</td><td>RHEL 8.10</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-s86">SGI8600 GPU</a></td><td>Intel Xeon Gold 6248R (24 コア)&nbsp;×2<br/>NVIDIA V100-SXM2-32GB&nbsp;×4</td><td>RHEL 8.10</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>CUDA 12.6<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-miyabi-c">Miyabi-C</a></td><td>Intel Xeon CPU Max 9480 (56 コア)&nbsp;×2</td><td>RHEL 9.8</td><td>AdaptiveCpp 24.10.0 (clang 17.0.6, Intel oneAPI 2023.2.0 でビルド)</td><td>OpenMP<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-miyabi-g">Miyabi-G</a></td><td>NVIDIA GH200 (Grace 72 コア + H100 96GB)</td><td>RHEL 9.8 (aarch64)</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>CUDA 12.6<br/>Open MPI 4.1.6 (CUDA 対応版)</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-odyssey">Odyssey</a></td><td>FUJITSU A64FX (48 コア)</td><td>RHEL 8</td><td>AdaptiveCpp 24.10.0 (<code>omp.library-only</code>, 富士通コンパイラ FCC 1.2.43)</td><td>OpenMP (富士通)<br/>富士通 MPI 1.2.43</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-aquarius">Aquarius</a></td><td>Intel Xeon Platinum 8360Y (36 コア)&nbsp;×2<br/>NVIDIA A100-SXM4-40GB&nbsp;×8</td><td>RHEL 8.10</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>CUDA 12.2<br/>Open MPI 4.1.1</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-ps-a">Plasma Simulator A</a></td><td>Intel Xeon 6980P (128 コア)&nbsp;×2</td><td>RHEL 9.6</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP<br/>Intel MPI 2021.18.1</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-ps-b">Plasma Simulator B</a></td><td>AMD MI300A (CPU 24 コア + GPU)&nbsp;×4</td><td>RHEL 9.6</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>HIP (ROCm 6.3.3)<br/>Open MPI 5.0.7</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-mac">Mac</a></td><td>Apple M4 (10 コア: 高性能 4, 高効率 6)</td><td>macOS 15</td><td>AdaptiveCpp 25.10 (<code>omp.library-only</code>, Apple clang 17)</td><td>OpenMP<br/>Open MPI 5.0</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-linux-wsl">Linux Workstation (WSL2)</a></td><td>Intel Xeon Gold 6226R (16 コア)&nbsp;×2<br/>NVIDIA RTX A6000&nbsp;×2</td><td>Ubuntu 24.04</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP, CUDA 12.6<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="ja/user/sycl-compiler.html#env-linux-wsl">Linux Workstation (WSL2)</a></td><td>Intel Xeon Gold 6226R (16 コア)&nbsp;×2<br/>NVIDIA RTX A6000&nbsp;×2</td><td>Rocky Linux 9.8</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP, CUDA 12.6<br/>Open MPI 4.1.1</td></tr>
+</tbody>
+</table>
+<p>マシン名から利用者ガイドの各環境の節 (コンパイラ, ライブラリの版, 導入方法) に移れる. 表に無い一般的な Linux にも, spack (配布パッケージのスクリプト) で LLVM から PARCEL までを導入できる.</p>
+</section>
+
+<section class="top-section">
+<h2>プログラムの性能</h2>
+<p>v1.2, v1.0, PETSc 3.22 の処理時間と 1 装置あたりのメモリ (Jacobi 前処理付き共役勾配法, 3 次元 Poisson 方程式, 格子 512×512×512, 倍精度, 16 装置). 条件の詳細と他のソルバの結果は<a href="ja/user/performance.html">利用者ガイドの「性能」の章</a>に示す.</p>
+<figure class="topchart"><svg viewBox="0 0 860 522" width="100%" style="max-width:860px;font-family:sans-serif;" role="img" aria-label="処理時間 [秒]">
+<text x="0" y="16" font-size="13" fill="#222">処理時間 [秒]</text>
+<text x="0" y="40" font-size="15" font-weight="bold" fill="#08519c">v1.2 は v1.0 より最大 1.56 倍, PETSc より最大 1.76 倍高速</text>
+<line x1="334.0" y1="54" x2="334.0" y2="482" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="85" font-size="12" fill="#222">SGI8600 CPU (Xeon Gold 6242R)</text>
+<rect x="214" y="60" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="70" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">24.2 秒</text>
+<rect x="214" y="74" width="150.3" height="12" fill="#4292c6"/>
+<text x="368.3" y="84" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">30.3 秒</text>
+<text x="712" y="85" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.25 倍高速</text>
+<rect x="214" y="88" width="211.2" height="12" fill="#9ecae1"/>
+<text x="429.2" y="98" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">42.6 秒</text>
+<text x="712" y="99" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.76 倍高速</text>
+<text x="0" y="139" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="214" y="114" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="124" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.64 秒</text>
+<rect x="214" y="128" width="186.6" height="12" fill="#4292c6"/>
+<text x="404.6" y="138" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">15.0 秒</text>
+<text x="712" y="139" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.55 倍高速</text>
+<rect x="214" y="142" width="143.4" height="12" fill="#9ecae1"/>
+<text x="361.4" y="152" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">11.5 秒</text>
+<text x="712" y="153" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.19 倍高速</text>
+<text x="0" y="193" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="214" y="168" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="178" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.82 秒</text>
+<rect x="214" y="182" width="128.8" height="12" fill="#4292c6"/>
+<text x="346.8" y="192" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.32 秒</text>
+<text x="712" y="193" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.07 倍高速</text>
+<rect x="214" y="196" width="136.8" height="12" fill="#9ecae1"/>
+<text x="354.8" y="206" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.77 秒</text>
+<text x="712" y="207" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.14 倍高速</text>
+<text x="0" y="247" font-size="12" fill="#222">Plasma Simulator A (Xeon 6980P)</text>
+<rect x="214" y="222" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="232" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.73 秒</text>
+<rect x="214" y="236" width="138.5" height="12" fill="#4292c6"/>
+<text x="356.5" y="246" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.62 秒</text>
+<text x="712" y="247" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.15 倍高速</text>
+<rect x="214" y="250" width="120.5" height="12" fill="#9ecae1"/>
+<text x="338.5" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.76 秒</text>
+<text x="712" y="261" font-size="11"  fill="#888">PETSc 比 同等</text>
+<text x="0" y="301" font-size="12" fill="#222">SGI8600 GPU (V100)</text>
+<rect x="214" y="276" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="286" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.18 秒</text>
+<rect x="214" y="290" width="158.2" height="12" fill="#4292c6"/>
+<text x="376.2" y="300" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.47 秒</text>
+<text x="712" y="301" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.32 倍高速</text>
+<rect x="214" y="304" width="128.1" height="12" fill="#9ecae1"/>
+<text x="346.1" y="314" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.67 秒</text>
+<text x="712" y="315" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.07 倍高速</text>
+<text x="0" y="355" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="214" y="330" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="340" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.34 秒</text>
+<rect x="214" y="344" width="131.3" height="12" fill="#4292c6"/>
+<text x="349.3" y="354" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.47 秒</text>
+<text x="712" y="355" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.09 倍高速</text>
+<rect x="214" y="358" width="120.8" height="12" fill="#9ecae1"/>
+<text x="338.8" y="368" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.35 秒</text>
+<text x="712" y="369" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.01 倍高速</text>
+<text x="0" y="409" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="214" y="384" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="394" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.92 秒</text>
+<rect x="214" y="398" width="122.8" height="12" fill="#4292c6"/>
+<text x="340.8" y="408" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.02 秒</text>
+<text x="712" y="409" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.02 倍高速</text>
+<rect x="214" y="412" width="136.0" height="12" fill="#9ecae1"/>
+<text x="354.0" y="422" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.45 秒</text>
+<text x="712" y="423" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.13 倍高速</text>
+<text x="0" y="463" font-size="12" fill="#222">Plasma Simulator B (MI300A)</text>
+<rect x="214" y="438" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="448" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.11 秒</text>
+<rect x="214" y="452" width="186.7" height="12" fill="#4292c6"/>
+<text x="404.7" y="462" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.29 秒</text>
+<text x="712" y="463" font-size="12" font-weight="bold" fill="#08519c">v1.0 比 1.56 倍高速</text>
+<rect x="214" y="466" width="121.1" height="12" fill="#9ecae1"/>
+<text x="339.1" y="476" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.13 秒</text>
+<text x="712" y="477" font-size="12" font-weight="bold" fill="#08519c">PETSc 比 1.01 倍高速</text>
+<rect x="214" y="494" width="12" height="12" fill="#08519c"/>
+<text x="230" y="504" font-size="12" fill="#222">v1.2</text>
+<rect x="281" y="494" width="12" height="12" fill="#4292c6"/>
+<text x="297" y="504" font-size="12" fill="#222">v1.0</text>
+<rect x="348" y="494" width="12" height="12" fill="#9ecae1"/>
+<text x="364" y="504" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+<figure class="topchart"><svg viewBox="0 0 860 522" width="100%" style="max-width:860px;font-family:sans-serif;" role="img" aria-label="1 装置あたりのメモリ [GiB] (CPU はホスト, GPU はデバイス)">
+<text x="0" y="16" font-size="13" fill="#222">1 装置あたりのメモリ [GiB] (CPU はホスト, GPU はデバイス)</text>
+<text x="0" y="40" font-size="15" font-weight="bold" fill="#006d2c">v1.2 は v1.0 より最大 45%, PETSc より最大 80% メモリを削減</text>
+<line x1="334.0" y1="54" x2="334.0" y2="482" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="85" font-size="12" fill="#222">SGI8600 CPU (Xeon Gold 6242R)</text>
+<rect x="214" y="60" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="70" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.89 GiB</text>
+<rect x="214" y="74" width="141.4" height="12" fill="#41ab5d"/>
+<text x="359.4" y="84" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.41 GiB</text>
+<text x="712" y="85" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 15% 削減</text>
+<rect x="214" y="88" width="257.3" height="12" fill="#a1d99b"/>
+<text x="475.3" y="98" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.20 GiB</text>
+<text x="712" y="99" font-size="12" font-weight="bold" fill="#006d2c">PETSc 比 53% 削減</text>
+<text x="0" y="139" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="214" y="114" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="124" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.97 GiB</text>
+<rect x="214" y="128" width="158.9" height="12" fill="#41ab5d"/>
+<text x="376.9" y="138" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.93 GiB</text>
+<text x="712" y="139" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 24% 削減</text>
+<rect x="214" y="142" width="184.0" height="12" fill="#a1d99b"/>
+<text x="402.0" y="152" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.55 GiB</text>
+<text x="712" y="153" font-size="12" font-weight="bold" fill="#006d2c">PETSc 比 35% 削減</text>
+<text x="0" y="193" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="214" y="168" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="178" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.37 GiB</text>
+<rect x="214" y="182" width="148.0" height="12" fill="#41ab5d"/>
+<text x="366.0" y="192" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.93 GiB</text>
+<text x="712" y="193" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 19% 削減</text>
+<rect x="214" y="196" width="360.0" height="12" fill="#a1d99b"/>
+<polygon points="558.0,210 561.0,210 565.0,194 562.0,194" fill="#fff"/>
+<polygon points="564.0,210 567.0,210 571.0,194 568.0,194" fill="#fff"/>
+<text x="578.0" y="206" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.39 GiB</text>
+<text x="712" y="207" font-size="12" font-weight="bold" fill="#006d2c">PETSc 比 75% 削減</text>
+<text x="0" y="247" font-size="12" fill="#222">Plasma Simulator A (Xeon 6980P)</text>
+<rect x="214" y="222" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="232" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.74 GiB</text>
+<rect x="214" y="236" width="117.7" height="12" fill="#41ab5d"/>
+<text x="335.7" y="246" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.65 GiB</text>
+<text x="712" y="247" font-size="11"  fill="#888">v1.0 比 2% 増</text>
+<rect x="214" y="250" width="360.0" height="12" fill="#a1d99b"/>
+<polygon points="558.0,264 561.0,264 565.0,248 562.0,248" fill="#fff"/>
+<polygon points="564.0,264 567.0,264 571.0,248 568.0,248" fill="#fff"/>
+<text x="578.0" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">23.9 GiB</text>
+<text x="712" y="261" font-size="12" font-weight="bold" fill="#006d2c">PETSc 比 80% 削減</text>
+<text x="0" y="301" font-size="12" fill="#222">SGI8600 GPU (V100)</text>
+<rect x="214" y="276" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="286" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.73 GiB</text>
+<rect x="214" y="290" width="194.7" height="12" fill="#41ab5d"/>
+<text x="412.7" y="300" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.80 GiB</text>
+<text x="712" y="301" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 38% 削減</text>
+<rect x="214" y="304" width="108.3" height="12" fill="#a1d99b"/>
+<text x="326.3" y="314" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.56 GiB</text>
+<text x="712" y="315" font-size="11"  fill="#888">PETSc 比 11% 増</text>
+<text x="0" y="355" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="214" y="330" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="340" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.97 GiB</text>
+<rect x="214" y="344" width="185.6" height="12" fill="#41ab5d"/>
+<text x="403.6" y="354" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.05 GiB</text>
+<text x="712" y="355" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 35% 削減</text>
+<rect x="214" y="358" width="110.6" height="12" fill="#a1d99b"/>
+<text x="328.6" y="368" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.82 GiB</text>
+<text x="712" y="369" font-size="11"  fill="#888">PETSc 比 9% 増</text>
+<text x="0" y="409" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="214" y="384" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="394" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.84 GiB</text>
+<rect x="214" y="398" width="190.1" height="12" fill="#41ab5d"/>
+<text x="408.1" y="408" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.92 GiB</text>
+<text x="712" y="409" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 37% 削減</text>
+<rect x="214" y="412" width="110.2" height="12" fill="#a1d99b"/>
+<text x="328.2" y="422" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.69 GiB</text>
+<text x="712" y="423" font-size="11"  fill="#888">PETSc 比 9% 増</text>
+<text x="0" y="463" font-size="12" fill="#222">Plasma Simulator B (MI300A)</text>
+<rect x="214" y="438" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="448" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.46 GiB</text>
+<rect x="214" y="452" width="219.1" height="12" fill="#41ab5d"/>
+<text x="437.1" y="462" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.67 GiB</text>
+<text x="712" y="463" font-size="12" font-weight="bold" fill="#006d2c">v1.0 比 45% 削減</text>
+<rect x="214" y="466" width="123.4" height="12" fill="#a1d99b"/>
+<text x="341.4" y="476" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.50 GiB</text>
+<text x="712" y="477" font-size="12" font-weight="bold" fill="#006d2c">PETSc 比 3% 削減</text>
+<rect x="214" y="494" width="12" height="12" fill="#006d2c"/>
+<text x="230" y="504" font-size="12" fill="#222">v1.2</text>
+<rect x="281" y="494" width="12" height="12" fill="#41ab5d"/>
+<text x="297" y="504" font-size="12" fill="#222">v1.0</text>
+<rect x="348" y="494" width="12" height="12" fill="#a1d99b"/>
+<text x="364" y="504" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+</section>
+
+<section class="top-section">
+<h2>開発者</h2>
+<p>日本原子力研究開発機構システム計算科学センター</p>
+</section>
+
+<section class="top-section">
+<h2>連絡先</h2>
+<p>質問・不具合の報告は GitHub の Issues へ: <a href="https://github.com/parcel-jaea/PARCEL-release/issues">https://github.com/parcel-jaea/PARCEL-release/issues</a></p>
+</section>
+</main>
+</body>
+</html>

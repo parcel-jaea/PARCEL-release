@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>インストール – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/installation.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li class="current"><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="sycl-compiler.html" rel="previous" accesskey="p">← SYCL対応コンパイラのインストール方法</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="usage.html" rel="next" accesskey="n">使用方法 →</a></span>
+</nav>
+<h1 data-number="4" id="installation"><span class="header-section-number">4</span> インストール</h1>
+<p>　<a href="glossary.html#g-sycl">SYCL</a>版PARCELの導入方法について説明する.<br />
+　PARCEL はヘッダーファイルのみで構成されている. <code>./Include/parcel_sycl.hpp</code> をインクルードし, SYCL対応コンパイラでコンパイルすれば利用可能である. ライブラリとしての事前ビルドやインストール作業は不要である.</p>
+<p>　ただし次の 3 点に注意する.</p>
+<ul>
+<li>C++・C言語・Fortran では, 既定で <a href="glossary.html#g-mpi">MPI</a> を使う (<code>PARCEL_MPI</code> の既定値 1). SYCL コンパイラ (<code>acpp</code>) を MPI のラッパ (<code>mpicxx</code> など) 経由で呼び出す. MPI を使わない 1 プロセス版は <code>-DPARCEL_MPI=0</code> でビルドできる. Python と spack では既定が MPI なしである (<a href="installation.html#install-mpi-default">「MPI の有無の既定」</a>, <a href="installation.html#install-nompi">「MPI なしのビルド」</a>).</li>
+<li>固有値ソルバ <code>ks_arnoldi</code> (<code>Include/parcel_krylov_ks.hpp</code>) は <code>lapacke.h</code> をインクルードし, <a href="glossary.html#g-lapack">LAPACKE</a> を呼び出す. 既定では全ソルバが有効なので, 線形方程式だけを解く場合も LAPACKE のヘッダとライブラリを指定する. <code>-DPARCEL_ENABLE_KS_ARNOLDI=0</code> で <code>ks_arnoldi</code> を外せば不要になる (<a href="installation.html#install-macros">「ビルドするソルバの取捨」</a>).</li>
+<li>ソース中の <code>#include</code> は相対パスで書かれている. サンプルプログラムは PARCEL のトップディレクトリでコンパイルする.</li>
+</ul>
+<p>　SYCL対応コンパイラの導入は<a href="sycl-compiler.html#sycl-compiler">前章</a>を参照のこと. <a href="glossary.html#g-spack">spack</a> で PARCEL ごと入れる方法は<a href="installation.html#install-spack">「spack によるインストール」</a>に, Python のパッケージは<a href="installation.html#install-python">「Python のパッケージ」</a>に示す.</p>
+<h2 data-number="4.1" id="install-layout"><span class="header-section-number">4.1</span> パッケージの構成</h2>
+<p>　配布パッケージ (PARCEL_SYCL v1.2) の構成を示す. ライブラリ本体は <code>Include/</code> のヘッダだけであり, 他はサンプルと試験である.</p>
+<div class="nowrap-c1">
+<table>
+<thead>
+<tr>
+<th>場所</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">Include/</span></code></td>
+<td>ライブラリ本体 (ヘッダのみ). <code><span class="tok">parcel_sycl.hpp</span></code> をインクルードする</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">capi/</span></code></td>
+<td>C言語・Fortran の API. <code><span class="tok">parcel_sycl_c.h</span></code> (C の宣言), <code><span class="tok">parcel_sycl_mod.f90</span></code> (Fortran のモジュール), <code><span class="tok">wrapper_parcel_sycl.cpp</span></code> (実装. SYCL 対応コンパイラでビルドする), <code><span class="tok">parcel_capi_default.hpp</span></code> (ラッパのコンパイル時の既定値: 内部精度と旧 API の設定)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">examples/</span></code></td>
+<td><code><span class="tok">quick_start.cpp</span></code>・<code><span class="tok">quick_start_c.c</span></code>・<code><span class="tok">quick_start_f.f90</span></code>・<code><span class="tok">quick_start.py</span></code> (<a href="quickstart.html#quickstart">クイックスタート</a>の C++・C言語・Fortran・Python の例), <code><span class="tok">example_pcg_ks.cpp</span></code> (<code><span class="tok">pcg</span></code> と <code><span class="tok">ks_arnoldi</span></code>), <code><span class="tok">sample_c.c</span></code>・<code><span class="tok">sample_f.f90</span></code> (C言語・Fortran の API で全ソルバを呼んで検証する例), <code><span class="tok">sample_f_mpi_stub.f90</span></code> (MPI なしのビルドで <code><span class="tok">sample_f.f90</span></code>・<code><span class="tok">quick_start_f.f90</span></code> を組むための 1 プロセス用 <code><span class="tok">mpi</span></code> モジュール), <code><span class="tok">problem.f90</span></code> (旧 API 用の行列生成), <code><span class="tok">build_examples.sh</span></code> (以上をまとめてビルドするスクリプト. コンパイラ・ターゲット・LAPACK は環境変数で変える), <code><span class="tok">run_quick_checks.sh</span></code> (ビルド後の確認. <a href="installation.html#install-quick-checks">「ビルド後の確認」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">python/</span></code></td>
+<td>Python のパッケージ <code><span class="tok">parcel</span></code> (<a href="installation.html#install-python">インストールの「Python のパッケージ」</a>, <a href="usage.html#usage-python">使用方法の Python</a>). <code><span class="tok">parcel/</span></code> (Python の層), <code><span class="tok">src/</span></code> (ネイティブ層 <code><span class="tok">libparcel_py.so</span></code> のソース), <code><span class="tok">envs/mac_brew.sh</span></code> (macOS + Homebrew でビルドするときの設定), <code><span class="tok">pyproject.toml</span></code>・<code><span class="tok">CMakeLists.txt</span></code> (pip でのビルドの設定)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">spack/</span></code></td>
+<td><a href="glossary.html#g-spack">spack</a> のレシピ <code><span class="tok">parcel-sycl</span></code>・<code><span class="tok">py-parcel-sycl</span></code> (<code><span class="tok">spack_repo/parcel/</span></code>) と, spack の取得から PARCEL までをゼロから入れるスクリプト (<code><span class="tok">stack/install_stack.sh</span></code>, 確認用の <code><span class="tok">stack/check_stack.sh</span></code>, 環境ごとの定義 <code><span class="tok">stack/envs/&lt;環境&gt;/</span></code>) (<a href="installation.html#install-spack">「spack によるインストール」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/verify/</span></code></td>
+<td>検証用サンプル <code><span class="tok">parcel_krylov_sample_verify.cpp</span></code> とその既定値 <code><span class="tok">parcel_default.hpp</span></code>, メモリ使用量の表示 (<code><span class="tok">diag_mem.hpp</span></code>. <code><span class="tok">PARCEL_MEM_REPORT</span></code>), 試験用の行列の生成 (Poisson・移流拡散・非構造)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/regression/</span></code></td>
+<td>回帰試験のジョブスクリプトの生成器 (<code><span class="tok">gen_regression.py</span></code>), 投入と集計のスクリプト, <a href="glossary.html#g-dd">double-double</a> の検査 (<code><span class="tok">ddcheck</span></code>), Python の API の試験 (<code><span class="tok">sample_py.py</span></code>), スケジューラの無い計算機で回帰試験を流すスクリプト (<code><span class="tok">run_local.sh</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/perf/</span></code></td>
+<td>性能試験のジョブスクリプトの生成器 (<code><span class="tok">gen_perf.py</span></code>, 混合精度の<code><span class="tok">gen_perf_prec.py</span></code>) と集計のスクリプト</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/site_config.py</span></code></td>
+<td>試験の環境ごとの設定 (キュー, モジュール, コンパイルフラグ, 課金先). 自分の環境に合わせて書き換える</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/check_version.py</span></code></td>
+<td>版の照合 (ビルド不要). 版を書き写しているファイル (Python のパッケージ, spack のレシピと環境の定義の <code><span class="tok">parcel-sycl@</span></code>, <code><span class="tok">CITATION.cff</span></code>) が <code><span class="tok">Include/parcel_version.hpp</span></code> と同じかを調べる (<a href="versions.html#versions-api">「版の確かめ方」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tools/make_tarball.py</span></code></td>
+<td>配布 tarball と sha256 を作るスクリプト (<a href="versions.html#versions-tarball">「配布物の確認」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">README.md</span></code>, <code><span class="tok">CHANGELOG.md</span></code></td>
+<td>概要と v1.2 の変更点</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">CITATION.cff</span></code>, <code><span class="tok">SUPPORT.md</span></code></td>
+<td>引用の情報と問い合わせの案内 (<a href="versions.html#versions-cite">「引用と問い合わせ」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">doc/</span></code></td>
+<td>本書の利用者ガイドと API リファレンスの HTML (日本語・英語. 入口は <code><span class="tok">doc/index.html</span></code>, 英語は <code><span class="tok">doc/index_en.html</span></code>. ウェブブラウザでそのまま開ける)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">COPYING</span></code>, <code><span class="tok">COPYING.LESSER</span></code></td>
+<td>ライセンス (LGPL-3.0)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>　説明の md (<code>README.md</code>, <code>CHANGELOG.md</code>, <code>SUPPORT.md</code>, <code>spack/README.md</code>, <code>python/README.md</code>, <code>tests/*/README.md</code>) は英語版で, 同じ場所に日本語版 (<code>README.ja.md</code> など, 名前の <code>.md</code> の前に <code>.ja</code>) がある. 以下では日本語版の名前で示す.</p>
+<p>　試験の実行方法は <code>tests/regression/README.ja.md</code> と <code>tests/perf/README.ja.md</code> に記す. 回帰試験は検証用サンプル (C++) と, C言語・Fortran・Python の API の試験 (<code>examples/sample_c.c</code>, <code>examples/sample_f.f90</code>, <code>tests/regression/sample_py.py</code>) からなり, <a href="glossary.html#g-mpi">MPI</a> あり・なしと言語を選んで生成・ビルド・投入・集計できる. 同梱の設定 (<code>tests/site_config.py</code>) には, 本書の試験環境のほか, <a href="glossary.html#g-spack">spack</a> でゼロから入れた環境で流す例 (<code>s86spack_cpu</code>, <code>s86spack_gpu</code> など) と, スケジューラの無い macOS + Homebrew の例 (<code>mac</code>) がある.</p>
+<h2 data-number="4.2" id="install-quick-checks"><span class="header-section-number">4.2</span> ビルド後の確認</h2>
+<p>　ビルド後の確認には <code>bash examples/run_quick_checks.sh</code> を使う. <a href="quickstart.html#quickstart">クイックスタート</a>の 4 つの例 (C++・C言語・Fortran・Python) を <code>examples/build_examples.sh</code> でビルドして 1 プロセスで実行し, <a href="glossary.html#g-mpi">MPI</a> ありのビルドでは C++ の例を 2 プロセスでも実行する. 各例は厳密解との最大相対誤差が 1e-6 以下なら <code>check: ... PASS</code> を表示する (<a href="quickstart.html#qs-overview">「プログラムの概要」</a>). 最後に <code>PASS n / FAIL m (SKIP k)</code> と所要時間を 1 行で表示し, 不合格が無ければ終了コード 0 で終わる. Python の例は, <code>parcel</code> (と NumPy・SciPy) を import できなければ SKIP とする (不合格にしない).</p>
+<p>　ビルド (<code>build_examples.sh quick</code>) は SYCL のコンパイル (C++ の例と C言語・Fortran の API のラッパ) を同時に走らせる (同時に走らせる数は <code>BUILD_JOBS</code>. 既定は対象の数とコア数の小さい方). ビルドに成功すると, ビルドの設定 (<code>SYCL_TARGET</code>, <code>CXXFLAGS</code>, <code>PARCEL_MPI</code>, コンパイラとその場所など) とソース (ヘッダ, API, 例) の cksum を <code>examples/build/build_stamp.txt</code> に記録する. 2 回目からは, 実行ファイルがそろい記録が今と同じならビルドを飛ばして実行だけをする (1 分かからない). 設定かソースが変わっていれば, 違う項目を表示して作り直す. <code>--rebuild</code> を付けると必ず作り直す.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> examples/run_quick_checks.sh                 <span class="co"># MPI あり. 最後の行: === PASS 6 / FAIL 0 (SKIP 0)  所要 &lt;秒&gt; s</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_MPI</span><span class="op">=</span>0 <span class="fu">bash</span> examples/run_quick_checks.sh    <span class="co"># MPI なし</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> examples/run_quick_checks.sh <span class="at">--rebuild</span>       <span class="co"># 作り直す</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">NO_BUILD</span><span class="op">=</span>1 <span class="fu">bash</span> examples/run_quick_checks.sh      <span class="co"># 記録を見ずに examples/build/ を実行だけする</span></span></code></pre></div>
+<p>　コンパイラ・ターゲット・LAPACK の環境変数は <code>build_examples.sh</code> と同じである (GPU は例えば <code>SYCL_TARGET=--acpp-targets=cuda:sm_70</code>). MPI の起動コマンドは <code>MPIEXEC</code> (既定 <code>mpirun</code>), <code>MPIEXEC_NP_FLAG</code> (既定 <code>-n</code>), <code>MPI_NP</code> (既定 2), <code>MPIEXEC_ARGS</code> で変える. 起動コマンドを通さないと <code>MPI_Init</code> できない MPI (富士通 MPI など) では <code>MPIEXEC_ALL=1</code> で 1 プロセスの実行も起動コマンドを通す. 富士通の <code>mpiexec</code> はランクの標準出力をジョブのログに出し, check の行を読めないので, 富士通の <code>mpiexec</code> (<code>MPIEXEC=mpiexec</code> で, その実体が <code>/opt/FJSV…</code> にあるもの) では <code>RC_ONLY=1</code> (終了コード 0 なら合格) が既定になる (外すときは <code>RC_ONLY=0</code>). <a href="glossary.html#g-spack">spack</a> で入れた場合は <code>spack test run parcel-sycl py-parcel-sycl</code> が同じ判定を行う (<a href="installation.html#install-spack">「spack によるインストール」</a>).</p>
+<p>　<strong>スレッド数と実行場所.</strong> <code>OMP_NUM_THREADS</code> が未設定なら, 計算ノード (ジョブの中) では使える論理 CPU 数をすべて, ログインノードでは 4 (使える数が 4 未満ならその数) を使う. <a href="glossary.html#g-mpi">MPI</a> の実行では合計がそれになるようプロセス数で割る (最低 1. ログインノードで 2 プロセスなら 1 プロセス 2 スレッド). 使える論理 CPU 数は, CPU の割り当て (<code>nproc</code>)・cgroup の CPU の上限・ジョブのこのノードの割り当て (<a href="glossary.html#g-pbs">PBS</a> の <code>NCPUS</code>, Slurm の <code>SLURM_CPUS_ON_NODE</code>) の最も小さいものである. 計算ノードかどうかはジョブの環境変数 (PBS の <code>PBS_JOBID</code>, 富士通 PJM の <code>PJM_JOBID</code>, Slurm の <code>SLURM_JOB_ID</code>) の有無で決め, <code>QUICK_NODE=compute</code> / <code>QUICK_NODE=login</code> で強制できる. 判定と使った値は最初に表示する. <code>OMP_NUM_THREADS</code> を設定していればその値を使う (ジョブではスケジューラが設定していることがある. PBS の <code>ompthreads</code> (キューの既定が 1 のことがある), 富士通 PJM の <code>--omp thread=</code>). Open MPI で <code>MPIEXEC_ARGS</code> に配置の指定 (<code>--bind-to</code>, <code>--map-by</code>) が無ければ <code>--bind-to none</code> を足す (Open MPI は 2 プロセス以下だと各プロセスを 1 コアに固定し, 複数のスレッドが 1 コアに詰め込まれるため).</p>
+<p>　<strong>どこで流すか.</strong> CPU の環境はログインノードでもよい (施設の規則に従う). GPU の環境と <a href="glossary.html#g-a64fx">A64FX</a> (<a href="glossary.html#g-odyssey">Odyssey</a>) は計算ノード (短いバッチジョブか対話ジョブ) で流す (ログインノードには GPU が無く, A64FX の実行ファイルは x86 のログインノードでは動かない). GPU の環境で MPI の試験 (2 プロセス) を流すとき, このスクリプトはプロセスごとに GPU を 1 台ずつ割り当てる設定 (<a href="concepts.html#gpu-rank-bind">「1 ランクと 1 デバイスの対応」</a> の <code>gpu_bind.sh</code> のようなもの) をしないので, 2 プロセスが同じ GPU を使うことがある.</p>
+<h2 data-number="4.3" id="install-options"><span class="header-section-number">4.3</span> コンパイルオプション</h2>
+<p>　コンパイル時に指定するフラグを示す. ライブラリ本体 (<code>Include/</code>) の<code>-D</code>マクロは<a href="installation.html#install-macros">マクロ</a>の節に示す. サンプルの実行時オプション (環境変数 <code>PARCEL_SOLVER</code>, <code>PARCEL_NX</code>, <code>PARCEL_PRECON</code> など) は<a href="usage.html#usage-verify-options">使用方法の章</a>で説明する.</p>
+<p><strong>全環境で必要なフラグ</strong></p>
+<table>
+<thead>
+<tr>
+<th>フラグ</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">--acpp-targets=&lt;ターゲット&gt;</span></code></td>
+<td>生成するコードの種類. <code><span class="tok">omp</span></code> (CPU, <a href="glossary.html#g-openmp">OpenMP</a>), <code><span class="tok">omp.library-only</span></code> (<a href="glossary.html#g-a64fx">A64FX</a> + 富士通コンパイラ), <code><span class="tok">cuda:sm_70</span></code> (<a href="glossary.html#g-v100">V100</a>), <code><span class="tok">cuda:sm_80</span></code> (<a href="glossary.html#g-a100">A100</a>), <code><span class="tok">cuda:sm_90</span></code> (<a href="glossary.html#g-h100">H100</a>), <code><span class="tok">hip:gfx942</span></code> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">-I&lt;lapacke.h</span> <span class="tok">の場所&gt;</span></code></td>
+<td><code><span class="tok">lapacke.h</span></code> のインクルードパス. 例: <code><span class="tok">-I/usr/include/openblas</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">-l&lt;LAPACK</span> <span class="tok">ライブラリ&gt;</span></code></td>
+<td><a href="glossary.html#g-lapack">LAPACKE</a> を含むライブラリ. 例: <code><span class="tok">-lopenblas</span></code>, 富士通 <code><span class="tok">-lfjlapack</span></code>, PS では <code><span class="tok">-l:libopenblaso.so.0</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">-O3</span></code></td>
+<td>最適化. すべての環境で指定している</td>
+</tr>
+</tbody>
+</table>
+<p><strong>環境依存のフラグ</strong></p>
+<table>
+<thead>
+<tr>
+<th>フラグ</th>
+<th>使用環境</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">-march=native</span> <span class="tok">-mtune=native</span></code></td>
+<td><a href="glossary.html#g-s86">s86 CPU</a>/GPU, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a></td>
+<td>ホスト CPU 向けの最適化</td>
+</tr>
+<tr>
+<td><code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code></td>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td>ptxas (CUDA のアセンブラ) のレジスタ数の上限を広げる. V100 で推奨. 既定の割り当てでは Jacobi <a href="glossary.html#g-precon">前処理</a>などのカーネルで行列とベクトルの読み出しが分かれて直列になり, 遅くなる. spill は出ず, 計算結果は変わらない. 他の GPU には付けない (<a href="kernel-opt.html#kopt-v100">V100 のレジスタ数の指定</a>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">-std=c++17</span></code></td>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td>富士通コンパイラ経由のビルドで指定</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DNDEBUG</span> <span class="tok">-fno-math-errno</span> <span class="tok">-fno-trapping-math</span></code></td>
+<td><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td>値を変えない浮動小数点のフラグだけを用いる. <code><span class="tok">-ffast-math</span></code>は <a href="glossary.html#g-dd">double-double</a> の誤差項と NaN の検出を壊すので使わない (付けると<code><span class="tok">#error</span></code>で止まる). <code><span class="tok">-fno-exceptions</span></code>は引数検査の例外と両立しないので使わない</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.4" id="install-macros"><span class="header-section-number">4.4</span> マクロ</h2>
+<p>　PARCEL はヘッダーファイルだけのライブラリなので, 利用者のプログラムをコンパイルするときに<code>-D&lt;マクロ&gt;</code>または<code>-D&lt;マクロ&gt;=&lt;値&gt;</code>を付けると, ライブラリ本体 (<code>Include/</code>) の構成や動作を選べる. どのマクロも既定値のままで使え, 通常は何も指定しなくてよい. 目的ごとに次の 4 種類がある.</p>
+<ul>
+<li>ビルドするソルバの取捨: 使わないソルバを外して, コンパイル時間を短くする</li>
+<li>整数型: 大域の添字 (既定 64 ビット) と<a href="glossary.html#g-rank">ランク</a>内の添字 (既定 32 ビット) の幅を選ぶ</li>
+<li>最適化: 環境に合わせて演算カーネルのループ構造を選ぶ. また, 既定ではメモリを少なくする設定になっているので, メモリを使って速くする最適化オプションを選ぶ (<a href="installation.html#install-kernel-opt">最適化</a>)</li>
+<li>検査と数値演算: 誤った結果を防ぐための検査と, <a href="glossary.html#g-dd">double-double</a> の演算の方式を選ぶ (既定のまま使う. <a href="installation.html#install-checks">検査と数値演算</a>)</li>
+</ul>
+<p>　このほかに診断・切り分け用のマクロがあるが, 通常は指定しない.</p>
+<h3 data-number="4.4.1" id="ビルドするソルバの取捨-includeparcel_solver_select.hpp"><span class="header-section-number">4.4.1</span> ビルドするソルバの取捨 (<code>Include/parcel_solver_select.hpp</code>)</h3>
+<p>　既定では全ソルバが有効であり, 通常は何も指定しなくてよい. 1 つの翻訳単位に全ソルバが入るためコンパイル時間が長く (<a href="glossary.html#g-a64fx">A64FX</a> では 1 構成 6〜14 分), 切り分けなどで使うソルバが決まっている場合に外すと短縮できる.</p>
+<p>　各マクロは 1 でそのソルバを入れ, 0 で外す. 各ソルバのマクロを指定しなければ<code>PARCEL_ENABLE_ALL_SOLVERS</code>の値 (既定 1) になるので, 何も指定しなければ全ソルバが入る. 一部のソルバだけを入れる場合は<code>PARCEL_ENABLE_ALL_SOLVERS=0</code>としてから, 入れるソルバを 1 にする.</p>
+<table>
+<thead>
+<tr>
+<th>マクロ</th>
+<th>既定値</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code></td>
+<td>1</td>
+<td>下記の各ソルバのマクロを指定しなかったときの値. 0 にすると, 1 を指定したソルバだけが入る</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PCG</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::pcg</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PBICGSTAB</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::pbicgstab</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PGMRES</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::pgmres</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PCAGMRES</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::pcagmres</span></code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない方式<code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>を含む)</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_POWER</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::power</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_INVERSE_POWER</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::inverse_power</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_KS_ARNOLDI</span></code></td>
+<td>1 (<code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code> の値)</td>
+<td><code><span class="tok">parcel::krylov::ks_arnoldi</span></code>. 0 にすると <a href="glossary.html#g-lapack">LAPACKE</a> は不要になる (検証用サンプルを除く)</td>
+</tr>
+</tbody>
+</table>
+<p>　依存関係は自動で補われる. <code>inverse_power</code> を有効にすると <code>pcg</code> と <code>pgmres</code> が, <code>ks_arnoldi</code> を有効にすると <code>pgmres</code> が有効になる. 1 つも有効でない場合はコンパイルエラーになる. <code>PARCEL_ENABLE_CHOLQR_PCAGMRES</code> というマクロは無く, 指定するとコンパイルエラー (<code>#error</code>) になる.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pgmres だけを入れる (他はすべて外す)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DPARCEL_ENABLE_ALL_SOLVERS=0</span> <span class="at">-DPARCEL_ENABLE_PGMRES</span><span class="op">=</span>1</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_arnoldi だけを外す (他はすべて入れる)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DPARCEL_ENABLE_KS_ARNOLDI=0</span></span></code></pre></div>
+<h3 data-number="4.4.2" id="install-int-type"><span class="header-section-number">4.4.2</span> 整数型</h3>
+<p>　行番号・列番号・行数・非零要素数などの整数は, 大域の添字をマクロ<code>PARCEL_INT</code>の型で, 1 つの<a href="glossary.html#g-rank">ランク</a>の中の添字 (<a href="glossary.html#g-device">デバイス</a>上の <a href="glossary.html#g-crs">CRS</a> など) をマクロ<code>PARCEL_LINT</code>の型で持つ. 既定は<code>PARCEL_INT</code>が 64 ビット (<code>int64_t</code>. <a href="glossary.html#g-mpi">MPI</a> の通信では<code>MPI_INT64_T</code>), <code>PARCEL_LINT</code>が 32 ビット (<code>int32_t</code>, <code>MPI_INT32_T</code>) である. この既定にした理由 (大規模な問題での桁あふれと局所カーネルの速さ) は<a href="concepts.html#precision-int">基本構成の「整数型」</a>に示す.</p>
+<table>
+<thead>
+<tr>
+<th>指定</th>
+<th><code><span class="tok">PARCEL_INT</span></code></th>
+<th><code><span class="tok">PARCEL_LINT</span></code></th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>なし (既定)</td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td></td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_LOCAL_INT64</span></code></td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td><code><span class="tok">-DPARCEL_LOCAL_INT64=0</span></code>は既定と同じ</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_INT32</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td><code><span class="tok">-DPARCEL_INT32=0</span></code>は既定と同じ</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_INT</span></code></td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td><code><span class="tok">PARCEL_INT</span></code>を 64 ビットにする旧来の書き方. 互換のため受け付ける (値は見ない)</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_INT</span></code>と<code><span class="tok">-DPARCEL_INT32</span></code>の両方</td>
+<td class="nowrap">—</td>
+<td class="nowrap">—</td>
+<td>矛盾するので<code><span class="tok">#error</span></code>でビルドを止める</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_INT32</span></code>と<code><span class="tok">-DPARCEL_LOCAL_INT64</span></code>の両方</td>
+<td class="nowrap">—</td>
+<td class="nowrap">—</td>
+<td>ランク内の型が大域の型より広くなるので<code><span class="tok">#error</span></code>でビルドを止める</td>
+</tr>
+</tbody>
+</table>
+<p>　選ばれた幅はマクロ<code>PARCEL_INT_BITS</code>と<code>PARCEL_LINT_BITS</code> (いずれも 64 または 32) で分かる.</p>
+<p>　型の選び方 (扱える行列の範囲, 大規模な問題での桁あふれ, メモリ量と局所カーネルの速さへの影響, C言語・Fortran の API との関係) は<a href="concepts.html#precision-int">基本構成の「整数型」</a>に示す.</p>
+<h3 data-number="4.4.3" id="install-kernel-opt"><span class="header-section-number">4.4.3</span> 最適化</h3>
+<p>　計算 (アルゴリズムと反復回数) を変えずに速さを上げる最適化のマクロを示す. 演算カーネルのループの形を選ぶもの (前半の 8 つ) と, メモリを使って速くするもの (後半の 2 つ. <span id="install-memory"></span>最適化オプション) がある. 各最適化の仕組み, 効果, 環境ごとの既定は<a href="kernel-opt.html#kernel-opt">「最適化」の章</a>に, 環境ごとのコンパイルコマンドは<a href="installation.html#install-recommended-flags">推奨オプション</a>に示す. 既定はメモリを少なくする設定である.</p>
+<table>
+<thead>
+<tr>
+<th>マクロ</th>
+<th>既定値</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">_BLOCKING_LOOP_</span></code></td>
+<td>0</td>
+<td>1 で <a href="glossary.html#g-spmv">SpMV</a> 以外の全カーネル (内積, <a href="glossary.html#g-axpy">axpy</a>, <a href="glossary.html#g-precon">前処理</a>など) をブロック化版に替える (<a href="kernel-opt.html#kopt-blocking">ブロック化</a>). <a href="glossary.html#g-a64fx">A64FX</a> 向け</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">_BLOCKING_LOOP_DOT_</span></code></td>
+<td>0</td>
+<td>1 で縮約 (dot,dddot,max) だけをブロック化版に替える. <a href="glossary.html#g-a64fx">A64FX</a> 以外の CPU 向け. GPU では指定しない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_SPMV_LADDER</span></code></td>
+<td>0</td>
+<td>1 で SpMV の内側ループを梯子状に分割する (<a href="kernel-opt.html#kopt-ladder">梯子分割</a>). AMD の GPU と <a href="glossary.html#g-a64fx">A64FX</a> 向け. NVIDIA の GPU には付けない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_PRECON_LADDER</span></code></td>
+<td>0 (<code><span class="tok">PARCEL_SPMV_LADDER</span></code> の値)</td>
+<td>Jacobi 前処理の反復ループの梯子分割. <a href="glossary.html#g-a64fx">A64FX</a> では 0 を明示する</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_GEMV_AS_AXPY</span></code></td>
+<td>0 (<code><span class="tok">_BLOCKING_LOOP_</span></code> の値)</td>
+<td>1 で <a href="glossary.html#g-gemv">gemv</a> を M 回の axpy に分解する (<a href="kernel-opt.html#kopt-gemv">gemv の分解</a>). 丸めの順序が変わる</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_A64FX_AXPY_C</span></code></td>
+<td>1</td>
+<td>1 で, 係数を値で渡す <a href="glossary.html#g-axpy">axpy</a> と gemv の axpy 分解版を <a href="glossary.html#g-a64fx">A64FX</a> 向けに書き直した版を使う (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の C). 0 で書き直す前の形にする. 結果は変わらない. <code><span class="tok">_BLOCKING_LOOP_</span></code>のビルドでだけ働く</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_CG_FUSED</span></code></td>
+<td>0 (<code><span class="tok">_BLOCKING_LOOP_</span></code> の値)</td>
+<td>1 で<code><span class="tok">pcg</span></code>の 1 反復のカーネルを融合する (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> の更新, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> の更新と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><mi>r</mi><mo>,</mo><mi>r</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r, r \rangle</annotation></semantics></math>. <a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の D). 結果は変わらない. <code><span class="tok">_BLOCKING_LOOP_</span></code>のビルドでだけ 1 にできる</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_JACOBI_NODIV_UNIT</span></code></td>
+<td>1</td>
+<td>1 で Jacobi 前処理の右辺の準備で割る値が 1 のとき割り算を省く (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の E). 結果は変わらない. <code><span class="tok">_BLOCKING_LOOP_</span></code>のビルドでだけ働く</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_JACOBI_ROW2</span></code></td>
+<td>0 (<code><span class="tok">_BLOCKING_LOOP_</span></code> の値. <code><span class="tok">PARCEL_PRECON_LADDER</span></code>が 1 なら 0)</td>
+<td>1 で前処理行列が単精度のとき Jacobi 前処理の反復を 2 行ずつ交互に処理する (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の F). 結果は変わらない. 倍精度の前処理行列とその場で計算する版では使わない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_JACOBI_ONTHEFLY</span></code></td>
+<td>1 (<a href="glossary.html#g-a64fx">A64FX</a> 向けでは 0)</td>
+<td>Jacobi 前処理 (<code><span class="tok">PRECON_JACOBI</span></code>) の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math>の値を持たず, 適用のたびに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の値と<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><annotation encoding="application/x-tex">D_A^{-1}</annotation></semantics></math>から計算する. 0 で値を保持する (最適化オプション「H なし」. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零の数 × 前処理行列の精度の大きさのメモリを使う). 行列スケーリング有効時, 係数行列・前処理行列・前処理の演算精度のいずれかが double-double の場合は 1 でも値を保持する. <code><span class="tok">_BLOCKING_LOOP_</span></code> (または <code><span class="tok">_BLOCKING_LOOP_SPMV_</span></code>) が 1 の <a href="glossary.html#g-a64fx">A64FX</a> 向けのビルドでは既定が 0 になる (<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_PCG_NO_XHIST</span></code></td>
+<td>1</td>
+<td><code><span class="tok">pcg</span></code>が解の更新をまとめる反復数 (pstep) の既定. 1 で 1 (探索方向を 1 本だけ持ち, 毎反復更新),0 で 4 (最適化オプション「G なし」. 袖付きベクトル 3 本分のメモリを使う). 実行時の環境変数<code><span class="tok">PARCEL_PSTEP</span></code>が優先する</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="4.4.4" id="install-ks-ortho"><span class="header-section-number">4.4.4</span> ks_arnoldi の直交化の既定</h3>
+<p>　<code>ks_arnoldi</code>の Arnoldi 過程の直交化 (<a href="eigen-solvers.html#alg-ks">固有値ソルバの章の Krylov-Schur 法</a>) は, プログラムで<code>set_qr_algo()</code>を呼んで選ぶ (<a href="../reference/ks-arnoldi.html#api-ks-set-qr-algo">API リファレンスの<code>ks_arnoldi</code>の<code>set_qr_algo()</code></a>). 呼ばないときの既定は, 次のマクロでビルド時に選ぶ. 環境変数<code>PARCEL_KS_ORTHO</code>は読まない (設定されていると, 最初の<code>solver()</code>で rank 0 が標準エラーに警告を 1 行出す. 動作は変わらない).</p>
+<table>
+<thead>
+<tr>
+<th>マクロ</th>
+<th>既定値</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_KS_ORTHO_DEFAULT</span></code></td>
+<td class="nowrap">未定義 (<code><span class="tok">cgs2</span></code>)</td>
+<td><code><span class="tok">cgs2</span></code> (古典 Gram-Schmidt 法 2 回) または <code><span class="tok">mgs</span></code> (修正 Gram-Schmidt 法 2 回). <a href="glossary.html#g-ps-a">PS-A</a> 向けのビルド (<a href="glossary.html#g-spack">spack</a> の環境<code><span class="tok">psa</span></code>, バリアント<code><span class="tok">ks_ortho=mgs</span></code>) は<code><span class="tok">mgs</span></code>である. 未定義なら CGS2 (<code><span class="tok">QR_CGS</span></code>). <code><span class="tok">set_qr_algo()</span></code>で指定した値が優先する</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="4.4.5" id="install-checks"><span class="header-section-number">4.4.5</span> 検査と数値演算</h3>
+<p>　誤った結果を防ぐための検査と, <a href="glossary.html#g-dd">double-double</a> の演算の方式を選ぶ. 既定のまま使う. 外すと誤った結果を黙って返しうるので, 理由を理解したうえでのみ指定する.</p>
+<div class="nowrap-c1 nowrap-c2">
+<table>
+<thead>
+<tr>
+<th>マクロ</th>
+<th>既定値</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_REQUIRE_IN_ORDER</span></code></td>
+<td class="nowrap">1</td>
+<td><code><span class="tok">set_crsMat()</span></code> と各ソルバの <code><span class="tok">solver()</span></code> の入口で, <a href="glossary.html#g-sycl">SYCL</a> キューが <a href="glossary.html#g-inorder">in-order</a> であることを検査し, 違反 (キューが無い場合を含む) は <code><span class="tok">std::invalid_argument</span></code> を投げる. PARCEL はカーネルを <code><span class="tok">sycl::event</span></code> や <code><span class="tok">depends_on</span></code> を使わずに 1 本のキューへ順に投入し, 前のカーネルの結果を次のカーネルが読むので, in-order 実行が前提である. SYCL 2020 の既定 (out-of-order) キューでは, accessor を使わない <a href="glossary.html#g-usm">USM</a> カーネル同士の実行順は保証されない. 0 で検査を外す</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_NO_CRS_CHECK</span></code></td>
+<td class="nowrap">0</td>
+<td>1 で <code><span class="tok">set_crsMat()</span></code> (通常版と <a href="glossary.html#g-dd">double-double</a> の hi/lo 版) の入力の検査を外す. 検査するのは, 局所行数 <code><span class="tok">n</span></code> が <code><span class="tok">nend-nstart+1</span></code> に等しく 1 行以上であること (0 行の<a href="glossary.html#g-rank">ランク</a>は扱えない), <code><span class="tok">rowptr[0]</span> <span class="tok">==</span> <span class="tok">0</span></code>・単調非減少・<code><span class="tok">rowptr[n]</span> <span class="tok">==</span> <span class="tok">nnz</span></code> であること, 全ランクの行ブロックが全体の行を隙間・重複なく覆うこと (ランクの並び順は問わない), 列番号が全体の行数の範囲にあること. 非 <a href="glossary.html#g-mpi">MPI</a> 版は <code><span class="tok">rowptr</span></code> と列番号だけを調べる. 崩れていれば全ランクが同じ <code><span class="tok">std::invalid_argument</span></code> を投げる (文言に崩れていたランクと内容). 費用は非零要素の走査 1 回と<a href="glossary.html#g-collective">集団通信</a> 2 回である. 外して崩れた入力を与えると, <a href="glossary.html#g-halo">袖</a>通信の未初期化の受信バッファを使って黙って誤った結果になるか, 配列の範囲外を読む</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_ALLOW_FAST_MATH</span></code></td>
+<td class="nowrap">未定義</td>
+<td>定義すると <code><span class="tok">-ffast-math</span></code> / <code><span class="tok">-ffinite-math-only</span></code> (<code><span class="tok">__FAST_MATH__</span></code> / <code><span class="tok">__FINITE_MATH_ONLY__</span></code>) 付きのビルドを許す. 既定では <code><span class="tok">parcel_sycl.hpp</span></code> が <code><span class="tok">#error</span></code> で止める. 結合則による式の書き換えで <a href="glossary.html#g-dd">double-double</a> の誤差項が消え, dd が黙って倍精度に落ちる. また NaN / Inf の検査 (<code><span class="tok">std::isfinite</span></code>) が消され, <code><span class="tok">DIVERGED_NANORINF</span></code> が働かなくなる. 定義した場合, dd の精度と NaN の検出は保証しない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_DD_NO_FMA</span></code></td>
+<td class="nowrap">未定義</td>
+<td>定義すると double-double の積の誤差なし変換 (TwoProd) を, 既定の <code><span class="tok">fma</span></code> によるもの (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p = \mathrm{fma}(a,b,0)</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>−</mi><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">e = \mathrm{fma}(a,b,-p)</annotation></semantics></math>) から Dekker の分割に替える. FMA 命令を持たない CPU 向けである. GPU (<a href="glossary.html#g-cuda">CUDA</a>) では Dekker の分割が壊れるので使わない</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>　<code>-fno-exceptions</code> も使わない. 引数の検査 (<code>std::invalid_argument</code> など) と両立しない.</p>
+<h2 data-number="4.5" id="install-recommended-flags"><span class="header-section-number">4.5</span> 推奨オプション</h2>
+<p>　各環境で推奨するフラグを示す. <a href="glossary.html#g-a64fx">A64FX</a> 以外の CPU には縮約のブロック化, <a href="glossary.html#g-a64fx">A64FX</a> には全カーネルのブロック化と SpMV の梯子分割と積和の FMA へのまとめ (<code>-ffp-contract=fast</code>) を指定し, 実行時に<code>OMP_WAIT_POLICY=ACTIVE</code>と<code>KMP_BLOCKTIME=infinite</code>を設定する (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>), AMD の GPU には梯子分割を指定する. NVIDIA の GPU には梯子分割を付けず, <a href="glossary.html#g-v100">V100</a> にはレジスタ数の指定を付ける.</p>
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th><code><span class="tok">--acpp-targets</span></code></th>
+<th>カーネル最適化</th>
+<th><a href="glossary.html#g-lapack">LAPACKE</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td class="nowrap"><code><span class="tok">omp</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a></td>
+<td class="nowrap"><code><span class="tok">cuda:sm_70</span></code></td>
+<td>なし (梯子分割を付けない) + <code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap"><code><span class="tok">omp.library-only</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_=1</span> <span class="tok">-DPARCEL_SPMV_LADDER=1</span> <span class="tok">-DPARCEL_PRECON_LADDER=0</span></code> + <code><span class="tok">-ffp-contract=fast</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lfjlapack</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-aquarius">Aquarius</a></td>
+<td class="nowrap"><code><span class="tok">cuda:sm_80</span></code></td>
+<td>なし</td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td class="nowrap"><code><span class="tok">omp</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-g">Miyabi-G</a></td>
+<td class="nowrap"><code><span class="tok">cuda:sm_90</span></code></td>
+<td>なし</td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap"><code><span class="tok">omp</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code></td>
+<td>nvhpc の <code><span class="tok">lapacke.h</span></code> + <code><span class="tok">-l:libopenblaso.so.0</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td class="nowrap"><code><span class="tok">hip:gfx942</span></code></td>
+<td><code><span class="tok">-DPARCEL_SPMV_LADDER=1</span> <span class="tok">-DPARCEL_PRECON_LADDER=1</span></code></td>
+<td>nvhpc の <code><span class="tok">lapacke.h</span></code> + <code><span class="tok">-l:libopenblaso.so.0</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　各最適化の仕組みと, 環境ごとに測った効果は<a href="kernel-opt.html#kernel-opt">「最適化」の章</a>に示す.</p>
+<p>　以下では環境ごとにコンパイルコマンドを示す. 環境設定は<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」</a>の章の各環境の「使用時の設定」で行う. いずれも検証用サンプル <code>tests/verify/parcel_krylov_sample_verify.cpp</code> を倍精度でビルドする例で, パッケージのトップディレクトリで実行する. ソルバ・問題サイズ・<a href="glossary.html#g-precon">前処理</a>は実行時に指定する (<a href="usage.html#usage-verify-options">検証用サンプルの実行時オプション</a>). 最大反復回数は<code>-DMAX_ITERATION</code>を付けなければ 10000 (<code>tests/verify/parcel_default.hpp</code>の既定. ライブラリの既定と同じ) で, 実行時に<code>PARCEL_MAX_ITER</code>で変えられる. コンパイルは <a href="glossary.html#g-mpi">MPI</a> も GPU も使わないので, <a href="glossary.html#g-a64fx">A64FX</a> 以外はログインノードで行う. <code>&lt;spack のインストール先&gt;</code> などは各自の環境に読み替える.</p>
+<h3 data-number="4.5.1" id="install-s86-cpu"><span class="header-section-number">4.5.1</span> s86 (CPU)</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「s86」の「使用時の設定」を行う</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.2" id="install-s86-gpu"><span class="header-section-number">4.5.2</span> s86 (GPU)</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「s86」の「使用時の設定」を行う</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_70 <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-Xcuda-ptxas</span> <span class="at">-maxrregcount</span><span class="op">=</span>255 <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.3" id="install-odyssey"><span class="header-section-number">4.5.3</span> Odyssey</h3>
+<p>　<a href="glossary.html#g-a64fx">A64FX</a> ではログインノードと計算ノードのアーキテクチャが異なるため, 計算ノードでビルドする. ビルド用のジョブスクリプトの例を示す. <a href="glossary.html#g-mpi">MPI</a> ラッパは <code>mpiFCC</code> を用い, <code>OMPI_CXX=acpp</code> で <code>acpp</code> を呼ばせる. <code>acpp</code> は <code>omp.library-only</code> ターゲットで <code>ACPP_CPU_CXX</code> の富士通コンパイラをホストコンパイラとして用いる. LAPACKE のヘッダの場所は他の環境と同じく <code>-I/usr/include/openblas</code> で指定し (この指定で計算ノードでビルドできる), 実装は富士通の <code>libfjlapack</code> を用いる.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;rscgrp=short-o&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;node=1&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;elapse=2:00:00&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -g &lt;グループ&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM --omp thread=48</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -j</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「Odyssey」の「使用時の設定」を行う</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PJM_O_WORKDIR}</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="va">LINKOPT</span><span class="op">=</span><span class="st">&quot;-L</span><span class="va">$fj_root</span><span class="st">/lib64 -Wl,-rpath,</span><span class="va">$fj_root</span><span class="st">/lib64 </span><span class="dt">\</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">  -L</span><span class="va">$sycl_root</span><span class="st">/lib -Wl,-rpath,</span><span class="va">$sycl_root</span><span class="st">/lib </span><span class="dt">\</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  -L</span><span class="va">$llvm_root</span><span class="st">/lib -Wl,-rpath,</span><span class="va">$llvm_root</span><span class="st">/lib -lfjlapack&quot;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="ex">mpiFCC</span> <span class="at">-O3</span> <span class="at">-std</span><span class="op">=</span>c++17 <span class="at">--acpp-targets</span><span class="op">=</span>omp.library-only <span class="dt">\</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_</span><span class="op">=</span>1 <span class="at">-DPARCEL_SPMV_LADDER</span><span class="op">=</span>1 <span class="at">-DPARCEL_PRECON_LADDER</span><span class="op">=</span>0 <span class="dt">\</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">-ffp-contract</span><span class="op">=</span>fast <span class="dt">\</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="va">${LINKOPT}</span></span></code></pre></div>
+<p>　1 回のビルドは <a href="glossary.html#g-xeon">Xeon</a> より長くかかり, メモリも数 GiB を要する. 1 ノードのジョブが使えるメモリは 28 GiB なので, 複数の精度構成を同時にビルドする場合は本数を制限する.</p>
+<p>　<code>-ffp-contract=fast</code>は積和 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>×</mo><mi>b</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">a \times b + c</annotation></semantics></math>) を FMA 命令にまとめさせる. 富士通コンパイラの clang モードは既定では積和をまとめない. AdaptiveCpp は<code>ACPP_OMP_CXX_FLAGS</code>の後ろにコマンドラインの<code>-O3</code>を並べて富士通コンパイラに渡すので, <code>ACPP_OMP_CXX_FLAGS</code>の<code>-Kfast</code>は後ろの<code>-O3</code>で打ち消され, 効かない. <code>-Kfast</code>を後ろに<code>-O3</code>を置かずに渡すなどして fast-math を効かせると, <a href="glossary.html#g-dd">double-double</a> と NaN の検出が壊れるため, PARCEL はビルドを<code>#error</code>で止める (<a href="accuracy.html#accuracy-fast-math">「-ffast-math を使わない」</a>). <code>-ffp-contract=fast</code>はコマンドラインに置けば富士通コンパイラまで届く. <a href="glossary.html#g-odyssey">Odyssey</a> の 1 ノード (4 <a href="glossary.html#g-rank">ランク</a> × 12 スレッド, NX=256, <code>pcg</code> + Jacobi 前処理) で, 1 反復が 3 % 速くなった (<a href="glossary.html#g-spmv">SpMV</a> は 10 %, <a href="glossary.html#g-axpy">axpy</a> の本体は 25 %). 反復回数は変わらず, 結果は最後の桁が変わる (残差で相対 1e-11 程度). FMA は積を丸めずに和を取るので, 付けないビルドとはビット単位では一致しない. 結果をそろえたい場合は<code>-ffp-contract=off</code>にする. <a href="glossary.html#g-dd">double-double</a> の関数の中は<code>Include/ddlib.hpp</code>が FMA を禁じたままである (この節の最後の段落).</p>
+<p>　<a href="glossary.html#g-a64fx">A64FX</a> 向けのビルド (<code>-D_BLOCKING_LOOP_=1</code>) では, Jacobi 前処理の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持する (<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>の「H なし」) のが既定である (<code>PARCEL_JACOBI_ONTHEFLY</code>の既定 0. 指定は要らない). <a href="glossary.html#g-a64fx">A64FX</a> ではその場の計算 (非零ごとの掛け算と対角の判定) が前処理の時間に表れ, <a href="glossary.html#g-odyssey">Odyssey</a> の 1 ノード (NX=256, <code>pcg</code> + Jacobi 前処理) で値を保持すると前処理の区間が 0.77 倍, 収束までの総時間が 0.81 倍になる. そのかわりメモリが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零 1 個あたり前処理行列の精度の大きさ (倍精度で 8 バイト) 増える. メモリを減らしたい場合は<code>-DPARCEL_JACOBI_ONTHEFLY=1</code>を明示する.</p>
+<p>　実行時には, <a href="glossary.html#g-openmp">OpenMP</a> のスレッドを待ち合わせの間も休ませない<code>OMP_WAIT_POLICY=ACTIVE</code>と<code>KMP_BLOCKTIME=infinite</code>を設定する (推奨. ライブラリの既定ではないので, ジョブの環境で設定する). <a href="glossary.html#g-odyssey">Odyssey</a> の 1 ノード (4 <a href="glossary.html#g-rank">ランク</a> × 12 スレッド, 1 <a href="glossary.html#g-cmg">CMG</a> に 1 ランク) で, 問題の大きさによらない 1 反復の固定費が 5.2 ms から 3.0 ms に減る. 装置あたりの行数が少ない場合に効く. 待っているスレッドもコアを使い続けるので, コアを取り合う配置 (1 ノードに他のプロセスを同居させるなど) では逆効果になる. このビルドで有効になる axpy の書き直しと<code>pcg</code>のカーネルの融合とあわせて, 効果と注意は<a href="kernel-opt.html#kopt-a64fx">「A64FX 向けの最適化」</a>に示す.</p>
+<p>　2026-10-10 より前のコードでは, <a href="glossary.html#g-dd">double-double</a> の演算のための FMA の禁止 (<code>#pragma clang fp contract(off)</code>) が富士通コンパイラでは<code>ddlib.hpp</code>の範囲で戻らず, 以降の全カーネルで FMA 命令が使われていなかった (富士通コンパイラの clang モードは<code>float_control</code>の push / pop を知らない). 今のコードは禁止を double-double の関数の中に限り, 他のカーネルではコンパイラの指定 (上の<code>-ffp-contract=fast</code>) どおり FMA を使う. 倍精度などの結果は以前のビルドと最後の桁で変わる.</p>
+<h3 data-number="4.5.4" id="install-aquarius"><span class="header-section-number">4.5.4</span> Aquarius</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「Aquarius」の「使用時の設定」を行う</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_80 <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.5" id="install-miyabi-c"><span class="header-section-number">4.5.5</span> Miyabi-C</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「Miyabi-C」の「使用時の設定」を行う</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.6" id="install-miyabi-g"><span class="header-section-number">4.5.6</span> Miyabi-G</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「Miyabi-G」の「使用時の設定」を行う</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_90 <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.7" id="install-ps-a"><span class="header-section-number">4.5.7</span> PS-A</h3>
+<p>　PS の計算ノードには <code>/usr/include/openblas/lapacke.h</code> が無い (ログインノードにのみ存在する). また MKL は <code>mkl_lapacke.h</code> しか持たない. そこで nvhpc が持つ <code>lapacke.h</code> をヘッダとして借り, 実装は OS の OpenBLAS (<a href="glossary.html#g-openmp">OpenMP</a> 版 <code>libopenblaso</code>) に解決させる. OpenBLAS 側のスレッドが PARCEL の OpenMP と入れ子にならないよう, <code>OPENBLAS_NUM_THREADS=1</code> を設定する. <a href="glossary.html#g-mpi">MPI</a> は Intel MPI なので <code>I_MPI_CXX</code> でも <code>acpp</code> を指定する.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「PS-A」の「使用時の設定」を行う</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/system/apps/rhel9/dev/nvhpc/25.3/Linux_x86_64/25.3/compilers/include/lp64 <span class="dt">\</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-l:libopenblaso.so.0</span></span></code></pre></div>
+<h3 data-number="4.5.8" id="install-ps-b"><span class="header-section-number">4.5.8</span> PS-B</h3>
+<p>　LAPACKE の扱いは <a href="glossary.html#g-ps-a">PS-A</a> と同じである.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「PS-B」の「使用時の設定」を行う</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>hip:gfx942 <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DNDEBUG</span> <span class="at">-fno-math-errno</span> <span class="at">-fno-trapping-math</span> <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DPARCEL_SPMV_LADDER</span><span class="op">=</span>1 <span class="at">-DPARCEL_PRECON_LADDER</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/system/apps/rhel9/dev/nvhpc/25.3/Linux_x86_64/25.3/compilers/include/lp64 <span class="dt">\</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-l:libopenblaso.so.0</span></span></code></pre></div>
+<h3 data-number="4.5.9" id="install-c-fortran"><span class="header-section-number">4.5.9</span> C言語・Fortran のプログラム</h3>
+<p>　C言語・Fortran の API を使うプログラムは, ラッパ <code>capi/wrapper_parcel_sycl.cpp</code> を上の各環境の<code>mpicxx</code>のコマンドと同じフラグ (<code>--acpp-targets</code>, カーネル最適化, LAPACKE) でコンパイルし, C・Fortran の main と SYCL 対応コンパイラでリンクする. <code>--acpp-targets</code> はラッパのコンパイルとリンクでそろえる. acpp (clang) は <a href="glossary.html#g-pie">PIE</a> としてリンクするので, gcc・gfortran で作るオブジェクトには <code>-fPIE</code> を付ける. <a href="glossary.html#g-s86">s86 CPU</a> (Open MPI) の例を示す. 他の環境では 1 行目のフラグをその環境のものに替える.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 環境設定: 「SYCL対応コンパイラのインストール方法」の章の「s86」の「使用時の設定」を行う</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="va">FLAGS</span><span class="op">=</span><span class="st">&quot;-O3 --acpp-targets=omp -march=native -mtune=native -D_BLOCKING_LOOP_DOT_=1&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="va">${FLAGS}</span> <span class="at">-I</span>/usr/include/openblas <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># C言語</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span>  <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-Icapi</span> <span class="at">-c</span> prog.c <span class="at">-o</span> prog.o</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> prog prog.o wrapper_parcel_sycl.o <span class="at">-lopenblas</span> <span class="at">-lm</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fortran (PARCEL のモジュールを先にコンパイルする)</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> capi/parcel_sycl_mod.f90 <span class="at">-o</span> parcel_sycl_mod.o</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> prog.f90 <span class="at">-o</span> prog.o</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> prog prog.o parcel_sycl_mod.o wrapper_parcel_sycl.o <span class="dt">\</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>       <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">--showme:link</span><span class="va">)</span> <span class="at">-L</span><span class="va">$(</span><span class="fu">dirname</span> <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">-print-file-name</span><span class="op">=</span>libgfortran.so<span class="va">))</span> <span class="at">-lgfortran</span> <span class="at">-lopenblas</span></span></code></pre></div>
+<ul>
+<li>リンクに加える MPI の Fortran ライブラリは MPI のラッパから調べる (Open MPI は <code>mpif90 --showme:link</code>, Intel MPI は <code>mpif90 -show</code>).</li>
+<li><a href="glossary.html#g-ps-a">PS-A</a> と <a href="glossary.html#g-ps-b">PS-B</a> では, LAPACKE の指定 (<code>-I</code> と <code>-l:libopenblaso.so.0</code>) を上の各節と同じにする. <a href="glossary.html#g-ps-a">PS-A</a> の Intel MPI では Fortran のラッパに <code>mpif90</code> (中身は gfortran) を使う.</li>
+<li>富士通 Fortran (frt, <code>mpifrt</code>) と富士通 C (fcc, <code>mpifcc</code>) では <code>-Kopenmp</code> を付ける (<a href="usage.html#usage-fortran">使用方法の Fortran</a>).</li>
+<li><code>examples/build_examples.sh</code> が同じ手順で <code>examples/</code> のサンプルを作る. コンパイラ・ターゲット・LAPACK は環境変数で変える (<code>SYCL_TARGET</code>, <code>CXXFLAGS</code>, <code>LAPACK_INC</code>, <code>LAPACK_LIB</code>, <code>MPICXX</code>・<code>MPICC</code>・<code>MPIFC</code>, <code>FC_LINK</code>).</li>
+</ul>
+<h3 data-number="4.5.10" id="install-mac"><span class="header-section-number">4.5.10</span> macOS (Homebrew)</h3>
+<p>　Homebrew で入れた環境 (<a href="sycl-compiler.html#env-mac">「SYCL対応コンパイラのインストール方法」の「macOS (Homebrew)」</a>) では, <code>--acpp-targets=omp.library-only</code> と縮約だけのブロック化 (<code>-D_BLOCKING_LOOP_DOT_=1</code>. 他の CPU と同じ) を用い, LAPACKE は Homebrew の OpenBLAS を指定する. Homebrew の <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> では<code>--acpp-targets=omp</code>も同じコンパイルになる. <code>-march=native</code>は要らない (付けても速さは同じ). 実行時は <code>mpirun -n &lt;並列数&gt; --bind-to none</code> で起動する. 次の例は <a href="quickstart.html#quickstart">クイックスタート</a>の 4 言語のプログラムで確かめた.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">/opt/homebrew/bin/brew</span> shellenv<span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="va">B</span><span class="op">=</span>/opt/homebrew</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="va">T</span><span class="op">=</span><span class="st">&quot;--acpp-targets=omp.library-only&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="va">LAPACK_INC</span><span class="op">=</span><span class="st">&quot;-I</span><span class="va">$B</span><span class="st">/opt/openblas/include&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="va">LAPACK_LIB</span><span class="op">=</span><span class="st">&quot;-L</span><span class="va">$B</span><span class="st">/opt/openblas/lib -lopenblas -Wl,-rpath,</span><span class="va">$B</span><span class="st">/opt/openblas/lib&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="va">FC_RT</span><span class="op">=</span><span class="st">&quot;-L</span><span class="va">$B</span><span class="st">/opt/gcc/lib/gcc/current -lgfortran -Wl,-rpath,</span><span class="va">$B</span><span class="st">/opt/gcc/lib/gcc/current&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># C++ (MPI あり. MPI なしは mpicxx を acpp に替え -DPARCEL_MPI=0 を付ける)</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="va">$T</span> <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="va">${LAPACK_INC}</span> <span class="dt">\</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="va">${LAPACK_LIB}</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># C言語・Fortran (MPI あり)</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="va">$T</span> <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="va">${LAPACK_INC}</span> <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span>  <span class="at">-O2</span> <span class="at">-Icapi</span> <span class="at">-c</span> prog.c <span class="at">-o</span> prog_c.o</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="va">$T</span> <span class="at">-o</span> prog_c prog_c.o wrapper_parcel_sycl.o <span class="va">${LAPACK_LIB}</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-c</span> capi/parcel_sycl_mod.f90 <span class="at">-o</span> parcel_sycl_mod.o</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-c</span> prog.f90 <span class="at">-o</span> prog_f.o</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="va">$T</span> <span class="at">-o</span> prog_f prog_f.o parcel_sycl_mod.o wrapper_parcel_sycl.o <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">--showme:link</span><span class="va">)</span> <span class="va">${FC_RT}</span> <span class="va">${LAPACK_LIB}</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 <span class="at">--bind-to</span> none ./prog_c</span></code></pre></div>
+<p>　macOS の gfortran の実行時ライブラリは <code>.dylib</code> なので, 場所 (<code>$B/opt/gcc/lib/gcc/current</code>) を<code>-L</code>と<code>-Wl,-rpath</code>で与える. <code>python/envs/mac_brew.sh</code> を読み込むと, 同じ値が環境変数 (<code>SYCL_TARGET</code>, <code>CXXFLAGS</code>, <code>LAPACK_INC</code>, <code>LAPACK_LIB</code>, <code>FC_LINK</code>) に入り, <code>examples/build_examples.sh</code> でサンプルを作れる. Python のパッケージは<a href="installation.html#install-python-envs">「Python のパッケージ」</a>に示す.</p>
+<h2 data-number="4.6" id="install-mpi-default"><span class="header-section-number">4.6</span> MPI の有無の既定</h2>
+<p>　PARCEL を <a href="glossary.html#g-mpi">MPI</a> ありでビルドするか, MPI なしの 1 プロセス版でビルドするかは, マクロ <code>PARCEL_MPI</code> (1: あり, 0: なし) で決まる. 既定は使い方によって次のように異なる.</p>
+<table>
+<thead>
+<tr>
+<th>使い方</th>
+<th><code><span class="tok">PARCEL_MPI</span></code>の既定</th>
+<th>決めている場所</th>
+<th>MPI なし / ありにする指定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C++ (<code><span class="tok">Include/parcel_sycl.hpp</span></code>をインクルード)</td>
+<td>1 (MPI あり)</td>
+<td><code><span class="tok">Include/</span></code>のヘッダ</td>
+<td><code><span class="tok">-DPARCEL_MPI=0</span></code>を付ける</td>
+</tr>
+<tr>
+<td>C言語 (<code><span class="tok">capi/parcel_sycl_c.h</span></code>)</td>
+<td>1 (MPI あり)</td>
+<td><code><span class="tok">parcel_sycl_c.h</span></code>とラッパ</td>
+<td>ラッパと main の両方に<code><span class="tok">-DPARCEL_MPI=0</span></code>を付ける</td>
+</tr>
+<tr>
+<td>Fortran (<code><span class="tok">capi/parcel_sycl_mod.f90</span></code>)</td>
+<td>1 (MPI あり)</td>
+<td>ラッパ (モジュールは MPI の有無によらない)</td>
+<td>ラッパに<code><span class="tok">-DPARCEL_MPI=0</span></code>を付け, <code><span class="tok">use</span> <span class="tok">mpi</span></code>を代用モジュールで満たす</td>
+</tr>
+<tr>
+<td><code><span class="tok">examples/build_examples.sh</span></code></td>
+<td>1 (MPI あり)</td>
+<td>環境変数<code><span class="tok">PARCEL_MPI</span></code></td>
+<td><code><span class="tok">PARCEL_MPI=0</span> <span class="tok">bash</span> <span class="tok">examples/build_examples.sh</span></code></td>
+</tr>
+<tr>
+<td>Python (<code><span class="tok">python/</span></code>. pip)</td>
+<td>0 (MPI なし)</td>
+<td><code><span class="tok">python/CMakeLists.txt</span></code></td>
+<td><code><span class="tok">-C</span> <span class="tok">cmake.define.PARCEL_MPI=1</span></code>で MPI あり</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-spack">spack</a> (<code><span class="tok">parcel-sycl</span></code>, <code><span class="tok">py-parcel-sycl</span></code>)</td>
+<td>0 (MPI なし. バリアント<code><span class="tok">~mpi</span></code>)</td>
+<td>レシピのバリアント<code><span class="tok">mpi</span></code></td>
+<td><code><span class="tok">+mpi</span></code>で MPI あり</td>
+</tr>
+</tbody>
+</table>
+<p>　C++・C言語・Fortran の既定が MPI ありなのは, v1.0 と同じ使い方 (MPI のラッパでコンパイルし<code>mpirun</code>で起動する) のプログラムをそのまま動かすためである. Python と spack の既定が MPI なしなのは, MPI の無い環境 (手元の計算機, macOS など) でもすぐに入れて試せるようにするためである. MPI ありの版を使う場合は, 上の指定で明示する. C言語・Fortran では, ラッパと main で指定が食い違うとコミュニケータの引数の型が合わず, 正しく動かない (リンクでは検出されない) ので, 両方を同じ指定でビルドする. C++ はヘッダだけのライブラリなので, 利用者のプログラムの指定がそのまま使われる. どちらの版も計算は同じで, MPI ありの版を 1 プロセスで実行した結果と MPI なしの版の結果はビット単位で一致する.</p>
+<h2 data-number="4.7" id="install-nompi"><span class="header-section-number">4.7</span> MPI なしのビルド</h2>
+<p>　<code>-DPARCEL_MPI=0</code> を付けると, <a href="glossary.html#g-mpi">MPI</a> を使わない 1 プロセス版をビルドできる. <code>mpi.h</code> を読まず, MPI のライブラリもリンクしないので, MPI のコンパイララッパ (<code>mpicxx</code>) ではなく SYCL 対応コンパイラ (<code>acpp</code> など) で直接コンパイルし, <code>mpirun</code> を使わずに実行する. 指定しない場合 (既定) は MPI ありである. 計算は MPI ありのビルドを 1 プロセスで実行した場合と同じで, 結果はビット単位で一致する.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="dt">\</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="at">-o</span> quick_start examples/quick_start.cpp <span class="at">-lopenblas</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./quick_start</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># examples/ の 4 本 (C言語・Fortran は gcc・gfortran でコンパイルする)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_MPI</span><span class="op">=</span>0 <span class="fu">bash</span> examples/build_examples.sh</span></code></pre></div>
+<p>　C言語・Fortran のプログラムを手でビルドする場合は, ラッパと C の main の両方に<code>-DPARCEL_MPI=0</code>を付け, MPI のラッパ (<code>mpicxx</code>, <code>mpicc</code>, <code>mpif90</code>) の代わりに <code>acpp</code>, <code>gcc</code>, <code>gfortran</code> を使う. Fortran の<code>use mpi</code>は 1 プロセス用の代用モジュール <code>examples/sample_f_mpi_stub.f90</code> (<code>MPI_Init</code>, <code>MPI_Comm_rank</code>, <code>MPI_Comm_size</code>, <code>MPI_Finalize</code> などを 1 プロセスとして実装したもの) で満たす. コマンドの例は<a href="quickstart.html#qs-c">クイックスタートの「C言語」</a>と<a href="quickstart.html#qs-fortran">「Fortran」</a>の「MPI なし」に示す.</p>
+<p>　利用者のプログラムは MPI ありと同じ書き方で動く. 違いは次のとおりである.</p>
+<ul>
+<li>C++: コミュニケータは <code>parcel::comm comm(&amp;q);</code> で作る (MPI ありの <code>parcel::comm comm(MPI_COMM_WORLD, &amp;q);</code> に当たる). <code>mpi_rank()</code> は 0, <code>mpi_size()</code> は 1 を返す. <code>set_crsMat(&amp;comm, nstart, nend, n, nnz, ...)</code> はそのまま使えるが, 1 プロセスが全体を持つので <code>nstart = 0</code>, <code>nend = n - 1</code> とする (違えば <code>std::invalid_argument</code>). MPI の型を使う関数 (<code>comm::mpi_comm()</code> など) は無い. 利用者のプログラム中の MPI の呼び出し (<code>MPI_Init</code> など) は <code>#if PARCEL_MPI</code> で分ける (<code>examples/quick_start.cpp</code> を参照).</li>
+<li>C言語: ラッパ (<code>capi/wrapper_parcel_sycl.cpp</code>) と, <code>parcel_sycl_c.h</code> をインクルードするプログラムの両方を <code>-DPARCEL_MPI=0</code> でコンパイルする (食い違うとコミュニケータの引数の型が合わない). 関数名と引数の並びは同じで, コミュニケータの引数の型 (<code>PARCEL_C_COMM</code>) は <code>int</code> になり, 値は使われない (0 を渡す). <code>nstart = index_base</code>, <code>n_local = n_global</code> とする (違えば <code>PARCEL_ERR_DISTRIBUTION</code>). ライブラリ内の例外は <code>MPI_Abort</code> せず, メッセージを表示して <code>PARCEL_ERR_RUNTIME</code> を返す. <code>MPI_Init</code> は要らない.</li>
+<li>Python: 既定で MPI なしの版になる (<a href="installation.html#install-python-nompi">インストールの「Python のパッケージ」</a>). <code>mpirun</code> を使わずに <code>python script.py</code> で実行する.</li>
+<li>Fortran: モジュール <code>capi/parcel_sycl_mod.f90</code> はそのまま使う (コミュニケータの整数は使われない). <code>examples/sample_f.f90</code> は変えずに, 1 プロセス用の <code>mpi</code> モジュールの代用 <code>examples/sample_f_mpi_stub.f90</code> と一緒に gfortran でコンパイルする.</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="4.8" id="install-python"><span class="header-section-number">4.8</span> Python のパッケージ</h2>
+<p>　Python のパッケージ <code>parcel</code> (配布パッケージの <code>python/</code>) は, PARCEL の C++ のライブラリを直接呼ぶネイティブ層 (<code>libparcel_py.so</code>) をソースからビルドして入れる. 必要なものは, PARCEL をビルドできる環境 (<a href="sycl-compiler.html#sycl-compiler">SYCL 対応コンパイラ</a>の章の「使用時の設定」), Python 3.8 以上と NumPy である. 行列を作るには SciPy が便利であり, 回帰試験の Python の試験 (<code>tests/regression/sample_py.py</code>) も SciPy を使う. ネイティブ層は <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> でビルドする. 既定は <a href="glossary.html#g-mpi">MPI</a> なしの 1 プロセス版であり, ビルドの設定 <code>PARCEL_MPI=1</code> で MPI ありの版になる. 入れ方は次の 3 通りである. 使い方は<a href="usage.html#usage-python">使用方法の Python</a> に示す.</p>
+<ul>
+<li><a href="glossary.html#g-spack">spack</a> のレシピ <code>py-parcel-sycl</code> で入れる (<a href="installation.html#install-spack">「spack によるインストール」</a>). ゼロから入れるスクリプト <code>spack/stack/install_stack.sh</code> は C++ のヘッダ, C言語・Fortran の API と一緒にこのパッケージも入れる.</li>
+<li><code>python/</code> で <code>pip install .</code> を実行する (下の<a href="installation.html#install-python-nompi">「MPI なし (既定)」</a>).</li>
+<li>pip を使わずにネイティブ層を直接ビルドし, 環境変数でその場所を与える (同上).</li>
+</ul>
+<h3 data-number="4.8.1" id="install-python-envs"><span class="header-section-number">4.8.1</span> 環境ごとの設定</h3>
+<p>　ネイティブ層は環境 (SYCL のターゲットと MPI の有無) ごとにビルドする. ビルドの設定は pip の<code>-C cmake.define.&lt;名前&gt;=&lt;値&gt;</code>で与える (<a href="installation.html#install-python-cmake">「ビルドの設定」</a>). 本書の試験環境で用いた値を次に示す (<a href="installation.html#install-recommended-flags">推奨オプション</a>と同じ). 空欄は既定値のままでよい.</p>
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th><code><span class="tok">PARCEL_TARGET</span></code></th>
+<th><code><span class="tok">PARCEL_KERNEL_FLAGS</span></code></th>
+<th><code><span class="tok">PARCEL_EXTRA_FLAGS</span></code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86</a> (CPU), <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap">(<code><span class="tok">omp</span></code>)</td>
+<td>(<code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code>)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap"><code><span class="tok">cuda:sm_70</span></code></td>
+<td>(<code><span class="tok">-DPARCEL_SPMV_LADDER=0</span> <span class="tok">-DPARCEL_PRECON_LADDER=0</span></code>. 梯子分割なし)</td>
+<td><code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td class="nowrap"><code><span class="tok">cuda:sm_80</span></code></td>
+<td>(同上)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td class="nowrap"><code><span class="tok">cuda:sm_90</span></code></td>
+<td>(同上)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap"><code><span class="tok">hip:gfx942</span></code></td>
+<td>(<code><span class="tok">-DPARCEL_SPMV_LADDER=1</span> <span class="tok">-DPARCEL_PRECON_LADDER=1</span></code>)</td>
+<td></td>
+</tr>
+<tr>
+<td>macOS (Apple シリコン) + Homebrew</td>
+<td class="nowrap"><code><span class="tok">omp.library-only</span></code></td>
+<td>(<code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code>)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>　括弧の値は既定値 (<code>PARCEL_KERNEL_FLAGS</code> はターゲットから決まる値) である. <a href="glossary.html#g-lapack">LAPACKE</a> の場所 (<code>LAPACKE_INCLUDE_DIR</code>, <code>LAPACK_LIBS</code>) は環境に合わせて与える (<a href="glossary.html#g-ps-a">PS-A</a>・<a href="glossary.html#g-ps-b">PS-B</a> では <code>-l:libopenblaso.so.0</code> など. <a href="installation.html#install-recommended-flags">推奨オプション</a>の各環境の節). ビルド・インストール・実行のいずれも, 同じ環境 (<a href="sycl-compiler.html#sycl-compiler">SYCL 対応コンパイラ</a>の章の「使用時の設定」. AdaptiveCpp・LAPACK・MPI のライブラリが見つかる状態) で行う.</p>
+<p>　macOS では, Homebrew で入れた環境 (<a href="sycl-compiler.html#env-mac">「SYCL対応コンパイラのインストール方法」の「macOS (Homebrew)」</a>) で <code>python/envs/mac_brew.sh</code> を読み込むと, 上の表の値と Homebrew の OpenBLAS の場所が環境変数に設定されるので, その後で下の pip または直接のビルドを行う.</p>
+<h3 data-number="4.8.2" id="install-python-nompi"><span class="header-section-number">4.8.2</span> MPI なし (既定)</h3>
+<p>　pip は <code>python/</code> で実行する. pip はビルドに scikit-build-core と CMake 3.18 以上を使う (無ければ取得する) ので, パッケージの置き場に接続できる必要がある. <a href="glossary.html#g-venv">venv</a> の pip は先に更新しておく (古い pip はビルドの設定を渡す <code>-C</code> を受け付けないことがある). ログインノードで実行してよく, 1〜2 分かかる.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv <span class="va">$HOME</span>/venv_parcel</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install <span class="at">-U</span> pip</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install scipy           <span class="co"># 任意. 行列を作るのに便利 (parcel の依存は NumPy だけ)</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> python</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install . <span class="at">-C</span> cmake.define.PARCEL_TARGET=cuda:sm_70 <span class="dt">\</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-C</span> <span class="st">&quot;cmake.define.PARCEL_EXTRA_FLAGS=-Xcuda-ptxas -maxrregcount=255&quot;</span>     <span class="co"># s86 (V100) の例</span></span></code></pre></div>
+<p>　ネイティブ層は <code>acpp</code> で直接ビルドし, <a href="glossary.html#g-mpi">MPI</a> のライブラリをリンクしない.</p>
+<p>　pip を使わない場合は, ネイティブ層を直接ビルドし, 環境変数 <code>PARCEL_PY_LIB</code> にその場所を, <code>PYTHONPATH</code> に <code>python/</code> を与える (パッケージのトップディレクトリで実行する. 回帰試験の Python のジョブもこの形で, <code>tests/regression/sub_build_lang_&lt;環境&gt;.sh</code> が <code>bin/&lt;環境&gt;/libparcel_py.so</code> を作る).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">-fPIC</span> <span class="at">-shared</span> <span class="at">-IInclude</span> <span class="at">-I</span>/usr/include/openblas <span class="at">-o</span> libparcel_py.so python/src/parcel_py.cpp <span class="at">-lopenblas</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>python <span class="va">PARCEL_PY_LIB</span><span class="op">=</span><span class="va">$PWD</span>/libparcel_py.so <span class="ex">python</span> script.py</span></code></pre></div>
+<p>　入ったことは次のように確かめる. <code>parcel.has_mpi()</code> は MPI ありの版なら <code>True</code> を返す. <code>parcel.build_info()</code> はビルドの設定を, <code>parcel.device_name()</code> は使われる<a href="glossary.html#g-device">デバイス</a>の名前を返す.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-c</span> <span class="st">&quot;import parcel; print(parcel.has_mpi(), parcel.build_info(), parcel.device_name())&quot;</span></span></code></pre></div>
+<p>　Python の API の試験 <code>tests/regression/sample_py.py</code> は, C言語の <code>examples/sample_c.c</code> と同じ問題・項目・判定 (7 種のソルバ, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らない pcagmres の 2 通り, ks_arnoldi の <a href="glossary.html#g-shift-invert">shift-invert</a> など) を Python から行う. 回帰試験の言語 <code>python</code> として流せるほか (<a href="installation.html#install-layout">「パッケージの構成」</a>), 単独でも動く. 引数は <a href="glossary.html#g-nx">NX</a> である.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_TEST_FROM_SOURCE</span><span class="op">=</span>1 <span class="va">PARCEL_PY_LIB</span><span class="op">=</span><span class="va">$PWD</span>/libparcel_py.so <span class="ex">python</span> tests/regression/sample_py.py 16   <span class="co"># パッケージの python/ を読む</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> tests/regression/sample_py.py 16                                                                <span class="co"># インストールした parcel を読む</span></span></code></pre></div>
+<h3 data-number="4.8.3" id="install-python-mpi"><span class="header-section-number">4.8.3</span> MPI あり</h3>
+<p>　ビルドの設定 <code>PARCEL_MPI=1</code> を与えると, ネイティブ層を <a href="glossary.html#g-mpi">MPI</a> の C++ ラッパ (既定 <code>mpicxx</code>) でビルドする. ラッパが中で <code>acpp</code> を呼ぶよう, <code>OMPI_CXX=acpp</code> (Open MPI) などを先に設定しておく. mpi4py は任意であり, 使う場合は同じ MPI でビルドしたものを venv に入れる.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv <span class="va">$HOME</span>/venv_parcel_mpi                       <span class="co"># MPI なしの版とは別の venv にする</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel_mpi/bin/python</span> <span class="at">-m</span> pip install <span class="at">-U</span> pip</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> python</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel_mpi/bin/python</span> <span class="at">-m</span> pip install . <span class="at">-C</span> cmake.define.PARCEL_MPI=1</span></code></pre></div>
+<p>　pip を使わない場合は, 上の<code>acpp</code>の行を<code>mpicxx</code>にし, <code>-DPARCEL_MPI=0</code>を外す. 実行は<a href="usage.html#usage-python-run-mpi">「MPI ありでの実行」</a>に示す.</p>
+<p>　試験の状況: pip で入れたパッケージとソースからビルドしたものの両方が, MPI ありの版で <a href="glossary.html#g-s86">s86</a> (CPU, <a href="glossary.html#g-v100">V100</a>), <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-ps-b">PS-B</a>, <a href="glossary.html#g-aquarius">Aquarius</a> のすべての項目に合格した. MPI なしの版は <a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-aquarius">Aquarius</a>, macOS (Homebrew. MPI ありの版も) で確認した. <a href="glossary.html#g-spack">spack</a> で入れた <code>py-parcel-sycl</code> の確認は<a href="installation.html#install-spack-envs">「spack によるインストール」</a>に示す.</p>
+<h3 data-number="4.8.4" id="install-python-cmake"><span class="header-section-number">4.8.4</span> ビルドの設定</h3>
+<p>　pip の <code>-C cmake.define.&lt;名前&gt;=&lt;値&gt;</code> で与える名前を次に示す (<code>python/CMakeLists.txt</code> の先頭に同じ一覧がある). 値を与えなければ右の列の既定値になる.</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>内容</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_MPI</span></code></td>
+<td>0 は <a href="glossary.html#g-mpi">MPI</a> なしの 1 プロセス版, 1 は MPI あり</td>
+<td><code><span class="tok">0</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_TARGET</span></code></td>
+<td><code><span class="tok">--acpp-targets</span></code> の値</td>
+<td><code><span class="tok">omp</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_KERNEL_FLAGS</span></code></td>
+<td>カーネル最適化のマクロ</td>
+<td><code><span class="tok">PARCEL_TARGET</span></code> から決める (<code><span class="tok">omp</span></code> は <code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code>, <code><span class="tok">hip</span></code> は梯子分割の 2 つ, <code><span class="tok">cuda</span></code> は梯子分割なし)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_HOST_FLAGS</span></code></td>
+<td>ホスト向けの最適化</td>
+<td><code><span class="tok">-march=native</span> <span class="tok">-mtune=native</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_EXTRA_FLAGS</span></code></td>
+<td>その他のフラグ</td>
+<td>なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_INCLUDE_DIR</span></code></td>
+<td>PARCEL の <code><span class="tok">Include/</span></code></td>
+<td><code><span class="tok">python/</span></code> と同じ階層の <code><span class="tok">Include/</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">LAPACKE_INCLUDE_DIR</span></code></td>
+<td><code><span class="tok">lapacke.h</span></code> の場所</td>
+<td><code><span class="tok">/usr/include/openblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">LAPACK_LIBS</span></code></td>
+<td>LAPACK のライブラリ</td>
+<td><code><span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_MPICXX</span></code></td>
+<td>C++ コンパイラ</td>
+<td>MPI なしは <code><span class="tok">acpp</span></code>, MPI ありは <code><span class="tok">mpicxx</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 data-number="4.9" id="install-spack"><span class="header-section-number">4.9</span> spack によるインストール</h2>
+<p>　配布パッケージの <code>spack/</code> には, PARCEL を <a href="glossary.html#g-spack">spack</a> で入れるためのレシピと, spack の取得から LLVM・<a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a>・OpenBLAS・Python, PARCEL までをゼロから入れるスクリプトがある. 説明の原文は <code>spack/README.ja.md</code> (英語版は <code>spack/README.md</code>) である. spack は 1.x (パッケージリポジトリの API v2.2) を対象とする.</p>
+<h3 data-number="4.9.1" id="install-spack-recipe"><span class="header-section-number">4.9.1</span> レシピ</h3>
+<table>
+<thead>
+<tr>
+<th>パッケージ</th>
+<th>中身</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">parcel-sycl</span></code></td>
+<td>ヘッダ (<code><span class="tok">include/</span></code>), C言語の API (<code><span class="tok">lib/libparcel_sycl_c.so</span></code> と <code><span class="tok">include/parcel_sycl_c.h</span></code>), Fortran のモジュール (<code><span class="tok">include/parcel_sycl_mod.mod</span></code> と <code><span class="tok">lib/libparcel_sycl_f.a</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">py-parcel-sycl</span></code></td>
+<td>Python のパッケージ <code><span class="tok">parcel</span></code> (<code><span class="tok">python/</span></code> を scikit-build-core でビルドする. <a href="installation.html#install-python">「Python のパッケージ」</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>　バリアントは両方に共通である.</p>
+<table>
+<thead>
+<tr>
+<th>バリアント</th>
+<th>既定</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">mpi</span></code></td>
+<td class="nowrap">off</td>
+<td><a href="glossary.html#g-mpi">MPI</a> あり (既定は MPI なしの 1 プロセス版)</td>
+</tr>
+<tr>
+<td><code><span class="tok">cuda</span></code> + <code><span class="tok">cuda_arch=&lt;n&gt;</span></code></td>
+<td class="nowrap">off</td>
+<td><code><span class="tok">--acpp-targets=cuda:sm_&lt;n&gt;</span></code>. <code><span class="tok">cuda_arch=70</span></code> (<a href="glossary.html#g-v100">V100</a>) では <code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code> を自動で付ける</td>
+</tr>
+<tr>
+<td><code><span class="tok">rocm</span></code> + <code><span class="tok">amdgpu_target=&lt;gfx&gt;</span></code></td>
+<td class="nowrap">off</td>
+<td><code><span class="tok">--acpp-targets=hip:&lt;gfx&gt;</span></code></td>
+</tr>
+<tr>
+<td>(<code><span class="tok">cuda</span></code>・<code><span class="tok">rocm</span></code> のどちらも無し)</td>
+<td class="nowrap"></td>
+<td><code><span class="tok">--acpp-targets=omp</span></code> (CPU)</td>
+</tr>
+<tr>
+<td><code><span class="tok">native</span></code></td>
+<td class="nowrap">on</td>
+<td><code><span class="tok">-march=native</span> <span class="tok">-mtune=native</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">kernel</span></code></td>
+<td class="nowrap"><code><span class="tok">auto</span></code></td>
+<td>カーネル最適化 (<a href="installation.html#install-kernel-opt">「最適化」</a>). <code><span class="tok">auto</span></code> (CPU は <code><span class="tok">blocking_dot</span></code>, AMD の GPU (<code><span class="tok">+rocm</span></code>) は <code><span class="tok">ladder</span></code>, NVIDIA の GPU (<code><span class="tok">+cuda</span></code>) は <code><span class="tok">none</span></code>, <code><span class="tok">+fj</span></code>は<code><span class="tok">a64fx</span></code>), <code><span class="tok">blocking_dot</span></code>, <code><span class="tok">a64fx</span></code>, <code><span class="tok">ladder</span></code>, <code><span class="tok">none</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">fj</span></code></td>
+<td class="nowrap">off</td>
+<td><a href="glossary.html#g-a64fx">A64FX</a> 向け: ホスト側を富士通コンパイラ (FCC) でコンパイルし, Fortran のモジュールを frt で作る (<a href="glossary.html#g-odyssey">Odyssey</a> の定義 <code><span class="tok">wis_ody</span></code> で確認). <code><span class="tok">-std=c++17</span> <span class="tok">-ffp-contract=fast</span></code>を付ける (<a href="installation.html#install-odyssey">推奨オプション</a>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">capi</span></code> (<code><span class="tok">parcel-sycl</span></code> のみ)</td>
+<td class="nowrap">on</td>
+<td>C言語・Fortran の API をビルドする</td>
+</tr>
+<tr>
+<td><code><span class="tok">scipy</span></code> (<code><span class="tok">py-parcel-sycl</span></code> のみ)</td>
+<td class="nowrap">on</td>
+<td>SciPy も入れる (<code><span class="tok">DistributedCSR.from_scipy()</span></code>・<code><span class="tok">from_global()</span></code> と <code><span class="tok">examples/quick_start.py</span></code> が使う. pip の <code><span class="tok">parcel[scipy]</span></code> に当たる)</td>
+</tr>
+<tr>
+<td><code><span class="tok">ks_ortho</span></code></td>
+<td class="nowrap"><code><span class="tok">cgs2</span></code></td>
+<td><code><span class="tok">ks_arnoldi</span></code>の直交化の既定 (<a href="installation.html#install-ks-ortho">「ks_arnoldi の直交化の既定」</a>). <code><span class="tok">mgs</span></code>で<code><span class="tok">-DPARCEL_KS_ORTHO_DEFAULT=mgs</span></code>を付ける (<code><span class="tok">PARCEL_CXXFLAGS</span></code>にも入る). プログラムが<code><span class="tok">set_qr_algo()</span></code>で指定した値が優先する. <code><span class="tok">py-parcel-sycl</span></code>は同じ値の<code><span class="tok">parcel-sycl</span></code>でビルドする</td>
+</tr>
+</tbody>
+</table>
+<p>　既存の spack の環境に足す場合は, <code>spack develop</code> で手元の配布パッケージを使う.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> repo add <span class="op">&lt;</span>パッケージ<span class="op">&gt;</span>/spack/spack_repo/parcel</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> config add <span class="st">&quot;concretizer:unify:when_possible&quot;</span>          <span class="co"># CPU 版と GPU 版などを並べるとき</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> develop <span class="at">--no-clone</span> <span class="at">--path</span> <span class="op">&lt;</span>パッケージ<span class="op">&gt;</span> parcel-sycl@1.2.0</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> develop <span class="at">--no-clone</span> <span class="at">--path</span> <span class="op">&lt;</span>パッケージ<span class="op">&gt;</span> py-parcel-sycl@1.2.0</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> add <span class="st">&quot;parcel-sycl@1.2.0 ~mpi ~cuda ~rocm&quot;</span> <span class="st">&quot;py-parcel-sycl@1.2.0 ~mpi ~cuda ~rocm&quot;</span>                    <span class="co"># CPU</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> add <span class="st">&quot;parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=70&quot;</span> <span class="st">&quot;py-parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=70&quot;</span>     <span class="co"># GPU</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> concretize <span class="at">-f</span> <span class="kw">&amp;&amp;</span> <span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>環境<span class="op">&gt;</span> install</span></code></pre></div>
+<p>　使うときは, 構成を指定して <code>spack load</code> する. <code>spack load parcel-sycl</code> は, 利用者のプログラムを PARCEL と同じ設定でコンパイルするための <code>PARCEL_CXXFLAGS</code> (ターゲット, 最適化, MPI の有無, ヘッダの場所) と <code>PARCEL_LDFLAGS</code> (実行時に要るライブラリ (LLVM の libomp, AdaptiveCpp, LAPACK, MPI) の <a href="glossary.html#g-rpath">RPATH</a> と LAPACK) を設定する. MPI ありの版では <code>OMPI_CXX=acpp</code> なども設定するので, <code>mpicxx</code> で同じようにコンパイルする. MPI のラッパ経由では libomp の RPATH が付かないので, <code>PARCEL_LDFLAGS</code> を必ず付ける. C言語・Fortran の API のヘッダ (<code>parcel_sycl_c.h</code>, <code>parcel_sycl_mod.mod</code>) とライブラリの場所は <code>spack load</code> では設定されないので, <code>spack location -i</code> で調べて <code>-I</code>, <code>-L</code>, <code>-Wl,-rpath</code> に与える.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>環境<span class="op">&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load parcel-sycl+cuda py-parcel-sycl+cuda                   <span class="co"># 構成を指定して読む</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="va">$PARCEL_CXXFLAGS</span> <span class="at">-O3</span> <span class="at">-o</span> prog prog.cpp <span class="va">$PARCEL_LDFLAGS</span>        <span class="co"># C++</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="va">P</span><span class="op">=</span><span class="va">$(</span><span class="ex">spack</span> location <span class="at">-i</span> parcel-sycl+cuda<span class="va">)</span>                           <span class="co"># C言語 (MPI なしの版): 場所は自分で与える</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-I</span><span class="va">$P</span>/include <span class="at">-o</span> prog prog.c <span class="at">-L</span><span class="va">$P</span>/lib <span class="at">-lparcel_sycl_c</span> <span class="at">-Wl,-rpath,</span><span class="va">$P</span>/lib</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> script.py                                                  <span class="co"># Python</span></span></code></pre></div>
+<p>　注意点を次に示す.</p>
+<ul>
+<li>ルートの仕様は <code>~cuda ~rocm</code> まで明示する. <code>parcel-sycl ~mpi</code> だけでは, 解決の統合 (unify) で GPU 版と同じものにまとめられることがある.</li>
+<li>CPU 版と GPU 版を同じ環境に入れるとビューで重なるので, 環境のビューから <code>parcel-sycl</code>・<code>py-parcel-sycl</code> を除外する (<code>view: default: {root: .spack-env/view, exclude: [parcel-sycl, py-parcel-sycl]}</code>).</li>
+<li>解決済みの環境に仕様を足すと, <code>concretize</code> が内部エラー (unsatisfiable) になることがある. <code>concretize -f</code> で解決し直す.</li>
+<li>MPI と <code>hipsycl</code> (AdaptiveCpp) は環境の中で 1 つにそろえる (<code>packages:mpi:require:</code> に版と構成まで, <code>packages:hipsycl:require:</code>). 外部登録の MPI が複数あると, 別の構成 (<a href="glossary.html#g-cuda">CUDA</a> 版など) が選ばれることがある.</li>
+<li>AdaptiveCpp が使う CUDA は, ビルド時の <code>ACPP_CUDA_PATH</code> (または spack の <code>cuda</code>) を記録し, <code>spack load</code> で同じ値を設定する. ドライバより新しい CUDA を使わないよう, 外部パッケージの <code>cuda</code> かこの変数で指定する.</li>
+<li><a href="glossary.html#g-lapack">LAPACKE</a> のヘッダは <code>include/lapacke/</code> に写す (計算ノードに <code>lapacke.h</code> が無い環境のため).</li>
+<li><code>spack develop</code> のソースの中で試験を実行すると (<code>bin/</code>, <code>__pycache__</code> などができる), spack は更新ありとみなし, 次の <code>install</code> で PARCEL を作り直す. 試験はソースの写しで行う.</li>
+</ul>
+<h3 data-number="4.9.2" id="install-spack-tarball"><span class="header-section-number">4.9.2</span> 配布 tarball から入れる</h3>
+<p>　レシピは配布 tarball の <code>url</code> と <code>sha256</code> を持つ. <code>url</code> は GitHub の Release に置く tarball (<code>https://github.com/parcel-jaea/PARCEL-release/releases/download/v1.2.0/parcel_sycl-1.2.0.tar.gz</code>) を指し, sha256 は <code>tools/make_tarball.py --pin</code> がレシピに書く (<a href="versions.html#versions-tarball">「配布物の確認」</a>). <code>spack develop</code> を使わなければ, spack は <code>url</code> から tarball を取得する (<code>parcel-sycl</code> と <code>py-parcel-sycl</code> は同じ tarball を使う). 計算機が外部に接続できないときは, tarball を spack の mirror の形 (<code>&lt;mirror&gt;/_source-cache/archive/&lt;sha256 の先頭 2 文字&gt;/&lt;sha256&gt;.tar.gz</code>) に置き, <code>spack mirror add</code> で登録する. spack は取得した tarball をレシピの sha256 と照合し, 違えば止まる. sha256 は spack のハッシュに入るので, 書き直すと (<code>spack develop</code> で使う場合も) PARCEL が作り直される. 手順は <code>spack/README.ja.md</code> の「配布 tarball から入れる」に示す.</p>
+<h3 data-number="4.9.3" id="install-spack-select"><span class="header-section-number">4.9.3</span> 構成の選び方</h3>
+<p>　入れる構成は, パッケージ (<code>parcel-sycl</code>, <code>py-parcel-sycl</code>) とバリアントの組合せ (仕様) で選ぶ. 目的ごとの仕様の例を示す (版の<code>@1.2.0</code>は省略した).</p>
+<table>
+<thead>
+<tr>
+<th>目的</th>
+<th>仕様</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU, MPI なし (C++・C言語・Fortran)</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code></td>
+</tr>
+<tr>
+<td>CPU, MPI あり</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">+mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code></td>
+</tr>
+<tr>
+<td>NVIDIA の GPU (<a href="glossary.html#g-a100">A100</a> の例)</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">+cuda</span> <span class="tok">cuda_arch=80</span></code></td>
+</tr>
+<tr>
+<td>NVIDIA の GPU, MPI あり</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">+mpi</span> <span class="tok">+cuda</span> <span class="tok">cuda_arch=80</span></code></td>
+</tr>
+<tr>
+<td>AMD の GPU (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">+rocm</span> <span class="tok">amdgpu_target=gfx942</span></code></td>
+</tr>
+<tr>
+<td>C++ (ヘッダ) だけ. C言語・Fortran の API を作らない</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~capi</span> <span class="tok">~mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code></td>
+</tr>
+<tr>
+<td>Python も使う</td>
+<td>同じ構成の<code><span class="tok">py-parcel-sycl</span></code>も並べる (例: <code><span class="tok">py-parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>言語の選び方: C++ (ヘッダ) は<code>parcel-sycl</code>に常に入る. C言語と Fortran の API はバリアント<code>capi</code> (既定 on) でまとめて入れるか外すかを選び, どちらか一方だけは選べない. Python は別のパッケージ<code>py-parcel-sycl</code>を加えるかどうかで選ぶ.</li>
+<li><code>+capi</code> (既定) では Fortran のコンパイラが必要である (Fortran のモジュールを作るため). Fortran のコンパイラが無い環境では<code>~capi</code>にする.</li>
+<li><code>py-parcel-sycl</code>はビルドに<code>parcel-sycl</code>を使うので, Python だけを入れる場合も<code>parcel-sycl</code>が入る. このとき<code>parcel-sycl</code>は既定の<code>+capi</code>になる. Fortran のコンパイラが無い環境では<code>py-parcel-sycl ~mpi ~cuda ~rocm ^parcel-sycl ~capi</code>のように<code>parcel-sycl</code>のバリアントを添える (<a href="glossary.html#g-s86">s86</a> で解決できることと, <code>parcel-sycl</code>が Fortran のコンパイラを使わなくなることを確かめた). ただし LAPACK に使う OpenBLAS も既定では Fortran のコンパイラを使うので, Fortran のコンパイラがまったく無い環境では<code>openblas ~fortran</code>も指定する (<a href="glossary.html#g-odyssey">Odyssey</a> の定義<code>wis_ody</code>と同じ).</li>
+<li><code>+cuda</code>と<code>+rocm</code>は同時に指定できない (レシピがエラーにする). どちらも付けなければ CPU (<a href="glossary.html#g-openmp">OpenMP</a>) 版である. GPU では<code>cuda_arch</code> (CUDA の計算能力. <a href="glossary.html#g-v100">V100</a> 70, <a href="glossary.html#g-a100">A100</a> 80, <a href="glossary.html#g-gh200">GH200</a> 90) または<code>amdgpu_target</code>を 1 つ指定する.</li>
+<li><code>+mpi</code>には MPI が要る. 計算機の MPI を外部パッケージとして環境の定義に登録しておく (<a href="glossary.html#g-mpi">MPI</a> と<code>hipsycl</code>は環境の中で 1 つにそろえる. 上の注意).</li>
+<li><code>py-parcel-sycl</code>の<code>mpi</code>・<code>cuda</code>・<code>rocm</code>などは, 組み合わせる<code>parcel-sycl</code>と同じにする (レシピが同じ構成の<code>parcel-sycl</code>を求める).</li>
+</ul>
+<p>　<a href="installation.html#install-spack-stack">ゼロから入れる方法</a>では, 入れる構成は<code>spack/stack/envs/&lt;環境&gt;/spack.yaml</code>の<code>specs:</code>に並べたものである. 同梱の定義は, その環境で使える構成をすべて並べている (例えば <a href="glossary.html#g-s86">s86</a> は CPU / GPU × MPI なし / あり × <code>parcel-sycl</code> / <code>py-parcel-sycl</code> の 8 行). 構成を絞る・変えるときは, <code>install_stack.sh</code>を実行する前に<code>specs:</code>を書き換える. 例えば CPU・MPI ありの C++・C言語・Fortran と Python だけを入れる場合は次のようにする. 入れた後に書き換えた場合も, 同じコマンドで<code>install_stack.sh</code>を流し直せば, 解決し直して足りないものだけを入れる.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spack</span><span class="kw">:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">specs</span><span class="kw">:</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> parcel-sycl@1.2.0 +mpi ~cuda ~rocm</span><span class="co">         # CPU・MPI あり (C++・C言語・Fortran)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> py-parcel-sycl@1.2.0 +mpi ~cuda ~rocm</span><span class="co">      # 同じ構成の Python</span></span></code></pre></div>
+<h3 data-number="4.9.4" id="install-spack-stack"><span class="header-section-number">4.9.4</span> ゼロから入れる</h3>
+<p>　既存の spack を使わず, spack の取得から PARCEL までを <code>spack/stack/install_stack.sh</code> の 1 本で入れる. 引数は環境の名前 (<code>spack/stack/envs/</code> の下のディレクトリ名), 入れ先, 並列数である.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/install_stack.sh s86 <span class="va">$HOME</span>/parcel_stack 16           <span class="co"># &lt;環境&gt; &lt;入れ先&gt; [並列数]</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/check_stack.sh <span class="va">$HOME</span>/parcel_stack <span class="va">$HOME</span>/parcel_check  <span class="co"># ログインノードでの確認</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$HOME</span>/parcel_stack/setup.sh                                          <span class="co"># 使うとき</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load parcel-sycl+mpi+cuda py-parcel-sycl+mpi+cuda</span></code></pre></div>
+<ul>
+<li>spack で作るもの: LLVM 18.1.8, AdaptiveCpp (<code>hipsycl</code> 24.10.0), OpenBLAS, binutils, Python 3.11 と NumPy・SciPy・pip, PARCEL 本体・C言語と Fortran の API・Python のパッケージ.</li>
+<li>各環境の既存品を使うもの: コンパイラ, <a href="glossary.html#g-cuda">CUDA</a> / ROCm, <a href="glossary.html#g-mpi">MPI</a>. 計算機のネットワークやドライバと結び付くため, <code>spack/stack/envs/&lt;環境&gt;/spack.yaml</code> に外部パッケージとして書く.</li>
+<li>spack 本体 (1.1.0.dev0) とレシピ集 (spack-packages) は, 確認した版に固定する (<code>install_stack.sh</code> の先頭).</li>
+<li>入れ先の中に spack・設定・キャッシュをすべて置き, <code>~/.spack</code> と <code>/etc/spack</code> を読まない (<code>SPACK_DISABLE_LOCAL_CONFIG=1</code>). 既存の spack の環境に影響されず, 影響も与えない.</li>
+<li>PARCEL のソースは <code>install_stack.sh</code> の 2 つ上のディレクトリ (配布パッケージのトップ. <code>Include/</code>, <code>capi/</code>, <code>python/</code> があること) である. 別の場所を使うときは <code>PARCEL_SRC=&lt;ディレクトリ&gt;</code> を与える.</li>
+<li><code>envs/&lt;環境&gt;/site_env.sh</code> はインストール中と <code>setup.sh</code> を読んだときに読む (サイトの MPI などのモジュール). <code>after_activate.sh</code> は環境を有効にした後に読む. <code>compilers.yaml</code> は本体より先に入れるコンパイラ (OS の GCC が古い環境で新しい GCC を作る) である.</li>
+<li>途中で止まったら, 同じコマンドで再開できる (入ったものは使い回す). <code>CONCRETIZE_ONLY=1</code> を付けると解決だけを行う.</li>
+<li><code>check_stack.sh</code> は入っている構成ごとに <code>spack load</code> し, Python から <code>parcel</code> を読めるか, <code>examples/</code> の <code>sample_c.c</code>・<code>sample_f.f90</code>・<code>quick_start.cpp</code> がビルドでき, 実行に要るライブラリがすべて見つかるかを調べる (実行はしない). MPI なしの Fortran は <code>examples/sample_f_mpi_stub.f90</code> と一緒にコンパイルする.</li>
+<li>インストール後の試験は <code>spack test run parcel-sycl py-parcel-sycl</code> (結果は <code>spack test results</code>). インストール先のヘッダとライブラリで<a href="quickstart.html#quickstart">クイックスタート</a>の例 (<code>parcel-sycl</code> は C++ と, <code>+capi</code> なら C言語・Fortran. <code>py-parcel-sycl</code> は <code>quick_start.py</code>) をビルドして実行し, 厳密解との最大相対誤差が 1e-6 以下かを判定する (<a href="installation.html#install-quick-checks">「ビルド後の確認」</a> と同じ). MPI ありの版は <code>MPIEXEC</code> (既定は MPI の <code>bin/mpiexec</code>)・<code>MPIEXEC_NP_FLAG</code>・<code>MPI_NP</code> (既定 2)・<code>MPIEXEC_ARGS</code> で起動する. GPU の版は, GPU の無いノード (ログインノード) ではビルドだけを試験して実行は SKIPPED になるので, GPU の計算ノードでも実行する. <code>PARCEL_TEST_RUN=0</code> で実行を止められる. スレッド数と実行場所の判定は<a href="installation.html#install-quick-checks">「ビルド後の確認」</a>と同じ (<code>OMP_NUM_THREADS</code> が無ければ計算ノードは使える論理 CPU 数のすべて, ログインノードは 4. <code>QUICK_NODE</code> で強制) で, 判定と使った値は <code>spack test results -l</code> の出力に出る. <code>+fj +mpi</code> (富士通の <code>mpiexec</code>) は <code>RC_ONLY=1</code> が既定である (外すときは <code>RC_ONLY=0</code>). Intel MPI では C言語・Fortran の試験を同じ場所の汎用のラッパ (<code>mpicc</code>, <code>mpif90</code>) で組み, 中身のコンパイラを <code>I_MPI_CC</code>, <code>I_MPI_F90</code> (と <code>I_MPI_FC</code>) で spack のコンパイラ (gfortran など) にする (spack が返す <code>mpiifx</code> は ifx を呼び, gfortran で作った <code>parcel_sycl_mod.mod</code> を読めない). GPU の版の実行と <code>+fj</code> は計算ノード (短いバッチジョブか対話ジョブ) で流す. CPU の版はログインノードでもよい (施設の規則に従う).</li>
+</ul>
+<h3 data-number="4.9.5" id="install-spack-envs"><span class="header-section-number">4.9.5</span> 用意した環境</h3>
+<table>
+<thead>
+<tr>
+<th><code><span class="tok">envs/</span></code></th>
+<th>環境</th>
+<th>入れる構成</th>
+<th>既存品</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">s86</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-s86">s86</a> (<a href="glossary.html#g-xeon">Xeon</a> + <a href="glossary.html#g-v100">V100</a>)</td>
+<td>CPU / GPU (<code><span class="tok">cuda_arch=70</span></code>) × MPI なし / あり</td>
+<td>GCC 9.5.0, CUDA 12.6, Open MPI 4.1.6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">miyc</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td>CPU × MPI なし / あり</td>
+<td>GCC 11.4.1, Open MPI 4.1.6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">miyg</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-miyabi-g">Miyabi-G</a></td>
+<td>GPU (<code><span class="tok">cuda_arch=90</span></code>) × MPI なし / あり</td>
+<td>GCC 11.4.1, CUDA 12.6, Open MPI 4.1.6 (CUDA 版)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">psa</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td>CPU × MPI なし / あり (<code><span class="tok">ks_ortho=mgs</span></code>: <code><span class="tok">ks_arnoldi</span></code>の直交化の既定が MGS2)</td>
+<td>GCC 11.5.0, Intel MPI 2021.18</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">psb</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td>GPU (<code><span class="tok">amdgpu_target=gfx942</span></code>) × MPI なし / あり</td>
+<td>GCC 11.5.0, ROCm 6.3.3, Open MPI 5.0.7 (ROCm 版)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">wis_aqu</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-aquarius">Aquarius</a></td>
+<td>GPU (<code><span class="tok">cuda_arch=80</span></code>) × MPI なし / あり</td>
+<td>GCC 8.3.1 (GCC 12 を作るためだけに使う), CUDA 12.2, Open MPI 4.1.1</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">wis_ody</span></code></td>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td>CPU (<code><span class="tok">+fj</span></code>) × MPI なし / あり</td>
+<td>GCC 8.3.1, 富士通のコンパイラ・MPI・LAPACK (tcsds-1.2.43)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">generic</span></code></td>
+<td class="nowrap">上記以外の Linux (雛形)</td>
+<td>CPU × MPI なし (MPI あり・NVIDIA の GPU はコメントを外して足す)</td>
+<td>書き換えて使う (GCC, MPI, CUDA)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>7 環境とも, <code>install_stack.sh</code> によるインストールと <code>check_stack.sh</code> の確認に合格し, 入れた PARCEL で回帰試験またはサンプル (<a href="glossary.html#g-mpi">MPI</a> あり・なし) が合格した. 既存の spack の環境にレシピを足す形でも, <a href="glossary.html#g-odyssey">Odyssey</a> 以外の 6 環境の計算ノードでサンプルが合格した.</li>
+<li>外部パッケージの場所 (<code>prefix:</code>) とモジュールの名前は各計算機のシステムのものである. 別の計算機では書き換える.</li>
+<li><a href="glossary.html#g-odyssey">Odyssey</a> (<code>wis_ody</code>) はログインノードが x86 なので, <a href="glossary.html#g-a64fx">A64FX</a> の計算ノードのジョブで入れる (<code>envs/wis_ody/install_job.sh</code> が例. 並列数, メモリの上限, 時間の注意は<a href="sycl-compiler.html#env-odyssey">「SYCL対応コンパイラのインストール方法」の Odyssey の節</a>と同じ). LLVM 18 を OS の GCC 8.3.1 で作り, その clang で AdaptiveCpp と NumPy・SciPy の C / C++ を作る. GCC 12 などの新しい GCC を作ると, その libstdc++ を富士通のコンパイラ (FCC) が読めず, C++ のプログラムをリンクできないためである. PARCEL は <code>+fj</code> で, ホスト側を FCC, MPI を <code>mpiFCC</code>, LAPACK を富士通の <code>-lfjlapack</code> で組む.</li>
+<li>上の 7 環境以外の Linux の計算機では, 雛形 <code>generic</code> を書き換えて使う (<a href="installation.html#install-spack-generic">下記</a>).</li>
+<li>macOS では spack を使わず, Homebrew で入れる (<a href="sycl-compiler.html#env-mac">「SYCL対応コンパイラのインストール方法」の「macOS (Homebrew)」</a>).</li>
+<li>入れた環境で回帰試験・性能試験を流す設定の例が <code>tests/site_config.py</code> にある (<code>s86spack_cpu</code>, <code>s86spack_gpu</code> など. <code>tests/regression/README.ja.md</code> の「spack の環境で流す」).</li>
+</ul>
+<h3 data-number="4.9.6" id="install-spack-generic"><span class="header-section-number">4.9.6</span> 試験環境以外の計算機</h3>
+<p>　上の 7 環境以外の Linux の計算機では, 雛形 <code>spack/stack/envs/generic/</code> を写して書き換え, <code>install_stack.sh</code> で入れる. 雛形は <a href="glossary.html#g-s86">s86</a> と <a href="glossary.html#g-miyabi-c">Miyabi-C</a> の定義にならって作ったものである. Ubuntu 24.04 (<a href="sycl-compiler.html#env-linux-wsl">WSL2</a>. OS の GCC 13.3.0, Open MPI 4.1.6, NVIDIA のリポジトリの CUDA 12.6, <a href="glossary.html#g-rtx-a6000">RTX A6000</a>) で, 下の手順のとおりに書き換えて CPU・GPU (<code>cuda_arch=86</code>) × MPI なし・ありの 8 構成を入れ, <code>check_stack.sh</code>, クイックスタート (C++・C言語・Python), 検証用サンプル (<code>pcg</code>・<code>pgmres</code>・<code>ks_arnoldi</code>) が合格した. Rocky Linux 9.8 (RHEL 9 互換. WSL2. OS の GCC 11.5.0, Open MPI 4.1.1, NVIDIA のリポジトリの CUDA 12.6) でも同じ 8 構成を入れ, 同じ試験が合格した. RHEL 系の OS の Open MPI は, ヘッダを含めて 1 つのディレクトリに並べてから登録する (<a href="sycl-compiler.html#env-linux-external">「MPI と CUDA を登録する」</a>).</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> spack/stack/envs/generic spack/stack/envs/mysite           <span class="co"># 写して書き換える</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="va">CONCRETIZE_ONLY</span><span class="op">=</span>1 <span class="fu">bash</span> spack/stack/install_stack.sh mysite <span class="va">$HOME</span>/parcel_stack   <span class="co"># 解決だけを試す</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/install_stack.sh mysite <span class="va">$HOME</span>/parcel_stack 16                  <span class="co"># 入れる</span></span></code></pre></div>
+<p>　書き換える箇所は<code>spack.yaml</code>の先頭のコメントに手順として書いてある.</p>
+<ul>
+<li>コンパイラ (GCC) の版と場所 (<code>gcc --version</code>, <code>which gcc g++ gfortran</code>で調べる).</li>
+<li><a href="glossary.html#g-mpi">MPI</a> を使う場合は, <code>specs:</code>の<code>+mpi</code>の 2 行と<code>packages:</code>の<code>mpi</code>・<code>openmpi</code>の行のコメントを外し, 版と場所を書き換える (書き方は<a href="sycl-compiler.html#env-linux-external">「一般的な Linux」</a>).</li>
+<li>NVIDIA の GPU を使う場合は, <code>+cuda</code>の行と<code>cuda</code>の行のコメントを外し, <code>cuda_arch</code> (<a href="running.html#run-gpu">「GPU で動かす」</a>で調べる), CUDA の版と場所を書き換え, <code>hipsycl</code>と<code>llvm</code>の行を GPU 用に替える. AMD の GPU は <a href="glossary.html#g-ps-b">PS-B</a> の定義<code>psb</code> (ROCm の外部登録) を下敷きにする.</li>
+<li>CPU が x86_64 でなければ, <code>llvm</code>の<code>targets</code>を書き換える (Arm は<code>aarch64</code>).</li>
+<li>モジュールで MPI などを読む計算機では, <code>site_env.sh</code>に<code>module load</code>を書く (RHEL 系の OS の Open MPI は<code>module load mpi/openmpi-x86_64</code>. 雛形の<code>site_env.sh</code>に例がある). メモリが少ない計算機では<code>PARCEL_STACK_JOBS</code>で同時コンパイル数を下げる.</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="sycl-compiler.html" rel="previous">← SYCL対応コンパイラのインストール方法</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="usage.html" rel="next">使用方法 →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

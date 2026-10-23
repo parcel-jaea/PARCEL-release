@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Common Items – PARCEL SYCL v1.2 API Reference</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API Reference</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/reference/common.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="function-index.html#function-index">Function Index</a></li>
+<li class="current"><a href="common.html#common"><span class="toc-section-number">1</span> Common Items</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> Format of the Entries</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> Solvers</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> Symbols and Terms</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> Input Matrix</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> Settings</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> Constants</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> Results</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> Convergence Status</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> Settings and MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> Precision</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> Convergence by Solver</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (Q Not Formed)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> PARCEL SYCL Classes</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> Mapping to the Common Items</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCEL Data Types</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> Constructor</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> Constructor</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> Constructor / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> Items Common to All Solvers</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> Class Template Arguments (Arithmetic Precision)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> Template Arguments of solver() (Data Precision)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> Handling of Settings and Exceptions</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> Constants</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> Common Member Functions</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (class)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (class)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (class)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (class)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (class)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (class)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (class)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</a></li>
+</ul></li>
+<li data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> Mapping to the Common Items</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> Constants</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (deprecated)</a></li>
+</ul></li>
+<li data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> Mapping to the Common Items</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> Constants</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (deprecated)</a></li>
+</ul></li>
+<li data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> Mapping to the Common Items</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> Exceptions</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="function-index.html" rel="previous" accesskey="p">← Function Index</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="convergence.html" rel="next" accesskey="n">Convergence by Solver →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="Language">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="1" id="common"><span class="header-section-number">1</span> Common Items</h1>
+<p>This reference presents the PARCEL API in separate chapters for each language. Items that do not depend on the language (solvers, input matrix, meaning and defaults of the settings, constants, meaning of the results, convergence states, handling under <a href="../user/glossary.html#g-mpi">MPI</a>) are collected in this chapter and in the next chapter, <a href="convergence.html#convergence">“Convergence by Solver”</a>. The chapters for each language give the names and syntax in that language, how errors are reported, and examples. Read this chapter, the next one, and the chapters of the language you use. Switch the language with the tabs at the top of each page.</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Chapters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>From <a href="overview.html#overview">PARCEL SYCL Classes</a> to <a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr>
+<td class="nowrap">C</td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr>
+<td class="nowrap">Fortran</td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+</tbody>
+</table>
+<p>The beginning of each language’s chapters has a table that maps the settings, constants and results of this chapter to the names in that language.</p>
+<h2 data-number="1.1" id="common-format"><span class="header-section-number">1.1</span> Format of the Entries</h2>
+<p>Each function or type entry in the language chapters consists of the following fields. Fields that do not apply are omitted.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">Description</td>
+<td>What the function does</td>
+</tr>
+<tr>
+<td class="nowrap">Synopsis</td>
+<td>The declaration in that language</td>
+</tr>
+<tr>
+<td class="nowrap">Arguments</td>
+<td>Name, direction (In / Out / In/Out), type, description, and default value. The default value is the value the library uses when nothing is specified</td>
+</tr>
+<tr>
+<td class="nowrap">Requirements</td>
+<td>Valid range of the arguments and the behavior when they are violated. If the library does not check them, “not checked” is stated</td>
+</tr>
+<tr>
+<td class="nowrap">Return Value</td>
+<td>Meaning of the return value</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="../user/glossary.html#g-mpi">MPI</a></td>
+<td>Whether the operation is collective, and whether all <a href="../user/glossary.html#g-rank">ranks</a> must pass the same value</td>
+</tr>
+<tr>
+<td class="nowrap">Notes</td>
+<td>Remarks on usage</td>
+</tr>
+<tr>
+<td class="nowrap">See Also</td>
+<td>Related functions and chapters</td>
+</tr>
+<tr>
+<td class="nowrap">Example</td>
+<td>A call example</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="1.2" id="common-solvers"><span class="header-section-number">1.2</span> Solvers</h2>
+<p>PARCEL has the following seven solvers. The solver names are common to all languages. The algorithms are described in the <a href="../user/linear-solvers.html">“Linear Solvers”</a> and <a href="../user/eigen-solvers.html">“Eigenvalue Solvers”</a> chapters of the User Guide, and how to choose among them in <a href="../user/choosing-solver.html">“Choosing a Solver”</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Solver</th>
+<th>Method</th>
+<th>Problem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">pcg</td>
+<td>Preconditioned conjugate gradient method</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and the preconditioner matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> symmetric positive definite</td>
+</tr>
+<tr>
+<td class="nowrap">pbicgstab</td>
+<td>Preconditioned stabilized biconjugate gradient method</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> (nonsymmetric matrices)</td>
+</tr>
+<tr>
+<td class="nowrap">pgmres</td>
+<td>Preconditioned generalized minimal residual method (right preconditioning, with restarts)</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> (nonsymmetric matrices)</td>
+</tr>
+<tr>
+<td class="nowrap">pcagmres</td>
+<td>Preconditioned communication-avoiding generalized minimal residual method (CA-GMRES). It generates <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> basis vectors at once and orthogonalizes them by QR factorization</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> (nonsymmetric matrices)</td>
+</tr>
+<tr>
+<td class="nowrap">power</td>
+<td>Power method</td>
+<td>One eigenpair of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> with the largest magnitude</td>
+</tr>
+<tr>
+<td class="nowrap">inverse_power</td>
+<td>Inverse power method. At each iteration an inner linear solver solves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>y</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">Ay = x</annotation></semantics></math></td>
+<td>One eigenpair of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> with the smallest magnitude</td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>Arnoldi process with Krylov-Schur restarts. Also handles nonsymmetric matrices and complex conjugate eigenvalue pairs</td>
+<td>Several eigenpairs of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> on the side of the largest magnitude; in <a href="../user/glossary.html#g-shift-invert">shift-invert</a> mode, the eigenpairs closest to the shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></td>
+</tr>
+</tbody>
+</table>
+<p>The eigenvalue solvers handle the standard eigenvalue problem <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>λ</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">Ax = \lambda x</annotation></semantics></math>. When <a href="common.html#set-precon-spectrum">the spectrum of the preconditioned matrix</a> is selected, they compute the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> instead of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>. Solvers can be excluded from the build (<a href="../user/installation.html#install-macros">“Selecting the Solvers to Build” in the User Guide</a>). What happens when an excluded solver is called is described in each language’s chapter.</p>
+<h2 data-number="1.3" id="common-symbols"><span class="header-section-number">1.3</span> Symbols and Terms</h2>
+<p>This reference uses the following symbols and terms.</p>
+<table>
+<thead>
+<tr>
+<th>Symbol / term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math></td>
+<td>Number of rows owned by each <a href="../user/glossary.html#g-rank">rank</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{global}</annotation></semantics></math></td>
+<td>Sum of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> over all ranks (number of rows of the matrix)</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math></td>
+<td><a href="common.html#set-tol">Convergence tolerance</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math></td>
+<td><a href="common.html#set-maxiter">Maximum number of iterations</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math></td>
+<td><a href="common.html#set-gmres-restart">Restart length</a> of pgmres; <a href="common.html#set-ks-subspace">maximum dimension of the Krylov subspace</a> of ks_arnoldi</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></td>
+<td>Number of vectors generated in one basis generation of pcagmres, and the number of basis generations before a restart (<a href="common.html#set-cagmres-st">setting</a>)</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math></td>
+<td>Number of eigenpairs that ks_arnoldi keeps after a restart (and returns at the end), and number of eigenpairs checked for convergence (<a href="common.html#set-ks-subspace">setting</a>)</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>R</mi></msub><annotation encoding="application/x-tex">N_{R}</annotation></semantics></math></td>
+<td><a href="common.html#set-ks-max-restart">Maximum number of restarts</a> of ks_arnoldi</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math></td>
+<td>Preconditioner matrix (built from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> according to <a href="common.html#set-precon">the preconditioner settings</a>) and the preconditioner matrix of the inner linear solver of the eigenvalue solvers</td>
+</tr>
+<tr>
+<td>shift-invert</td>
+<td>Method for finding the eigenvalues near a shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>. It computes the eigenvalues <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> of largest magnitude of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(A - \sigma I)^{-1}</annotation></semantics></math> and maps them back by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mi>σ</mi><mo>+</mo><mn>1</mn><mi>/</mi><mi>θ</mi></mrow><annotation encoding="application/x-tex">\lambda = \sigma + 1/\theta</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><annotation encoding="application/x-tex">\mathrm{Op}</annotation></semantics></math></td>
+<td>Operator to which ks_arnoldi applies the Arnoldi process: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> (when the spectrum of the preconditioned matrix is computed), and in shift-invert mode <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(A - \sigma I)^{-1}</annotation></semantics></math> or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)^{-1}</annotation></semantics></math></td>
+</tr>
+<tr>
+<td>Ritz pair <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, x)</annotation></semantics></math></td>
+<td>Approximate eigenvalue <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and approximate eigenvector <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><annotation encoding="application/x-tex">\mathrm{Op}</annotation></semantics></math> computed within the Krylov subspace</td>
+</tr>
+<tr>
+<td>True residual</td>
+<td>Relative residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax\| / \|b\|</annotation></semantics></math> recomputed from the solution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>. In contrast, the residual updated by the recurrence of the iteration is called the recurrence residual</td>
+</tr>
+<tr>
+<td><a href="../user/glossary.html#g-lucky">Lucky breakdown</a></td>
+<td>The Krylov subspace becomes an invariant subspace and the next basis vector cannot be built. The solution (eigenpair) lies in that subspace, so this by itself is not a failure</td>
+</tr>
+<tr>
+<td>rank 0</td>
+<td>The rank with number 0 in the communicator. It writes the progress and the results to standard output</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="1.4" id="common-matrix"><span class="header-section-number">1.4</span> Input Matrix</h2>
+<p>The coefficient matrix is given in <a href="../user/glossary.html#g-crs">CRS</a> format. When solving in parallel with <a href="../user/glossary.html#g-mpi">MPI</a>, each <a href="../user/glossary.html#g-rank">rank</a> owns a block of contiguous rows (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math> rows from the global row number <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">nstart</annotation></semantics></math>) and passes only those rows. The format is explained in <a href="../user/concepts.html#data-structure">the data structure section of the User Guide</a>.</p>
+<ul>
+<li>The row pointer has length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} + 1</annotation></semantics></math> and gives positions from the start of the owned rows. It is nondecreasing, and the difference between its last and first entries equals the number of nonzeros of the owned rows.</li>
+<li>Column indices are global indices of the whole matrix.</li>
+<li>Indices are 0-based. The C and Fortran APIs can also use 1-based indices.</li>
+<li>The integers for the number of rows, the number of nonzeros, the row pointer and the column indices are passed as 64-bit integers (in C++ the integer type can also be made 32-bit at build time).</li>
+</ul>
+<p>The library checks the following conditions; if they are not satisfied, all ranks report the same error (how errors are reported is described in each language’s chapter).</p>
+<ul>
+<li>Each rank owns at least one row (a rank without rows is not supported). The number may differ between ranks.</li>
+<li>The row blocks of all ranks together cover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math> without overlaps or gaps. They need not be in rank order.</li>
+<li>The row pointer satisfies the conditions above, and the column indices lie in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1, n_{global}]</annotation></semantics></math> for 1-based indices).</li>
+<li>The number of nonzeros of one rank, and the sum of its number of owned rows and its number of <a href="../user/glossary.html#g-halo">halo</a> elements, fit in the range of the library’s internal local index (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math> or less with the default 32 bits). If they exceed it, increase the number of ranks (in C++ the local index can also be made 64-bit at build time).</li>
+</ul>
+<p>The following conditions are not checked; if they are not satisfied, wrong results may be returned silently.</p>
+<ul>
+<li>Store both the upper and the lower triangle even for a symmetric matrix (there is no format that stores only one triangle).</li>
+<li>Store the diagonal element in every row (even if its value is 0). The Jacobi-type preconditioners use the diagonal elements.</li>
+<li>Sort the column indices of each row in ascending order, and do not put the same column index twice in a row.</li>
+</ul>
+<p>In a <a href="../user/installation.html#install-nompi">build without MPI</a>, one process owns the whole matrix (all rows).</p>
+<h2 data-number="1.5" id="common-settings"><span class="header-section-number">1.5</span> Settings</h2>
+<p>The behavior of the solvers is determined by the following settings. Settings that are not specified take the defaults in the table. The names in each language are given in the mapping table of each language’s chapters. Values outside the accepted values are rejected (an error is reported). Give the same values on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<div class="minw-c3">
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Used by</th>
+<th>Meaning</th>
+<th>Accepted values</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span id="set-tol">Convergence tolerance</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math></td>
+<td>All solvers</td>
+<td>Threshold for the relative residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>r</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|r\|/\|b\|</annotation></semantics></math> in the linear solvers, for the relative change of the eigenvalue in power and inverse_power, and for the relative residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><mi>θ</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="postfix">∥</mo><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\|\mathrm{Op}\,x-\theta x\|/(|\theta|\|x\|)</annotation></semantics></math> of the Ritz pairs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, x)</annotation></semantics></math> in ks_arnoldi (in shift-invert mode it is checked on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> before mapping back to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>)</td>
+<td>Finite positive number</td>
+<td>1.0e-8</td>
+</tr>
+<tr>
+<td><span id="set-maxiter">Maximum number of iterations</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math></td>
+<td>Linear solvers, power, inverse_power</td>
+<td>Upper limit of the iterations: the total number of inner iterations in pgmres and pcagmres, the number of outer iterations in power and inverse_power. ks_arnoldi does not use it (it uses <a href="common.html#set-ks-max-restart">the maximum number of restarts</a>)</td>
+<td>1 or greater. Need not be a multiple of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">st</annotation></semantics></math>) in pgmres and pcagmres</td>
+<td>10000</td>
+</tr>
+<tr>
+<td><span id="set-precon">Preconditioner type</span></td>
+<td>All solvers</td>
+<td>Type of the preconditioner matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> (<a href="common.html#common-const-precon">constants</a>). In the linear solvers it is the preconditioner of the iteration; in the eigenvalue solvers it is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> used when <a href="common.html#set-precon-spectrum">the spectrum of the preconditioned matrix</a> is computed</td>
+<td>None, point Jacobi, block Jacobi, Jacobi</td>
+<td>None</td>
+</tr>
+<tr>
+<td><span id="set-jacobi-iter">Number of Jacobi iterations</span></td>
+<td>When the preconditioner is Jacobi</td>
+<td>Number of Jacobi iterations</td>
+<td>1 or greater</td>
+<td>1</td>
+</tr>
+<tr>
+<td><span id="set-blocks">Number of block Jacobi blocks</span></td>
+<td>When the preconditioner is block Jacobi</td>
+<td>Number of blocks per <a href="../user/glossary.html#g-rank">rank</a>, equal to the degree of parallelism of the application. Finer blocks make the preconditioner weaker</td>
+<td>1 or greater and at most the number of owned rows (the upper bound is not checked)</td>
+<td>Automatic. On CPUs, the environment variable <code><span class="tok">PARCEL_NBLOCK</span></code>, otherwise the number of OpenMP threads, otherwise the value given at build time. On GPUs, 2 rows per block</td>
+</tr>
+<tr>
+<td><span id="set-scaling">Scaling of the preconditioner matrix and vectors</span></td>
+<td>When the preconditioner is block Jacobi or Jacobi</td>
+<td>Whether to divide the matrix and residual by their maximum to bring them into the range of half precision (specified separately for the matrix and the vectors)</td>
+<td>On, off, automatic</td>
+<td>Automatic (on for block Jacobi; otherwise on only when the arithmetic precision of the preconditioner or the precision of the preconditioner matrix is half precision)</td>
+</tr>
+<tr>
+<td><span id="set-gmres-restart">Restart length</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math></td>
+<td>pgmres</td>
+<td>Memory for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m + 1</annotation></semantics></math> basis vectors is allocated</td>
+<td>1 or greater</td>
+<td>30</td>
+</tr>
+<tr>
+<td><span id="set-gmres-qr">Orthogonalization method</span></td>
+<td>pgmres</td>
+<td>Orthogonalization in the Arnoldi process (<a href="common.html#common-const-qr">constants</a>)</td>
+<td>Classical Gram-Schmidt, modified Gram-Schmidt</td>
+<td>Modified Gram-Schmidt</td>
+</tr>
+<tr>
+<td><span id="set-cagmres-st">Basis generation size</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></td>
+<td>pcagmres</td>
+<td>Number of vectors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> generated at once and number of basis generations <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> before a restart. The restart length is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s \times t</annotation></semantics></math></td>
+<td>Both 1 or greater</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><span id="set-cagmres-qr">QR factorization method</span></td>
+<td>pcagmres</td>
+<td>QR factorization of the basis (<a href="common.html#common-const-qr">constants</a>, <a href="common.html#common-cagmres-q">combination rules</a>)</td>
+<td>Classical Gram-Schmidt, modified Gram-Schmidt, Cholesky QR, Cholesky QR by the moment method</td>
+<td>Modified Gram-Schmidt (Cholesky QR when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed)</td>
+</tr>
+<tr>
+<td><span id="set-cagmres-q">Q mode</span></td>
+<td>pcagmres</td>
+<td>Whether the orthonormal basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed explicitly (<a href="common.html#common-const-q">constants</a>, <a href="common.html#common-cagmres-q">combination rules</a>)</td>
+<td>AUTO, EXPLICIT, IMPLICIT</td>
+<td>AUTO</td>
+</tr>
+<tr>
+<td><span id="set-precon-spectrum">Spectrum of the preconditioned matrix</span></td>
+<td>Eigenvalue solvers</td>
+<td>False: compute the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>; the outer eigenvalue iteration does not use the preconditioner. True: compute the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> (<a href="common.html#common-eigen-notes">notes</a>)</td>
+<td>True, false</td>
+<td>False</td>
+</tr>
+<tr>
+<td><span id="set-inner-algo">Type of the inner linear solver</span></td>
+<td>inverse_power</td>
+<td>Inner linear solver (<a href="common.html#common-const-inner">constants</a>). pcg is only for symmetric (positive or negative definite) <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> (not checked). When the spectrum of the preconditioned matrix is computed, pgmres is used regardless of the type</td>
+<td>pgmres, pcg</td>
+<td>pgmres</td>
+</tr>
+<tr>
+<td><span id="set-inner-tol">Tolerance of the inner linear solver</span></td>
+<td>inverse_power, shift-invert of ks_arnoldi</td>
+<td>Threshold for the relative residual of the inner linear solver</td>
+<td>Finite positive number</td>
+<td>1.0e-10</td>
+</tr>
+<tr>
+<td><span id="set-inner-maxiter">Maximum iterations of the inner linear solver</span></td>
+<td>Same as above</td>
+<td>Upper limit of the iterations of the inner linear solver (for pgmres, the total number of inner iterations; need not be a multiple of the restart length)</td>
+<td>1 or greater</td>
+<td>inverse_power 5000, ks_arnoldi 2000</td>
+</tr>
+<tr>
+<td><span id="set-inner-restart">Restart length of the inner linear solver</span></td>
+<td>Same as above</td>
+<td>Restart length of the inner pgmres. Not used when the inner solver is pcg</td>
+<td>1 or greater</td>
+<td>30</td>
+</tr>
+<tr>
+<td><span id="set-inner-precon">Preconditioner of the inner linear solver</span></td>
+<td>Same as above</td>
+<td>Type of the preconditioner <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> of the inner linear solver, number of Jacobi iterations, number of block Jacobi blocks, scaling (<a href="common.html#common-eigen-notes">notes</a>)</td>
+<td>Same as for the preconditioner type, iterations, blocks and scaling</td>
+<td>Jacobi (1 iteration); blocks and scaling automatic</td>
+</tr>
+<tr>
+<td><span id="set-shift">Shift-invert</span></td>
+<td>ks_arnoldi</td>
+<td>When enabled, computes the eigenvalues closest to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>. The value is the shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></td>
+<td>Any real number. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> must not coincide with an eigenvalue (not checked)</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td><span id="set-ks-subspace">Size of the Krylov subspace</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math></td>
+<td>ks_arnoldi</td>
+<td>Maximum dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> of the subspace, number of eigenpairs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math> kept after a restart (and returned at the end), number of eigenpairs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> checked for convergence</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m \leq n_{global}</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">m = 30</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">k_{keep} = 10</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">nev = 4</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><span id="set-ks-max-restart">Maximum number of restarts</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>R</mi></msub><annotation encoding="application/x-tex">N_{R}</annotation></semantics></math></td>
+<td>ks_arnoldi</td>
+<td>Upper limit on the number of restarts</td>
+<td>1 or greater</td>
+<td>200</td>
+</tr>
+<tr>
+<td><span id="set-ks-qr">Orthogonalization method (ks_arnoldi)</span></td>
+<td>ks_arnoldi</td>
+<td>Orthogonalization of the Arnoldi process (<a href="common.html#common-const-qr">constants</a>). Either method is applied twice (classical Gram-Schmidt twice = CGS2, modified Gram-Schmidt twice = MGS2). The accuracy of the eigenvalues is equivalent; only the speed differs</td>
+<td>Classical Gram-Schmidt, modified Gram-Schmidt</td>
+<td>Classical Gram-Schmidt (CGS2). Can be changed to modified Gram-Schmidt when building the library</td>
+</tr>
+<tr>
+<td><span id="set-init-vector">Initial vector</span></td>
+<td>ks_arnoldi</td>
+<td>Initial vector of the Arnoldi process. power and inverse_power always use the default vector</td>
+<td>Any vector. If its norm is 0 or non-finite, it is replaced by the default vector (rank 0 reports this)</td>
+<td>Vector built from the global row numbers (independent of the row partitioning)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Some settings cannot be specified in some languages, or are expressed differently from the table (for example, “use the default” expressed as 0). These are shown in the mapping table of each language’s chapters.</p>
+<h3 data-number="1.5.1" id="common-precon-notes"><span class="header-section-number">1.5.1</span> Notes on the Preconditioners</h3>
+<ul>
+<li>The block Jacobi preconditioner is slow on GPUs; on GPUs the Jacobi preconditioner is recommended. The types of preconditioners are described in <a href="../user/preconditioners.html">the “Preconditioners” chapter of the User Guide</a>.</li>
+<li>The Jacobi preconditioner shares the row pointers and column indices of the coefficient matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> without copying them, and by default it does not keep the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math> either but computes them from the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> at every application (the default of builds for A64FX stores the values). The preconditioner is built inside the solve and used only there, so do not destroy or modify <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> while the solve is running. Building with <code>-DPARCEL_JACOBI_ONTHEFLY=0</code> stores the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>, which uses more memory and makes the preconditioner faster on GPUs (<a href="../user/kernel-opt.html#perf-memory-options">“Choosing Between Memory and Speed” in the User Guide</a>). With matrix scaling, and when the coefficient matrix, the preconditioner matrix or the preconditioner computation precision is <a href="../user/glossary.html#g-dd">double-double</a>, the values are stored even with the default.</li>
+<li>When the number of blocks and the scaling are automatic, the values actually used are printed if the environment variable <code>PARCEL_PRECON_VERBOSE</code> is set.</li>
+<li>Scaling is not used with the point Jacobi preconditioner or without preconditioning.</li>
+</ul>
+<h3 data-number="1.5.2" id="common-eigen-notes"><span class="header-section-number">1.5.2</span> Notes on the Eigenvalue Solvers</h3>
+<ul>
+<li>When the spectrum of the preconditioned matrix is not computed (default), the preconditioner settings are not used by the outer eigenvalue iteration. Specifying only the preconditioner does not make the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> converge faster. To speed up the inner linear solver of inverse_power and shift-invert, set the preconditioner of the inner linear solver.</li>
+<li>When the spectrum of the preconditioned matrix is computed, the inner linear solver (inverse_power, shift-invert of ks_arnoldi) becomes a right-preconditioned pgmres that solves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)z = v</annotation></semantics></math> and returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>, and the preconditioner is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> itself (the settings of the preconditioner of the inner linear solver are not used).</li>
+<li>The settings of the inner linear solver are used by inverse_power and by the shift-invert mode of ks_arnoldi, and not by power or ks_arnoldi without a shift. The orthogonalization of the inner pgmres is fixed to the modified Gram-Schmidt method.</li>
+<li>The outer iteration continues even if the inner linear solver does not converge. The number of such cases is obtained as <a href="common.html#res-inner-fail">a result</a>. It is not reflected in the outer convergence state.</li>
+<li>In the shift-invert mode of ks_arnoldi without the spectrum of the preconditioned matrix, the inner pgmres solves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(A - \sigma I)z = v</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> is built from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>. How <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math> is given is described in each language’s chapter.</li>
+<li>The error of the inner linear solver becomes the error of the eigenvalue estimate as it is, so the inner linear solver must converge more tightly than the outer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math>.</li>
+</ul>
+<h3 data-number="1.5.3" id="common-cagmres-q"><span class="header-section-number">1.5.3</span> Q Modes and QR Factorization of pcagmres</h3>
+<p>The Q modes (<a href="common.html#common-const-q">constants</a>) are as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">AUTO</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed only when the QR factorization is Cholesky QR and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>; otherwise <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed</td>
+</tr>
+<tr>
+<td class="nowrap">EXPLICIT</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is always formed (even for Cholesky QR with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>)</td>
+</tr>
+<tr>
+<td class="nowrap">IMPLICIT</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed for any <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>. Only <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is obtained from the Cholesky factorization of the Gram matrix of the basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>, and the solution is updated with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>R</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V(R^{-1}y)</annotation></semantics></math>. The QR factorization must be Cholesky QR or Cholesky QR by the moment method</td>
+</tr>
+</tbody>
+</table>
+<p>The combination of the Q mode and the QR factorization is checked at the entry of the solve, independently of the order in which the settings are given, and the following cases are rejected (the same judgment on all ranks).</p>
+<ul>
+<li>IMPLICIT with classical or modified Gram-Schmidt explicitly specified (if no QR factorization is specified, Cholesky QR is used).</li>
+<li>Cholesky QR by the moment method combined with AUTO or EXPLICIT.</li>
+<li>Cholesky QR by the moment method with a preconditioner other than none, or with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> that is not an even number of 2 or more.</li>
+</ul>
+<p>Cholesky QR by the moment method (<a href="../user/glossary.html#g-moment">moment method</a>) is only for symmetric <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>. This is not checked; with a nonsymmetric <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> a wrong <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is used and wrong results are returned. AUTO and EXPLICIT perform the same computation except for Cholesky QR with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>. IMPLICIT computes in a different order, so its results differ within rounding errors even with the same <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> and QR factorization. With IMPLICIT, the orthogonality error of the Cholesky QR method is proportional to the square of the condition number of the basis, so a larger <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> can worsen convergence. With <a href="../user/glossary.html#g-fp16">FP16</a> data or arithmetic precision, do not use the Cholesky QR family (IMPLICIT and the moment method): the result is NaN or no convergence regardless of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> (not checked). The methods are described in <a href="../user/linear-solvers.html#alg-pcagmres">the “Linear Solvers” chapter</a> and <a href="../user/qr.html">the “QR Factorization” chapter</a> of the User Guide.</p>
+<h2 data-number="1.6" id="common-constants"><span class="header-section-number">1.6</span> Constants</h2>
+<p>The values of the settings are expressed with the following constants. The values are the same in all languages; the names in each language are given in that language’s chapters.</p>
+<p><span id="common-const-precon"></span>Preconditioner type:</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th style="text-align: right;">Value</th>
+<th>Preconditioner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">NONE</td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td>No preconditioning</td>
+</tr>
+<tr>
+<td class="nowrap">POINTJACOBI</td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>Point Jacobi preconditioner</td>
+</tr>
+<tr>
+<td class="nowrap">BLOCKJACOBI</td>
+<td style="text-align: right;" class="nowrap">2</td>
+<td>Block Jacobi preconditioner</td>
+</tr>
+<tr>
+<td class="nowrap">JACOBI</td>
+<td style="text-align: right;" class="nowrap">4</td>
+<td>Jacobi preconditioner</td>
+</tr>
+</tbody>
+</table>
+<p><span id="common-const-qr"></span>Orthogonalization and QR factorization method:</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th style="text-align: right;">Value</th>
+<th>Method</th>
+<th>Solvers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">CGS</td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td>Classical Gram-Schmidt method</td>
+<td>pgmres, pcagmres (when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed), ks_arnoldi (applied twice)</td>
+</tr>
+<tr>
+<td class="nowrap">MGS</td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>Modified Gram-Schmidt method</td>
+<td>pgmres, pcagmres (when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed), ks_arnoldi (applied twice)</td>
+</tr>
+<tr>
+<td class="nowrap">CHOLESKYQR</td>
+<td style="text-align: right;" class="nowrap">2</td>
+<td>Cholesky QR method</td>
+<td>pcagmres</td>
+</tr>
+<tr>
+<td class="nowrap">CAGMRES_CHOLESKYQR</td>
+<td style="text-align: right;" class="nowrap">202</td>
+<td>Cholesky QR method by the <a href="../user/glossary.html#g-moment">moment method</a> (symmetric matrices without preconditioning only)</td>
+<td>pcagmres (IMPLICIT only)</td>
+</tr>
+</tbody>
+</table>
+<p><span id="common-const-inner"></span>Type of the inner linear solver:</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th style="text-align: right;">Value</th>
+<th>Solver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">PGMRES</td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td>Right-preconditioned pgmres</td>
+</tr>
+<tr>
+<td class="nowrap">PCG</td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>pcg</td>
+</tr>
+</tbody>
+</table>
+<p><span id="common-const-q"></span>Q mode of pcagmres:</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th style="text-align: right;">Value</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AUTO</td>
+<td style="text-align: right;">0</td>
+<td><a href="common.html#common-cagmres-q">See above</a></td>
+</tr>
+<tr>
+<td>EXPLICIT</td>
+<td style="text-align: right;">1</td>
+<td>Same as above</td>
+</tr>
+<tr>
+<td>IMPLICIT</td>
+<td style="text-align: right;">2</td>
+<td>Same as above</td>
+</tr>
+</tbody>
+</table>
+<p>The constants of the convergence states are given in <a href="common.html#common-reason">the section below</a>.</p>
+<h2 data-number="1.7" id="common-results"><span class="header-section-number">1.7</span> Results</h2>
+<p>Besides the solution (the eigenvalues and eigenvectors for the eigenvalue solvers), a solve returns the following values. They are the same on all <a href="../user/glossary.html#g-rank">ranks</a>. The details of their meaning differ between the solvers and are given in <a href="common.html#common-reason">the convergence status section</a> and in <a href="convergence.html#convergence">the next chapter</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span id="res-reason">Convergence state</span></td>
+<td>One of <a href="common.html#common-reason">the convergence state constants</a>. Positive means converged, negative means failure, and 0 means that no solve has been run</td>
+</tr>
+<tr>
+<td><span id="res-iter">Iteration count</span></td>
+<td>How iterations are counted differs between the solvers (<a href="common.html#common-iter-resid">table below</a>)</td>
+</tr>
+<tr>
+<td><span id="res-resid">Residual</span></td>
+<td>Relative value compared with the convergence tolerance (<a href="common.html#common-iter-resid">table below</a>). NaN if it has not been computed</td>
+</tr>
+<tr>
+<td><span id="res-true">True residual</span></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax\|/\|b\|</annotation></semantics></math> computed at the end of a linear solver, returned without additional computation. NaN for the eigenvalue solvers. The residual of pcg and pbicgstab is the recurrence residual, which can drift from the true residual through rounding errors; to check the accuracy of the solution, look at the true residual</td>
+</tr>
+<tr>
+<td><span id="res-nconv">Number of converged eigenpairs</span></td>
+<td>Number of eigenpairs among the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> ones that satisfied the tolerance in the last convergence check of ks_arnoldi (NaN is not counted; if true residuals were checked, for example in an invariant subspace, that number). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> on convergence. 0 for the other solvers</td>
+</tr>
+<tr>
+<td><span id="res-inner-fail">Number of inner solver failures</span></td>
+<td>Number of times the inner linear solver ended without satisfying its tolerance in inverse_power and the shift-invert mode of ks_arnoldi. 0 for power and ks_arnoldi without a shift. Not reflected in the outer convergence state. If it is not 0, review the maximum iterations and the preconditioner of the inner linear solver</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.7.1" id="common-eigen-output"><span class="header-section-number">1.7.1</span> Output of Eigenvalues and Eigenvectors</h3>
+<ul>
+<li>power and inverse_power return one eigenvalue and one eigenvector. The eigenvalue is real.</li>
+<li>ks_arnoldi returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math> eigenpairs in descending order of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\theta|</annotation></semantics></math> (closest to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> first in shift-invert mode). Convergence is guaranteed only for the first <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> pairs.</li>
+<li>An eigenvalue is given as a pair of real and imaginary parts. For a complex conjugate pair, the corresponding eigenvectors are stored consecutively as two vectors, the real part and the imaginary part.</li>
+<li>If the run ends with an effective dimension below <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, the missing eigenpairs are returned as 0 (rank 0 reports this). Eigenvalues for which <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><msup><mo stretchy="false" form="prefix">|</mo><mn>2</mn></msup><mo>≤</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>300</mn></mrow></msup></mrow><annotation encoding="application/x-tex">|\theta|^{2} \leq 10^{-300}</annotation></semantics></math> in the inverse transformation of shift-invert are returned as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mi>∞</mi></mrow><annotation encoding="application/x-tex">+\infty</annotation></semantics></math>.</li>
+<li>The layout of the arrays in each language is given in that language’s chapters.</li>
+</ul>
+<h2 data-number="1.8" id="common-reason"><span class="header-section-number">1.8</span> Convergence Status</h2>
+<p>The convergence state returned by a solve is one of the following constants (following PETSc’s <code>KSPConvergedReason</code>: positive means converged, negative means failure).</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th style="text-align: right;">Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">CONVERGED_RTOL</td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>The convergence tolerance was satisfied</td>
+</tr>
+<tr>
+<td class="nowrap">ITERATING</td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td>Not run (before a solve, or not solved because of an argument error)</td>
+</tr>
+<tr>
+<td class="nowrap">DIVERGED_ITS</td>
+<td style="text-align: right;" class="nowrap">-1</td>
+<td>The maximum number of iterations (for ks_arnoldi, the maximum number of restarts) was reached</td>
+</tr>
+<tr>
+<td class="nowrap">DIVERGED_NANORINF</td>
+<td style="text-align: right;" class="nowrap">-2</td>
+<td>NaN / Inf appeared in the residual or eigenvalue estimate used for the convergence check</td>
+</tr>
+<tr>
+<td class="nowrap">DIVERGED_BREAKDOWN</td>
+<td style="text-align: right;" class="nowrap">-3</td>
+<td>Breakdown of the algorithm (table below)</td>
+</tr>
+</tbody>
+</table>
+<p>The cases in which each state occurs are shown for each solver. The details are given in <a href="convergence.html#convergence">the next chapter</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Solver</th>
+<th>CONVERGED_RTOL</th>
+<th>DIVERGED_NANORINF</th>
+<th>DIVERGED_BREAKDOWN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">pcg</td>
+<td>Relative recurrence residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math> without iterating, iteration count 0). Relative initial residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> left at the initial guess without iterating, iteration count 0)</td>
+<td>Stops as soon as the relative recurrence residual becomes non-finite</td>
+<td>Does not occur (division by zero is not detected; if the result is non-finite, NANORINF)</td>
+</tr>
+<tr>
+<td class="nowrap">pbicgstab</td>
+<td>Same as pcg. Stopped at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mi>A</mi><mover><mi>e</mi><mo accent="true">̂</mo></mover><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = A\hat{e} = 0</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>e</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">\|e\|/\|b\| &lt; tol</annotation></semantics></math> (<a href="../user/glossary.html#g-lucky">lucky breakdown</a>)</td>
+<td>Same as pcg</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msup><mi>r</mi><mo>*</mo></msup><mo>,</mo><mi>q</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r^{\ast},q \rangle</annotation></semantics></math> is 0 or non-finite, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\omega = 0</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\rho = 0</annotation></semantics></math>, or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = 0</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>e</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>≥</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">\|e\|/\|b\| \geq tol</annotation></semantics></math></td>
+</tr>
+<tr>
+<td class="nowrap">pgmres</td>
+<td>True relative residual at the start of a restart <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math>, or true relative residual at termination <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math> when the iteration limit was reached. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math></td>
+<td>Stops as soon as the true relative residual or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> of the Arnoldi process becomes non-finite</td>
+<td>Lucky breakdown with no column usable for the update (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> singular at the first column)</td>
+</tr>
+<tr>
+<td class="nowrap">pcagmres</td>
+<td>Same as pgmres</td>
+<td>Stops as soon as the true relative residual becomes non-finite</td>
+<td>No column usable for the update after a lucky breakdown (rank deficiency of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>≈</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h_{i+1,i} \approx 0</annotation></semantics></math>)</td>
+</tr>
+<tr>
+<td class="nowrap">power, inverse_power</td>
+<td>Relative change of the eigenvalue <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math></td>
+<td>Stops as soon as the eigenvalue estimate, its relative change, or an inner product used for the check becomes non-finite (inverse_power: also when the inner linear solver ended with NANORINF)</td>
+<td>power: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">AK^{-1}x = 0</annotation></semantics></math>; inverse_power: the solution of the inner linear solver is 0</td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>Ritz residual estimates of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> target pairs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">\leq tol</annotation></semantics></math> (with an invariant subspace or random directions, also confirmed by the true residual)</td>
+<td>Stops as soon as a value of the Arnoldi process, a Ritz value, or a residual estimate becomes non-finite</td>
+<td>An invariant subspace that cannot be confirmed by the true residual, an effective dimension below <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>, or a LAPACK failure</td>
+</tr>
+</tbody>
+</table>
+<p>DIVERGED_ITS means that none of the above occurred and the maximum number of iterations (for ks_arnoldi, the maximum number of restarts) was reached. The algorithms are described in <a href="../user/linear-solvers.html">the “Linear Solvers” chapter</a> and <a href="../user/eigen-solvers.html">the “Eigenvalue Solvers” chapter</a> of the User Guide.</p>
+<h3 data-number="1.8.1" id="common-iter-resid"><span class="header-section-number">1.8.1</span> Meaning of the Iteration Count and Residuals</h3>
+<p>The meanings of <a href="common.html#res-iter">the iteration count</a>, <a href="common.html#res-resid">the residual</a> and <a href="common.html#res-true">the true residual</a> for each solver are as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Solver</th>
+<th>Iteration count</th>
+<th>Residual</th>
+<th>True residual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">pcg, pbicgstab</td>
+<td>Number of iterations</td>
+<td>Relative recurrence residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>r</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|r\|/\|b\|</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>e</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|e\|/\|b\|</annotation></semantics></math> when pbicgstab stops at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = 0</annotation></semantics></math>)</td>
+<td>True relative residual computed at termination</td>
+</tr>
+<tr>
+<td class="nowrap">pgmres</td>
+<td>Total number of inner iterations (number of restarts × <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>; the maximum number of iterations if the limit was reached)</td>
+<td>True relative residual computed at the start of each restart. If the iteration limit was reached, the value after the last update (= the true residual)</td>
+<td>Same as left</td>
+</tr>
+<tr>
+<td class="nowrap">pcagmres</td>
+<td>Total number of basis vectors (number of cycles × <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s \times t</annotation></semantics></math>; the maximum number of iterations if the limit was reached)</td>
+<td>Same as pgmres</td>
+<td>Same as left</td>
+</tr>
+<tr>
+<td class="nowrap">power, inverse_power</td>
+<td>Number of outer iterations</td>
+<td>Relative change of the eigenvalue <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msup><mi>λ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo>−</mo><msup><mi>λ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="prefix">|</mo><mi>/</mi><mo stretchy="false" form="prefix">|</mo><msup><mi>λ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\lambda^{(i)} - \lambda^{(i-1)}|/|\lambda^{(i)}|</annotation></semantics></math>. NaN if stopped on a non-finite value</td>
+<td>NaN</td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>Number of restarts performed</td>
+<td>Maximum of the Ritz residual estimates of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math> target pairs (the maximum of the true residuals if those were checked)</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.8.2" id="common-linear"><span class="header-section-number">1.8.2</span> Common Handling in the Linear Solvers</h3>
+<p>In the linear solvers (pcg, pbicgstab, pgmres, pcagmres), <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math> returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math> without iterating, with the state CONVERGED_RTOL (iteration count 0; residual and true residual 0). Rank 0 writes the line <code>||b|| = 0 : x = 0</code>.</p>
+<p>If the relative initial residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax^{(0)}\| / \|b\|</annotation></semantics></math> of the initial guess <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">x^{(0)}</annotation></semantics></math> is below <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math> (including the case where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">x^{(0)}</annotation></semantics></math> is already the solution), every linear solver returns CONVERGED_RTOL without iterating (iteration count 0) and leaves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> at the initial guess. The residual and the true residual are this relative initial residual.</p>
+<h3 data-number="1.8.3" id="common-stdout"><span class="header-section-number">1.8.3</span> Standard Output</h3>
+<p>Rank 0 writes one line of the following form to standard output at the end of a solve (non-finite values are printed as <code>n/a</code>). inverse_power appends <code>, linsolve_failures = ...</code>, and ks_arnoldi appends <code>, ks_nconv = &lt;number converged&gt;/nev</code> (plus <code>linsolve_failures</code> in shift-invert mode).</p>
+<p>Example: <code>converged_reason = 1 (CONVERGED_RTOL) , its = 27 , residual = 4.200000e-10 , true_residual = 4.211375e-10</code></p>
+<p>In addition, rank 0 writes the progress of the iteration and a breakdown of the computing time. The linear solvers write the true relative residual at termination on the line <code>finish : residual true norm</code>. pcagmres does not write this line when it returns at the check before the iteration. The format of the standard output is not part of the API. To obtain the results from a program, use the result interface of each language.</p>
+<h2 data-number="1.9" id="common-mpi"><span class="header-section-number">1.9</span> Settings and MPI</h2>
+<ul>
+<li>The settings are used when a solve is run. Give the same values on all <a href="../user/glossary.html#g-rank">ranks</a>. Values outside the accepted values are rejected, and all ranks report the same error.</li>
+<li>A solve is a collective operation (<code>MPI_Barrier</code>, <code>MPI_Allreduce</code> for inner products, and <a href="../user/glossary.html#g-halo">halo</a> communication in <a href="../user/glossary.html#g-spmv">SpMV</a>). All ranks of the communicator with which the matrix is given must call it with the same solver and the same settings.</li>
+<li>At the entry of a solve, the conditions on <a href="common.html#common-matrix">the input matrix</a>, the size of the subspace of ks_arnoldi (including <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">m \leq n_{global}</annotation></semantics></math>), and <a href="common.html#common-cagmres-q">the combination of the Q mode and the QR factorization</a> of pcagmres are checked. In every case, all ranks report the same error before any collective communication.</li>
+<li>A solve does not report an error even if it does not converge. Check <a href="common.html#res-reason">the convergence state</a> before using the result. The convergence state is reset at the entry of a solve and set at its exit.</li>
+<li>If <a href="../user/glossary.html#g-device">device</a> memory cannot be allocated, or the size of the matrix exceeds the range of the library’s internal integers, an error occurs. These can happen on only some ranks, so the handling differs between the languages (see each language’s chapter).</li>
+<li>The dense LAPACK computations (ks_arnoldi) are done on rank 0, and the results are distributed to all ranks. All values used for decisions are aggregated over all ranks, so all ranks take the same branch.</li>
+</ul>
+<h2 data-number="1.10" id="common-precision"><span class="header-section-number">1.10</span> Precision</h2>
+<p>PARCEL can choose the precision in which data are stored (data precision) and the precision of the arithmetic (arithmetic precision) separately for each operation (<a href="../user/glossary.html#g-spmv">SpMV</a>, preconditioner, vector operations, inner products) and each piece of data (matrix, vectors, preconditioner matrix, etc.). The types are half precision (<a href="../user/glossary.html#g-fp16">FP16</a>), single precision, double precision, <code>long double</code>, and <a href="../user/glossary.html#g-dd">double-double</a> (about quadruple precision). How the precision is chosen differs between the languages.</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Choosing the precision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>Template arguments for each operation and each piece of data (<a href="data-types.html#data-types">PARCEL Data Types</a>)</td>
+</tr>
+<tr>
+<td class="nowrap">C, Fortran</td>
+<td>Fixed by macros when the wrapper is compiled; cannot be changed at run time (all double precision by default). The input and output arrays are double precision</td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td>Double precision only</td>
+</tr>
+</tbody>
+</table>
+<p>With configurations that use half precision, there is a lower limit on the relative residual that the precision can reach; with a tolerance below it, the iteration stagnates or breaks down with NaN. The details of the restrictions are given in <a href="../user/usage.html#usage-cpp-precision">“Specifying the Precision” in the “Usage” chapter</a> and in <a href="../user/accuracy.html">“Numerical Accuracy and Reproducibility”</a> of the User Guide.</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="function-index.html" rel="previous">← Function Index</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="convergence.html" rel="next">Convergence by Solver →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = '';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

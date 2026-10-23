@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Numerical Accuracy and Reproducibility – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/accuracy.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li class="current"><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="qr.html" rel="previous" accesskey="p">← QR Factorization</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="kernel-opt.html" rel="next" accesskey="n">Optimization →</a></span>
+</nav>
+<h1 data-number="12" id="accuracy"><span class="header-section-number">12</span> Numerical Accuracy and Reproducibility</h1>
+<p>This chapter shows how to check the results returned by the solvers, and how the results change with the precision specification, the degree of parallelism and the execution environment. How to specify precision is shown in <a href="concepts.html#precision-configs">“Precision Configurations”</a>.</p>
+<p><br />
+</p>
+<h2 data-number="12.1" id="accuracy-reason"><span class="header-section-number">12.1</span> Checking the Convergence Status</h2>
+<p><code>solver()</code> returns no exception or error even if it does not converge. Before using the result, check it with <code>is_converged()</code> (or <code>get_converged_reason() &gt; 0</code>). The value is the same on all <a href="glossary.html#g-rank">ranks</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Convergence status</th>
+<th>Main cause</th>
+<th>Example remedies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">CONVERGED_RTOL</span></code> (1)</td>
+<td>The tolerance was satisfied</td>
+<td>For the linear solvers, also check the true residual (next section)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">DIVERGED_ITS</span></code> (-1)</td>
+<td>The maximum number of iterations (for <code><span class="tok">ks_arnoldi</span></code>, the maximum number of <a href="glossary.html#g-restart">restarts</a>) was reached</td>
+<td>Add a <a href="glossary.html#g-precon">preconditioner</a>, increase the restart length of <code><span class="tok">pgmres</span></code>, check that the tolerance is reachable with the precision configuration</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">DIVERGED_NANORINF</span></code> (-2)</td>
+<td>The residual or the eigenvalue estimate became NaN / Inf</td>
+<td>Review low-precision configurations (below), check that the matrix and the right-hand side contain no non-finite values</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">DIVERGED_BREAKDOWN</span></code> (-3)</td>
+<td>Breakdown of the algorithm (division by zero, etc.)</td>
+<td>For <code><span class="tok">pbicgstab</span></code>, switch to <code><span class="tok">pgmres</span></code>; raise the precision of the dot products</td>
+</tr>
+</tbody>
+</table>
+<p>The conditions under which each status occurs for each solver are given in <a href="../reference/common.html#common-reason">“Convergence Status” in the API Reference</a>; use <code>parcel::krylov::converged_reason_name()</code> to turn the value into a string. For <code>inverse_power</code> and <a href="glossary.html#g-shift-invert">shift-invert</a> of the eigenvalue solvers, check the number of times the inner linear solver did not converge with <code>get_linsolve_failures()</code> (it is not reflected in the outer convergence status).</p>
+<p><br />
+</p>
+<h2 data-number="12.2" id="accuracy-residual"><span class="header-section-number">12.2</span> Recurrence Residual and True Residual</h2>
+<p>The residual used in the convergence check of the linear solvers is one of the following two kinds, depending on the solver.</p>
+<ul>
+<li><code>pcg</code> and <code>pbicgstab</code>: the residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> updated by a recurrence in the iteration. It is mathematically equal to the true residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">b - Ax</annotation></semantics></math>, but drifts away from it due to rounding errors. <code>get_residual()</code> returns this value.</li>
+<li><code>pgmres</code> and <code>pcagmres</code>: the true residual computed from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> at the beginning of each <a href="glossary.html#g-restart">restart</a>.</li>
+</ul>
+<p>All linear solvers compute and print the true <a href="glossary.html#g-relres">relative residual</a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax\| / \|b\|</annotation></semantics></math> at termination (<code>finish : residual true norm</code>) and return it with <code>get_true_residual()</code>. To check the accuracy of the solution with <code>pcg</code> and <code>pbicgstab</code>, look at <code>get_true_residual()</code>. The difference between the recurrence residual and the true residual grows when the vectors are held at low precision. This is why the guideline for the tolerance of <code>dataF16</code> is 1e-2 (<a href="concepts.html#precision-configs">“Precision Configurations”</a>).</p>
+<p>When built with <code>-DRESIDUAL_REPLACE</code>, <code>pcg</code> and <code>pbicgstab</code> also compute and print the true residual in every iteration (for diagnosis; one more <a href="glossary.html#g-spmv">SpMV</a> per iteration). <code>pcg</code> updates the solution every <code>PARCEL_PSTEP</code> (default 1) iterations. With 2 or more, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> keeps its previous value in the iterations in between, so keep the default of 1 to see the true residual of every iteration (<a href="linear-solvers.html#alg-pcg">Preconditioned Conjugate Gradient Method</a>).</p>
+<p>A small residual does not mean that the error of the solution is equally small. The relative error of the solution is roughly bounded by the product of the condition number of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and the relative residual, so for a matrix with a large condition number, the error of the solution is larger than the relative residual.</p>
+<p>The convergence check of the eigenvalue solvers is the relative change of the eigenvalue estimate for <code>power</code> and <code>inverse_power</code>, and an estimate of the Ritz residual for <code>ks_arnoldi</code>; neither is the true residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>A</mi><mi>x</mi><mo>−</mo><mi>λ</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|Ax - \lambda x\|</annotation></semantics></math> itself. <code>get_true_residual()</code> of the eigenvalue solvers returns NaN. To check the accuracy of an eigenpair, compute the residual from the returned eigenvector.</p>
+<p><br />
+</p>
+<h2 data-number="12.3" id="accuracy-reproducibility"><span class="header-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</h2>
+<p>When run with the same execution environment, the same build, the same numbers of <a href="glossary.html#g-rank">ranks</a> and threads, and the same precision configuration, the results (number of iterations and solution) are the same every time. Changing the number of ranks, the number of threads or the hardware changes the last digits for the following reasons.</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Order of the partial sums of dot products and norms (within a rank)</td>
+<td>On CPUs with <code><span class="tok">_BLOCKING_LOOP_DOT_=1</span></code>, the order is determined by the number of blocks (the number of threads by default); on GPUs, by the size of the <a href="glossary.html#g-workitem">work-group</a></td>
+</tr>
+<tr>
+<td>Reduction between ranks</td>
+<td>The algorithm of <code><span class="tok">MPI_Allreduce</span></code> (varies with the <a href="glossary.html#g-mpi">MPI</a> implementation, the number of ranks and the message length)</td>
+</tr>
+<tr>
+<td>Row partitioning</td>
+<td>The contents of each rank’s partial sums change with the number of ranks</td>
+</tr>
+<tr>
+<td>Fusion of multiply-add (FMA)</td>
+<td>Differs by compiler and <a href="glossary.html#g-device">device</a>. <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> adds <code><span class="tok">-ffp-contract=fast</span></code> for all targets (with <code><span class="tok">omp.library-only</span></code> it is not added for the host compiler, so on <a href="glossary.html#g-a64fx">A64FX</a> it is specified explicitly in the <a href="installation.html#install-odyssey">recommended options</a>), and the <a href="glossary.html#g-cuda">CUDA</a> <a href="glossary.html#g-backend">backend</a> fuses multiplications and additions into FMA</td>
+</tr>
+</tbody>
+</table>
+<p>In double precision, these differences often do not appear in the number of iterations. In the measurements solving the Poisson problem with <a href="glossary.html#g-nx">NX</a>=512 and the Jacobi <a href="glossary.html#g-precon">preconditioner</a> (<a href="performance.html#perf-conv512">“Performance” chapter</a>), the number of iterations of <code>pcg</code> (611 iterations) agreed across all 8 environments and all numbers of devices. <code>pgmres</code> for the convection-diffusion equation (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 60, 1140 iterations) and the variant of <code>pcagmres</code> that forms <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> (1152 iterations) also agreed. However, the solutions do not necessarily agree to the last digit. In the same measurements, the number of iterations of <code>pbicgstab</code> (397-466 iterations) and of <code>pcagmres</code> without forming <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> (1152-1216 iterations) varied with the environment and the number of devices.</p>
+<p>On the other hand, the following do not depend on the number of ranks.</p>
+<ul>
+<li>The initial vector of <code>power</code> and <code>inverse_power</code>, and the replacement initial vector and random directions of <code>ks_arnoldi</code>. All are built from global row numbers.</li>
+<li>The eigendecomposition and Schur decomposition of the Hessenberg matrix in <code>ks_arnoldi</code>. Rank 0 computes them and distributes them to all ranks, so branches never diverge between ranks.</li>
+<li>The action of the point Jacobi and Jacobi preconditioners (apart from rounding errors).</li>
+</ul>
+<p>For the <a href="glossary.html#g-jacobi">block Jacobi</a> preconditioner, the blocks do not cross ranks, so the action of the preconditioner itself changes with the number of ranks and the number of blocks <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">nb</annotation></semantics></math>. The default number of blocks is the number of threads per rank on CPUs and the value giving 2 rows per block on GPUs, so the number of iterations changes with the number of ranks, threads and hardware even in double precision. To compare, fix the number of blocks with <code>set_blockjacobi()</code> or use the Jacobi preconditioner.</p>
+<p>In configurations with lowered precision, the differences in the last digit of double precision are amplified by rounding to low precision, and the number of iterations varies with the environment. Agreement of the number of iterations between environments is not guaranteed. Reaching the tolerance and the accuracy of the solution are preserved; what changes is the number of iterations needed. The configuration that lowers only the data precision of the preconditioner to single (<code>precon_dataF</code>) had the same number of iterations as double precision in the NX=512 measurements above (<code>pcg</code> 611, <code>pgmres</code> for the convection-diffusion equation 1140).</p>
+<p>To compare low-precision configurations between environments, align the build flags (such as <code>_BLOCKING_LOOP_DOT_</code>) and the run configuration (ranks × threads), and leave a margin in the maximum number of iterations. If you want even the number of iterations to agree across environments, use double precision (or a configuration that lowers only the data precision of the preconditioner).</p>
+<p>Even with the same source and the same flags, the results may change when the executable is rebuilt. <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> adds <code>-ffp-contract=fast</code> for all targets, so the compiler decides at each place whether to fuse multiplications and additions into FMA, and that choice can change from build to build. On <a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>, <code>hip:gfx942</code>), rebuilt executables differed by a few iterations, mainly in single-precision configurations (the same executable agrees bit for bit however many times it is run). This has not occurred on <a href="glossary.html#g-s86">s86</a>. To make the results agree even after rebuilding, compile with <code>-ffp-contract=off</code>. The results of two executables built with <code>-ffp-contract=off</code> agreed (the effect on performance has not been measured). The macro <code>PARCEL_FP_CONTRACT_OFF</code> enables <code>#pragma clang fp contract(off)</code> in the headers, but it is effective only together with <code>-ffp-contract=fast-honor-pragmas</code>, so normally use <code>-ffp-contract=off</code>.</p>
+<p><br />
+</p>
+<h2 data-number="12.4" id="accuracy-lowprec"><span class="header-section-number">12.4</span> Known Limits at Low Precision</h2>
+<p>The following restrictions are not defects of the implementation but limits of the precision itself (the list of FP32 and <a href="glossary.html#g-fp16">FP16</a> configurations is in <a href="concepts.html#precision-configs">“Precision Configurations”</a>). In configurations including FP16, there is a lower limit (a residual floor) on the <a href="glossary.html#g-relres">relative residual</a> that the precision can reach; giving a smaller tolerance leads to stagnation or breakdown with NaN. In the bundled regression tests (<a href="glossary.html#g-nx">NX</a>=8), the tolerances of the following combinations are relaxed. Use them as a guideline for choosing the tolerance for your own problem.</p>
+<table>
+<thead>
+<tr>
+<th>Precision configuration</th>
+<th>Solver</th>
+<th><a href="glossary.html#g-precon">Preconditioner</a></th>
+<th>Tolerance in the regression tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">calcF16</span></code></td>
+<td><code><span class="tok">pbicgstab</span></code></td>
+<td>Point Jacobi, <a href="glossary.html#g-jacobi">block Jacobi</a></td>
+<td>3e-2</td>
+</tr>
+<tr>
+<td><code><span class="tok">calcF16</span></code></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td>Point Jacobi</td>
+<td>1e-2</td>
+</tr>
+<tr>
+<td><code><span class="tok">calcF16</span></code>, <code><span class="tok">dataF16</span></code></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td>Block Jacobi</td>
+<td>1e-1 (only to check that it runs)</td>
+</tr>
+<tr>
+<td><code><span class="tok">calcF16</span></code></td>
+<td><code><span class="tok">pcagmres</span></code> (variant that forms <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>)</td>
+<td>All 4</td>
+<td>1e-2</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_calcF16</span></code>, <code><span class="tok">precon_allF16</span></code></td>
+<td><code><span class="tok">pcg</span></code>, <code><span class="tok">pgmres</span></code>, <code><span class="tok">pcagmres</span></code></td>
+<td>Point Jacobi</td>
+<td>1e-5</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_calcF16</span></code>, <code><span class="tok">precon_allF16</span></code></td>
+<td><code><span class="tok">power</span></code></td>
+<td>Block Jacobi, Jacobi</td>
+<td>1e-5</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>With FP16 data or computation precision (<code>calcF16</code>, <code>dataF16</code>), do not use the Cholesky QR variants of <code>pcagmres</code> (<code>set_explicit_q(CAGMRES_Q_IMPLICIT)</code> and the <a href="glossary.html#g-moment">moment method</a> <code>QR_CAGMRES_CHOLESKYQR</code>). They give NaN or do not converge regardless of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>. The variants that form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> (the default <code>CAGMRES_Q_AUTO</code> with <code>QR_CGS</code> or <code>QR_MGS</code> as the QR factorization, or <code>CAGMRES_Q_EXPLICIT</code>) can be used with the default <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>8</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s, t) = (8, 4)</annotation></semantics></math>.</li>
+<li><code>pgmres</code> and <code>pcagmres</code> check convergence only at the beginning of each <a href="glossary.html#g-restart">restart</a>. If the tolerance is close to the residual floor, the residual stagnates near the tolerance, and the longer the restart length, the longer it takes to stop. Choose the tolerance with a margin above the floor. With FP16 arithmetic, a shorter restart length of <code>pgmres</code> may stop it earlier (the regression tests solve <code>pgmres</code> of <code>calcF16</code> with a restart length of 15).</li>
+<li>The residual floor differs by configuration and hardware. FP16 arithmetic on GPUs has a higher floor than on CPUs. Even on CPUs, FP16 <code>pcg</code> and <code>pbicgstab</code> with the block Jacobi preconditioner may break down depending on the partitioning (numbers of ranks and threads). When the computation precision of the preconditioner is FP16, the point Jacobi preconditioner has a higher floor than the Jacobi preconditioner.</li>
+<li>For <code>inverse_power</code> in configurations including FP16, the inner linear solver stagnates at the floor and the outer iteration becomes slow (the regression tests relax the inner tolerance). If the inner linear solver fails with non-finite values, the outer iteration also stops with <code>DIVERGED_NANORINF</code>. How to check the inner convergence is shown in <a href="accuracy.html#accuracy-reason">“Checking the Convergence Status”</a>. In configurations with an FP16 preconditioner, removing the inner preconditioner with <code>set_linsolve_precon_algo(parcel::PRECON_NONE)</code> may be faster.</li>
+<li>If you use FP16, lower only the data precision of the preconditioner. <code>precon_dataF16</code> (arithmetic in double precision) passes the regression tests with the same tolerance as double precision (1e-9) for all combinations of solvers and the 4 preconditioners (only for <code>inverse_power</code> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> mode combined with the block Jacobi preconditioner is the inner tolerance relaxed).</li>
+<li>When a preconditioner is used with single-precision <code>power</code>, the rounding of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> built by the preconditioner becomes the error of the eigenvalue directly (in the regression tests, the error tolerance for <code>power</code> of <code>calcF</code> and <code>dataF</code> combined with the block Jacobi and Jacobi preconditioners is relaxed to 5e-4).</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="12.5" id="accuracy-dd"><span class="header-section-number">12.5</span> double-double</h2>
+<p><a href="glossary.html#g-dd">double-double</a> (<code>parcel_doubledouble</code>) [12,13] represents one value by two double-precision numbers, the high part (hi) and the low part (lo), and extracts the rounding error of each operation with error-free transformations (TwoSum for addition and TwoProd for multiplication [14]) and keeps it in lo. The eigenvalues returned by the eigenvalue solvers are computed in double precision on the host, so they stay at double-precision accuracy even if dd is specified.</p>
+<p>The error-free transformation of the product (TwoProd) is built with <code>fma</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p = \mathrm{fma}(a,b,0)</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>−</mi><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">e = \mathrm{fma}(a,b,-p)</annotation></semantics></math>). The result of <code>fma</code> is not fused any further, so the value does not change even if the compiler contracts expressions. In addition, within the dd operations on the host, <code>float_control(precise)</code> and <code>fp contract(off)</code> forbid rewriting and contraction of expressions. With <code>-DPARCEL_DD_NO_FMA</code>, Dekker’s splitting [12] is used. It is meant for CPUs without FMA instructions; do not use it on GPUs (<a href="glossary.html#g-cuda">CUDA</a>), where multiplications and additions are fused into FMA and Dekker’s splitting breaks (the dd product falls to double-precision accuracy).</p>
+<p><br />
+</p>
+<h2 data-number="12.6" id="accuracy-fast-math"><span class="header-section-number">12.6</span> Do Not Use -ffast-math</h2>
+<p>Building with <code>-ffast-math</code> or <code>-ffinite-math-only</code> makes <code>parcel_sycl.hpp</code> stop the build with <code>#error</code> (detected by <code>__FAST_MATH__</code> and <code>__FINITE_MATH_ONLY__</code>). There are two reasons.</p>
+<ul>
+<li>The error-free transformations of <a href="glossary.html#g-dd">double-double</a> rely on computations that extract the rounding error as it is. Allowing rewriting by associativity simplifies the error terms to 0, and dd silently falls back to double precision. Accuracy is lost in particular in the dd dot product (<code>dot</code>) and matrix-vector product (<code>gemv</code>).</li>
+<li>The checks for NaN / Inf (<code>std::isfinite</code>) are removed, and <code>DIVERGED_NANORINF</code> no longer works.</li>
+</ul>
+<p>To build anyway, knowing this, add <code>-DPARCEL_ALLOW_FAST_MATH</code>. The accuracy of dd and the detection of NaN are then not guaranteed. The build flags for <a href="glossary.html#g-ps-b">PS-B</a> use only <code>-fno-math-errno -fno-trapping-math</code>, which do not change values (<a href="installation.html#install-options">“Compile Options” in “Installation”</a>). Do not use <code>-fno-exceptions</code> either, since it is incompatible with <code>std::invalid_argument</code> of the argument checks.</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="qr.html" rel="previous">← QR Factorization</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="kernel-opt.html" rel="next">Optimization →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

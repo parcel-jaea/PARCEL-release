@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Glossary – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/glossary.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li class="current"><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="versions.html" rel="previous" accesskey="p">← Versions and Compatibility</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="references.html" rel="next" accesskey="n">References →</a></span>
+</nav>
+<h1 data-number="16" id="glossary"><span class="header-section-number">16</span> Glossary</h1>
+<p>This chapter lists the names of computers and devices, software, PARCEL-specific terms, and basic terms of iterative methods used in this manual. Device specifications are those of the configurations used in the v1.2 tests. The environment setup and build procedure for each system are given in the chapters <a href="sycl-compiler.html#sycl-compiler">Installing a SYCL Compiler</a> and <a href="installation.html#installation">Installation</a>.</p>
+<h2 data-number="16.1" id="glossary-env"><span class="header-section-number">16.1</span> Systems</h2>
+<p>The ten systems used for the v1.2 tests. This manual refers to them by these names.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>System</th>
+<th>Node configuration</th>
+<th>Setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><span id="g-s86">s86 CPU</span></td>
+<td>SGI8600 CPU node</td>
+<td>Intel Xeon Gold 6242R (20 cores) ×2</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-s86">s86</a></td>
+</tr>
+<tr>
+<td class="nowrap">s86 GPU</td>
+<td>SGI8600 GPU node</td>
+<td>Intel Xeon Gold 6248R (24 cores) ×2 + NVIDIA <a href="glossary.html#g-v100">V100</a>-SXM2-32GB ×4</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-s86">s86</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-odyssey">Odyssey</span></td>
+<td>Odyssey of Wisteria/BDEC-01 (Wisteria-Odyssey)</td>
+<td>Fujitsu <a href="glossary.html#g-a64fx">A64FX</a> (48 cores) ×1</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-odyssey">Odyssey</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-aquarius">Aquarius</span></td>
+<td>Aquarius of Wisteria/BDEC-01 (Wisteria-Aquarius)</td>
+<td>Intel Xeon Platinum 8360Y (36 cores) ×2 + NVIDIA <a href="glossary.html#g-a100">A100</a>-SXM4-40GB ×8</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-aquarius">Aquarius</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-miyabi-c">Miyabi-C</span></td>
+<td>Miyabi CPU node</td>
+<td>Intel Xeon CPU Max 9480 (56 cores, <a href="glossary.html#g-hbm">HBM</a>2e) ×2</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-miyabi-c">Miyabi-C</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-miyabi-g">Miyabi-G</span></td>
+<td>Miyabi GPU node</td>
+<td>NVIDIA <a href="glossary.html#g-gh200">GH200</a> ×1 (<a href="glossary.html#g-grace">Grace</a> 72 cores, <a href="glossary.html#g-h100">H100</a> 96GB)</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-miyabi-g">Miyabi-G</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-ps-a">PS-A</span></td>
+<td>Plasma Simulator Subsystem A</td>
+<td>Intel Xeon 6980P (128 cores) ×2</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-ps-a">PS-A</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-ps-b">PS-B</span></td>
+<td>Plasma Simulator Subsystem B</td>
+<td>AMD Instinct <a href="glossary.html#g-mi300a">MI300A</a> ×4 (each = 24 cores + GPU)</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-ps-b">PS-B</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-mac">Mac</span></td>
+<td>Mac with macOS 15 (installed with Homebrew)</td>
+<td>Apple M4 (10 cores: 4 performance, 6 efficiency)</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-mac">Mac</a></td>
+</tr>
+<tr>
+<td class="nowrap"><span id="g-linux-ws">Linux Workstation</span></td>
+<td>Linux on Windows WSL2 (Ubuntu 24.04, Rocky Linux 9)</td>
+<td>Intel Xeon Gold 6226R (16 cores) ×2 + NVIDIA <a href="glossary.html#g-rtx-a6000">RTX A6000</a> ×2</td>
+<td class="nowrap"><a href="sycl-compiler.html#env-linux-wsl">Linux Workstation</a></td>
+</tr>
+</tbody>
+</table>
+<p>“s86” alone means both s86 CPU and s86 GPU.</p>
+<h2 data-number="16.2" id="glossary-devices"><span class="header-section-number">16.2</span> Processors and GPUs</h2>
+<dl>
+<dt><span id="g-v100">V100</span></dt>
+<dd>
+NVIDIA GPU (Volta). Installed in s86 GPU. AdaptiveCpp target: <code>cuda:sm_70</code>.
+</dd>
+<dt><span id="g-a100">A100</span></dt>
+<dd>
+NVIDIA GPU (Ampere). Installed in Aquarius. Target: <code>cuda:sm_80</code>. Supports <a href="glossary.html#g-mig">MIG</a>.
+</dd>
+<dt><span id="g-rtx-a6000">RTX A6000</span></dt>
+<dd>
+NVIDIA workstation GPU (Ampere, 48 GB memory). Installed in the <a href="glossary.html#g-linux-ws">Linux Workstation</a>. Target: <code>cuda:sm_86</code>.
+</dd>
+<dt><span id="g-h100">H100</span></dt>
+<dd>
+NVIDIA GPU (Hopper). In Miyabi-G it is the GPU part of the <a href="glossary.html#g-gh200">GH200</a>. Target: <code>cuda:sm_90</code>. Supports <a href="glossary.html#g-mig">MIG</a>.
+</dd>
+<dt><span id="g-gh200">GH200</span></dt>
+<dd>
+NVIDIA Grace Hopper Superchip: a <a href="glossary.html#g-grace">Grace</a> CPU and an <a href="glossary.html#g-h100">H100</a> GPU in one module. One Miyabi-G node is one GH200.
+</dd>
+<dt><span id="g-grace">Grace</span></dt>
+<dd>
+NVIDIA Arm CPU (72 Neoverse V2 cores). The CPU part of the <a href="glossary.html#g-gh200">GH200</a>.
+</dd>
+<dt><span id="g-mi300a">MI300A</span></dt>
+<dd>
+AMD Instinct MI300A. An <a href="glossary.html#g-apu">APU</a> with CPU cores and a GPU in one package sharing <a href="glossary.html#g-hbm">HBM</a>3. Installed in PS-B. AdaptiveCpp target: <code>hip:gfx942</code>. See <a href="concepts.html#gpu-rank-apu">“APU (AMD Instinct MI300A)”</a> for how PARCEL uses it.
+</dd>
+<dt><span id="g-a64fx">A64FX</span></dt>
+<dd>
+Fujitsu Arm CPU with SVE. Its 48 cores are grouped into four <a href="glossary.html#g-cmg">CMGs</a> of 12 cores, each with its own <a href="glossary.html#g-hbm">HBM</a>2. Installed in Odyssey. Target: <code>omp.library-only</code> (used with the Fujitsu compiler).
+</dd>
+<dt><span id="g-xeon">Xeon</span></dt>
+<dd>
+Intel x86_64 CPU. The v1.2 tests used Xeon Gold 6242R / 6248R (s86), Xeon Platinum 8360Y (Aquarius), Xeon CPU Max 9480 (Miyabi-C; with in-package <a href="glossary.html#g-hbm">HBM</a>2e) and Xeon 6980P (PS-A). Target: <code>omp</code> (OpenMP backend).
+</dd>
+</dl>
+<h2 data-number="16.3" id="glossary-units"><span class="header-section-number">16.3</span> Components and Resource Units</h2>
+<dl>
+<dt><span id="g-apu">APU</span></dt>
+<dd>
+Accelerated Processing Unit: a processor with a CPU and a GPU in one package sharing memory. In this manual it means the <a href="glossary.html#g-mi300a">MI300A</a>.
+</dd>
+<dt><span id="g-mig">MIG</span></dt>
+<dd>
+Multi-Instance GPU: a feature that partitions an NVIDIA GPU (<a href="glossary.html#g-a100">A100</a>, <a href="glossary.html#g-h100">H100</a>, etc.) into instances with their own <a href="glossary.html#g-sm">SMs</a> and memory, each usable as an independent GPU. The size of an instance is given by its profile name (e.g. <code>2g.24gb</code>: <code>&lt;n&gt;g</code> is the amount of compute, the rest is the memory size). See <a href="concepts.html#gpu-rank-mig">“MIG (NVIDIA Multi-Instance GPU)”</a> for how PARCEL uses it.
+</dd>
+<dt><span id="g-sm">SM</span></dt>
+<dd>
+Streaming Multiprocessor: a group of compute units in an NVIDIA GPU. The parallelism of a GPU is determined by its number of SMs.
+</dd>
+<dt><span id="g-cmg">CMG</span></dt>
+<dd>
+Core Memory Group: a unit of 12 cores of the <a href="glossary.html#g-a64fx">A64FX</a> and their <a href="glossary.html#g-hbm">HBM</a>2. It corresponds to one <a href="glossary.html#g-numa">NUMA node</a>.
+</dd>
+<dt><span id="g-hbm">HBM</span></dt>
+<dd>
+High Bandwidth Memory: high-bandwidth memory stacked in the same package as the processor. Used by GPUs, the <a href="glossary.html#g-a64fx">A64FX</a> (HBM2), Xeon CPU Max (HBM2e) and the <a href="glossary.html#g-mi300a">MI300A</a> (HBM3).
+</dd>
+<dt><span id="g-numa">NUMA node</span></dt>
+<dd>
+A group of cores that share nearby memory. Access to the memory of another NUMA node is slower, so the threads of one rank are kept within one NUMA node (<a href="concepts.html#gpu-rank-data">GPUs, MPI Ranks and Data</a>).
+</dd>
+<dt><span id="g-vnode">vnode</span></dt>
+<dd>
+A virtual node of PBS (the job scheduler). On PS-B, resources are allocated as 1 <a href="glossary.html#g-numa">NUMA node</a> = 1 vnode = 1 <a href="glossary.html#g-apu">APU</a>.
+</dd>
+</dl>
+<h2 data-number="16.4" id="glossary-software"><span class="header-section-number">16.4</span> Software</h2>
+<dl>
+<dt><span id="g-sycl">SYCL</span></dt>
+<dd>
+A standard of the Khronos Group for writing parallel code for devices such as CPUs and GPUs in C++. PARCEL is written in SYCL.
+</dd>
+<dt><span id="g-adaptivecpp">AdaptiveCpp</span></dt>
+<dd>
+A SYCL implementation (formerly hipSYCL / Open SYCL). The compiler driver is <code>acpp</code>, and <code>--acpp-targets</code> selects the generated code (<code>omp</code>, <code>cuda:sm_XX</code>, <code>hip:gfxXXX</code>, etc.). The v1.2 tests used version 24.10.
+</dd>
+<dt><span id="g-backend">Backend</span></dt>
+<dd>
+The mechanism AdaptiveCpp uses to run kernels. The OpenMP backend (CPU, <code>omp</code>), the CUDA backend (NVIDIA GPUs) and the HIP backend (AMD GPUs) were used.
+</dd>
+<dt><span id="g-cuda">CUDA / HIP and ROCm</span></dt>
+<dd>
+Development and runtime environments for NVIDIA and AMD GPUs, respectively. AdaptiveCpp uses them to generate and run GPU code.
+</dd>
+<dt><span id="g-mpi">MPI</span></dt>
+<dd>
+A standard for inter-process communication. PARCEL uses it for the halo exchange between ranks and for reducing inner products. The tests used Open MPI, Intel MPI and Fujitsu MPI.
+</dd>
+<dt><span id="g-spack">spack</span></dt>
+<dd>
+A package manager for HPC. AdaptiveCpp and LLVM were installed with spack on the v1.2 test systems. <code>spack/</code> in the distribution package contains the PARCEL recipes and a script that installs everything from scratch.
+</dd>
+<dt><span id="g-pbs">PBS</span></dt>
+<dd>
+A job scheduler, used on s86, Miyabi and the Plasma Simulator (Wisteria/BDEC-01 uses Fujitsu’s job management system).
+</dd>
+<dt><span id="g-pjm">PJM (Fujitsu job management system)</span></dt>
+<dd>
+Fujitsu’s job scheduler (job management of Fujitsu Technical Computing Suite), used on Wisteria/BDEC-01 (<a href="glossary.html#g-odyssey">Odyssey</a>, <a href="glossary.html#g-aquarius">Aquarius</a>). Resources are written in the job script with <code>#PJM</code>, and jobs are submitted with <code>pjsub</code> (<a href="running.html#run-jobs">“Running in Jobs”</a>).
+</dd>
+<dt><span id="g-openmp">OpenMP</span></dt>
+<dd>
+A standard for writing thread parallelism in C, C++ and Fortran. The CPU <a href="glossary.html#g-backend">backend</a> of AdaptiveCpp runs kernels with OpenMP threads. The number of threads is given with the environment variable <code>OMP_NUM_THREADS</code>.
+</dd>
+<dt><span id="g-usm">USM</span></dt>
+<dd>
+Unified Shared Memory: the mechanism of <a href="glossary.html#g-sycl">SYCL</a> 2020 to allocate and access device memory through pointers. PARCEL places its vectors and matrices in USM device memory.
+</dd>
+<dt><span id="g-lapack">BLAS, LAPACK, LAPACKE</span></dt>
+<dd>
+BLAS and LAPACK are the standard interfaces (in Fortran) of libraries for basic vector and matrix operations and for dense matrix computations such as linear systems and eigenvalue problems. LAPACKE is the interface for calling LAPACK from C (header <code>lapacke.h</code>). OpenBLAS and others provide implementations. PARCEL uses LAPACKE in <code>ks_arnoldi</code> for eigenvalues of small dense matrices (<a href="sycl-compiler.html#env-lapacke">“Installing LAPACKE”</a>).
+</dd>
+<dt><span id="g-mpi-wrapper">MPI compiler wrapper</span></dt>
+<dd>
+Commands such as <code>mpicxx</code>, <code>mpicc</code> and <code>mpif90</code> that call the underlying compiler with the MPI header and library options added. The compiler called can be changed with an environment variable (<code>OMPI_CXX</code> for Open MPI, <code>MPICH_CXX</code> for the MPICH family, <code>I_MPI_CXX</code> for Intel MPI); PARCEL makes them call <code>acpp</code>.
+</dd>
+<dt><span id="g-pie">PIE</span></dt>
+<dd>
+Position Independent Executable: an executable that runs regardless of the address at which it is loaded. <code>acpp</code> (clang) links as PIE, so objects linked together with it must be compiled with <code>-fPIE</code> (or <code>-fPIC</code>).
+</dd>
+<dt><span id="g-rpath">RPATH, LD_LIBRARY_PATH</span></dt>
+<dd>
+Where shared libraries (<code>.so</code>) are searched at run time. RPATH is embedded in the executable at link time with <code>-Wl,-rpath,&lt;dir&gt;</code>; <code>LD_LIBRARY_PATH</code> is an environment variable given at run time. Without either, libraries outside the standard locations (such as the <code>libomp.so</code> of LLVM) are not found and the program does not start.
+</dd>
+<dt><span id="g-module">module (environment modules)</span></dt>
+<dd>
+A mechanism to switch versions of software installed on a system with <code>module load &lt;name&gt;</code> (Environment Modules, Lmod). It sets <code>PATH</code>, <code>LD_LIBRARY_PATH</code> and so on. Available modules are listed with <code>module avail</code>. It is different from the Fortran module (<code>parcel_sycl_mod</code>).
+</dd>
+<dt><span id="g-venv">venv</span></dt>
+<dd>
+A Python virtual environment, created with <code>python3 -m venv &lt;dir&gt;</code>. Packages installed in it do not affect other Python environments. The examples install the Python package <code>parcel</code> in one (<a href="installation.html#install-python">“Python Package”</a>).
+</dd>
+</dl>
+<h2 data-number="16.5" id="glossary-parcel"><span class="header-section-number">16.5</span> PARCEL Terms</h2>
+<dl>
+<dt><span id="g-rank">Rank</span></dt>
+<dd>
+An MPI process. PARCEL assigns one <a href="glossary.html#g-device">device</a> and a contiguous block of rows of the coefficient matrix to each rank.
+</dd>
+<dt><span id="g-device">Device</span></dt>
+<dd>
+The resource a rank computes on: one GPU, one <a href="glossary.html#g-mig">MIG</a> instance, the GPU part of an <a href="glossary.html#g-apu">APU</a>, or a group of CPU cores (OpenMP backend) (<a href="concepts.html#gpu-rank-data">GPUs, MPI Ranks and Data</a>).
+</dd>
+<dt><span id="g-halo">Halo (ghost), halo exchange</span></dt>
+<dd>
+The vector elements owned by other ranks that a sparse matrix-vector product needs (the halo, also called ghost), and the communication that receives them.
+</dd>
+<dt><span id="g-crs">CRS</span></dt>
+<dd>
+Compressed Row Storage: a sparse-matrix format with three arrays, row pointers (<code>rowptr</code>), column indices and values. Matrices are passed to PARCEL in this format.
+</dd>
+<dt><span id="g-inorder">In-order queue</span></dt>
+<dd>
+A SYCL queue that executes kernels in the order they were submitted. PARCEL requires it.
+</dd>
+<dt><span id="g-dd">Double-double (dd)</span></dt>
+<dd>
+A precision equivalent to quadruple precision that represents a value as the sum of two double-precision numbers [12,13]. Type <code>parcel_doubledouble</code> (<a href="concepts.html#precision-configs">Precision Configurations</a>).
+</dd>
+<dt><span id="g-fp16">FP16</span></dt>
+<dd>
+Half precision (16-bit floating point). Type <code>parcel_fp16</code>.
+</dd>
+<dt><span id="g-collective">Collective operation, collective communication</span></dt>
+<dd>
+An operation that all ranks of the communicator must call. It includes MPI collective communication such as <code>MPI_Allreduce</code> (summing dot products). <code>set_crsMat()</code> and <code>solver()</code> of PARCEL are collective, so they hang if only some ranks call them. Call them on all ranks with the same settings.
+</dd>
+</dl>
+<h2 data-number="16.6" id="glossary-numerics"><span class="header-section-number">16.6</span> Computational Terms</h2>
+<dl>
+<dt><span id="g-spmv">SpMV</span></dt>
+<dd>
+Sparse matrix-vector product <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>A</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">y = Ax</annotation></semantics></math>. One of the most time-consuming operations in the iterations of Krylov subspace methods.
+</dd>
+<dt><span id="g-axpy">axpy</span></dt>
+<dd>
+Linear combination of vectors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>α</mi><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">y \leftarrow \alpha x + y</annotation></semantics></math> (the BLAS name). In PARCEL the name also covers the form that scales <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>α</mi><mi>x</mi><mo>+</mo><mi>β</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">y \leftarrow \alpha x + \beta y</annotation></semantics></math>).
+</dd>
+<dt><span id="g-gemv">gemv</span></dt>
+<dd>
+Matrix-vector product <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>α</mi><mi>V</mi><mi>c</mi><mo>+</mo><mi>β</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">y \leftarrow \alpha Vc + \beta y</annotation></semantics></math> (the BLAS name). PARCEL uses it to add a linear combination of the columns (several vectors) of a tall matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>.
+</dd>
+<dt><span id="g-workitem">work item, work group</span></dt>
+<dd>
+Units of execution of a <a href="glossary.html#g-sycl">SYCL</a> kernel. One work item handles one index (one matrix row by default in PARCEL). A group of work items is a work group; work items in a work group can synchronize (barrier).
+</dd>
+<dt><span id="g-nx">NX</span></dt>
+<dd>
+Number of grid points along one side of the 3-D grid used by the verification sample and the tests. The number of unknowns (matrix rows) is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><msup><mi>X</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">NX^{3}</annotation></semantics></math>.
+</dd>
+<dt><span id="g-manufactured">Manufactured solution</span></dt>
+<dd>
+A verification method that builds the right-hand side <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mi>A</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">b = Ax</annotation></semantics></math> from a chosen solution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>, solves it, and measures the error against the known solution. Used by the verification sample.
+</dd>
+<dt><span id="g-lucky">Lucky breakdown</span></dt>
+<dd>
+In GMRES-type methods, a new basis vector becoming zero (rank deficiency of the basis) while the basis is built. It means the Krylov subspace contains the exact solution, which is obtained from the basis up to that point. Despite the name, it is not an error.
+</dd>
+<dt><span id="g-moment">Moment method</span></dt>
+<dd>
+In the Cholesky QR of <code>pcagmres</code>, a method that builds the Gram matrix with fewer inner products, using the fact that for a symmetric matrix the inner products of the basis vectors depend only on the moments <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>k</mi></msub><mo>=</mo><msubsup><mi>v</mi><mn>0</mn><mi>T</mi></msubsup><msup><mi>A</mi><mi>k</mi></msup><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{k} = v_{0}^{T}A^{k}v_{0}</annotation></semantics></math> (<a href="qr.html#qr-cagmres-choleskyqr">“Cholesky QR Method by the Moment Method”</a>).
+</dd>
+<dt><span id="g-krylov">Krylov subspace method</span></dt>
+<dd>
+A general name for iterative methods that seek an approximate solution in the subspace obtained by repeatedly multiplying a vector <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> by the matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> (the Krylov subspace <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false" form="prefix">{</mo><mi>b</mi><mo>,</mo><mi>A</mi><mi>b</mi><mo>,</mo><msup><mi>A</mi><mn>2</mn></msup><mi>b</mi><mo>,</mo><mi>…</mi><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\mathrm{span}\{b, Ab, A^{2}b, \ldots\}</annotation></semantics></math>). Examples are the conjugate gradient method (<code>pcg</code>), BiCGStab (<code>pbicgstab</code>), GMRES (<code>pgmres</code>) and the Arnoldi method (<code>ks_arnoldi</code>). The matrix is used only through matrix-vector products, so they suit large sparse matrices.
+</dd>
+<dt><span id="g-precon">Preconditioning</span></dt>
+<dd>
+To speed up convergence of an iterative method, prepare a matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> (the preconditioner) that is close to the coefficient matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and easy to invert, and solve <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mi>z</mi><mo>=</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">Kz = r</annotation></semantics></math> inside the iteration (approximately applying <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">A^{-1}</annotation></semantics></math>). The closer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> is to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>, the fewer the iterations, but the cost per application grows (<a href="preconditioners.html#preconditioners">the “Preconditioners” chapter</a>).
+</dd>
+<dt><span id="g-jacobi">Jacobi, block Jacobi, ILU(0)</span></dt>
+<dd>
+Kinds of preconditioners. Point Jacobi takes only the diagonal of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>; the Jacobi preconditioner of PARCEL performs Jacobi iterations the number of times given by <code>set_jacobi()</code>. Block Jacobi divides the rows of each rank into blocks and takes only the matrix inside the blocks as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>. PARCEL solves inside the blocks with ILU(0) (incomplete LU factorization that creates no values outside the original nonzero positions) (<a href="preconditioners.html#preconditioners">the “Preconditioners” chapter</a>).
+</dd>
+<dt><span id="g-restart">Restart</span></dt>
+<dd>
+In GMRES and similar methods, rebuilding the basis from the current approximate solution when the number of basis vectors reaches a fixed number (the restart period). It limits the memory of the basis and the cost of orthogonalization, but may slow convergence. In the Krylov-Schur method, it refers to shrinking and rebuilding the subspace.
+</dd>
+<dt><span id="g-relres">Relative residual</span></dt>
+<dd>
+The norm of the residual <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">r = b - Ax</annotation></semantics></math> divided by the norm of the right-hand side, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>r</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|r\|/\|b\|</annotation></semantics></math>. The linear solvers of PARCEL regard the iteration as converged when it falls below the tolerance (<code>set_tolerance()</code>). There are the residual updated by the recurrence and the true residual recomputed from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">b - Ax</annotation></semantics></math> (<a href="accuracy.html#accuracy-residual">“Recurrence Residual and True Residual”</a>).
+</dd>
+<dt><span id="g-spd">Symmetric positive definite</span></dt>
+<dd>
+A matrix with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><msup><mi>A</mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">A = A^{T}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>T</mi></msup><mi>A</mi><mi>x</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x^{T}Ax &gt; 0</annotation></semantics></math> for every nonzero vector <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>. All its eigenvalues are positive real numbers. The conjugate gradient method (<code>pcg</code>) assumes this property. Typical examples are the difference matrices of diffusion and Poisson equations (with the appropriate sign).
+</dd>
+<dt><span id="g-ritz">Ritz value, Ritz pair</span></dt>
+<dd>
+An eigenvalue of the matrix restricted to a subspace (Ritz value), paired with the corresponding vector in the original space (Ritz vector). The Arnoldi and Krylov-Schur methods use Ritz values as approximations of the eigenvalues of the original matrix.
+</dd>
+<dt><span id="g-shift-invert">Shift-invert</span></dt>
+<dd>
+A method that computes eigenvalues near a shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> by computing the eigenvalues of largest magnitude of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(A - \sigma I)^{-1}</annotation></semantics></math>. An eigenvalue <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math> of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is mapped to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>λ</mi><mo>−</mo><mi>σ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">1/(\lambda - \sigma)</annotation></semantics></math>, so eigenvalues near <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> come to the side of largest magnitude. Each step requires solving <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(A - \sigma I)z = v</annotation></semantics></math> (with the internal <code>pgmres</code> in PARCEL).
+</dd>
+</dl>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="versions.html" rel="previous">← Versions and Compatibility</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="references.html" rel="next">References →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

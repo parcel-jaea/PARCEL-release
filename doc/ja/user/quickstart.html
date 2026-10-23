@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>クイックスタート – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/quickstart.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li class="current"><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="index.html" rel="previous" accesskey="p">← PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="concepts.html" rel="next" accesskey="n">基本構成 →</a></span>
+</nav>
+<h1 data-number="1" id="quickstart"><span class="header-section-number">1</span> クイックスタート</h1>
+<p>　1 次元 Laplace 作用素の差分行列 (三重対角行列) を係数とする連立一次方程式 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> を共役勾配法で解く最小のプログラムで, SYCL 対応コンパイラの導入からビルド, 実行までを示す. 同じ問題を C++・C言語・Fortran・Python の 4 つの言語で解き, それぞれ <a href="glossary.html#g-mpi">MPI</a> なし (1 プロセス) と MPI あり (複数プロセス) の作り方と動かし方を示す. 本書に出てくる計算機・装置の名前 (<a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-v100">V100</a> など) と略語は<a href="glossary.html#glossary">用語集</a>にまとめている.</p>
+<h2 data-number="1.1" id="qs-overview"><span class="header-section-number">1.1</span> プログラムの概要</h2>
+<p>　解く問題は次のとおりである. 4 つの言語のプログラムはいずれもこの問題を解き, 同じ結果を出す.</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>: 問題サイズ (大域の行数). プログラムの <code>n_global</code> で, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">n = 1000</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>: 行番号 (整数). 0 から数え, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 0, 1, \ldots, n-1</annotation></semantics></math> (Fortran の配列の添字は 1 から)</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n \times n</annotation></semantics></math> の係数行列. 対角要素が 2, 隣接要素 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> 行の <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i-1</annotation></semantics></math> 列と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i+1</annotation></semantics></math> 列) が <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math> の三重対角行列</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>: 長さ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> の右辺ベクトル. 全要素 1 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mn>1</mn><msup><mo stretchy="false" form="postfix">)</mo><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">b = (1, \ldots, 1)^{T}</annotation></semantics></math>)</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>: 長さ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> の解ベクトル. 初期値は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math> (零ベクトル). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mn>0</mn></msub><annotation encoding="application/x-tex">x_0</annotation></semantics></math> は先頭の要素</li>
+<li>解法: <a href="glossary.html#g-precon">前処理</a>なしの共役勾配法 (<code>pcg</code>), 倍精度. 収束判定値は<a href="glossary.html#g-relres">相対残差</a><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>r</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|r\|/\|b\|</annotation></semantics></math> = 1.0e-9, 最大反復回数 10000</li>
+</ul>
+<p>　右辺 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> は反転対称 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub><mo>=</mo><msub><mi>b</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn><mo>−</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">b_i = b_{n-1-i}</annotation></semantics></math>) で, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> の固有ベクトルのうち <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">n/2</annotation></semantics></math> 本とだけ成分を持つので, 共役勾配法は丸め誤差が無ければちょうど <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>/</mi><mn>2</mn><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">n/2 = 500</annotation></semantics></math> 反復で厳密解 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">x_i = (i+1)(n-i)/2</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>=</mo><mi>n</mi><mi>/</mi><mn>2</mn><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">x_0 = n/2 = 500</annotation></semantics></math>) に到達する. どの言語のプログラムも, 収束状態・反復回数・残差と<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mn>0</mn></msub><annotation encoding="application/x-tex">x_0</annotation></semantics></math>を表示し, 全成分について厳密解との相対誤差 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn><mo stretchy="false" form="prefix">|</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">|x_i - (i+1)(n-i)/2| / ((i+1)(n-i)/2)</annotation></semantics></math> の最大を求めて, 1e-6 以下なら <code>check: ... PASS</code> と表示する (MPI ありでは各ランクの担当行の最大をランク間で集める). 収束しないか誤差がしきい値を超えると <code>FAIL</code> を表示して終了コード 1 で終わる. しきい値は, 条件数 (約 4.1e5) と収束判定値 1e-9 からの最悪の見積もり 4e-4 よりずっと小さいが, 実際の誤差は丸め誤差の程度 (0〜1.3e-15) で, 解き方の誤りは桁違いに大きい誤差になるので区別できる. 4 つの言語の例をまとめてビルド・実行して合否を出すには <code>bash examples/run_quick_checks.sh</code> を使う (<a href="installation.html#install-quick-checks">インストールの「ビルド後の確認」</a>).</p>
+<p>　プログラムの流れはどの言語でも同じである.</p>
+<ol type="1">
+<li>行を<a href="glossary.html#g-rank">ランク</a>に分ける. 各ランクは連続した行 (行ブロック) を受け持つ. MPI なしでは 1 プロセスが全行を受け持つ.</li>
+<li>受け持つ行の係数行列を <a href="glossary.html#g-crs">CRS</a> 形式 (行ポインタ・列番号・値) で作る. 列番号は大域の番号で渡す.</li>
+<li>ソルバの設定 (収束判定値, 最大反復回数) をして解く. 設定しない項目はライブラリの既定値になる.</li>
+<li>収束状態を確かめる.</li>
+</ol>
+<p>　MPI なしとありで, プログラムの書き方はほとんど変わらない. MPI ありでは各ランクが自分の担当行だけを作り, 全ランクが同じ関数を同じ設定で呼ぶ (<a href="glossary.html#g-collective">集団操作</a>). MPI なしは 1 プロセスが全体を持つ. どちらで作るかはビルドの指定 (<code>PARCEL_MPI</code>) で選ぶ (<a href="installation.html#install-mpi-default">インストールの「MPI の有無の既定」</a>).</p>
+<p>　必要なものは次のとおりである.</p>
+<ul>
+<li><a href="glossary.html#g-sycl">SYCL</a> 処理系 (<a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a>. <a href="quickstart.html#qs-compiler">次節</a>)</li>
+<li><a href="glossary.html#g-lapack">LAPACKE</a> (OpenBLAS など. 固有値ソルバが用いる)</li>
+<li>MPI ありの場合は MPI (Open MPI など)</li>
+<li>C言語・Fortran の場合は C・Fortran のコンパイラ (gcc・gfortran, 富士通 fcc・frt など. <a href="quickstart.html#qs-compilers">「GCC 以外のコンパイラの環境」</a>), Python の場合は Python 3.8 以上と NumPy (例では SciPy も使う)</li>
+</ul>
+<h2 data-number="1.2" id="qs-compiler"><span class="header-section-number">1.2</span> SYCL 対応コンパイラの導入</h2>
+<p>　PARCEL はヘッダーファイルだけのライブラリで, SYCL 対応コンパイラでコンパイルして使う. v1.2 では <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> を用いる.</p>
+<p>　導入の経路は環境によって次のように選ぶ.</p>
+<p><span id="install-routes"></span></p>
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>経路</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本書の試験環境 (<a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-odyssey">Odyssey</a>, <a href="glossary.html#g-aquarius">Aquarius</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-ps-b">PS-B</a>)</td>
+<td><code><span class="tok">install_stack.sh</span></code> (ゼロから入れる), または既存の <a href="glossary.html#g-spack">spack</a> に AdaptiveCpp を入れる</td>
+<td>環境の定義 <code><span class="tok">spack/stack/envs/&lt;環境&gt;/</span></code> が同梱されている. 既存の spack に入れる手順は<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>の各環境の節</td>
+</tr>
+<tr>
+<td>上記以外の Linux (RHEL 系・Ubuntu 系, Windows の WSL2)</td>
+<td><code><span class="tok">install_stack.sh</span></code> と雛形 <code><span class="tok">generic</span></code>, または spack に AdaptiveCpp を入れる</td>
+<td>Ubuntu 24.04 と Rocky Linux 9 (いずれも WSL2) で確かめた. <a href="sycl-compiler.html#env-linux">「一般的な Linux」</a></td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>Homebrew</td>
+<td><a href="sycl-compiler.html#env-mac">「macOS (Homebrew)」</a></td>
+</tr>
+<tr>
+<td>Python だけを使う</td>
+<td>pip (<code><span class="tok">python/</span></code>で<code><span class="tok">pip</span> <span class="tok">install</span> <span class="tok">.</span></code>), または spack の<code><span class="tok">py-parcel-sycl</span></code></td>
+<td>AdaptiveCpp と <a href="glossary.html#g-lapack">LAPACKE</a> は上のいずれかで先に入れる. <a href="installation.html#install-python">「Python のパッケージ」</a></td>
+</tr>
+</tbody>
+</table>
+<p>　主な経路の使い方を示す.</p>
+<ul>
+<li>ゼロから入れる (Linux): 配布パッケージの <code>spack/stack/install_stack.sh</code> が, <a href="glossary.html#g-spack">spack</a> の取得から LLVM・AdaptiveCpp・OpenBLAS・Python と NumPy・SciPy, PARCEL 本体, C言語・Fortran・Python の API までを, 既存の spack と切り離した新しい spack 環境にまとめて入れる. MPI・<a href="glossary.html#g-cuda">CUDA</a> / ROCm・コンパイラは各計算機の既存品を使う. 試験環境の定義 (<a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-ps-b">PS-B</a>, <a href="glossary.html#g-aquarius">Aquarius</a>, <a href="glossary.html#g-odyssey">Odyssey</a>) が同梱されている (<a href="installation.html#install-spack">インストールの「spack によるインストール」</a>).</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/install_stack.sh s86 <span class="va">$HOME</span>/parcel_stack 16     <span class="co"># &lt;環境&gt; &lt;入れ先&gt; [並列数]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$HOME</span>/parcel_stack/setup.sh                                   <span class="co"># 使うとき (毎回)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load parcel-sycl~mpi~cuda~rocm py-parcel-sycl~mpi~cuda~rocm      <span class="co"># CPU 版・MPI なしの例</span></span></code></pre></div>
+<ul>
+<li>macOS: spack は使わず, Homebrew でバイナリを入れる (<a href="sycl-compiler.html#env-mac">「SYCL対応コンパイラのインストール方法」の「macOS (Homebrew)」</a>).</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install adaptivecpp open-mpi openblas gcc numpy scipy</span></code></pre></div>
+<ul>
+<li>既存の spack に AdaptiveCpp を入れる: 試験環境ごとの手順を<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>に, それ以外の Linux での手順を<a href="sycl-compiler.html#env-linux">「一般的な Linux」</a>に示す.</li>
+</ul>
+<p>　以下の各言語の例は, CPU (<a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> の <a href="glossary.html#g-openmp">OpenMP</a> <a href="glossary.html#g-backend">バックエンド</a>) で, LAPACKE が<code>/usr/include/openblas</code>にある Linux の環境 (<a href="glossary.html#g-s86">s86</a> など) を想定し, パッケージのトップディレクトリで実行する. 環境変数とモジュールは環境ごとに異なるので, <a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>の各環境の「使用時の設定」を先に行う. macOS + Homebrew の場合のフラグは<a href="installation.html#install-mac">インストールの「macOS (Homebrew)」</a>に示す. CPU の実行ファイルは LLVM の OpenMP ランタイム (<code>libomp.so</code>) を使うが, <code>acpp</code> はその場所を実行ファイルに埋め込まない. 試験環境の「使用時の設定」は<code>LD_LIBRARY_PATH</code>に LLVM の<code>lib/</code>を加えてこれを解決している. 自分で用意した環境では, 実行時に<code>LD_LIBRARY_PATH</code>に LLVM の<code>lib/</code>を加えるか, リンク時に<code>-Wl,-rpath,&lt;LLVM の lib&gt;</code>を付ける (どちらも無いと OS の<code>libomp</code>を読むか, 見つからずに起動できない). Fortran の実行時ライブラリ (<code>libgfortran</code>) の場所も<code>-L</code>で与える (例では<code>gfortran -print-file-name</code>で調べている). GPU (NVIDIA) では <code>--acpp-targets=cuda:sm_70</code> のように対象を変える. プログラムは変えなくてよい. <a href="glossary.html#g-v100">V100</a> (<code>sm_70</code>) では<code>-Xcuda-ptxas -maxrregcount=255</code>も付けることを推奨する (<a href="installation.html#install-recommended-flags">推奨オプション</a>).</p>
+<h3 data-number="1.2.1" id="qs-compilers"><span class="header-section-number">1.2.1</span> GCC 以外のコンパイラの環境</h3>
+<p>　以下の例は C言語・Fortran の main を gcc・gfortran (または Open MPI の <code>mpicc</code>・<code>mpif90</code>) でコンパイルする. 標準のコンパイラが GCC でない環境でも同じ手順で使える. 試験環境での組み合わせを示す. 各環境の詳しいフラグは<a href="installation.html#install-recommended-flags">インストールの「推奨オプション」</a>にある.</p>
+<table>
+<thead>
+<tr>
+<th>標準のコンパイラ (試験環境)</th>
+<th>C++ (PARCEL 本体)</th>
+<th>C言語・Fortran の main</th>
+<th>MPI のラッパ</th>
+<th>注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GCC (<a href="glossary.html#g-s86">s86</a> など多くの Linux)</td>
+<td><code><span class="tok">acpp</span></code> (LLVM 18 の clang)</td>
+<td>gcc・gfortran</td>
+<td>Open MPI の<code><span class="tok">mpicxx</span></code>・<code><span class="tok">mpicc</span></code>・<code><span class="tok">mpif90</span></code> (<code><span class="tok">OMPI_CXX=acpp</span></code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>富士通コンパイラ (<a href="glossary.html#g-odyssey">Odyssey</a>)</td>
+<td><code><span class="tok">acpp</span> <span class="tok">--acpp-targets=omp.library-only</span></code>. カーネルを含む全体を富士通 FCC (clang モード. <code><span class="tok">ACPP_CPU_CXX</span></code>で指定) がコンパイルする</td>
+<td>富士通 fcc・frt</td>
+<td><code><span class="tok">mpiFCC</span></code> (<code><span class="tok">OMPI_CXX=acpp</span></code>), <code><span class="tok">mpifcc</span></code>, <code><span class="tok">mpifrt</span></code></td>
+<td>fcc・frt には<code><span class="tok">-Kopenmp</span></code>を付ける (<a href="usage.html#usage-fortran">使用方法の「Fortran」</a>). ログインノードと計算ノードのアーキテクチャが違うので, ビルドは計算ノードで行う (<a href="sycl-compiler.html#env-odyssey">「Odyssey」</a>)</td>
+</tr>
+<tr>
+<td>Intel oneAPI (<a href="glossary.html#g-ps-a">PS-A</a>)</td>
+<td><code><span class="tok">acpp</span></code> (LLVM 18 の clang. サイトの<code><span class="tok">intel</span></code>・<code><span class="tok">intelmpi</span></code>モジュールを読んだ環境で使う)</td>
+<td>gcc・gfortran (Intel MPI の<code><span class="tok">mpicc</span></code>・<code><span class="tok">mpif90</span></code>)</td>
+<td>Intel MPI の<code><span class="tok">mpicxx</span></code> (<code><span class="tok">I_MPI_CXX=acpp</span></code>)</td>
+<td>MPI の Fortran ライブラリは<code><span class="tok">mpif90</span> <span class="tok">-show</span></code>で調べる (<a href="sycl-compiler.html#env-ps-a">「PS-A」</a>)</td>
+</tr>
+<tr>
+<td>Apple clang (<a href="sycl-compiler.html#env-mac">macOS</a>)</td>
+<td><code><span class="tok">acpp</span> <span class="tok">--acpp-targets=omp.library-only</span></code>. 全体を Apple clang がコンパイルする</td>
+<td>clang (C), gfortran (Homebrew の<code><span class="tok">gcc</span></code>)</td>
+<td>Open MPI (Homebrew) の<code><span class="tok">mpicxx</span></code>・<code><span class="tok">mpicc</span></code>・<code><span class="tok">mpif90</span></code> (<code><span class="tok">OMPI_CXX=acpp</span></code>)</td>
+<td>縮約だけのブロック化 (<code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code>) を付ける. <code><span class="tok">-march=native</span></code>は要らない (付けても速さは同じ). <code><span class="tok">mpirun</span> <span class="tok">--bind-to</span> <span class="tok">none</span></code>で起動する (<a href="installation.html#install-mac">インストールの「macOS (Homebrew)」</a>)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>omp.library-only</code>では <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は <a href="glossary.html#g-sycl">SYCL</a> のランタイムとしてだけ働き, ホストの C++ コンパイラ (富士通 FCC, Apple clang) がカーネルを含む全体をコンパイルする. 富士通 FCC (<a href="glossary.html#g-a64fx">A64FX</a>) では全カーネルのブロック化 (<code>-D_BLOCKING_LOOP_=1</code>) を, Apple clang では他の CPU と同じ縮約だけのブロック化 (<code>-D_BLOCKING_LOOP_DOT_=1</code>) を指定する. どちらもブロック化しないと内積が極端に遅い (<a href="kernel-opt.html#kopt-blocking">「最適化」の章の「ブロック化」</a>).</li>
+<li>標準の MPI のラッパが<code>acpp</code>を呼ぶようにする変数は MPI によって異なる (Open MPI と富士通 MPI は<code>OMPI_CXX</code>, Intel MPI は<code>I_MPI_CXX</code>, MPICH 系は<code>MPICH_CXX</code>).</li>
+</ul>
+<p>　以下の実行例のスレッド数は, 実行結果を得た macOS + Homebrew の計算機 (Apple M4, 10 コア) に合わせて, MPI なしは 8 スレッド, MPI ありは 4 ランク × 2 スレッドとしている. 自分の環境では, ランク数 × スレッド数がコア数を超えないように変える. 実行結果は, この 2 通りで実行したもので, 表示は両者で同じだった. 残差の値は環境と並列数によって丸めの桁が変わる (例えば <a href="glossary.html#g-s86">s86 CPU</a> の 4 ランクでは真の残差が 2.49e-14) が, 反復回数 500 と<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">x_0 = 500</annotation></semantics></math>は変わらない. 途中の反復の表示と時間の内訳は省略した.</p>
+<div class="langtabs">
+<div class="langtabbar" role="tablist"><button type="button" role="tab" data-lang="cpp" aria-selected="false">C++</button><button type="button" role="tab" data-lang="c" aria-selected="false">C言語</button><button type="button" role="tab" data-lang="f" aria-selected="false">Fortran</button><button type="button" role="tab" data-lang="py" aria-selected="false">Python</button></div>
+<section id="qs-cpp" class="langpane" data-lang="cpp" data-label="C++" data-number="1.3">
+<h2 data-number="1.3"><span class="header-section-number">1.3</span> C++</h2>
+<h3 data-number="1.3.1" id="プログラム"><span class="header-section-number">1.3.1</span> プログラム</h3>
+<p>　ソースは <code>examples/quick_start.cpp</code> である. MPI なしとありの違いは <code>#if PARCEL_MPI</code> の 4 か所だけである.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cmath&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;../Include/parcel_sycl.hpp&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  MPI_Init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="pp">#else</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>argc<span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>argv<span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 既定のデバイス (--acpp-targets で決まる)。in-order キューを使う</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   (PARCEL はカーネルを event なしで順に投入するため、in-order でないとソルバが例外を投げる)</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    sycl<span class="op">::</span>queue q<span class="op">{</span>sycl<span class="op">::</span>default_selector_v<span class="op">,</span> sycl<span class="op">::</span>property<span class="op">::</span>queue<span class="op">::</span>in_order<span class="op">{}};</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    parcel<span class="op">::</span>comm comm<span class="op">(</span>MPI_COMM_WORLD<span class="op">,</span> <span class="op">&amp;</span>q<span class="op">);</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="pp">#else</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    parcel<span class="op">::</span>comm comm<span class="op">(&amp;</span>q<span class="op">);</span>                          <span class="co">// MPI なし: rank 0, 1 プロセス</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> myrank <span class="op">=</span> comm<span class="op">.</span>mpi_rank<span class="op">(),</span> nproc <span class="op">=</span> comm<span class="op">.</span>mpi_size<span class="op">();</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 行の分割: 各ランクが連続した行を持つ (端数は最終ランク)</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> PARCEL_INT n_global <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> PARCEL_INT nstart <span class="op">=</span> <span class="op">(</span>n_global <span class="op">/</span> nproc<span class="op">)</span> <span class="op">*</span> myrank<span class="op">;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> PARCEL_INT nend   <span class="op">=</span> <span class="op">(</span>myrank <span class="op">==</span> nproc <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">?</span> n_global <span class="op">-</span> <span class="dv">1</span> <span class="op">:</span> nstart <span class="op">+</span> n_global <span class="op">/</span> nproc <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> PARCEL_INT n      <span class="op">=</span> nend <span class="op">-</span> nstart <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 担当行の CRS (行ポインタは局所 0 始まり, 列番号は大域 0 始まり)</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span>PARCEL_INT<span class="op">&gt;</span> rowptr<span class="op">(</span>n <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">),</span> col<span class="op">;</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">double</span><span class="op">&gt;</span> val<span class="op">;</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>PARCEL_INT i <span class="op">=</span> nstart<span class="op">;</span> i <span class="op">&lt;=</span> nend<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>i <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span>            <span class="op">{</span> col<span class="op">.</span>push_back<span class="op">(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">);</span> val<span class="op">.</span>push_back<span class="op">(-</span><span class="fl">1.0</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      col<span class="op">.</span>push_back<span class="op">(</span>i<span class="op">);</span>       val<span class="op">.</span>push_back<span class="op">(</span> <span class="fl">2.0</span><span class="op">);</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> n_global <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span> col<span class="op">.</span>push_back<span class="op">(</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">);</span> val<span class="op">.</span>push_back<span class="op">(-</span><span class="fl">1.0</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>      rowptr<span class="op">[</span>i <span class="op">-</span> nstart <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span>PARCEL_INT<span class="op">)</span>col<span class="op">.</span>size<span class="op">();</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    parcel<span class="op">::</span>matrix<span class="op">&lt;</span>parcel_double<span class="op">&gt;</span> A<span class="op">(&amp;</span>q<span class="op">);</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    A<span class="op">.</span>set_crsMat<span class="op">&lt;</span><span class="dt">double</span><span class="op">&gt;(&amp;</span>comm<span class="op">,</span> nstart<span class="op">,</span> nend<span class="op">,</span> n<span class="op">,</span> col<span class="op">.</span>size<span class="op">(),</span> rowptr<span class="op">.</span>data<span class="op">(),</span> col<span class="op">.</span>data<span class="op">(),</span> val<span class="op">.</span>data<span class="op">());</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">double</span><span class="op">&gt;</span> x_h<span class="op">(</span>n<span class="op">,</span> <span class="fl">0.0</span><span class="op">),</span> b_h<span class="op">(</span>n<span class="op">,</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    parcel<span class="op">::</span>vector<span class="op">&lt;</span>parcel_double<span class="op">&gt;</span> x<span class="op">(</span>n<span class="op">,</span> <span class="op">&amp;</span>q<span class="op">),</span> b<span class="op">(</span>n<span class="op">,</span> <span class="op">&amp;</span>q<span class="op">);</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    x<span class="op">.</span>setValue<span class="op">(</span>x_h<span class="op">.</span>data<span class="op">());</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    b<span class="op">.</span>setValue<span class="op">(</span>b_h<span class="op">.</span>data<span class="op">());</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 共役勾配法 (演算はすべて倍精度)</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    parcel<span class="op">::</span>krylov<span class="op">::</span>pcg<span class="op">&lt;</span>parcel_double<span class="op">,</span> parcel_double<span class="op">,</span> parcel_double<span class="op">,</span> parcel_double<span class="op">&gt;</span> cg<span class="op">;</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    cg<span class="op">.</span>set_tolerance<span class="op">(</span><span class="fl">1.0e-9</span><span class="op">);</span>                       <span class="co">// 相対残差 ||r|| / ||b||</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    cg<span class="op">.</span>set_max_iteration<span class="op">(</span><span class="dv">10000</span><span class="op">);</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    q<span class="op">.</span>wait<span class="op">();</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    cg<span class="op">.</span>solver<span class="op">&lt;</span>parcel_double<span class="op">,</span> parcel_double<span class="op">,</span> parcel_double<span class="op">,</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>              parcel_double<span class="op">,</span> parcel_double<span class="op">,</span> parcel_double<span class="op">&gt;(</span>A<span class="op">,</span> x<span class="op">,</span> b<span class="op">);</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    x<span class="op">.</span>getValue<span class="op">(</span>x_h<span class="op">.</span>data<span class="op">());</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    q<span class="op">.</span>wait<span class="op">();</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 厳密解との比較. 行列は境界の外の値を 0 とした (Dirichlet 境界) 差分 -x[i-1] + 2 x[i] - x[i+1] = 1 なので,</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   厳密解は x[i] = (i + 1) (n_global - i) / 2 (i は大域 0 始まり. x[0] = n_global / 2, 中央で最大 約 n_global^2 / 8).</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   全成分の相対誤差 |x[i] - exact| / exact の最大を各ランクの担当行で求め, ランクの最大を集める.</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    <span class="co">// しきい値 1e-6: 条件数は cot^2(pi / (2 (n_global + 1))) = 約 4.1e5 で, tolerance 1e-9 からの最悪の見積もり</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   (相対誤差 &lt;= 条件数 x 相対残差) は 4e-4. 実際はそれよりずっと小さい: b = 1 は中央に対して対称なので Krylov 部分空間は</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   500 次元で尽き, pcg は 500 反復で残差がほぼ 0 になって, 誤差は丸め誤差の程度 (s86 の CPU・GPU, 1・2 ランクで 0〜1.3e-15).</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   解き方の誤り (行列・分割・通信の誤り) は桁違いに大きい誤差になるので, 1e-6 で区別できる.</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">double</span> err_limit <span class="op">=</span> <span class="fl">1.0e-6</span><span class="op">;</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> err_local <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>PARCEL_INT k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> n<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">const</span> <span class="dt">double</span> i <span class="op">=</span> <span class="op">(</span><span class="dt">double</span><span class="op">)(</span>nstart <span class="op">+</span> k<span class="op">);</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">const</span> <span class="dt">double</span> exact <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="op">(</span>i <span class="op">+</span> <span class="fl">1.0</span><span class="op">)</span> <span class="op">*</span> <span class="op">((</span><span class="dt">double</span><span class="op">)</span>n_global <span class="op">-</span> i<span class="op">);</span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>      <span class="dt">double</span> e <span class="op">=</span> <span class="bu">std::</span>fabs<span class="op">(</span>x_h<span class="op">[</span>k<span class="op">]</span> <span class="op">-</span> exact<span class="op">)</span> <span class="op">/</span> exact<span class="op">;</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(!(</span>e <span class="op">==</span> e<span class="op">))</span> e <span class="op">=</span> HUGE_VAL<span class="op">;</span>                  <span class="co">// NaN は無限大として扱う (不合格にする)</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>      err_local <span class="op">=</span> <span class="bu">std::</span>max<span class="op">(</span>err_local<span class="op">,</span> e<span class="op">);</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> err_max <span class="op">=</span> err_local<span class="op">;</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    MPI_Allreduce<span class="op">(&amp;</span>err_local<span class="op">,</span> <span class="op">&amp;</span>err_max<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> MPI_DOUBLE<span class="op">,</span> MPI_MAX<span class="op">,</span> MPI_COMM_WORLD<span class="op">);</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">bool</span> ok <span class="op">=</span> cg<span class="op">.</span>is_converged<span class="op">()</span> <span class="op">&amp;&amp;</span> err_max <span class="op">&lt;=</span> err_limit<span class="op">;</span></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 収束状態と判定 (全ランクで同じ値)</span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>myrank <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>      <span class="bu">std::</span>printf<span class="op">(</span><span class="st">&quot;reason = </span><span class="sc">%d</span><span class="st"> (</span><span class="sc">%s</span><span class="st">), iterations = </span><span class="sc">%d</span><span class="st">, residual = </span><span class="sc">%.3e</span><span class="st">, true residual = </span><span class="sc">%.3e\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>                  <span class="op">(</span><span class="dt">int</span><span class="op">)</span>cg<span class="op">.</span>get_converged_reason<span class="op">(),</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>                  parcel<span class="op">::</span>krylov<span class="op">::</span>converged_reason_name<span class="op">(</span>cg<span class="op">.</span>get_converged_reason<span class="op">()),</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>                  <span class="op">(</span><span class="dt">int</span><span class="op">)</span>cg<span class="op">.</span>get_iterations<span class="op">(),</span> cg<span class="op">.</span>get_residual<span class="op">(),</span> cg<span class="op">.</span>get_true_residual<span class="op">());</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>      <span class="bu">std::</span>printf<span class="op">(</span><span class="st">&quot;x[0] = </span><span class="sc">%.6f</span><span class="st"> (exact </span><span class="sc">%.6f</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> x_h<span class="op">[</span><span class="dv">0</span><span class="op">],</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fl">1.0</span> <span class="op">*</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>n_global<span class="op">);</span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>      <span class="bu">std::</span>printf<span class="op">(</span><span class="st">&quot;check: max relative error = </span><span class="sc">%.3e</span><span class="st"> (limit </span><span class="sc">%.1e</span><span class="st">) </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> err_max<span class="op">,</span> err_limit<span class="op">,</span> ok <span class="op">?</span> <span class="st">&quot;PASS&quot;</span> <span class="op">:</span> <span class="st">&quot;FAIL&quot;</span><span class="op">);</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>      <span class="bu">std::</span>fflush<span class="op">(</span>stdout<span class="op">);</span>                          <span class="co">// MPI_Abort の前に出力を出し切る</span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>ok<span class="op">)</span> <span class="op">{</span> MPI_Abort<span class="op">(</span>MPI_COMM_WORLD<span class="op">,</span> <span class="dv">1</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>  MPI_Finalize<span class="op">();</span></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="pp">#else</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>ok<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>　<a href="glossary.html#g-sycl">SYCL</a> キューは必ず <a href="glossary.html#g-inorder">in-order</a> キュー (<code>sycl::property::queue::in_order{}</code> を付けて作る) とする. PARCEL はカーネルを <code>sycl::event</code> による依存関係を付けずに 1 本のキューへ順に投入し, 前のカーネルが書いたベクトルを次のカーネルが読むので, 投入順に実行されることを前提にしている. in-order でないキューを渡すと <code>set_crsMat()</code> と各ソルバの <code>solver()</code> が <code>std::invalid_argument</code> を投げる.</p>
+<p>　精度のテンプレート引数は省略でき, 省略した精度は倍精度 (<code>parcel_double</code>) になる. 上のプログラムの行列・ベクトル・ソルバは<code>parcel::matrix&lt;&gt; A(&amp;q);</code>, <code>parcel::vector&lt;&gt; x(n, &amp;q);</code>, <code>parcel::krylov::pcg&lt;&gt; cg;</code>, <code>cg.solver(A, x, b);</code>と書いても同じである (<a href="concepts.html#precision-configs">「精度構成」</a>). 収束判定値と最大反復回数を設定しない場合の既定はそれぞれ 1.0e-8 と 10000 である.</p>
+<h3 data-number="1.3.2" id="ビルドと実行-mpi-なし"><span class="header-section-number">1.3.2</span> ビルドと実行 (MPI なし)</h3>
+<p>　<code>-DPARCEL_MPI=0</code> を付けて SYCL 対応コンパイラ (<code>acpp</code>) で直接コンパイルし, <code>mpirun</code> を使わずに実行する.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">-o</span> quick_start examples/quick_start.cpp <span class="at">-lopenblas</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>8 <span class="ex">./quick_start</span></span></code></pre></div>
+<h3 data-number="1.3.3" id="ビルドと実行-mpi-あり"><span class="header-section-number">1.3.3</span> ビルドと実行 (MPI あり)</h3>
+<p>　MPI のラッパ (<code>mpicxx</code>) の中で <code>acpp</code> を呼ぶよう <code>OMPI_CXX=acpp</code> (Open MPI の場合) を設定してコンパイルし, <code>mpirun</code> で起動する. <code>PARCEL_MPI</code> の既定は 1 なので指定は要らない.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">-o</span> quick_start examples/quick_start.cpp <span class="at">-lopenblas</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>2 <span class="ex">mpirun</span> <span class="at">-n</span> 4 ./quick_start</span></code></pre></div>
+<p>　<a href="glossary.html#g-openmp">OpenMP</a> バックエンドでは環境変数<code>OMP_PROC_BIND</code>を設定しない. 設定すると全スレッドが 1 コアに集まり, 大幅に遅くなる環境がある (<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>).</p>
+<h3 data-number="1.3.4" id="実行結果"><span class="header-section-number">1.3.4</span> 実行結果</h3>
+<p>　最初の行はライブラリが表示する収束状態, 残りの 3 行はプログラムが表示したものである.</p>
+<pre><code> converged_reason = 1 (CONVERGED_RTOL) , its = 500 , residual = 1.161602e-15 , true_residual = 1.183245e-13
+reason = 1 (CONVERGED_RTOL), iterations = 500, residual = 1.162e-15, true residual = 1.183e-13
+x[0] = 500.000000 (exact 500.000000)
+check: max relative error = 1.252e-15 (limit 1.0e-06) PASS</code></pre>
+</section>
+<section id="qs-c" class="langpane" data-lang="c" data-label="C言語" data-number="1.4">
+<h2 data-number="1.4"><span class="header-section-number">1.4</span> C言語</h2>
+<h3 data-number="1.4.1" id="プログラム-1"><span class="header-section-number">1.4.1</span> プログラム</h3>
+<p>　C言語からは <code>capi/parcel_sycl_c.h</code> をインクルードし, <code>parcel_solve_linear()</code> を呼ぶ. 設定は構造体 <code>parcel_options</code> に入れ (<code>parcel_options_init()</code> で既定値を入れてから必要な項目だけ変える), 収束状態は <code>parcel_result</code> で受け取る. 行番号などの整数は 64 ビットの <code>parcel_int</code> である. MPI なしでは, コミュニケータの引数 (<code>PARCEL_C_COMM</code>) は <code>int</code> になり, 値は使われない. ソースは <code>examples/quick_start_c.c</code> である.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;parcel_sycl_c.h&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  MPI_Init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> myrank<span class="op">,</span> nproc<span class="op">;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  MPI_Comm_rank<span class="op">(</span>MPI_COMM_WORLD<span class="op">,</span> <span class="op">&amp;</span>myrank<span class="op">);</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  MPI_Comm_size<span class="op">(</span>MPI_COMM_WORLD<span class="op">,</span> <span class="op">&amp;</span>nproc<span class="op">);</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  PARCEL_C_COMM comm <span class="op">=</span> MPI_COMM_WORLD<span class="op">;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="pp">#else</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> myrank <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> nproc <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  PARCEL_C_COMM comm <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>                 <span class="co">/* MPI なしでは使われない */</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* 行の分割: 各ランクが連続した行を持つ (端数は最終ランク) */</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> parcel_int n_global <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> parcel_int nstart <span class="op">=</span> <span class="op">(</span>n_global <span class="op">/</span> nproc<span class="op">)</span> <span class="op">*</span> myrank<span class="op">;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> parcel_int nend   <span class="op">=</span> <span class="op">(</span>myrank <span class="op">==</span> nproc <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">?</span> n_global <span class="op">-</span> <span class="dv">1</span> <span class="op">:</span> nstart <span class="op">+</span> n_global <span class="op">/</span> nproc <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> parcel_int n      <span class="op">=</span> nend <span class="op">-</span> nstart <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* 担当行の CRS (行ポインタは局所 0 始まり, 列番号は大域 0 始まり) */</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  parcel_int <span class="op">*</span>rowptr <span class="op">=</span> malloc<span class="op">((</span>n <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span>parcel_int<span class="op">));</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  parcel_int <span class="op">*</span>col    <span class="op">=</span> malloc<span class="op">(</span><span class="dv">3</span> <span class="op">*</span> n <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span>parcel_int<span class="op">));</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> <span class="op">*</span>val <span class="op">=</span> malloc<span class="op">(</span><span class="dv">3</span> <span class="op">*</span> n <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">double</span><span class="op">));</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> <span class="op">*</span>b   <span class="op">=</span> malloc<span class="op">(</span>n <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">double</span><span class="op">));</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> <span class="op">*</span>x   <span class="op">=</span> calloc<span class="op">(</span>n<span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">double</span><span class="op">));</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  parcel_int nnz <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  rowptr<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>parcel_int i <span class="op">=</span> nstart<span class="op">;</span> i <span class="op">&lt;=</span> nend<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span>            <span class="op">{</span> col<span class="op">[</span>nnz<span class="op">]</span> <span class="op">=</span> i <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> val<span class="op">[</span>nnz<span class="op">++]</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1.0</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    col<span class="op">[</span>nnz<span class="op">]</span> <span class="op">=</span> i<span class="op">;</span>           val<span class="op">[</span>nnz<span class="op">++]</span> <span class="op">=</span>  <span class="fl">2.0</span><span class="op">;</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> n_global <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span> col<span class="op">[</span>nnz<span class="op">]</span> <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> val<span class="op">[</span>nnz<span class="op">++]</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1.0</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    rowptr<span class="op">[</span>i <span class="op">-</span> nstart <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">=</span> nnz<span class="op">;</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    b<span class="op">[</span>i <span class="op">-</span> nstart<span class="op">]</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* 共役勾配法 (前処理なし, 倍精度) */</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  parcel_options opt<span class="op">;</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  parcel_options_init<span class="op">(&amp;</span>opt<span class="op">);</span>              <span class="co">/* 既定値を入れてから必要な項目だけ変える */</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  opt<span class="op">.</span>tolerance     <span class="op">=</span> <span class="fl">1.0e-9</span><span class="op">;</span>             <span class="co">/* 相対残差 ||r|| / ||b|| */</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  opt<span class="op">.</span>max_iteration <span class="op">=</span> <span class="dv">10000</span><span class="op">;</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  parcel_result res<span class="op">;</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> rc <span class="op">=</span> parcel_solve_linear<span class="op">(</span>PARCEL_SOLVER_PCG<span class="op">,</span> <span class="op">&amp;</span>opt<span class="op">,</span> comm<span class="op">,</span> n<span class="op">,</span> nstart<span class="op">,</span> n_global<span class="op">,</span> nnz<span class="op">,</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>                               rowptr<span class="op">,</span> col<span class="op">,</span> val<span class="op">,</span> b<span class="op">,</span> x<span class="op">,</span> <span class="op">&amp;</span>res<span class="op">);</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* 厳密解との比較. 行列は境界の外の値を 0 とした (Dirichlet 境界) 差分 -x[i-1] + 2 x[i] - x[i+1] = 1 なので,</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co">   *   厳密解は x[i] = (i + 1) (n_global - i) / 2 (i は大域 0 始まり). 全成分の相対誤差の最大を各ランクの担当行で求め,</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co">   *   ランクの最大を集める. しきい値 1e-6 の根拠は quick_start.cpp を参照 (条件数 約 4.1e5, tolerance 1e-9). */</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> <span class="dt">double</span> err_limit <span class="op">=</span> <span class="fl">1.0e-6</span><span class="op">;</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> err_local <span class="op">=</span> <span class="fl">0.0</span><span class="op">,</span> err_max<span class="op">;</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>parcel_int k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> n<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">double</span> i <span class="op">=</span> <span class="op">(</span><span class="dt">double</span><span class="op">)(</span>nstart <span class="op">+</span> k<span class="op">);</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">double</span> exact <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="op">(</span>i <span class="op">+</span> <span class="fl">1.0</span><span class="op">)</span> <span class="op">*</span> <span class="op">((</span><span class="dt">double</span><span class="op">)</span>n_global <span class="op">-</span> i<span class="op">);</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> e <span class="op">=</span> fabs<span class="op">(</span>x<span class="op">[</span>k<span class="op">]</span> <span class="op">-</span> exact<span class="op">)</span> <span class="op">/</span> exact<span class="op">;</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!(</span>e <span class="op">==</span> e<span class="op">))</span> e <span class="op">=</span> HUGE_VAL<span class="op">;</span>          <span class="co">/* NaN は無限大として扱う (不合格にする) */</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>e <span class="op">&gt;</span> err_local<span class="op">)</span> err_local <span class="op">=</span> e<span class="op">;</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  err_max <span class="op">=</span> err_local<span class="op">;</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>  MPI_Allreduce<span class="op">(&amp;</span>err_local<span class="op">,</span> <span class="op">&amp;</span>err_max<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> MPI_DOUBLE<span class="op">,</span> MPI_MAX<span class="op">,</span> MPI_COMM_WORLD<span class="op">);</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> <span class="dt">int</span> ok <span class="op">=</span> <span class="op">(</span>rc <span class="op">==</span> PARCEL_OK <span class="op">&amp;&amp;</span> res<span class="op">.</span>converged_reason <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> err_max <span class="op">&lt;=</span> err_limit<span class="op">);</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>myrank <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;rc = </span><span class="sc">%d</span><span class="st">, reason = </span><span class="sc">%d</span><span class="st">, iterations = </span><span class="sc">%d</span><span class="st">, residual = </span><span class="sc">%.3e</span><span class="st">, true residual = </span><span class="sc">%.3e\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>           rc<span class="op">,</span> res<span class="op">.</span>converged_reason<span class="op">,</span> res<span class="op">.</span>iterations<span class="op">,</span> res<span class="op">.</span>residual<span class="op">,</span> res<span class="op">.</span>true_residual<span class="op">);</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x[0] = </span><span class="sc">%.6f</span><span class="st"> (exact </span><span class="sc">%.6f</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">[</span><span class="dv">0</span><span class="op">],</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>n_global<span class="op">);</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;check: max relative error = </span><span class="sc">%.3e</span><span class="st"> (limit </span><span class="sc">%.1e</span><span class="st">) </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> err_max<span class="op">,</span> err_limit<span class="op">,</span> ok <span class="op">?</span> <span class="st">&quot;PASS&quot;</span> <span class="op">:</span> <span class="st">&quot;FAIL&quot;</span><span class="op">);</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  free<span class="op">(</span>rowptr<span class="op">);</span> free<span class="op">(</span>col<span class="op">);</span> free<span class="op">(</span>val<span class="op">);</span> free<span class="op">(</span>b<span class="op">);</span> free<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="pp">#if PARCEL_MPI</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  MPI_Finalize<span class="op">();</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> ok <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="1.4.2" id="ビルドと実行-mpi-なし-1"><span class="header-section-number">1.4.2</span> ビルドと実行 (MPI なし)</h3>
+<p>　C言語の API の実装 (ラッパ <code>capi/wrapper_parcel_sycl.cpp</code>) を SYCL 対応コンパイラでコンパイルし, C の main と SYCL 対応コンパイラでリンクする. ラッパと main の両方に <code>-DPARCEL_MPI=0</code> を付ける (食い違うとコミュニケータの引数の型が合わない). acpp (clang) は <a href="glossary.html#g-pie">PIE</a> としてリンクするので, gcc で作るオブジェクトには <code>-fPIE</code> を付ける.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span>  <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="at">-Icapi</span> <span class="at">-c</span> examples/quick_start_c.c <span class="at">-o</span> quick_start_c.o</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> quick_start_c quick_start_c.o wrapper_parcel_sycl.o <span class="at">-lopenblas</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>8 <span class="ex">./quick_start_c</span></span></code></pre></div>
+<h3 data-number="1.4.3" id="ビルドと実行-mpi-あり-1"><span class="header-section-number">1.4.3</span> ビルドと実行 (MPI あり)</h3>
+<p>　ラッパを <code>mpicxx</code> (中身は <code>acpp</code>) で, main を <code>mpicc</code> でコンパイルし, <code>mpicxx</code> でリンクする.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span>  <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-Icapi</span> <span class="at">-c</span> examples/quick_start_c.c <span class="at">-o</span> quick_start_c.o</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> quick_start_c quick_start_c.o wrapper_parcel_sycl.o <span class="at">-lopenblas</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>2 <span class="ex">mpirun</span> <span class="at">-n</span> 4 ./quick_start_c</span></code></pre></div>
+<p>　<a href="glossary.html#g-openmp">OpenMP</a> バックエンドでは環境変数<code>OMP_PROC_BIND</code>を設定しない. 設定すると全スレッドが 1 コアに集まり, 大幅に遅くなる環境がある (<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>).</p>
+<h3 data-number="1.4.4" id="実行結果-1"><span class="header-section-number">1.4.4</span> 実行結果</h3>
+<p>　最初の行はライブラリが表示する収束状態, 残りの 3 行はプログラムが表示したものである.</p>
+<pre><code> converged_reason = 1 (CONVERGED_RTOL) , its = 500 , residual = 1.161602e-15 , true_residual = 1.183245e-13
+rc = 0, reason = 1, iterations = 500, residual = 1.162e-15, true residual = 1.183e-13
+x[0] = 500.000000 (exact 500.000000)
+check: max relative error = 1.252e-15 (limit 1.0e-06) PASS</code></pre>
+</section>
+<section id="qs-fortran" class="langpane" data-lang="f" data-label="Fortran" data-number="1.5">
+<h2 data-number="1.5"><span class="header-section-number">1.5</span> Fortran</h2>
+<h3 data-number="1.5.1" id="プログラム-2"><span class="header-section-number">1.5.1</span> プログラム</h3>
+<p>　Fortran からはモジュール <code>parcel_sycl_mod</code> (<code>capi/parcel_sycl_mod.f90</code>) を <code>use</code> し, <code>parcel_solve_linear()</code> を呼ぶ. 設定は派生型 <code>parcel_options</code> に入れ (<code>parcel_options_init</code> で既定値を入れてから必要な項目だけ変える), 収束状態は <code>parcel_result</code> で受け取る. この例では <code>index_base = 1</code> として, 行ポインタ・列番号・担当行の先頭 (<code>nstart</code>) を Fortran の習慣どおり 1 始まりで渡す. 整数は <code>integer(parcel_int_kind)</code> (64 ビット) である. MPI なしでは, <code>use mpi</code> を 1 プロセス用の代用モジュール (<code>examples/sample_f_mpi_stub.f90</code>) で満たすので, プログラムは変えなくてよい. ソースは <code>examples/quick_start_f.f90</code> である.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">program</span> quick_start_f</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">use</span> mpi</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">use</span> iso_c_binding</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">use</span> parcel_sycl_mod</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">implicit</span> <span class="kw">none</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">integer(parcel_int_kind)</span>, <span class="dt">parameter</span> <span class="dt">::</span> n_global <span class="kw">=</span> <span class="dv">1000</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">integer(parcel_int_kind)</span> <span class="dt">::</span> nstart, nend, n, nnz, i</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">integer(parcel_int_kind)</span>, <span class="dt">allocatable</span> <span class="dt">::</span> rowptr(:), col(:)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real(c_double)</span>, <span class="dt">allocatable</span> <span class="dt">::</span> val(:), b(:), x(:)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type(parcel_options)</span> <span class="dt">::</span> opt</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type(parcel_result)</span>  <span class="dt">::</span> res</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">integer</span> <span class="dt">::</span> myrank, nproc, ierr, rc</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">! 厳密解との比較のしきい値. 根拠は quick_start.cpp を参照 (条件数 約 4.1e5, tolerance 1e-9)</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real(c_double)</span>, <span class="dt">parameter</span> <span class="dt">::</span> err_limit <span class="kw">=</span> <span class="fl">1.0d-6</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real(c_double)</span> <span class="dt">::</span> xi, exact, e, err_local, err_max</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">logical</span> <span class="dt">::</span> ok</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">call</span> MPI_Init(ierr)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">call</span> MPI_Comm_rank(MPI_COMM_WORLD, myrank, ierr)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">call</span> MPI_Comm_size(MPI_COMM_WORLD, nproc, ierr)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">! 行の分割: 各ランクが連続した行を持つ (端数は最終ランク). 番号は 0 始まりで計算する</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  nstart <span class="kw">=</span> (n_global <span class="kw">/</span> nproc) <span class="kw">*</span> myrank</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if</span> (myrank <span class="op">==</span> nproc <span class="kw">-</span> <span class="dv">1</span>) <span class="kw">then</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="bu">     n</span><span class="kw">end</span> <span class="kw">=</span> n_global <span class="kw">-</span> <span class="dv">1</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">else</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="bu">     n</span><span class="kw">end</span> <span class="kw">=</span> nstart <span class="kw">+</span> n_global <span class="kw">/</span> nproc <span class="kw">-</span> <span class="dv">1</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end if</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  n <span class="kw">=</span> nend <span class="kw">-</span> nstart <span class="kw">+</span> <span class="dv">1</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">! 担当行の CRS (index_base = 1: 行ポインタ・列番号・nstart を 1 始まりで渡す)</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  <span class="kw">allocate</span>(rowptr(n <span class="kw">+</span> <span class="dv">1</span>), col(<span class="dv">3</span> <span class="kw">*</span> n), val(<span class="dv">3</span> <span class="kw">*</span> n), b(n), x(n))</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  nnz <span class="kw">=</span> <span class="dv">0</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>  rowptr(<span class="dv">1</span>) <span class="kw">=</span> <span class="dv">1</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>  <span class="kw">do</span> i <span class="kw">=</span> nstart, nend</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>f (i <span class="op">&gt;</span> <span class="dv">0</span>) <span class="kw">then</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>        nnz <span class="kw">=</span> nnz <span class="kw">+</span> <span class="dv">1</span>; col(nnz) <span class="kw">=</span> i;     val(nnz) <span class="kw">=</span> <span class="kw">-</span><span class="fl">1.0d0</span>     <span class="co">! 列 i-1 (0 始まり) = i (1 始まり)</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span>nd <span class="kw">if</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="bu">     n</span>nz <span class="kw">=</span> nnz <span class="kw">+</span> <span class="dv">1</span>;    col(nnz) <span class="kw">=</span> i <span class="kw">+</span> <span class="dv">1</span>; val(nnz) <span class="kw">=</span>  <span class="fl">2.0d0</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>f (i <span class="op">&lt;</span> n_global <span class="kw">-</span> <span class="dv">1</span>) <span class="kw">then</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>        nnz <span class="kw">=</span> nnz <span class="kw">+</span> <span class="dv">1</span>; col(nnz) <span class="kw">=</span> i <span class="kw">+</span> <span class="dv">2</span>; val(nnz) <span class="kw">=</span> <span class="kw">-</span><span class="fl">1.0d0</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span>nd <span class="kw">if</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="bu">     r</span>owptr(i <span class="kw">-</span> nstart <span class="kw">+</span> <span class="dv">2</span>) <span class="kw">=</span> nnz <span class="kw">+</span> <span class="dv">1</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end do</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>  b <span class="kw">=</span> <span class="fl">1.0d0</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>  x <span class="kw">=</span> <span class="fl">0.0d0</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  <span class="co">! 共役勾配法 (前処理なし, 倍精度)</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>  <span class="kw">call</span> parcel_options_init(opt)</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>  opt<span class="op">%</span>index_base    <span class="kw">=</span> <span class="dv">1</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>  opt<span class="op">%</span>tolerance     <span class="kw">=</span> <span class="fl">1.0d-9</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  opt<span class="op">%</span>max_iteration <span class="kw">=</span> <span class="dv">10000</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  rc <span class="kw">=</span> parcel_solve_linear(PARCEL_SOLVER_PCG, opt, MPI_COMM_WORLD, n, nstart <span class="kw">+</span> <span class="dv">1</span>, n_global, nnz, <span class="kw">&amp;</span></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>       rowptr, col, val, b, x, res)</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>  <span class="co">! 厳密解との比較. 行列は境界の外の値を 0 とした (Dirichlet 境界) 差分 -x(i-1) + 2 x(i) - x(i+1) = 1 なので,</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>  <span class="co">!   厳密解は 0 始まりの大域番号 i で x = (i + 1) (n_global - i) / 2. 全成分の相対誤差の最大を各ランクの担当行で求め,</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>  <span class="co">!   ランクの最大を集める</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>  err_local <span class="kw">=</span> <span class="fl">0.0d0</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>  <span class="kw">do</span> i <span class="kw">=</span> nstart, nend</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="bu">     x</span>i <span class="kw">=</span> <span class="bu">dble</span>(i)</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span>xact <span class="kw">=</span> <span class="fl">0.5d0</span> <span class="kw">*</span> (xi <span class="kw">+</span> <span class="fl">1.0d0</span>) <span class="kw">*</span> (<span class="bu">dble</span>(n_global) <span class="kw">-</span> xi)</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span> <span class="kw">=</span> <span class="bu">abs</span>(x(i <span class="kw">-</span> nstart <span class="kw">+</span> <span class="dv">1</span>) <span class="kw">-</span> exact) <span class="kw">/</span> exact</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>f (e <span class="op">/=</span> e) e <span class="kw">=</span> <span class="fu">huge</span>(e)                <span class="co">! NaN は最大の値として扱う (不合格にする)</span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span>rr_local <span class="kw">=</span> <span class="bu">max</span>(err_local, e)</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end do</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>  <span class="kw">call</span> MPI_Allreduce(err_local, err_max, <span class="dv">1</span>, MPI_DOUBLE_PRECISION, MPI_MAX, MPI_COMM_WORLD, ierr)</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>  ok <span class="kw">=</span> rc <span class="op">==</span> PARCEL_OK <span class="op">.and.</span> res<span class="op">%</span>converged_reason <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">.and.</span> err_max <span class="op">&lt;=</span> err_limit</span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if</span> (myrank <span class="op">==</span> <span class="dv">0</span>) <span class="kw">then</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a><span class="bu">     w</span>rite(<span class="kw">*</span>, <span class="st">&#39;(a,i0,a,i0,a,i0,a,es10.3,a,es10.3)&#39;</span>) <span class="st">&#39;rc = &#39;</span>, rc, <span class="st">&#39;, reason = &#39;</span>, res<span class="op">%</span>converged_reason, <span class="kw">&amp;</span></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;, iterations = &#39;</span>, res<span class="op">%</span>iterations, <span class="st">&#39;, residual = &#39;</span>, res<span class="op">%</span>residual, <span class="st">&#39;, true residual = &#39;</span>, res<span class="op">%</span>true_residual</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a><span class="bu">     w</span>rite(<span class="kw">*</span>, <span class="st">&#39;(a,f12.6,a,f12.6,a)&#39;</span>) <span class="st">&#39;x(1) = &#39;</span>, x(<span class="dv">1</span>), <span class="st">&#39; (exact &#39;</span>, <span class="fl">0.5d0</span> <span class="co">* dble(n_global), &#39;)&#39;</span></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>f (ok) <span class="kw">then</span></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>        <span class="fu">write(*</span>, <span class="st">&#39;(a,es9.3,a,es7.1,a)&#39;</span><span class="fu">)</span> <span class="st">&#39;check: max relative error = &#39;</span>, <span class="co">err_max, &#39; (limit &#39;, err_limit, &#39;) PASS&#39;</span></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span>lse</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>        <span class="fu">write(*</span>, <span class="st">&#39;(a,es9.3,a,es7.1,a)&#39;</span><span class="fu">)</span> <span class="st">&#39;check: max relative error = &#39;</span>, <span class="co">err_max, &#39; (limit &#39;, err_limit, &#39;) FAIL&#39;</span></span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a><span class="bu">     e</span>nd <span class="kw">if</span></span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end if</span></span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>  <span class="kw">call</span> MPI_Finalize(ierr)</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if</span> (<span class="op">.not.</span> ok) <span class="kw">stop</span> <span class="dv">1</span></span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a><span class="kw">end program</span> quick_start_f</span></code></pre></div>
+<h3 data-number="1.5.2" id="ビルドと実行-mpi-なし-2"><span class="header-section-number">1.5.2</span> ビルドと実行 (MPI なし)</h3>
+<p>　Fortran の API の実装 (ラッパ <code>capi/wrapper_parcel_sycl.cpp</code>. C++ で書かれている) を <code>-DPARCEL_MPI=0</code> を付けて SYCL 対応コンパイラでコンパイルし, 代用の <code>mpi</code> モジュール, PARCEL のモジュール, main の順に gfortran でコンパイルして, SYCL 対応コンパイラでリンクする. acpp (clang) は <a href="glossary.html#g-pie">PIE</a> としてリンクするので, gfortran で作るオブジェクトには <code>-fPIE</code> を付ける. リンク時には Fortran の実行時ライブラリ (<code>-lgfortran</code>) を加える.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">gfortran</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> examples/sample_f_mpi_stub.f90 <span class="at">-o</span> sample_f_mpi_stub.o</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">gfortran</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> capi/parcel_sycl_mod.f90 <span class="at">-o</span> parcel_sycl_mod.o</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">gfortran</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> examples/quick_start_f.f90 <span class="at">-o</span> quick_start_f.o</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> quick_start_f quick_start_f.o parcel_sycl_mod.o sample_f_mpi_stub.o <span class="dt">\</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>     wrapper_parcel_sycl.o <span class="at">-L</span><span class="va">$(</span><span class="fu">dirname</span> <span class="va">$(</span><span class="ex">gfortran</span> <span class="at">-print-file-name</span><span class="op">=</span>libgfortran.so<span class="va">))</span> <span class="at">-lgfortran</span> <span class="at">-lopenblas</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>8 <span class="ex">./quick_start_f</span></span></code></pre></div>
+<h3 data-number="1.5.3" id="ビルドと実行-mpi-あり-2"><span class="header-section-number">1.5.3</span> ビルドと実行 (MPI あり)</h3>
+<p>　モジュールと main を <code>mpif90</code> でコンパイルし, <code>mpicxx</code> でリンクする. リンク時には MPI の Fortran ライブラリと Fortran の実行時ライブラリを加える (<code>--showme:link</code> は Open MPI の機能). 富士通 Fortran (frt, <code>mpifrt</code>) では <code>-Kopenmp</code> を付ける (<a href="usage.html#usage-fortran">使用方法の Fortran</a>). MPI なしの手順を同じディレクトリで行った後は, 代用モジュールが作った<code>mpi.mod</code>を先に消す. 残っていると<code>use mpi</code>が MPI の本物のモジュールでなくこれを読み, リンクで<code>__mpi_MOD_mpi_init</code>などが見つからなくなる.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> mpi.mod                     <span class="co"># MPI なしの手順で作った代用モジュール</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> capi/parcel_sycl_mod.f90 <span class="at">-o</span> parcel_sycl_mod.o</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> examples/quick_start_f.f90 <span class="at">-o</span> quick_start_f.o</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> quick_start_f quick_start_f.o parcel_sycl_mod.o wrapper_parcel_sycl.o <span class="dt">\</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>       <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">--showme:link</span><span class="va">)</span> <span class="at">-L</span><span class="va">$(</span><span class="fu">dirname</span> <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">-print-file-name</span><span class="op">=</span>libgfortran.so<span class="va">))</span> <span class="at">-lgfortran</span> <span class="at">-lopenblas</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>2 <span class="ex">mpirun</span> <span class="at">-n</span> 4 ./quick_start_f</span></code></pre></div>
+<p>　<a href="glossary.html#g-openmp">OpenMP</a> バックエンドでは環境変数<code>OMP_PROC_BIND</code>を設定しない. 設定すると全スレッドが 1 コアに集まり, 大幅に遅くなる環境がある (<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>).</p>
+<h3 data-number="1.5.4" id="実行結果-2"><span class="header-section-number">1.5.4</span> 実行結果</h3>
+<p>　最初の行はライブラリが表示する収束状態, 残りの 3 行はプログラムが表示したものである.</p>
+<pre><code> converged_reason = 1 (CONVERGED_RTOL) , its = 500 , residual = 1.161602e-15 , true_residual = 1.183245e-13
+rc = 0, reason = 1, iterations = 500, residual =  1.162E-15, true residual =  1.183E-13
+x(1) =   500.000000 (exact   500.000000)
+check: max relative error = 1.252E-15 (limit 1.0E-06) PASS</code></pre>
+</section>
+<section id="qs-python" class="langpane" data-lang="py" data-label="Python" data-number="1.6">
+<h2 data-number="1.6"><span class="header-section-number">1.6</span> Python</h2>
+<h3 data-number="1.6.1" id="プログラム-3"><span class="header-section-number">1.6.1</span> プログラム</h3>
+<p>　Python からはパッケージ <code>parcel</code> を <code>import</code> する. 行列は SciPy の CSR 行列から <code>parcel.DistributedCSR</code> で作り, <code>parcel.solve()</code> で解く. 同じスクリプトが MPI なしの版とありの版の両方で動く (MPI ありでは <code>from_global()</code> が各ランクの担当行を切り出す). 精度は倍精度だけである. ソースは <code>examples/quick_start.py</code> である.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.sparse <span class="im">as</span> sp</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> parcel</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>n_global <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> sp.diags([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], shape<span class="op">=</span>(n_global, n_global), <span class="bu">format</span><span class="op">=</span><span class="st">&quot;csr&quot;</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR.from_global(G)          <span class="co"># このランクの担当行を切り出す (MPI なしでは全行)</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.ones(A.n_local)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b, method<span class="op">=</span><span class="st">&quot;pcg&quot;</span>, tol<span class="op">=</span><span class="fl">1e-9</span>, maxiter<span class="op">=</span><span class="dv">10000</span>)   <span class="co"># 前処理なし, 倍精度</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 厳密解との比較. 行列は境界の外の値を 0 とした (Dirichlet 境界) 差分 -x[i-1] + 2 x[i] - x[i+1] = 1 なので,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   厳密解は x[i] = (i + 1) (n_global - i) / 2 (i は大域 0 始まり). 全成分の相対誤差の最大を各ランクの担当行で求め,</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   ランクの最大を集める. しきい値 1e-6 の根拠は quick_start.cpp を参照 (条件数 約 4.1e5, tolerance 1e-9)</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>err_limit <span class="op">=</span> <span class="fl">1.0e-6</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> np.arange(A.row_start, A.row_start <span class="op">+</span> A.n_local, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>exact <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (i <span class="op">+</span> <span class="fl">1.0</span>) <span class="op">*</span> (n_global <span class="op">-</span> i)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>rel <span class="op">=</span> np.<span class="bu">abs</span>(x <span class="op">-</span> exact) <span class="op">/</span> exact</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>rel[<span class="op">~</span>np.isfinite(rel)] <span class="op">=</span> np.inf                   <span class="co"># NaN は無限大として扱う (不合格にする)</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>err_max <span class="op">=</span> A.comm.allreduce(<span class="bu">float</span>(rel.<span class="bu">max</span>()), op<span class="op">=</span><span class="st">&quot;max&quot;</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>ok <span class="op">=</span> info.converged <span class="kw">and</span> err_max <span class="op">&lt;=</span> err_limit</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> A.comm.rank <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;reason = </span><span class="sc">{</span>info<span class="sc">.</span>reason<span class="sc">}</span><span class="ss">, iterations = </span><span class="sc">{</span>info<span class="sc">.</span>iterations<span class="sc">}</span><span class="ss">, &quot;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f&quot;residual = </span><span class="sc">{</span>info<span class="sc">.</span>residual<span class="sc">:.3e}</span><span class="ss">, true residual = </span><span class="sc">{</span>info<span class="sc">.</span>true_residual<span class="sc">:.3e}</span><span class="ss">&quot;</span>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;x[0] = </span><span class="sc">{</span>x[<span class="dv">0</span>]<span class="sc">:.6f}</span><span class="ss"> (exact </span><span class="sc">{</span><span class="fl">0.5</span> <span class="op">*</span> n_global<span class="sc">:.6f}</span><span class="ss">)&quot;</span>)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;check: max relative error = </span><span class="sc">{</span>err_max<span class="sc">:.3e}</span><span class="ss"> (limit </span><span class="sc">{</span>err_limit<span class="sc">:.1e}</span><span class="ss">) </span><span class="sc">{</span><span class="st">&#39;PASS&#39;</span> <span class="cf">if</span> ok <span class="cf">else</span> <span class="st">&#39;FAIL&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">SystemExit</span>(<span class="dv">1</span>)</span></code></pre></div>
+<h3 data-number="1.6.2" id="インストールと実行-mpi-なし"><span class="header-section-number">1.6.2</span> インストールと実行 (MPI なし)</h3>
+<p>　パッケージは環境ごとにネイティブ層をソースからビルドして入れる. 既定は MPI なしの版である. <a href="glossary.html#g-spack">spack</a> で入れた場合 (<a href="quickstart.html#qs-compiler">前節</a>) は <code>spack load py-parcel-sycl~mpi...</code> で使える. pip で入れる場合は <code>python/</code> で次のようにする (詳しくは<a href="installation.html#install-python">インストールの「Python のパッケージ」</a>).</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv <span class="va">$HOME</span>/venv_parcel <span class="kw">&amp;&amp;</span> <span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install <span class="at">-U</span> pip</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install scipy                       <span class="co"># 例のスクリプトが使う (parcel 自体は NumPy だけで動く)</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> python <span class="kw">&amp;&amp;</span> <span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install . <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ..     <span class="co"># CPU (omp) の既定の設定</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>8 <span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> examples/quick_start.py</span></code></pre></div>
+<h3 data-number="1.6.3" id="インストールと実行-mpi-あり"><span class="header-section-number">1.6.3</span> インストールと実行 (MPI あり)</h3>
+<p>　ビルドの設定 <code>PARCEL_MPI=1</code> を与えて入れ, <code>mpirun</code> で起動する. 全ランクが同じスクリプトを実行する.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv <span class="va">$HOME</span>/venv_parcel_mpi <span class="kw">&amp;&amp;</span> <span class="va">$HOME</span><span class="ex">/venv_parcel_mpi/bin/python</span> <span class="at">-m</span> pip install <span class="at">-U</span> pip scipy</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> python <span class="kw">&amp;&amp;</span> <span class="va">$HOME</span><span class="ex">/venv_parcel_mpi/bin/python</span> <span class="at">-m</span> pip install . <span class="at">-C</span> cmake.define.PARCEL_MPI=1 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ..</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>2 <span class="ex">mpirun</span> <span class="at">-n</span> 4 <span class="va">$HOME</span>/venv_parcel_mpi/bin/python examples/quick_start.py</span></code></pre></div>
+<p>　<a href="glossary.html#g-openmp">OpenMP</a> バックエンドでは環境変数<code>OMP_PROC_BIND</code>を設定しない. 設定すると全スレッドが 1 コアに集まり, 大幅に遅くなる環境がある (<a href="sycl-compiler.html#sycl-compiler">「SYCL対応コンパイラのインストール方法」の章</a>).</p>
+<h3 data-number="1.6.4" id="実行結果-3"><span class="header-section-number">1.6.4</span> 実行結果</h3>
+<p>　Python のパッケージは, ライブラリが表示する途中経過を出さない (rank 0 がスクリプトの<code>print</code>で表示する).</p>
+<pre><code>reason = converged, iterations = 500, residual = 1.162e-15, true residual = 1.183e-13
+x[0] = 500.000000 (exact 500.000000)
+check: max relative error = 1.252e-15 (limit 1.0e-06) PASS</code></pre>
+</section>
+</div>
+<h2 data-number="1.7" id="qs-next"><span class="header-section-number">1.7</span> 次に読む節</h2>
+<table>
+<thead>
+<tr>
+<th>したいこと</th>
+<th>節</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>どのソルバ・<a href="glossary.html#g-precon">前処理</a>を使うか決める</td>
+<td><a href="choosing-solver.html#choosing-solver">「ソルバの選び方」の章</a></td>
+</tr>
+<tr>
+<td>前処理を付ける</td>
+<td><a href="preconditioners.html#preconditioners">「前処理」の章</a>, <code><span class="tok">set_precon_algo()</span></code></td>
+</tr>
+<tr>
+<td>精度を下げて速くする (混合精度)</td>
+<td><a href="usage.html#usage-cpp-precision">「使用方法」C++ の「精度の指定」</a></td>
+</tr>
+<tr>
+<td>GPU で動かす</td>
+<td><a href="running.html#run-gpu">「GPU で動かす」</a></td>
+</tr>
+<tr>
+<td>自分の問題の行列を渡す</td>
+<td><a href="usage.html#usage-own-matrix">「自分の行列を渡す」</a></td>
+</tr>
+<tr>
+<td>計算ノードのジョブで流す</td>
+<td><a href="running.html#run-jobs">「ジョブで流す」</a></td>
+</tr>
+<tr>
+<td>固有値を求める</td>
+<td><a href="eigen-solvers.html#eigen-solvers">「固有値ソルバ」の章</a>, <code><span class="tok">examples/example_pcg_ks.cpp</span></code></td>
+</tr>
+<tr>
+<td>C / Fortran から呼ぶ</td>
+<td><a href="usage.html#usage-c">「使用方法」の C言語</a> / <a href="usage.html#usage-fortran">Fortran</a></td>
+</tr>
+<tr>
+<td>Python から呼ぶ</td>
+<td><a href="usage.html#usage-python">「使用方法」の Python</a></td>
+</tr>
+<tr>
+<td>収束しないときに調べる</td>
+<td><a href="../reference/common-members.html">API リファレンスの「共通メンバ関数」</a>(<code><span class="tok">get_converged_reason()</span></code> ほか), <a href="accuracy.html#accuracy">「数値精度と再現性」の章</a></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="index.html" rel="previous">← PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="concepts.html" rel="next">基本構成 →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.langtabs'));
+  if (!groups.length) return;
+  function panes(g) { return Array.prototype.filter.call(g.children, function (e) { return e.classList.contains('langpane'); }); }
+  function show(l) {
+    groups.forEach(function (g) {
+      var ps = panes(g), has = ps.some(function (p) { return p.getAttribute('data-lang') === l; });
+      var cur = has ? l : ps[0].getAttribute('data-lang');
+      ps.forEach(function (p) { p.hidden = (p.getAttribute('data-lang') !== cur); });
+      Array.prototype.forEach.call(g.querySelectorAll('.langtabbar button'), function (b) {
+        b.setAttribute('aria-selected', b.getAttribute('data-lang') === cur ? 'true' : 'false');
+      });
+    });
+  }
+  function fromHash() {
+    var h = decodeURIComponent(location.hash.slice(1));
+    if (!h) return null;
+    var e = document.getElementById(h);
+    var p = e ? e.closest('.langpane') : null;
+    return p ? { lang: p.getAttribute('data-lang'), el: e } : null;
+  }
+  groups.forEach(function (g) {
+    g.classList.add('js');
+    Array.prototype.forEach.call(g.querySelectorAll('.langtabbar button'), function (b) {
+      b.addEventListener('click', function () { var l = b.getAttribute('data-lang'); put(l); show(l); });
+    });
+  });
+  var t = fromHash();
+  show(t ? t.lang : (get() || 'cpp'));
+  if (t) t.el.scrollIntoView();
+  window.addEventListener('hashchange', function () {
+    var t = fromHash();
+    if (t) { put(t.lang); show(t.lang); t.el.scrollIntoView(); }
+  });
+})();
+</script>
+</body>
+</html>

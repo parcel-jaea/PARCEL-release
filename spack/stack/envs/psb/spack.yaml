@@ -1,0 +1,94 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+# PS-B (MI300A, 計算ノードは Zen 4 / ログインノードは Xeon): PARCEL をゼロから入れる spack 環境
+#   spack で作るもの: LLVM 18, AdaptiveCpp (hipsycl), OpenBLAS, binutils, Python と numpy / SciPy, PARCEL
+#   既存品を使うもの: GCC 11.5.0 (OS), ROCm 6.3.3, Open MPI 5.0.7 (サイトの ROCm 版)
+#   @PARCEL_SRC@ と @PARCEL_REPO@ は install_stack.sh が置き換える
+spack:
+  specs:
+  - parcel-sycl@1.2.0 ~mpi +rocm amdgpu_target=gfx942 ~native
+  - py-parcel-sycl@1.2.0 ~mpi +rocm amdgpu_target=gfx942 ~native
+  - parcel-sycl@1.2.0 +mpi +rocm amdgpu_target=gfx942 ~native
+  - py-parcel-sycl@1.2.0 +mpi +rocm amdgpu_target=gfx942 ~native
+  - py-scipy
+  - py-pip
+  concretizer:
+    unify: when_possible
+  view:
+    default:
+      root: .spack-env/view
+      # parcel は構成違いを並べて入れるのでビューに入れない (spack load parcel-sycl+mpi のように構成を指定して読む)
+      exclude: [parcel-sycl, py-parcel-sycl]
+  repos:
+    parcel: '@PARCEL_REPO@'
+  develop:
+    parcel-sycl:
+      spec: parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+    py-parcel-sycl:
+      spec: py-parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+  packages:
+    all:
+      # ログインノード (Xeon 6980P) の命令を計算ノード (MI300A の Zen 4) で使わないよう x86_64_v4 に揃える
+      target: [x86_64_v4]
+    tar:
+      # spack の tar 1.35 は RHEL9 の libacl のヘッダと型が合わずビルドできない (Miyabi-G で確認)。OS の tar を使う
+      buildable: false
+      externals:
+      - spec: tar@1.34
+        prefix: /usr
+    c:
+      require: [gcc]
+    cxx:
+      require: [gcc]
+    fortran:
+      require: [gcc]
+    gcc:
+      buildable: false
+      externals:
+      - spec: gcc@11.5.0 languages:='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    hip:
+      buildable: false
+      externals:
+      - spec: hip@6.3.3
+        prefix: /opt/rocm-6.3.3
+    hsa-rocr-dev:
+      buildable: false
+      externals:
+      - spec: hsa-rocr-dev@6.3.3
+        prefix: /opt/rocm-6.3.3
+    comgr:
+      buildable: false
+      externals:
+      - spec: comgr@6.3.3
+        prefix: /opt/rocm-6.3.3
+    llvm-amdgpu:
+      buildable: false
+      externals:
+      - spec: llvm-amdgpu@6.3.3
+        prefix: /opt/rocm-6.3.3/lib/llvm
+    mpi:
+      require: [openmpi]
+    openmpi:
+      buildable: false
+      externals:
+      - spec: openmpi@5.0.7
+        prefix: /system/apps/rhel9/library/openmpi/5.0.7/rocm/6.3.3/ompi
+    hipsycl:
+      require: ['@24.10.0 ~cuda +rocm amdgpu_target=gfx942']
+    llvm:
+      # AdaptiveCpp 24.10 は LLVM 14〜18。使わない部品は作らない (lldb, lua, polly, flang, mlir)
+      require: ['@18.1.8 +clang +lld ~lldb ~lua ~polly ~flang ~mlir ~python ~gold targets:=x86,amdgpu']
+    blas:
+      require: [openblas]
+    lapack:
+      require: [openblas]
+    python:
+      require: ['@3.11']

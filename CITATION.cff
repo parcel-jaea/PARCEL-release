@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+#
+# PARCEL_SYCL を引用するときの情報 (Citation File Format 1.2.0)。
+#   version は Include/parcel_version.hpp と同じにする (tests/check_version.py で照合)。
+#   date-released は公開日 (YYYY-MM-DD)。著者は組織名だけを書いている。
+#   preferred-citation (引用してほしい論文) の書誌はマニュアルの参考文献 [3] の記載どおり (DOI はマニュアルに無いので書かない)。
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "PARCEL_SYCL: Parallel Computing Elements (SYCL version)"
+abstract: >-
+  A header-only SYCL library of parallel Krylov subspace methods (pcg, pbicgstab,
+  pgmres, pcagmres) and eigenvalue solvers (power, inverse_power, ks_arnoldi) for
+  distributed sparse matrices in CRS format, with MPI parallelization and C,
+  Fortran and Python interfaces.
+version: "1.2.0"
+date-released: "2026-10-23"
+license: LGPL-3.0-only
+url: "https://ccse.jaea.go.jp/software/PARCEL/"
+repository-code: "https://github.com/parcel-jaea/PARCEL-release"
+authors:
+  - name: "日本原子力研究開発機構 システム計算科学センター HPC・DX基盤技術開発室"
+contact:
+  - name: "日本原子力研究開発機構 システム計算科学センター"
+    website: "https://github.com/parcel-jaea/PARCEL-release/issues"
+keywords:
+  - Krylov subspace methods
+  - eigenvalue solver
+  - sparse linear solver
+  - SYCL
+  - MPI
+  - GPU
+preferred-citation:
+  type: conference-paper
+  # マニュアルの記載は "Y. Idomura, T. Ina, A. Mayumi, et al." (4 人目以降は記載が無いので書いていない)
+  authors:
+    - family-names: Idomura
+      given-names: Y.
+    - family-names: Ina
+      given-names: T.
+    - family-names: Mayumi
+      given-names: A.
+  title: "Application of a communication-avoiding generalized minimal residual method to a gyrokinetic five dimensional eulerian code on many core platforms"
+  conference:
+    name: "ScalA 17: 8th Workshop on Latest Advances in Scalable Algorithms for Large Scale Systems"
+  start: 1
+  end: 8
+  year: 2017

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Member Functions Common to the Eigenvalue Solvers – PARCEL SYCL v1.2 API Reference</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API Reference</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/reference/eigen-common.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="function-index.html#function-index">Function Index</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> Common Items</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> Format of the Entries</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> Solvers</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> Symbols and Terms</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> Input Matrix</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> Settings</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> Constants</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> Results</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> Convergence Status</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> Settings and MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> Precision</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> Convergence by Solver</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (Q Not Formed)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> PARCEL SYCL Classes</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> Mapping to the Common Items</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCEL Data Types</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> Constructor</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> Constructor</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> Constructor / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> Items Common to All Solvers</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> Class Template Arguments (Arithmetic Precision)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> Template Arguments of solver() (Data Precision)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> Handling of Settings and Exceptions</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> Constants</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> Common Member Functions</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li class="current" data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (class)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (class)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (class)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (class)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (class)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (class)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (class)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> Mapping to the Common Items</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> Constants</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> Mapping to the Common Items</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> Constants</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> Mapping to the Common Items</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> Exceptions</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="common-members.html" rel="previous" accesskey="p">← Common Member Functions</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="pcg.html" rel="next" accesskey="n">parcel::krylov::pcg →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="Language">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="10" id="eigen-common"><span class="header-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</h1>
+<p>These functions are shared by <code>power</code>, <code>inverse_power</code>, and <code>ks_arnoldi</code> (inherited from <code>parcel::krylov::eigen_param</code>). <code>set_linsolve_*</code> configure the inner linear solver of the inverse power method and of the shift-invert mode of the Krylov-Schur method; they are not used by <code>power</code> or by <code>ks_arnoldi</code> without a shift. The defaults of the inner linear solver differ between the solvers (<a href="common.html#common-settings">common settings</a>). The orthogonalization in the inner <code>pgmres</code> is fixed to the modified Gram-Schmidt method. The ideas behind the settings of the eigenvalue solvers are given in <a href="common.html#common-eigen-notes">“Notes on the Eigenvalue Solvers” in Common Items</a>.</p>
+<h2 data-number="10.1" id="api-set-precon-spectrum"><span class="header-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</h2>
+<p><strong>Description</strong> Selects the matrix whose eigenvalues are computed: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_precon_spectrum<span class="op">(</span><span class="dt">bool</span> f<span class="op">);</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> get_precon_spectrum<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">f</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">bool</span></code></td>
+<td>false: compute eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>. The outer eigenvalue iteration does not use preconditioning. true: compute eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> is built from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> according to the settings of <code><span class="tok">set_precon_algo()</span></code> and related functions</td>
+<td class="nowrap">false</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> When true, the inner linear solver (<code>inverse_power</code>, and the shift-invert mode of <code>ks_arnoldi</code>) becomes a right-preconditioned <code>pgmres</code> that solves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)z = v</annotation></semantics></math> and returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>, and the preconditioner is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> itself (<code>set_linsolve_precon_algo()</code> and related functions and <code>ShiftMat</code> are not used).</p>
+<p><strong>See Also</strong> <a href="common-members.html#api-set-precon-algo">set_precon_algo()</a>, <a href="../user/eigen-solvers.html">the “Eigenvalue Solvers” chapter</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pw<span class="op">.</span>set_precon_algo<span class="op">(</span>parcel<span class="op">::</span>PRECON_JACOBI<span class="op">);</span>  pw<span class="op">.</span>set_precon_spectrum<span class="op">(</span><span class="kw">true</span><span class="op">);</span>   <span class="co">// largest eigenvalue of A K^-1</span></span></code></pre></div>
+<h2 data-number="10.2" id="api-set-linsolve-algo"><span class="header-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</h2>
+<p><strong>Description</strong> Sets or gets the type of the inner linear solver of <code>inverse_power</code>.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_linsolve_algo<span class="op">(</span>PARCEL_INT algo<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_linsolve_algo<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">algo</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><code><span class="tok">parcel:<wbr />:<wbr />krylov:<wbr />:<wbr />LINSOLVE_PGMRES</span></code> (0, right-preconditioned <code><span class="tok">pgmres</span></code>) or <code><span class="tok">LINSOLVE_PCG</span></code> (1, <code><span class="tok">pcg</span></code>)</td>
+<td class="nowrap"><code><span class="tok">LINSOLVE_PGMRES</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> <code>LINSOLVE_PGMRES</code> or <code>LINSOLVE_PCG</code>. Any other value throws <code>std::invalid_argument</code>. <code>LINSOLVE_PCG</code> is limited to the case where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is symmetric (positive definite or negative definite; not checked). When <code>set_precon_spectrum(true)</code> is set, <code>pgmres</code> is used regardless of this setting.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> Effective only for <code>inverse_power</code> with <code>set_precon_spectrum(false)</code>. The shift-invert mode of <code>ks_arnoldi</code> always uses <code>pgmres</code>.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ip<span class="op">.</span>set_linsolve_algo<span class="op">(</span>parcel<span class="op">::</span>krylov<span class="op">::</span>LINSOLVE_PCG<span class="op">);</span></span></code></pre></div>
+<h2 data-number="10.3" id="api-set-linsolve-tolerance"><span class="header-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</h2>
+<p><strong>Description</strong> Sets or gets the convergence tolerance (relative residual) of the inner linear solver.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>   set_linsolve_tolerance<span class="op">(</span><span class="dt">double</span> tol<span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> get_linsolve_tolerance<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">tol</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">double</span></code></td>
+<td><a href="common.html#set-inner-tol">Convergence tolerance of the inner linear solver</a></td>
+<td class="nowrap">1.0e-10</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> A finite positive value. 0 or less, NaN, and Inf throw <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> The outer iteration continues even if the inner linear solver does not converge. The number of times it did not converge is obtained with <code>get_linsolve_failures()</code>.</p>
+<h2 data-number="10.4" id="api-set-linsolve-max-iteration"><span class="header-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</h2>
+<p><strong>Description</strong> Sets or gets the maximum number of iterations of the inner linear solver.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_linsolve_max_iteration<span class="op">(</span>PARCEL_INT itr<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_linsolve_max_iteration<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">itr</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><a href="common.html#set-inner-maxiter">Maximum number of iterations of the inner linear solver</a> (for <code><span class="tok">pgmres</span></code>, the total number of inner iterations)</td>
+<td><code><span class="tok">inverse_power</span></code> 5000, <code><span class="tok">ks_arnoldi</span></code> 2000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> 1 or greater. 0 or less throws <code>std::invalid_argument</code>. When the inner solver is <code>pgmres</code>, the value need not be a multiple of <code>set_linsolve_restart()</code> and may be smaller than it (the inner solver iterates exactly up to the limit).</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<h2 data-number="10.5" id="api-set-linsolve-restart"><span class="header-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</h2>
+<p><strong>Description</strong> Sets or gets the restart length of the inner <code>pgmres</code>.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_linsolve_restart<span class="op">(</span>PARCEL_INT m<span class="op">);</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_linsolve_restart<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">m</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><a href="common.html#set-inner-restart">Restart length of the inner linear solver</a></td>
+<td class="nowrap">30</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> 1 or greater. 0 or less throws <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> Not used when the inner solver is <code>pcg</code>.</p>
+<h2 data-number="10.6" id="api-set-linsolve-precon"><span class="header-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</h2>
+<p><strong>Description</strong> Sets the type of the preconditioner <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> of the inner linear solver, the number of block Jacobi blocks, and the number of Jacobi iterations.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_linsolve_precon_algo<span class="op">(</span>PARCEL_INT algo<span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_linsolve_blockjacobi<span class="op">(</span>PARCEL_INT nblock<span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_linsolve_jacobi<span class="op">(</span>PARCEL_INT iter<span class="op">);</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>precon_param <span class="op">*</span>get_linsolve_precon_param<span class="op">();</span>   <span class="co">// access to the settings (get_precon_algo(), etc.)</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">algo</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Type of <a href="common.html#set-inner-precon">preconditioner of the inner linear solver</a>. Same values as <code><span class="tok">set_precon_algo()</span></code></td>
+<td><code><span class="tok">PRECON_JACOBI</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">nblock</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Number of block Jacobi blocks of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math></td>
+<td>If not called, determined automatically from the <a href="../user/glossary.html#g-device">device</a>, as for <code><span class="tok">set_blockjacobi()</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">iter</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>Number of Jacobi iterations of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> Same as <code>set_precon_algo()</code>, <code>set_blockjacobi()</code>, and <code>set_jacobi()</code>. Out-of-range values throw <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> Not used when <code>set_precon_spectrum(true)</code> is set; preconditioning is then done with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>. The conditions under which these settings are used in the shift-invert mode of <code>ks_arnoldi</code> are given in <a href="ks-arnoldi.html#api-ks-set-shift">set_shift()</a>.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ip<span class="op">.</span>set_linsolve_precon_algo<span class="op">(</span>parcel<span class="op">::</span>PRECON_BLOCKJACOBI<span class="op">);</span></span></code></pre></div>
+<h2 data-number="10.7" id="api-set-linsolve-scaling"><span class="header-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</h2>
+<p><strong>Description</strong> Sets whether matrix and vector scaling are applied in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math>.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_linsolve_scaling_matrix<span class="op">(</span><span class="dt">bool</span> f<span class="op">);</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_linsolve_scaling_vector<span class="op">(</span><span class="dt">bool</span> f<span class="op">);</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">f</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">bool</span></code></td>
+<td class="nowrap">false: off, true: on</td>
+<td>If not called, automatic (same rule as <code><span class="tok">set_scaling_matrix()</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<h2 data-number="10.8" id="api-get-linsolve-failures"><span class="header-section-number">10.8</span> get_linsolve_failures()</h2>
+<p><strong>Description</strong> Returns the number of times the inner linear solver did not converge in the most recent <code>solver()</code> call.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_linsolve_failures<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Return Value</strong> The number of times the inner linear solver (<code>inverse_power</code>, and the shift-invert mode of <code>ks_arnoldi</code>) ended without satisfying the convergence tolerance. 0 for <code>power</code> and for <code>ks_arnoldi</code> without a shift.</p>
+<p><strong>MPI</strong> Local operation. The value is the same on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> This is not reflected in the outer convergence status (<code>get_converged_reason()</code>), because the outer iteration can converge even if the inner solver does not reach its tolerance. If the value is nonzero, review <code>set_linsolve_max_iteration()</code> and <code>set_linsolve_precon_algo()</code>.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>ip<span class="op">.</span>get_linsolve_failures<span class="op">()</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="bu">std::</span>printf<span class="op">(</span><span class="st">&quot;inner solver did not converge </span><span class="sc">%d</span><span class="st"> times</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>ip<span class="op">.</span>get_linsolve_failures<span class="op">());</span></span></code></pre></div>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="common-members.html" rel="previous">← Common Member Functions</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="pcg.html" rel="next">parcel::krylov::pcg →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'cpp';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

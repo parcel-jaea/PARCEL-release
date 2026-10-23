@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Python の API – PARCEL SYCL v1.2 API リファレンス</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API リファレンス</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/reference/python-api.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="function-index.html#function-index">関数索引</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> 共通事項</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> 各項目の書式</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> ソルバ</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> 記号と用語</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> 入力の行列</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> 設定</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> 定数</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> 結果</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> 収束状態</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> 設定の扱いと MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> 精度</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> ソルバごとの収束判定</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> SYCL版PARCELクラス</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> 共通事項との対応</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCELデータ型</a></li>
+<li class="otherlang" data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> コンストラクタ</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> コンストラクタ</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> コンストラクタ / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> ソルバ共通の事項</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> クラステンプレート引数 (演算精度)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> solver() のテンプレート引数 (データ精度)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> 設定の扱いと例外</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> 定数</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> 共通メンバ関数</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> 固有値ソルバ共通のメンバ関数</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (クラス)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (クラス)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (クラス)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (クラス)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (クラス)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (クラス)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (クラス)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C言語の API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> 共通事項との対応</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> 定数</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran の API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> 共通事項との対応</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> 定数</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</a></li>
+</ul></li>
+<li class="current" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python の API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> 共通事項との対応</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> 例外</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← ソルバごとの収束判定</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="言語">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="false">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C言語</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="true">Python</a>
+</div>
+<h1 data-number="20" id="python-api"><span class="header-section-number">20</span> Python の API</h1>
+<p>　Python からはパッケージ <code>parcel</code> (配布パッケージの <code>python/</code>) を <code>import</code> して使う. パッケージはライブラリを直接呼ぶネイティブ層 (<code>libparcel_py.so</code>) を持ち, C言語・Fortran の API とは独立している. 設定の意味と既定値, 結果, 収束状態は<a href="common.html#common">共通事項</a>と<a href="convergence.html#convergence">ソルバごとの収束判定</a>に, 使い方の流れと例は<a href="../user/usage.html#usage-python">利用者ガイドの使用方法の「Python」</a>, インストールは<a href="../user/installation.html#install-python">利用者ガイドのインストールの「Python のパッケージ」</a>に示す.</p>
+<ul>
+<li>公開する名前は<code>DistributedCSR</code>, <code>solve</code>, <code>eigs</code>, <code>SolveInfo</code>, <code>EigInfo</code>, <code>Comm</code>, <code>partition_rows</code>, <code>build_info</code>, <code>has_mpi</code>, <code>device_name</code>, <code>ParcelError</code>, <code>NotBuiltError</code>である.</li>
+<li>1 回の呼び出しで <a href="../user/glossary.html#g-sycl">SYCL</a> キューの作成, 行列の登録, 求解までを行う. <a href="common.html#common-precision">精度</a>はデータ・演算とも倍精度だけで, 入出力の配列は float64 である.</li>
+<li>設定の引数は<code>None</code> (既定) のときライブラリの既定値 (<a href="common.html#common-settings">共通事項の設定</a>) になる. 下の引数の表の「既定値」はその値である.</li>
+<li>誤りは Python の例外で知らせる (<a href="python-api.html#py-errors">例外</a>). 求解は収束しなくても例外にならないので, 返す<code>info.converged</code>を確かめる.</li>
+<li>ネイティブ層を MPI ありでビルドした版では, 全<a href="../user/glossary.html#g-rank">ランク</a>が同じ呼び出しを同じ引数で行う (集団操作). 最初の呼び出しで <a href="../user/glossary.html#g-mpi">MPI</a> を初期化する (mpi4py などが先に初期化していればそれを使い, パッケージが初期化したときだけ終了時に<code>MPI_Finalize</code>を呼ぶ). MPI なしの版では 1 プロセスが全体を持つ.</li>
+<li>ネイティブ層は, 環境変数<code>PARCEL_PY_LIB</code>があればそのパス, 無ければパッケージ内の<code>libparcel_py.so</code>を読む. 見つからない場合とネイティブ層の版 (ABI) がパッケージと合わない場合は<code>ImportError</code>になる. <a href="../user/glossary.html#g-adaptivecpp">AdaptiveCpp</a> の警告を抑えるため, <code>ACPP_DEBUG_LEVEL</code>が設定されていなければ 0 にする.</li>
+</ul>
+<h2 data-number="20.1" id="py-mapping"><span class="header-section-number">20.1</span> 共通事項との対応</h2>
+<p>　<a href="common.html#common-settings">共通事項の設定</a>と<code>solve()</code>・<code>eigs()</code>の引数, <a href="common.html#common-results">結果</a>と<code>SolveInfo</code>・<code>EigInfo</code>の属性の対応を示す. 定数は文字列で与える.</p>
+<div class="nowrap-c2 nowrap-code">
+<table>
+<thead>
+<tr>
+<th>共通事項の設定</th>
+<th>引数</th>
+<th>表し方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="common.html#set-tol">収束判定値</a></td>
+<td><code><span class="tok">tol</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-maxiter">最大反復回数</a></td>
+<td><code><span class="tok">maxiter</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon">前処理の種類</a></td>
+<td><code><span class="tok">precond</span></code></td>
+<td><code><span class="tok">"none"</span></code>, <code><span class="tok">"point_jacobi"</span></code>, <code><span class="tok">"block_jacobi"</span></code>, <code><span class="tok">"jacobi"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-jacobi-iter">Jacobi 前処理の反復回数</a></td>
+<td><code><span class="tok">precond_options["iterations"]</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-blocks">ブロック Jacobi 前処理のブロック数</a></td>
+<td><code><span class="tok">precond_options["blocks"]</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-scaling">スケーリング</a></td>
+<td><code><span class="tok">precond_options["scale_matrix"]</span></code>, <code><span class="tok">["scale_vector"]</span></code></td>
+<td><code><span class="tok">True</span></code>, <code><span class="tok">False</span></code>, <code><span class="tok">None</span></code> (自動)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-restart">リスタート周期</a> (pgmres)</td>
+<td><code><span class="tok">restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-qr">直交化の方式</a> (pgmres)</td>
+<td><code><span class="tok">orthogonalization</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-st">基底生成の大きさ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></a></td>
+<td><code><span class="tok">s</span></code>, <code><span class="tok">t</span></code></td>
+<td>両方とも与える</td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-qr">QR 分解の方式</a> (pcagmres)</td>
+<td><code><span class="tok">qr</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code>, <code><span class="tok">"cholesky_qr"</span></code>, <code><span class="tok">"cholesky_qr_moment"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方</a></td>
+<td><code><span class="tok">q_mode</span></code></td>
+<td><code><span class="tok">"auto"</span></code>, <code><span class="tok">"explicit"</span></code>, <code><span class="tok">"implicit"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a></td>
+<td><code><span class="tok">precond_spectrum</span></code></td>
+<td><code><span class="tok">True</span></code>, <code><span class="tok">False</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-algo">内部線形ソルバの種類</a></td>
+<td><code><span class="tok">inner_method</span></code></td>
+<td><code><span class="tok">"pgmres"</span></code>, <code><span class="tok">"pcg"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-tol">内部線形ソルバの収束判定値</a></td>
+<td><code><span class="tok">inner_tol</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-maxiter">内部線形ソルバの最大反復回数</a></td>
+<td><code><span class="tok">inner_maxiter</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-restart">内部線形ソルバのリスタート周期</a></td>
+<td><code><span class="tok">inner_restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-precon">内部線形ソルバの前処理</a></td>
+<td><code><span class="tok">inner_precond</span></code>, <code><span class="tok">inner_precond_options</span></code></td>
+<td>スケーリングは指定できない (常に自動)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-shift">shift-invert</a></td>
+<td><code><span class="tok">sigma</span></code></td>
+<td>与えると有効. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>はパッケージが組み立てる</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-subspace">Krylov 部分空間の大きさ</a></td>
+<td><code><span class="tok">m</span></code>, <code><span class="tok">k_keep</span></code>, <code><span class="tok">nev</span></code></td>
+<td>3 つとも与える</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-max-restart">最大リスタート回数</a></td>
+<td><code><span class="tok">max_restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-qr">直交化の方式</a> (ks_arnoldi)</td>
+<td><code><span class="tok">orthogonalization</span></code> (<code><span class="tok">eigs()</span></code>)</td>
+<td><code><span class="tok">"cgs"</span></code> (CGS2) または <code><span class="tok">"mgs"</span></code> (MGS2)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-init-vector">初期ベクトル</a></td>
+<td><code><span class="tok">v0</span></code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</div>
+<table>
+<thead>
+<tr>
+<th>共通事項の結果</th>
+<th>属性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="common.html#res-reason">収束状態</a></td>
+<td><code><span class="tok">converged</span></code>, <code><span class="tok">reason</span></code>, <code><span class="tok">reason_code</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-iter">反復回数</a></td>
+<td><code><span class="tok">iterations</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-resid">残差</a></td>
+<td><code><span class="tok">residual</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-true">真の残差</a></td>
+<td><code><span class="tok">true_residual</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-nconv">収束した固有対の数</a></td>
+<td><code><span class="tok">n_converged</span></code> (<code><span class="tok">EigInfo</span></code>のみ)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-inner-fail">内部線形ソルバの失敗回数</a></td>
+<td><code><span class="tok">inner_failures</span></code> (<code><span class="tok">EigInfo</span></code>のみ)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.2" id="api-py-distributedcsr"><span class="header-section-number">20.2</span> parcel.DistributedCSR</h2>
+<p><strong>概要</strong>　<a href="../user/glossary.html#g-mpi">MPI</a> で行ブロックに分割した疎行列のうち, このランクの担当行を表す (<a href="common.html#common-matrix">共通事項の「入力の行列」</a>).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR(indptr, indices, data, row_start, n_global, comm<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">indptr</span></code></td>
+<td>整数の 1 次元配列</td>
+<td>担当行の 0 始まりの局所の行ポインタ (長さ<code><span class="tok">n_local</span> <span class="tok">+</span> <span class="tok">1</span></code>)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">indices</span></code></td>
+<td>整数の 1 次元配列</td>
+<td>大域の 0 始まりの列番号</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">data</span></code></td>
+<td>実数の 1 次元配列</td>
+<td>行列要素 (<code><span class="tok">indices</span></code>と同じ長さ)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">row_start</span></code></td>
+<td>整数</td>
+<td>担当する最初の行の大域行番号 (0 始まり)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_global</span></code></td>
+<td>整数</td>
+<td>大域行数</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">comm</span></code></td>
+<td><code><span class="tok">parcel.Comm</span></code>, mpi4py のコミュニケータ, <code><span class="tok">None</span></code></td>
+<td>コミュニケータ. <code><span class="tok">None</span></code>は MPI_COMM_WORLD</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>属性</strong>　<code>indptr</code>, <code>indices</code>, <code>data</code> (int64 / float64 の連続配列に複製したもの. 元の配列は呼び出し後に変更してよい), <code>row_start</code>, <code>n_global</code>, <code>comm</code> (<code>parcel.Comm</code>), <code>n_local</code> (担当行数), <code>nnz</code> (担当行の非零要素数), <code>shape</code> (<code>(n_global, n_global)</code>).</p>
+<p><strong>前提条件</strong>　並びは<code>scipy.sparse.csr_matrix</code>と同じである. 作成時に, <code>indptr</code>が長さ 2 以上の 1 次元配列であること, <code>indices</code>と<code>data</code>が同じ長さの 1 次元配列であること, <code>indptr[0] = 0</code>かつ<code>indptr[-1] = len(indices)</code>であることを検査し, 外れていれば<code>ValueError</code>を投げる. 求解のときには, 各ランクが 1 行以上を持つこと, <code>indptr</code>が単調非減少であること, 列番号が 0 以上<code>n_global</code>未満であること, 全ランクの行ブロックが 0 から<code>n_global - 1</code>までを隙間・重複なく覆うこと (ランクの並び順は問わない) を検査し, 崩れていれば全ランクが同じ<code>ValueError</code>を投げる. 行数がネイティブ層の整数の範囲を超えるときは<code>OverflowError</code>を投げる.</p>
+<p><strong>関連項目</strong>　<a href="python-api.html#api-py-csr-from">from_scipy() / from_global()</a>, <a href="python-api.html#api-py-local-slice">local_slice()</a></p>
+<h2 data-number="20.3" id="api-py-csr-from"><span class="header-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</h2>
+<p><strong>概要</strong>　SciPy の疎行列から<code>DistributedCSR</code>を作る (クラスメソッド).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR.from_scipy(local_rows, row_start, n_global<span class="op">=</span><span class="va">None</span>, comm<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR.from_global(global_matrix, comm<span class="op">=</span><span class="va">None</span>, row_start<span class="op">=</span><span class="va">None</span>, n_local<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">local_rows</span></code></td>
+<td>scipy.sparse の行列</td>
+<td>担当行だけの行列 (列は大域)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">row_start</span></code></td>
+<td>整数</td>
+<td>担当する最初の行の大域行番号. <code><span class="tok">from_global()</span></code>では省くと<code><span class="tok">partition_rows()</span></code>の分割を使う</td>
+<td class="nowrap"><code><span class="tok">from_global()</span></code>は<code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_global</span></code></td>
+<td>整数</td>
+<td>大域行数. 省くと<code><span class="tok">local_rows</span></code>の列数</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">global_matrix</span></code></td>
+<td>scipy.sparse の正方行列</td>
+<td>全体の行列 (全ランクが同じものを持つ)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_local</span></code></td>
+<td>整数</td>
+<td>担当行数 (<code><span class="tok">row_start</span></code>と一緒に与える)</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">comm</span></code></td>
+<td><code><span class="tok">parcel.Comm</span></code>, mpi4py のコミュニケータ, <code><span class="tok">None</span></code></td>
+<td>コミュニケータ</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>戻り値</strong>　<code>DistributedCSR</code>.</p>
+<p><strong>注意</strong>　<code>from_global()</code>は全体の行列から担当行を切り出すので, 小さな問題や試験に向く. 正方行列でなければ<code>ValueError</code>を投げる.</p>
+<h2 data-number="20.4" id="api-py-local-slice"><span class="header-section-number">20.4</span> DistributedCSR.local_slice()</h2>
+<p><strong>概要</strong>　全体のベクトルからこのランクの担当行の部分を取り出すスライスを返す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> A.local_slice()          <span class="co"># slice(row_start, row_start + n_local)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b_global[A.local_slice()])</span></code></pre></div>
+<h2 data-number="20.5" id="api-py-solve"><span class="header-section-number">20.5</span> parcel.solve()</h2>
+<p><strong>概要</strong>　連立一次方程式<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math>を解き, 解と収束状態を返す (pcg, pbicgstab, pgmres, pcagmres).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b, <span class="op">*</span>, method<span class="op">=</span><span class="st">&quot;pcg&quot;</span>, x0<span class="op">=</span><span class="va">None</span>, tol<span class="op">=</span><span class="va">None</span>, maxiter<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       precond<span class="op">=</span><span class="va">None</span>, precond_options<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       restart<span class="op">=</span><span class="va">None</span>, orthogonalization<span class="op">=</span><span class="va">None</span>,      <span class="co"># pgmres のみ</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                       s<span class="op">=</span><span class="va">None</span>, t<span class="op">=</span><span class="va">None</span>, qr<span class="op">=</span><span class="va">None</span>, q_mode<span class="op">=</span><span class="va">None</span>,      <span class="co"># pcagmres のみ</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                       verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<p><strong>引数</strong>　設定の引数の意味は「共通事項」の列の節に示す.</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>値</th>
+<th>共通事項</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">A</span></code></td>
+<td><code><span class="tok">DistributedCSR</span></code></td>
+<td><a href="common.html#common-matrix">入力の行列</a></td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">b</span></code></td>
+<td>右辺の担当行の部分 (長さ<code><span class="tok">A.n_local</span></code>)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">method</span></code></td>
+<td><code><span class="tok">"pcg"</span></code>, <code><span class="tok">"pbicgstab"</span></code>, <code><span class="tok">"pgmres"</span></code>, <code><span class="tok">"pcagmres"</span></code></td>
+<td><a href="common.html#common-solvers">ソルバ</a></td>
+<td><code><span class="tok">"pcg"</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">x0</span></code></td>
+<td>初期値の担当行の部分. <code><span class="tok">None</span></code>なら 0</td>
+<td>—</td>
+<td><code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tol</span></code></td>
+<td>有限の正の数</td>
+<td><a href="common.html#set-tol">収束判定値</a></td>
+<td>1.0e-8</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">maxiter</span></code></td>
+<td>1 以上の整数</td>
+<td><a href="common.html#set-maxiter">最大反復回数</a></td>
+<td>10000</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precond</span></code></td>
+<td><code><span class="tok">None</span></code>, <code><span class="tok">"none"</span></code>, <code><span class="tok">"point_jacobi"</span></code>, <code><span class="tok">"block_jacobi"</span></code>, <code><span class="tok">"jacobi"</span></code></td>
+<td><a href="common.html#set-precon">前処理の種類</a></td>
+<td>前処理なし</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precond_options</span></code></td>
+<td>辞書. <code><span class="tok">"iterations"</span></code> (1 以上), <code><span class="tok">"blocks"</span></code> (1 以上), <code><span class="tok">"scale_matrix"</span></code>, <code><span class="tok">"scale_vector"</span></code> (<code><span class="tok">True</span></code>, <code><span class="tok">False</span></code>, <code><span class="tok">None</span></code>)</td>
+<td><a href="common.html#set-jacobi-iter">Jacobi の反復回数</a>, <a href="common.html#set-blocks">ブロック数</a>, <a href="common.html#set-scaling">スケーリング</a></td>
+<td>反復 1 回, ブロック数・スケーリングは自動</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">restart</span></code></td>
+<td>1 以上の整数 (pgmres のみ)</td>
+<td><a href="common.html#set-gmres-restart">リスタート周期</a></td>
+<td>30</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">orthogonalization</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code> (pgmres のみ)</td>
+<td><a href="common.html#set-gmres-qr">直交化の方式</a></td>
+<td><code><span class="tok">"mgs"</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">s</span></code>, <code><span class="tok">t</span></code></td>
+<td>1 以上の整数. 両方とも与える (pcagmres のみ)</td>
+<td><a href="common.html#set-cagmres-st">基底生成の大きさ</a></td>
+<td>8, 4</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">qr</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code>, <code><span class="tok">"cholesky_qr"</span></code>, <code><span class="tok">"cholesky_qr_moment"</span></code> (pcagmres のみ)</td>
+<td><a href="common.html#set-cagmres-qr">QR 分解の方式</a></td>
+<td><code><span class="tok">"mgs"</span></code> (<code><span class="tok">q_mode="implicit"</span></code>では<code><span class="tok">"cholesky_qr"</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">q_mode</span></code></td>
+<td><code><span class="tok">"auto"</span></code>, <code><span class="tok">"explicit"</span></code>, <code><span class="tok">"implicit"</span></code> (pcagmres のみ)</td>
+<td><a href="common.html#set-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方</a></td>
+<td><code><span class="tok">"auto"</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">verbose</span></code></td>
+<td><code><span class="tok">True</span></code>で<a href="../user/glossary.html#g-rank">ランク</a> 0 が反復の経過を表示する. <code><span class="tok">False</span></code>のときは求解の間, 標準出力 (ファイル記述子 1) を捨てる</td>
+<td><a href="common.html#common-stdout">標準出力</a></td>
+<td><code><span class="tok">False</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　<code>b</code>と<code>x0</code>の形が<code>(A.n_local,)</code>でなければ<code>ValueError</code>. 文字列の値が上の候補にない場合, 数が範囲外の場合は<code>ValueError</code>. 対象でないソルバに<code>restart</code>, <code>orthogonalization</code>, <code>s</code>, <code>t</code>, <code>qr</code>, <code>q_mode</code>を与えると<code>ValueError</code>. <code>s</code>と<code>t</code>は両方とも与える. <code>precond_options</code>の知らないキーは<code>ValueError</code>. 組合せの誤り (例えば<code>q_mode="implicit"</code>に<code>qr="cgs"</code>. <a href="common.html#common-cagmres-q">規則</a>) はライブラリが判定し, 全ランクが同じ<code>ValueError</code>を投げる.</p>
+<p><strong>戻り値</strong>　<code>(x, info)</code>. <code>x</code>は解の担当行の部分 (float64 の配列), <code>info</code>は <a href="python-api.html#api-py-info">SolveInfo</a>. 収束しなくても例外にはならないので<code>info.converged</code>を確かめる.</p>
+<p><strong>MPI</strong>　集団操作 (MPI ありの版).</p>
+<p><strong>関連項目</strong>　<a href="convergence.html#convergence">ソルバごとの収束判定</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b[A.local_slice()], method<span class="op">=</span><span class="st">&quot;pgmres&quot;</span>, restart<span class="op">=</span><span class="dv">60</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                       precond<span class="op">=</span><span class="st">&quot;jacobi&quot;</span>, tol<span class="op">=</span><span class="fl">1e-10</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> info.converged:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(info.reason, info.iterations, info.true_residual)</span></code></pre></div>
+<h2 data-number="20.6" id="api-py-eigs"><span class="header-section-number">20.6</span> parcel.eigs()</h2>
+<p><strong>概要</strong>　固有値問題<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>v</mi><mo>=</mo><mi>λ</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">Av = \lambda v</annotation></semantics></math> (<code>precond_spectrum=True</code>では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>) を解き, 固有値・固有ベクトル・収束状態を返す (power, inverse_power, ks_arnoldi).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>values, vectors, info <span class="op">=</span> parcel.eigs(A, <span class="op">*</span>, method<span class="op">=</span><span class="st">&quot;ks_arnoldi&quot;</span>, tol<span class="op">=</span><span class="va">None</span>, maxiter<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        precond<span class="op">=</span><span class="va">None</span>, precond_options<span class="op">=</span><span class="va">None</span>, precond_spectrum<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        m<span class="op">=</span><span class="va">None</span>, k_keep<span class="op">=</span><span class="va">None</span>, nev<span class="op">=</span><span class="va">None</span>, max_restart<span class="op">=</span><span class="va">None</span>, sigma<span class="op">=</span><span class="va">None</span>, v0<span class="op">=</span><span class="va">None</span>,   <span class="co"># ks_arnoldi のみ</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        orthogonalization<span class="op">=</span><span class="va">None</span>,                                                 <span class="co"># ks_arnoldi のみ</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        inner_method<span class="op">=</span><span class="va">None</span>, inner_tol<span class="op">=</span><span class="va">None</span>, inner_maxiter<span class="op">=</span><span class="va">None</span>, inner_restart<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        inner_precond<span class="op">=</span><span class="va">None</span>, inner_precond_options<span class="op">=</span><span class="va">None</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<p><strong>引数</strong>　<code>A</code>, <code>tol</code>, <code>maxiter</code>, <code>precond</code>, <code>precond_options</code>, <code>verbose</code>は <a href="python-api.html#api-py-solve">solve()</a> と同じである (<code>maxiter</code>は power / inverse_power の外側の反復の上限. ks_arnoldi は使わない).</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>値</th>
+<th>共通事項</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">method</span></code></td>
+<td><code><span class="tok">"power"</span></code> (絶対値最大), <code><span class="tok">"inverse_power"</span></code> (絶対値最小), <code><span class="tok">"ks_arnoldi"</span></code> (絶対値の大きい側から複数)</td>
+<td><a href="common.html#common-solvers">ソルバ</a></td>
+<td><code><span class="tok">"ks_arnoldi"</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">precond_spectrum</span></code></td>
+<td><code><span class="tok">True</span></code>で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>の固有値を求める (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>は<code><span class="tok">precond</span></code>の前処理)</td>
+<td><a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a></td>
+<td><code><span class="tok">False</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">m</span></code>, <code><span class="tok">k_keep</span></code>, <code><span class="tok">nev</span></code></td>
+<td>部分空間の最大次元, リスタートで残す数, 求める固有値の数 (3 つとも与える. ks_arnoldi のみ)</td>
+<td><a href="common.html#set-ks-subspace">Krylov 部分空間の大きさ</a></td>
+<td>30, 10, 4</td>
+</tr>
+<tr>
+<td><code><span class="tok">max_restart</span></code></td>
+<td>1 以上の整数 (ks_arnoldi のみ)</td>
+<td><a href="common.html#set-ks-max-restart">最大リスタート回数</a></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code><span class="tok">orthogonalization</span></code></td>
+<td><code><span class="tok">"cgs"</span></code> (CGS2) または <code><span class="tok">"mgs"</span></code> (MGS2). <code><span class="tok">"cgs2"</span></code>, <code><span class="tok">"mgs2"</span></code> も受け付ける (ks_arnoldi のみ)</td>
+<td><a href="common.html#set-ks-qr">直交化の方式</a></td>
+<td>ライブラリの既定 (CGS2. ビルド時の指定で MGS2)</td>
+</tr>
+<tr>
+<td><code><span class="tok">sigma</span></code></td>
+<td>shift-invert のシフト. 与えると<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>に近い固有値を求める (ks_arnoldi のみ)</td>
+<td><a href="common.html#set-shift">shift-invert</a></td>
+<td><code><span class="tok">None</span></code> (無効)</td>
+</tr>
+<tr>
+<td><code><span class="tok">v0</span></code></td>
+<td>初期ベクトルの担当行の部分 (長さ<code><span class="tok">A.n_local</span></code>. ks_arnoldi のみ)</td>
+<td><a href="common.html#set-init-vector">初期ベクトル</a></td>
+<td><code><span class="tok">None</span></code> (大域行番号から作る)</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_method</span></code></td>
+<td><code><span class="tok">"pgmres"</span></code>, <code><span class="tok">"pcg"</span></code> (inverse_power で使う)</td>
+<td><a href="common.html#set-inner-algo">内部線形ソルバの種類</a></td>
+<td><code><span class="tok">"pgmres"</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_tol</span></code></td>
+<td>有限の正の数</td>
+<td><a href="common.html#set-inner-tol">内部線形ソルバの収束判定値</a></td>
+<td>1.0e-10</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_maxiter</span></code></td>
+<td>1 以上の整数</td>
+<td><a href="common.html#set-inner-maxiter">内部線形ソルバの最大反復回数</a></td>
+<td>inverse_power 5000, ks_arnoldi 2000</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_restart</span></code></td>
+<td>1 以上の整数</td>
+<td><a href="common.html#set-inner-restart">内部線形ソルバのリスタート周期</a></td>
+<td>30</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_precond</span></code>, <code><span class="tok">inner_precond_options</span></code></td>
+<td>内部線形ソルバの前処理 (<code><span class="tok">precond</span></code>と同じ値) と, その<code><span class="tok">"iterations"</span></code>, <code><span class="tok">"blocks"</span></code> (スケーリングは自動で, 指定すると<code><span class="tok">ValueError</span></code>)</td>
+<td><a href="common.html#set-inner-precon">内部線形ソルバの前処理</a></td>
+<td><code><span class="tok">"jacobi"</span></code> (反復 1 回), ブロック数は自動</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　<code>m</code>, <code>k_keep</code>, <code>nev</code>, <code>max_restart</code>, <code>sigma</code>, <code>v0</code>, <code>orthogonalization</code>は ks_arnoldi だけで使え, 他のソルバに与えると<code>ValueError</code>. <code>orthogonalization</code>が上の値以外でも<code>ValueError</code>. <code>m</code>, <code>k_keep</code>, <code>nev</code>は 3 つとも与え, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m \leq n_{global}</annotation></semantics></math>を満たさなければ<code>ValueError</code>. 内部線形ソルバの引数は inverse_power と, <code>sigma</code>を与えた ks_arnoldi で使われる. <code>precond_spectrum=True</code>のときは<code>inner_method</code>によらず pgmres を使う. <code>v0</code>の形が<code>(A.n_local,)</code>でなければ<code>ValueError</code>.</p>
+<p><strong>戻り値</strong>　<code>(values, vectors, info)</code>. <code>values</code>は複素数の 1 次元配列 (power と inverse_power では 1 個, ks_arnoldi では<code>k_keep</code>個). <code>vectors</code>は形 (<code>A.n_local</code>, 個数) の配列で, j 列目が j 番目の固有ベクトルの担当行の部分である. ks_arnoldi の固有値は絶対値の降順 (shift-invert では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>に近い順) に並び, 複素共役対の固有ベクトルは実部と虚部が連続する 2 列に入る (<a href="common.html#common-eigen-output">固有値と固有ベクトルの出力</a>). <code>info</code>は <a href="python-api.html#api-py-info">EigInfo</a>.</p>
+<p><strong>MPI</strong>　集団操作 (MPI ありの版).</p>
+<p><strong>関連項目</strong>　<a href="common.html#common-eigen-notes">固有値ソルバの補足</a>, <a href="convergence.html#convergence">ソルバごとの収束判定</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_arnoldi で絶対値の大きい側から 4 個, shift-invert で 0 に近い側から 2 個</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>vals, vecs, info <span class="op">=</span> parcel.eigs(A, method<span class="op">=</span><span class="st">&quot;ks_arnoldi&quot;</span>, m<span class="op">=</span><span class="dv">40</span>, k_keep<span class="op">=</span><span class="dv">10</span>, nev<span class="op">=</span><span class="dv">4</span>, tol<span class="op">=</span><span class="fl">1e-10</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>vals, vecs, info <span class="op">=</span> parcel.eigs(A, method<span class="op">=</span><span class="st">&quot;ks_arnoldi&quot;</span>, m<span class="op">=</span><span class="dv">20</span>, k_keep<span class="op">=</span><span class="dv">6</span>, nev<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">0.0</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                               tol<span class="op">=</span><span class="fl">1e-10</span>, inner_tol<span class="op">=</span><span class="fl">1e-12</span>)</span></code></pre></div>
+<h2 data-number="20.7" id="api-py-info"><span class="header-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</h2>
+<p><strong>概要</strong>　<code>solve()</code>と<code>eigs()</code>が返す結果 (変更できないデータクラス). 意味は<a href="common.html#common-results">共通事項の「結果」</a>のとおりで, 値は全ランクで同じである.</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>型</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">converged</span></code></td>
+<td class="nowrap"><code><span class="tok">bool</span></code></td>
+<td>収束したら<code><span class="tok">True</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">reason</span></code></td>
+<td class="nowrap"><code><span class="tok">str</span></code></td>
+<td><a href="common.html#common-reason">収束状態</a>の名前. <code><span class="tok">"converged"</span></code> (CONVERGED_RTOL), <code><span class="tok">"iterating"</span></code> (ITERATING), <code><span class="tok">"max_iterations"</span></code> (DIVERGED_ITS), <code><span class="tok">"nan_or_inf"</span></code> (DIVERGED_NANORINF), <code><span class="tok">"breakdown"</span></code> (DIVERGED_BREAKDOWN)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">reason_code</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td>収束状態の定数の値 (1, 0, -1, -2, -3)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">iterations</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td><a href="common.html#res-iter">反復回数</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">residual</span></code></td>
+<td class="nowrap"><code><span class="tok">float</span></code></td>
+<td><a href="common.html#res-resid">残差</a> (ソルバが収束判定に用いた相対値)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">true_residual</span></code></td>
+<td class="nowrap"><code><span class="tok">float</span></code></td>
+<td><a href="common.html#res-true">真の残差</a>. 固有値ソルバでは NaN</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_converged</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td><code><span class="tok">EigInfo</span></code>のみ. <a href="common.html#res-nconv">収束した固有対の数</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">inner_failures</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td><code><span class="tok">EigInfo</span></code>のみ. <a href="common.html#res-inner-fail">内部線形ソルバの失敗回数</a></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.8" id="api-py-comm"><span class="header-section-number">20.8</span> parcel.Comm</h2>
+<p><strong>概要</strong>　PARCEL に渡す <a href="../user/glossary.html#g-mpi">MPI</a> コミュニケータ.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> parcel.Comm()             <span class="co"># MPI_COMM_WORLD (mpi4py が無くても使える)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> parcel.Comm(mpi4py_comm)  <span class="co"># mpi4py のコミュニケータ</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>c.rank, c.size</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> c.allreduce(value, op<span class="op">=</span><span class="st">&quot;sum&quot;</span>)      <span class="co"># &quot;sum&quot;, &quot;max&quot;, &quot;min&quot;</span></span></code></pre></div>
+<p><strong>引数</strong>　<code>mpi4py_comm</code>は mpi4py のコミュニケータ (<code>MPI.Comm</code>) または<code>None</code>. MPI なしの版で mpi4py のコミュニケータを渡すと<code>TypeError</code>. mpi4py のコミュニケータでないものを渡しても<code>TypeError</code>.</p>
+<p><strong>戻り値</strong>　<code>rank</code>と<code>size</code>はこのランクの番号とランク数 (MPI なしの版では 0 と 1). <code>allreduce()</code>は全ランクの和・最大・最小 (<code>float</code>) を返す (集団操作. <code>op</code>が不正なら<code>ValueError</code>).</p>
+<p><strong>注意</strong>　行列の<code>comm</code>引数には<code>parcel.Comm</code>と mpi4py のコミュニケータのどちらも渡せる.</p>
+<h2 data-number="20.9" id="api-py-partition-rows"><span class="header-section-number">20.9</span> parcel.partition_rows()</h2>
+<p><strong>概要</strong>　<code>n_global</code>行を各ランクに連続した行ブロックとして均等に割り当てる.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>row_start, n_local <span class="op">=</span> parcel.partition_rows(n_global, comm<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p><strong>戻り値</strong>　このランクの<code>(row_start, n_local)</code>. 端数は先頭のランクから 1 行ずつ割り当てる.</p>
+<p><strong>前提条件</strong>　<code>n_global</code>がランク数以上 (満たさなければ<code>ValueError</code>).</p>
+<h2 data-number="20.10" id="api-py-build-info"><span class="header-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</h2>
+<p><strong>概要</strong>　ネイティブ層の情報を返す.</p>
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>戻り値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">build_info()</span></code></td>
+<td>ビルドの情報の文字列 (整数型の幅, 精度, MPI の有無, ABI の版. pip で入れた場合はターゲットとカーネル最適化のフラグも)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">has_mpi()</span></code></td>
+<td>ネイティブ層を MPI ありでビルドしたら<code><span class="tok">True</span></code>, MPI なし (1 プロセス版) なら<code><span class="tok">False</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">device_name()</span></code></td>
+<td>このランクで PARCEL が使う<a href="../user/glossary.html#g-device">デバイス</a>の名前 (既定のセレクタで選ばれるもの)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.11" id="api-py-version"><span class="header-section-number">20.11</span> parcel.__version__ / parcel.library_version()</h2>
+<p><strong>概要</strong>　版を返す.</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">__version__</span></code></td>
+<td>パッケージの版の文字列 (<code><span class="tok">"1.2.0"</span></code>. 本体と同じ番号)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">library_version()</span></code></td>
+<td>ネイティブ層をビルドしたときの <code><span class="tok">Include/parcel_version.hpp</span></code> の版の文字列. <code><span class="tok">__version__</span></code> と同じになる</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.12" id="py-errors"><span class="header-section-number">20.12</span> 例外</h2>
+<table>
+<thead>
+<tr>
+<th>例外</th>
+<th>起こる場合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">ValueError</span></code></td>
+<td>引数・設定の誤り (取りうる値の外, 組合せの誤り), 行列の検査の不合格</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">OverflowError</span></code></td>
+<td>行数などがネイティブ層の整数型の範囲を超える</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">TypeError</span></code></td>
+<td>行列が<code><span class="tok">DistributedCSR</span></code>でない, コミュニケータの型が誤り</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ImportError</span></code></td>
+<td>ネイティブ層が見つからない, 版 (ABI) が合わない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">parcel.NotBuiltError</span></code></td>
+<td>指定したソルバがビルドから外されている (<a href="../user/installation.html#install-macros">利用者ガイドの「ビルドするソルバの取捨」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">parcel.ParcelError</span></code></td>
+<td>その他の失敗 (<code><span class="tok">RuntimeError</span></code>の派生. <code><span class="tok">NotBuiltError</span></code>の基底クラス. 属性<code><span class="tok">code</span></code>にエラーコード)</td>
+</tr>
+</tbody>
+</table>
+<p>　MPI なしの版では, これらの例外は呼び出したプロセスで捕まえられ, <a href="../user/glossary.html#g-device">デバイス</a>のメモリ不足などのライブラリ内の失敗も<code>parcel.ParcelError</code>になる. MPI ありの版では, ライブラリが判定する誤り (設定の組合せ, 行列の検査) は全ランクで同じ例外になる. 配列の長さや値の範囲など Python 側の検査は各ランクで行うので, 引数がランクによって異なり一部のランクだけが例外を投げると, 残りのランクは集団操作で待ち続ける. これら以外の誤り (デバイスのメモリ不足など) は一部のランクだけで起きうるので, メッセージを表示して MPI_Abort で全ランクを終了する.</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← ソルバごとの収束判定</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'py';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

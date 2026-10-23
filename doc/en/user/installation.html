@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Installation – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/installation.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li class="current"><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="sycl-compiler.html" rel="previous" accesskey="p">← Installing a SYCL Compiler</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="usage.html" rel="next" accesskey="n">Usage →</a></span>
+</nav>
+<h1 data-number="4" id="installation"><span class="header-section-number">4</span> Installation</h1>
+<p>This chapter describes how to install <a href="glossary.html#g-sycl">SYCL</a> PARCEL.<br />
+PARCEL consists of header files only. It can be used simply by including <code>./Include/parcel_sycl.hpp</code> and compiling with a SYCL-capable compiler. No prebuilding or installation as a library is required.</p>
+<p>Note, however, the following three points.</p>
+<ul>
+<li>In C++, C and Fortran, <a href="glossary.html#g-mpi">MPI</a> is used by default (<code>PARCEL_MPI</code> defaults to 1). The SYCL compiler (<code>acpp</code>) is invoked through an MPI wrapper (<code>mpicxx</code>, etc.). A single-process version without MPI can be built with <code>-DPARCEL_MPI=0</code>. Python and spack default to no MPI (<a href="installation.html#install-mpi-default">“Default of MPI”</a>, <a href="installation.html#install-nompi">“Build without MPI”</a>).</li>
+<li>The eigenvalue solver <code>ks_arnoldi</code> (<code>Include/parcel_krylov_ks.hpp</code>) includes <code>lapacke.h</code> and calls <a href="glossary.html#g-lapack">LAPACKE</a>. Since all solvers are enabled by default, the LAPACKE header and library must be specified even when only linear systems are solved. Excluding <code>ks_arnoldi</code> with <code>-DPARCEL_ENABLE_KS_ARNOLDI=0</code> removes this requirement (<a href="installation.html#install-macros">“Selecting the Solvers to Build”</a>).</li>
+<li>The <code>#include</code> directives in the source use relative paths. Compile the sample programs in the PARCEL top-level directory.</li>
+</ul>
+<p>For installing a SYCL-capable compiler, see <a href="sycl-compiler.html#sycl-compiler">the previous chapter</a>. Installing PARCEL together with its prerequisites with <a href="glossary.html#g-spack">spack</a> is described in <a href="installation.html#install-spack">“Installing with spack”</a>, and the Python package in <a href="installation.html#install-python">“Python Package”</a>.</p>
+<h2 data-number="4.1" id="install-layout"><span class="header-section-number">4.1</span> Package Layout</h2>
+<p>The layout of the distribution package (PARCEL_SYCL v1.2) is shown below. The library itself consists only of the headers in <code>Include/</code>; the rest are samples and tests.</p>
+<div class="nowrap-c1">
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">Include/</span></code></td>
+<td>The library (headers only). Include <code><span class="tok">parcel_sycl.hpp</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">capi/</span></code></td>
+<td>C / Fortran API: <code><span class="tok">parcel_sycl_c.h</span></code> (C declarations), <code><span class="tok">parcel_sycl_mod.f90</span></code> (Fortran module), <code><span class="tok">wrapper_parcel_sycl.cpp</span></code> (implementation; build with a SYCL compiler), <code><span class="tok">parcel_capi_default.hpp</span></code> (compile-time defaults of the wrapper: internal precisions and the settings of the legacy API)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">examples/</span></code></td>
+<td><code><span class="tok">quick_start.cpp</span></code>, <code><span class="tok">quick_start_c.c</span></code>, <code><span class="tok">quick_start_f.f90</span></code>, <code><span class="tok">quick_start.py</span></code> (the C++, C, Fortran and Python examples of the <a href="quickstart.html#quickstart">Quick Start</a>), <code><span class="tok">example_pcg_ks.cpp</span></code> (<code><span class="tok">pcg</span></code> and <code><span class="tok">ks_arnoldi</span></code>), <code><span class="tok">sample_c.c</span></code> / <code><span class="tok">sample_f.f90</span></code> (call and verify all solvers through the C / Fortran API), <code><span class="tok">sample_f_mpi_stub.f90</span></code> (single-process <code><span class="tok">mpi</span></code> module for building <code><span class="tok">sample_f.f90</span></code> and <code><span class="tok">quick_start_f.f90</span></code> without MPI), <code><span class="tok">problem.f90</span></code> (matrix generation for the legacy API), <code><span class="tok">build_examples.sh</span></code> (builds all of the above; compilers, target and LAPACK are set with environment variables), <code><span class="tok">run_quick_checks.sh</span></code> (checking after the build; <a href="installation.html#install-quick-checks">“Checking After the Build”</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">python/</span></code></td>
+<td>The Python package <code><span class="tok">parcel</span></code> (<a href="installation.html#install-python">“Python Package” in “Installation”</a>, <a href="usage.html#usage-python">Python in “Usage”</a>): <code><span class="tok">parcel/</span></code> (Python layer), <code><span class="tok">src/</span></code> (source of the native layer <code><span class="tok">libparcel_py.so</span></code>), <code><span class="tok">envs/mac_brew.sh</span></code> (settings for building on macOS + Homebrew), <code><span class="tok">pyproject.toml</span></code> / <code><span class="tok">CMakeLists.txt</span></code> (build settings for pip)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">spack/</span></code></td>
+<td><a href="glossary.html#g-spack">spack</a> recipes <code><span class="tok">parcel-sycl</span></code> / <code><span class="tok">py-parcel-sycl</span></code> (<code><span class="tok">spack_repo/parcel/</span></code>) and the scripts that install everything from fetching spack to PARCEL (<code><span class="tok">stack/install_stack.sh</span></code>, <code><span class="tok">stack/check_stack.sh</span></code> for checking, per-environment definitions <code><span class="tok">stack/envs/&lt;env&gt;/</span></code>) (<a href="installation.html#install-spack">“Installing with spack”</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/verify/</span></code></td>
+<td>The verification sample <code><span class="tok">parcel_krylov_sample_verify.cpp</span></code>, its defaults <code><span class="tok">parcel_default.hpp</span></code>, the memory report (<code><span class="tok">diag_mem.hpp</span></code>; <code><span class="tok">PARCEL_MEM_REPORT</span></code>), and the test matrix generators (Poisson, convection-diffusion, unstructured)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/regression/</span></code></td>
+<td>Generator of the regression-test job scripts (<code><span class="tok">gen_regression.py</span></code>), submission and summary scripts, the <a href="glossary.html#g-dd">double-double</a> check (<code><span class="tok">ddcheck</span></code>), the Python API test (<code><span class="tok">sample_py.py</span></code>), and a script that runs the regression tests on machines without a scheduler (<code><span class="tok">run_local.sh</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/perf/</span></code></td>
+<td>Generators of the performance-test job scripts (<code><span class="tok">gen_perf.py</span></code>, and <code><span class="tok">gen_perf_prec.py</span></code> for mixed precision) and summary scripts</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/site_config.py</span></code></td>
+<td>Per-environment settings of the tests (queues, modules, compile flags, accounts). Edit it for your environment</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tests/check_version.py</span></code></td>
+<td>Version check (no build needed). Checks that the files that copy the version (the Python package, the spack recipes and the <code><span class="tok">parcel-sycl@</span></code> specs of the environment definitions, <code><span class="tok">CITATION.cff</span></code>) agree with <code><span class="tok">Include/parcel_version.hpp</span></code> (<a href="versions.html#versions-api">“Checking the Version”</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tools/make_tarball.py</span></code></td>
+<td>Script that creates the distribution tarball and its sha256 (<a href="versions.html#versions-tarball">“Verifying the Distribution”</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">README.md</span></code>, <code><span class="tok">CHANGELOG.md</span></code></td>
+<td>Overview and changes in v1.2</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">CITATION.cff</span></code>, <code><span class="tok">SUPPORT.md</span></code></td>
+<td>Citation information and how to get support (<a href="versions.html#versions-cite">“Citation and Support”</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">doc/</span></code></td>
+<td>HTML of the User Guide and the API Reference of this manual (Japanese and English; entry <code><span class="tok">doc/index.html</span></code>, English <code><span class="tok">doc/index_en.html</span></code>; open it directly in a web browser)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">COPYING</span></code>, <code><span class="tok">COPYING.LESSER</span></code></td>
+<td>License (LGPL-3.0)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The descriptive md files (<code>README.md</code>, <code>CHANGELOG.md</code>, <code>SUPPORT.md</code>, <code>spack/README.md</code>, <code>python/README.md</code>, <code>tests/*/README.md</code>) are in English, with a Japanese version in the same place (<code>README.ja.md</code> etc., <code>.ja</code> before <code>.md</code> in the name).</p>
+<p>How to run the tests is described in <code>tests/regression/README.md</code> and <code>tests/perf/README.md</code>. The regression tests consist of the verification sample (C++) and the tests of the C, Fortran and Python APIs (<code>examples/sample_c.c</code>, <code>examples/sample_f.f90</code>, <code>tests/regression/sample_py.py</code>); with or without <a href="glossary.html#g-mpi">MPI</a> and the languages can be selected for generation, build, submission and summary. Besides the test environments of this manual, the bundled settings (<code>tests/site_config.py</code>) include examples for environments installed from scratch with <a href="glossary.html#g-spack">spack</a> (<code>s86spack_cpu</code>, <code>s86spack_gpu</code>, etc.) and an example for macOS + Homebrew without a scheduler (<code>mac</code>).</p>
+<h2 data-number="4.2" id="install-quick-checks"><span class="header-section-number">4.2</span> Checking After the Build</h2>
+<p>To check a build, use <code>bash examples/run_quick_checks.sh</code>. It builds the four <a href="quickstart.html#quickstart">Quick Start</a> examples (C++, C, Fortran and Python) with <code>examples/build_examples.sh</code>, runs them as one process, and with an <a href="glossary.html#g-mpi">MPI</a> build also runs the C++ example with two processes. Each example prints <code>check: ... PASS</code> if the maximum relative error against the exact solution is at most 1e-6 (<a href="quickstart.html#qs-overview">“Program Overview”</a>). At the end, the script prints <code>PASS n / FAIL m (SKIP k)</code> and the elapsed time on one line, and exits with status 0 if nothing failed. The Python example is SKIPPED (not failed) if <code>parcel</code> (with NumPy and SciPy) cannot be imported.</p>
+<p>The build (<code>build_examples.sh quick</code>) runs the SYCL compilations (the C++ example and the wrapper of the C / Fortran API) at the same time (the number of concurrent compilations is <code>BUILD_JOBS</code>; the default is the smaller of the number of targets and the number of cores). After a successful build, the build settings (<code>SYCL_TARGET</code>, <code>CXXFLAGS</code>, <code>PARCEL_MPI</code>, the compilers and their locations, etc.) and the cksum of the sources (headers, API, examples) are recorded in <code>examples/build/build_stamp.txt</code>. From the second run on, if the executables exist and the record matches the current state, the build is skipped and only the runs are performed (less than a minute). If a setting or a source has changed, the differing items are shown and the examples are rebuilt. <code>--rebuild</code> always rebuilds.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> examples/run_quick_checks.sh                 <span class="co"># with MPI. last line: === PASS 6 / FAIL 0 (SKIP 0)  所要 &lt;sec&gt; s</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_MPI</span><span class="op">=</span>0 <span class="fu">bash</span> examples/run_quick_checks.sh    <span class="co"># without MPI</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> examples/run_quick_checks.sh <span class="at">--rebuild</span>       <span class="co"># rebuild</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">NO_BUILD</span><span class="op">=</span>1 <span class="fu">bash</span> examples/run_quick_checks.sh      <span class="co"># run examples/build/ as is, without checking the record</span></span></code></pre></div>
+<p>The environment variables for the compilers, target and LAPACK are the same as for <code>build_examples.sh</code> (for a GPU, e.g. <code>SYCL_TARGET=--acpp-targets=cuda:sm_70</code>). The MPI launcher is set with <code>MPIEXEC</code> (default <code>mpirun</code>), <code>MPIEXEC_NP_FLAG</code> (default <code>-n</code>), <code>MPI_NP</code> (default 2) and <code>MPIEXEC_ARGS</code>. For MPI libraries that cannot run <code>MPI_Init</code> without the launcher (e.g. Fujitsu MPI), <code>MPIEXEC_ALL=1</code> starts the single-process runs through the launcher as well. Fujitsu <code>mpiexec</code> writes the standard output of the ranks to the job log, where the check lines cannot be read, so with Fujitsu <code>mpiexec</code> (<code>MPIEXEC=mpiexec</code> whose real file is under <code>/opt/FJSV…</code>) <code>RC_ONLY=1</code> (pass if the exit status is 0) is the default (use <code>RC_ONLY=0</code> to turn it off). When installed with <a href="glossary.html#g-spack">spack</a>, <code>spack test run parcel-sycl py-parcel-sycl</code> performs the same check (<a href="installation.html#install-spack">“Installing with spack”</a>).</p>
+<p><strong>Number of threads and where it runs.</strong> If <code>OMP_NUM_THREADS</code> is not set, all available logical CPUs are used on a compute node (inside a job), and 4 on a login node (or the number available, if fewer than 4). For the <a href="glossary.html#g-mpi">MPI</a> run this is divided by the number of processes so that the total stays the same (at least 1; 2 processes on a login node get 2 threads each). The number of available logical CPUs is the smallest of the CPU affinity (<code>nproc</code>), the CPU limit of the cgroup, and the job’s allocation on this node (<a href="glossary.html#g-pbs">PBS</a> <code>NCPUS</code>, Slurm <code>SLURM_CPUS_ON_NODE</code>). Whether it is a compute node is decided by the presence of a job environment variable (PBS <code>PBS_JOBID</code>, Fujitsu PJM <code>PJM_JOBID</code>, Slurm <code>SLURM_JOB_ID</code>), and can be forced with <code>QUICK_NODE=compute</code> / <code>QUICK_NODE=login</code>. The decision and the values used are printed first. If <code>OMP_NUM_THREADS</code> is set, its value is used (in a job the scheduler may set it: PBS <code>ompthreads</code> (a queue default of 1 is possible), Fujitsu PJM <code>--omp thread=</code>). With Open MPI, <code>--bind-to none</code> is added unless <code>MPIEXEC_ARGS</code> specifies a placement (<code>--bind-to</code>, <code>--map-by</code>) (with 2 or fewer processes Open MPI binds each process to one core, which would pack several threads onto one core).</p>
+<p><strong>Where to run it.</strong> In CPU environments, a login node is fine (follow the rules of the site). In GPU environments and on <a href="glossary.html#g-a64fx">A64FX</a> (<a href="glossary.html#g-odyssey">Odyssey</a>), run it on a compute node (a short batch job or an interactive job): login nodes have no GPU, and A64FX executables do not run on the x86 login nodes. When the MPI run (2 processes) is done in a GPU environment, the script does not assign one GPU per process (as <code>gpu_bind.sh</code> in <a href="concepts.html#gpu-rank-bind">“Mapping One Rank to One Device”</a> does), so both processes may use the same GPU.</p>
+<h2 data-number="4.3" id="install-options"><span class="header-section-number">4.3</span> Compile Options</h2>
+<p>This section describes the flags specified at compile time. The <code>-D</code> macros of the library itself (<code>Include/</code>) are described in the section <a href="installation.html#install-macros">Macros</a>. The run-time options of the samples (environment variables <code>PARCEL_SOLVER</code>, <code>PARCEL_NX</code>, <code>PARCEL_PRECON</code>, etc.) are described in <a href="usage.html#usage-verify-options">the “Usage” chapter</a>.</p>
+<p><strong>Flags required in all environments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">--acpp-targets=&lt;target&gt;</span></code></td>
+<td>Kind of code to generate. <code><span class="tok">omp</span></code> (CPU, <a href="glossary.html#g-openmp">OpenMP</a>), <code><span class="tok">omp.library-only</span></code> (<a href="glossary.html#g-a64fx">A64FX</a> + Fujitsu compiler), <code><span class="tok">cuda:sm_70</span></code> (<a href="glossary.html#g-v100">V100</a>), <code><span class="tok">cuda:sm_80</span></code> (<a href="glossary.html#g-a100">A100</a>), <code><span class="tok">cuda:sm_90</span></code> (<a href="glossary.html#g-h100">H100</a>), <code><span class="tok">hip:gfx942</span></code> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">-I&lt;location</span> <span class="tok">of</span> <span class="tok">lapacke.h&gt;</span></code></td>
+<td>Include path for <code><span class="tok">lapacke.h</span></code>. Example: <code><span class="tok">-I/usr/include/openblas</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">-l&lt;LAPACK</span> <span class="tok">library&gt;</span></code></td>
+<td>Library containing <a href="glossary.html#g-lapack">LAPACKE</a>. Examples: <code><span class="tok">-lopenblas</span></code>, Fujitsu <code><span class="tok">-lfjlapack</span></code>, on PS <code><span class="tok">-l:libopenblaso.so.0</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">-O3</span></code></td>
+<td>Optimization. Specified in all environments</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Environment-dependent flags</strong></p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Environments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">-march=native</span> <span class="tok">-mtune=native</span></code></td>
+<td><a href="glossary.html#g-s86">s86 CPU</a>/GPU, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a></td>
+<td>Optimization for the host CPU</td>
+</tr>
+<tr>
+<td><code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code></td>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td>Raises the register limit of ptxas (the CUDA assembler). Recommended on V100. With the default allocation, the loads of the matrix and vectors in kernels such as the Jacobi <a href="glossary.html#g-precon">preconditioner</a> are split and serialized, which is slower. No spills occur and the results do not change. Not used on other GPUs (<a href="kernel-opt.html#kopt-v100">Register Limit on V100</a>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">-std=c++17</span></code></td>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td>Specified for builds through the Fujitsu compiler</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DNDEBUG</span> <span class="tok">-fno-math-errno</span> <span class="tok">-fno-trapping-math</span></code></td>
+<td><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td>Only floating-point flags that do not change values are used. <code><span class="tok">-ffast-math</span></code> is not used because it breaks the error terms of <a href="glossary.html#g-dd">double-double</a> and the detection of NaN (the build stops with <code><span class="tok">#error</span></code>); <code><span class="tok">-fno-exceptions</span></code> is not used because it is incompatible with the exceptions of the argument checks</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.4" id="install-macros"><span class="header-section-number">4.4</span> Macros</h2>
+<p>Since PARCEL is a header-only library, the configuration and behavior of the library (<code>Include/</code>) can be selected by adding <code>-D&lt;macro&gt;</code> or <code>-D&lt;macro&gt;=&lt;value&gt;</code> when compiling the user program. Every macro works with its default value, and normally nothing needs to be specified. There are the following four kinds by purpose.</p>
+<ul>
+<li>Selecting the solvers to build: exclude unused solvers to shorten compilation</li>
+<li>Integer type: select the widths of the global indices (64-bit by default) and the <a href="glossary.html#g-rank">rank</a>-local indices (32-bit by default)</li>
+<li>Optimization: select the loop structure of the kernels for each environment, and, since the defaults reduce memory, optimization options that use more memory for speed (<a href="installation.html#install-kernel-opt">Optimization</a>)</li>
+<li>Checks and numerical operations: checks that prevent wrong results and the method of <a href="glossary.html#g-dd">double-double</a> operations (keep the defaults; <a href="installation.html#install-checks">Checks and Numerical Operations</a>)</li>
+</ul>
+<p>In addition, there are macros for diagnosis and isolation, which are not specified in normal builds.</p>
+<h3 data-number="4.4.1" id="selecting-the-solvers-to-build-includeparcel_solver_select.hpp"><span class="header-section-number">4.4.1</span> Selecting the Solvers to Build (<code>Include/parcel_solver_select.hpp</code>)</h3>
+<p>All solvers are enabled by default, and normally nothing needs to be specified. Because all solvers go into a single translation unit, compilation takes a long time (6–14 minutes per configuration on <a href="glossary.html#g-a64fx">A64FX</a>); when the solvers to be used are known, for example during troubleshooting, disabling the others shortens the compilation.</p>
+<p>Each macro builds the solver when set to 1 and excludes it when set to 0. A solver macro that is not specified takes the value of <code>PARCEL_ENABLE_ALL_SOLVERS</code> (default 1), so all solvers are built when nothing is specified. To build only some solvers, set <code>PARCEL_ENABLE_ALL_SOLVERS=0</code> and set the solvers to be built to 1.</p>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code></td>
+<td>1</td>
+<td>Value used for each solver macro below when it is not specified. If set to 0, only the solvers set to 1 are built</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PCG</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::pcg</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PBICGSTAB</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::pbicgstab</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PGMRES</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::pgmres</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_PCAGMRES</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::pcagmres</span></code> (including the variant that does not form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>, <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_POWER</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::power</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_INVERSE_POWER</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::inverse_power</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_ENABLE_KS_ARNOLDI</span></code></td>
+<td>1 (the value of <code><span class="tok">PARCEL_ENABLE_ALL_SOLVERS</span></code>)</td>
+<td><code><span class="tok">parcel::krylov::ks_arnoldi</span></code>. If set to 0, <a href="glossary.html#g-lapack">LAPACKE</a> is no longer required (except for the verification sample)</td>
+</tr>
+</tbody>
+</table>
+<p>Dependencies are resolved automatically: enabling <code>inverse_power</code> enables <code>pcg</code> and <code>pgmres</code>, and enabling <code>ks_arnoldi</code> enables <code>pgmres</code>. If no solver is enabled, a compile error occurs. There is no macro named <code>PARCEL_ENABLE_CHOLQR_PCAGMRES</code>; specifying it causes a compile error (<code>#error</code>).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># build only pgmres (exclude all others)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DPARCEL_ENABLE_ALL_SOLVERS=0</span> <span class="at">-DPARCEL_ENABLE_PGMRES</span><span class="op">=</span>1</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># exclude only ks_arnoldi (build all others)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DPARCEL_ENABLE_KS_ARNOLDI=0</span></span></code></pre></div>
+<h3 data-number="4.4.2" id="install-int-type"><span class="header-section-number">4.4.2</span> Integer Type</h3>
+<p>Integers such as row indices, column indices and numbers of nonzeros are held in the type of the macro <code>PARCEL_INT</code> for global indices, and in the type of the macro <code>PARCEL_LINT</code> for indices within one <a href="glossary.html#g-rank">rank</a> (such as the <a href="glossary.html#g-crs">CRS</a> on the <a href="glossary.html#g-device">device</a>). By default, <code>PARCEL_INT</code> is 64 bits (<code>int64_t</code>; <code>MPI_INT64_T</code> in <a href="glossary.html#g-mpi">MPI</a> communication) and <code>PARCEL_LINT</code> is 32 bits (<code>int32_t</code>, <code>MPI_INT32_T</code>). The reasons for these defaults (integer overflow in large problems and the speed of the local kernels) are given in <a href="concepts.html#precision-int">“Integer Type” in the Basic Structure chapter</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Specification</th>
+<th><code><span class="tok">PARCEL_INT</span></code></th>
+<th><code><span class="tok">PARCEL_LINT</span></code></th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None (default)</td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td></td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_LOCAL_INT64</span></code></td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td><code><span class="tok">-DPARCEL_LOCAL_INT64=0</span></code> is the same as the default</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_INT32</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td><code><span class="tok">-DPARCEL_INT32=0</span></code> is the same as the default</td>
+</tr>
+<tr>
+<td><code><span class="tok">-DPARCEL_INT</span></code></td>
+<td class="nowrap"><code><span class="tok">int64_t</span></code></td>
+<td class="nowrap"><code><span class="tok">int32_t</span></code></td>
+<td>Former way to make <code><span class="tok">PARCEL_INT</span></code> 64-bit. Accepted for compatibility (its value is not used)</td>
+</tr>
+<tr>
+<td>Both <code><span class="tok">-DPARCEL_INT</span></code> and <code><span class="tok">-DPARCEL_INT32</span></code></td>
+<td class="nowrap">—</td>
+<td class="nowrap">—</td>
+<td>Contradictory; stopped with <code><span class="tok">#error</span></code></td>
+</tr>
+<tr>
+<td>Both <code><span class="tok">-DPARCEL_INT32</span></code> and <code><span class="tok">-DPARCEL_LOCAL_INT64</span></code></td>
+<td class="nowrap">—</td>
+<td class="nowrap">—</td>
+<td>The rank-local type would be wider than the global type; stopped with <code><span class="tok">#error</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The selected widths are available as the macros <code>PARCEL_INT_BITS</code> and <code>PARCEL_LINT_BITS</code> (64 or 32 each).</p>
+<p>How to choose the type (the range of matrices, integer overflow in large problems, the effect on memory and on the speed of the local kernels, and the relation to the C and Fortran APIs) is described in <a href="concepts.html#precision-int">“Integer Type” in the Basic Structure chapter</a>.</p>
+<h3 data-number="4.4.3" id="install-kernel-opt"><span class="header-section-number">4.4.3</span> Optimization</h3>
+<p>The macros of optimizations that increase speed without changing the computation (the algorithm and the number of iterations) are listed below: those that select the loop form of the kernels (the first eight) and those that make the solvers faster by using more memory (the last two; <span id="install-memory"></span>optimization options). How each optimization works, its effects and the defaults per environment are described in <a href="kernel-opt.html#kernel-opt">the “Optimization” chapter</a>, and the compile commands per environment in <a href="installation.html#install-recommended-flags">Recommended Options</a>. The defaults reduce memory.</p>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">_BLOCKING_LOOP_</span></code></td>
+<td>0</td>
+<td>If 1, replaces all kernels except <a href="glossary.html#g-spmv">SpMV</a> (dot products, <a href="glossary.html#g-axpy">axpy</a>, <a href="glossary.html#g-precon">preconditioners</a>, etc.) with blocked versions (<a href="kernel-opt.html#kopt-blocking">Blocking</a>). For <a href="glossary.html#g-a64fx">A64FX</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">_BLOCKING_LOOP_DOT_</span></code></td>
+<td>0</td>
+<td>If 1, replaces only the reductions (dot, dddot, max) with blocked versions. For CPUs other than <a href="glossary.html#g-a64fx">A64FX</a>. Do not specify on GPUs</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_SPMV_LADDER</span></code></td>
+<td>0</td>
+<td>If 1, splits the inner loop of SpMV in a ladder (<a href="kernel-opt.html#kopt-ladder">Ladder Splitting</a>). For AMD GPUs and <a href="glossary.html#g-a64fx">A64FX</a>. Not used on NVIDIA GPUs</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_PRECON_LADDER</span></code></td>
+<td>0 (the value of <code><span class="tok">PARCEL_SPMV_LADDER</span></code>)</td>
+<td>Ladder splitting of the iteration loops of the Jacobi preconditioner. Set explicitly to 0 on <a href="glossary.html#g-a64fx">A64FX</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_GEMV_AS_AXPY</span></code></td>
+<td>0 (the value of <code><span class="tok">_BLOCKING_LOOP_</span></code>)</td>
+<td>If 1, decomposes <a href="glossary.html#g-gemv">gemv</a> into M axpy operations (<a href="kernel-opt.html#kopt-gemv">Decomposing gemv</a>). Changes the rounding order</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_A64FX_AXPY_C</span></code></td>
+<td>1</td>
+<td>If 1, uses the versions of the <a href="glossary.html#g-axpy">axpy</a> that takes coefficients by value and of the axpy decomposition of gemv rewritten for <a href="glossary.html#g-a64fx">A64FX</a> (C in <a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>). 0 gives the form before the rewrite. The results do not change. Effective only in <code><span class="tok">_BLOCKING_LOOP_</span></code> builds</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_CG_FUSED</span></code></td>
+<td>0 (the value of <code><span class="tok">_BLOCKING_LOOP_</span></code>)</td>
+<td>If 1, fuses the kernels of one iteration of <code><span class="tok">pcg</span></code> (the updates of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>, the update of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><mi>r</mi><mo>,</mo><mi>r</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r, r \rangle</annotation></semantics></math>; D in <a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>). The results do not change. Can be 1 only in <code><span class="tok">_BLOCKING_LOOP_</span></code> builds</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_JACOBI_NODIV_UNIT</span></code></td>
+<td>1</td>
+<td>If 1, skips the division in the preparation of the right-hand side of the Jacobi preconditioner when the divisor is 1 (E in <a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>). The results do not change. Effective only in <code><span class="tok">_BLOCKING_LOOP_</span></code> builds</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_JACOBI_ROW2</span></code></td>
+<td>0 (the value of <code><span class="tok">_BLOCKING_LOOP_</span></code>; 0 if <code><span class="tok">PARCEL_PRECON_LADDER</span></code> is 1)</td>
+<td>If 1, processes the Jacobi sweep two rows at a time alternately when the preconditioner matrix is single precision (F in <a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>). The results do not change. Not used for a double-precision preconditioner matrix or with on-the-fly computation</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_JACOBI_ONTHEFLY</span></code></td>
+<td>1 (0 for <a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td>The Jacobi preconditioner (<code><span class="tok">PRECON_JACOBI</span></code>) does not keep the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math> and computes them from the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><annotation encoding="application/x-tex">D_A^{-1}</annotation></semantics></math> at every application. With 0 the values are stored (optimization option “without H”: uses the memory of the number of nonzeros of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> × size of the preconditioner matrix precision). With matrix scaling, a double-double coefficient matrix, preconditioner matrix or preconditioner computation precision, the values are stored even with 1. In builds for <a href="glossary.html#g-a64fx">A64FX</a>, where <code><span class="tok">_BLOCKING_LOOP_</span></code> (or <code><span class="tok">_BLOCKING_LOOP_SPMV_</span></code>) is 1, the default is 0 (<a href="kernel-opt.html#perf-memory-options">Choosing Between Memory and Speed</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_PCG_NO_XHIST</span></code></td>
+<td>1</td>
+<td>Default of the number of iterations (pstep) over which <code><span class="tok">pcg</span></code> batches the solution update. 1 gives 1 (one search direction, updated at every iteration); 0 gives 4 (optimization option “without G”: uses the memory of 3 vectors with halo). The run-time environment variable <code><span class="tok">PARCEL_PSTEP</span></code> takes precedence</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="4.4.4" id="install-ks-ortho"><span class="header-section-number">4.4.4</span> Default Orthogonalization of ks_arnoldi</h3>
+<p>The orthogonalization of the Arnoldi process of <code>ks_arnoldi</code> (<a href="eigen-solvers.html#alg-ks">Krylov-Schur method in the eigenvalue solver chapter</a>) is selected in the program with <code>set_qr_algo()</code> (<a href="../reference/ks-arnoldi.html#api-ks-set-qr-algo"><code>set_qr_algo()</code> of <code>ks_arnoldi</code> in the API Reference</a>). The following macro selects at build time the default used when it is not called. The environment variable <code>PARCEL_KS_ORTHO</code> is not read (if it is set, rank 0 prints a one-line warning to standard error at the first <code>solver()</code>; the behavior does not change).</p>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_KS_ORTHO_DEFAULT</span></code></td>
+<td class="nowrap">undefined (<code><span class="tok">cgs2</span></code>)</td>
+<td><code><span class="tok">cgs2</span></code> (classical Gram-Schmidt twice) or <code><span class="tok">mgs</span></code> (modified Gram-Schmidt twice). The build for <a href="glossary.html#g-ps-a">PS-A</a> (the <a href="glossary.html#g-spack">spack</a> environment <code><span class="tok">psa</span></code>, variant <code><span class="tok">ks_ortho=mgs</span></code>) uses <code><span class="tok">mgs</span></code>. When undefined, CGS2 (<code><span class="tok">QR_CGS</span></code>). A value given with <code><span class="tok">set_qr_algo()</span></code> takes precedence</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="4.4.5" id="install-checks"><span class="header-section-number">4.4.5</span> Checks and Numerical Operations</h3>
+<p>These macros select checks that prevent wrong results and the method of <a href="glossary.html#g-dd">double-double</a> operations. Keep the defaults; removing the checks can silently return wrong results, so specify them only when you understand the reasons.</p>
+<div class="nowrap-c1 nowrap-c2">
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_REQUIRE_IN_ORDER</span></code></td>
+<td class="nowrap">1</td>
+<td>At the entry of <code><span class="tok">set_crsMat()</span></code> and of <code><span class="tok">solver()</span></code> of each solver, checks that the <a href="glossary.html#g-sycl">SYCL</a> queue is <a href="glossary.html#g-inorder">in-order</a>, and throws <code><span class="tok">std::invalid_argument</span></code> on violation (including when there is no queue). PARCEL submits kernels to one queue in order without <code><span class="tok">sycl::event</span></code> or <code><span class="tok">depends_on</span></code>, and each kernel reads the results of the previous one, so in-order execution is assumed. With the SYCL 2020 default (out-of-order) queue, the execution order of <a href="glossary.html#g-usm">USM</a> kernels that use no accessors is not guaranteed. 0 disables the check</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_NO_CRS_CHECK</span></code></td>
+<td class="nowrap">0</td>
+<td>1 disables the input checks of <code><span class="tok">set_crsMat()</span></code> (the normal version and the hi/lo version for <a href="glossary.html#g-dd">double-double</a>). The checks are: the local number of rows <code><span class="tok">n</span></code> equals <code><span class="tok">nend-nstart+1</span></code> and is at least one (a <a href="glossary.html#g-rank">rank</a> with zero rows is not supported); <code><span class="tok">rowptr[0]</span> <span class="tok">==</span> <span class="tok">0</span></code>, it is non-decreasing, and <code><span class="tok">rowptr[n]</span> <span class="tok">==</span> <span class="tok">nnz</span></code>; the row blocks of all ranks cover all rows without gaps or overlaps (in any rank order); and the column indices are within the global number of rows. The non-<a href="glossary.html#g-mpi">MPI</a> version checks only <code><span class="tok">rowptr</span></code> and the column indices. On violation all ranks throw the same <code><span class="tok">std::invalid_argument</span></code> (the message names the offending rank and what is wrong). The cost is one pass over the nonzeros and two <a href="glossary.html#g-collective">collective communications</a>. If the checks are disabled and a broken input is given, the result is silently wrong because uninitialized receive buffers of the <a href="glossary.html#g-halo">halo</a> exchange are used, or memory outside the arrays is read</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_ALLOW_FAST_MATH</span></code></td>
+<td class="nowrap">Undefined</td>
+<td>If defined, allows builds with <code><span class="tok">-ffast-math</span></code> / <code><span class="tok">-ffinite-math-only</span></code> (<code><span class="tok">__FAST_MATH__</span></code> / <code><span class="tok">__FINITE_MATH_ONLY__</span></code>). By default <code><span class="tok">parcel_sycl.hpp</span></code> stops with <code><span class="tok">#error</span></code>. Rewriting expressions by associativity eliminates the error terms of <a href="glossary.html#g-dd">double-double</a>, and dd silently falls to double precision. In addition, the NaN / Inf checks (<code><span class="tok">std::isfinite</span></code>) are removed and <code><span class="tok">DIVERGED_NANORINF</span></code> no longer works. If defined, the precision of dd and the detection of NaN are not guaranteed</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_DD_NO_FMA</span></code></td>
+<td class="nowrap">Undefined</td>
+<td>If defined, replaces the error-free transformation of double-double products (TwoProd) by <code><span class="tok">fma</span></code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p = \mathrm{fma}(a,b,0)</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>−</mi><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">e = \mathrm{fma}(a,b,-p)</annotation></semantics></math>, the default) with Dekker splitting. For CPUs without FMA instructions. Do not use it on GPUs (<a href="glossary.html#g-cuda">CUDA</a>), where Dekker splitting breaks</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Do not use <code>-fno-exceptions</code> either. It is incompatible with the argument checks (<code>std::invalid_argument</code>, etc.).</p>
+<h2 data-number="4.5" id="install-recommended-flags"><span class="header-section-number">4.5</span> Recommended Options</h2>
+<p>The recommended flags for each environment are shown below. Blocking of reductions is specified for CPUs other than <a href="glossary.html#g-a64fx">A64FX</a>, blocking of all kernels, ladder splitting of SpMV, and fusion of multiply-adds into FMA (<code>-ffp-contract=fast</code>) for <a href="glossary.html#g-a64fx">A64FX</a>, together with <code>OMP_WAIT_POLICY=ACTIVE</code> and <code>KMP_BLOCKTIME=infinite</code> at run time (<a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>), and ladder splitting for AMD GPUs. NVIDIA GPUs do not use ladder splitting, and <a href="glossary.html#g-v100">V100</a> uses the register limit.</p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th><code><span class="tok">--acpp-targets</span></code></th>
+<th>Kernel optimization</th>
+<th><a href="glossary.html#g-lapack">LAPACKE</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td class="nowrap"><code><span class="tok">omp</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a></td>
+<td class="nowrap"><code><span class="tok">cuda:sm_70</span></code></td>
+<td>None (no ladder splitting) + <code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap"><code><span class="tok">omp.library-only</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_=1</span> <span class="tok">-DPARCEL_SPMV_LADDER=1</span> <span class="tok">-DPARCEL_PRECON_LADDER=0</span></code> + <code><span class="tok">-ffp-contract=fast</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lfjlapack</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-aquarius">Aquarius</a></td>
+<td class="nowrap"><code><span class="tok">cuda:sm_80</span></code></td>
+<td>None</td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td class="nowrap"><code><span class="tok">omp</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code></td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-g">Miyabi-G</a></td>
+<td class="nowrap"><code><span class="tok">cuda:sm_90</span></code></td>
+<td>None</td>
+<td><code><span class="tok">-I/usr/include/openblas</span> <span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap"><code><span class="tok">omp</span></code></td>
+<td><code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code></td>
+<td><code><span class="tok">lapacke.h</span></code> from nvhpc + <code><span class="tok">-l:libopenblaso.so.0</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td class="nowrap"><code><span class="tok">hip:gfx942</span></code></td>
+<td><code><span class="tok">-DPARCEL_SPMV_LADDER=1</span> <span class="tok">-DPARCEL_PRECON_LADDER=1</span></code></td>
+<td><code><span class="tok">lapacke.h</span></code> from nvhpc + <code><span class="tok">-l:libopenblaso.so.0</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The mechanisms of the optimizations and their measured effects per environment are described in <a href="kernel-opt.html#kernel-opt">the “Optimization” chapter</a>.</p>
+<p>The compile commands for each environment are shown below. The environment is set up with “Settings for use” of each environment in the chapter <a href="sycl-compiler.html#sycl-compiler">“Installing a SYCL Compiler”</a>. Each is an example of building the verification sample <code>tests/verify/parcel_krylov_sample_verify.cpp</code> in double precision in the top-level directory of the package. The solver, problem size, and <a href="glossary.html#g-precon">preconditioner</a> are specified at run time (<a href="usage.html#usage-verify-options">Run-Time Options of the Verification Sample</a>). Without <code>-DMAX_ITERATION</code>, the maximum number of iterations is 10000 (the default in <code>tests/verify/parcel_default.hpp</code>, the same as the library default), and it can be changed at run time with <code>PARCEL_MAX_ITER</code>. Compilation uses neither <a href="glossary.html#g-mpi">MPI</a> nor GPUs, so it is done on the login node except on <a href="glossary.html#g-a64fx">A64FX</a>. Replace <code>&lt;spack installation directory&gt;</code> and similar placeholders according to your environment.</p>
+<h3 data-number="4.5.1" id="install-s86-cpu"><span class="header-section-number">4.5.1</span> s86 (CPU)</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;s86&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.2" id="install-s86-gpu"><span class="header-section-number">4.5.2</span> s86 (GPU)</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;s86&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_70 <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-Xcuda-ptxas</span> <span class="at">-maxrregcount</span><span class="op">=</span>255 <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.3" id="install-odyssey"><span class="header-section-number">4.5.3</span> Odyssey</h3>
+<p>On <a href="glossary.html#g-a64fx">A64FX</a>, the login nodes and compute nodes have different architectures, so the build is done on a compute node. An example build job script is shown below. The <a href="glossary.html#g-mpi">MPI</a> wrapper <code>mpiFCC</code> is used, and <code>OMPI_CXX=acpp</code> makes it invoke <code>acpp</code>. With the <code>omp.library-only</code> target, <code>acpp</code> uses the Fujitsu compiler given in <code>ACPP_CPU_CXX</code> as the host compiler. As in the other environments, the location of the LAPACKE header is specified with <code>-I/usr/include/openblas</code> (with this, the build works on the compute node), and Fujitsu’s <code>libfjlapack</code> is used as the implementation.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;rscgrp=short-o&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;node=1&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;elapse=2:00:00&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -g &lt;group&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM --omp thread=48</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -j</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;Odyssey&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${PJM_O_WORKDIR}</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="va">LINKOPT</span><span class="op">=</span><span class="st">&quot;-L</span><span class="va">$fj_root</span><span class="st">/lib64 -Wl,-rpath,</span><span class="va">$fj_root</span><span class="st">/lib64 </span><span class="dt">\</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">  -L</span><span class="va">$sycl_root</span><span class="st">/lib -Wl,-rpath,</span><span class="va">$sycl_root</span><span class="st">/lib </span><span class="dt">\</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  -L</span><span class="va">$llvm_root</span><span class="st">/lib -Wl,-rpath,</span><span class="va">$llvm_root</span><span class="st">/lib -lfjlapack&quot;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="ex">mpiFCC</span> <span class="at">-O3</span> <span class="at">-std</span><span class="op">=</span>c++17 <span class="at">--acpp-targets</span><span class="op">=</span>omp.library-only <span class="dt">\</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_</span><span class="op">=</span>1 <span class="at">-DPARCEL_SPMV_LADDER</span><span class="op">=</span>1 <span class="at">-DPARCEL_PRECON_LADDER</span><span class="op">=</span>0 <span class="dt">\</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">-ffp-contract</span><span class="op">=</span>fast <span class="dt">\</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="va">${LINKOPT}</span></span></code></pre></div>
+<p>A single build takes longer than on <a href="glossary.html#g-xeon">Xeon</a> and needs several GiB of memory. The memory available to a single-node job is 28 GiB, so limit the number of concurrent builds when building several precision configurations at the same time.</p>
+<p><code>-ffp-contract=fast</code> makes the compiler fuse multiply-adds (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>×</mo><mi>b</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">a \times b + c</annotation></semantics></math>) into FMA instructions. The clang mode of the Fujitsu compiler does not fuse them by default. AdaptiveCpp passes the command-line <code>-O3</code> to the Fujitsu compiler after <code>ACPP_OMP_CXX_FLAGS</code>, so the <code>-Kfast</code> in <code>ACPP_OMP_CXX_FLAGS</code> is canceled by the later <code>-O3</code> and does not take effect. If fast-math is enabled, for example by passing <code>-Kfast</code> without a later <code>-O3</code>, <a href="glossary.html#g-dd">double-double</a> and the NaN detection break, so PARCEL stops the build with <code>#error</code> (<a href="accuracy.html#accuracy-fast-math">“Do Not Use -ffast-math”</a>). <code>-ffp-contract=fast</code> on the command line reaches the Fujitsu compiler. On one node of <a href="glossary.html#g-odyssey">Odyssey</a> (4 <a href="glossary.html#g-rank">ranks</a> × 12 threads, NX=256, <code>pcg</code> + Jacobi preconditioner), one iteration became 3 % faster (<a href="glossary.html#g-spmv">SpMV</a> 10 %, the body of <a href="glossary.html#g-axpy">axpy</a> 25 %). The number of iterations does not change, and the results change in the last digits (about 1e-11 relative in the residual). FMA adds without rounding the product, so the results are not bit-identical to a build without the flag. Use <code>-ffp-contract=off</code> if the results must agree. Inside the <a href="glossary.html#g-dd">double-double</a> functions, <code>Include/ddlib.hpp</code> still prohibits FMA (last paragraph of this section).</p>
+<p>In builds for <a href="glossary.html#g-a64fx">A64FX</a> (<code>-D_BLOCKING_LOOP_=1</code>), the Jacobi preconditioner stores the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> by default (“Without H” in <a href="kernel-opt.html#perf-memory-options">Choosing Between Memory and Speed</a>; the default of <code>PARCEL_JACOBI_ONTHEFLY</code> is 0, so nothing needs to be specified). On <a href="glossary.html#g-a64fx">A64FX</a> the on-the-fly computation (a multiplication and a diagonal check per nonzero) shows up in the preconditioner time: on one node of <a href="glossary.html#g-odyssey">Odyssey</a> (NX=256, <code>pcg</code> + Jacobi preconditioner), storing the values makes the preconditioner section 0.77 times and the total time to convergence 0.81 times. In exchange, the memory grows by the size of the preconditioner matrix precision per nonzero of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> (8 bytes in double precision). To reduce memory, specify <code>-DPARCEL_JACOBI_ONTHEFLY=1</code> explicitly.</p>
+<p>At run time, set <code>OMP_WAIT_POLICY=ACTIVE</code> and <code>KMP_BLOCKTIME=infinite</code>, which keep the <a href="glossary.html#g-openmp">OpenMP</a> threads spinning while they wait (recommended; this is not a library default, so set it in the job environment). On one node of <a href="glossary.html#g-odyssey">Odyssey</a> (4 <a href="glossary.html#g-rank">ranks</a> × 12 threads, one rank per <a href="glossary.html#g-cmg">CMG</a>), the fixed cost per iteration that does not depend on the problem size drops from 5.2 ms to 3.0 ms. It helps when the number of rows per device is small. Waiting threads keep using their cores, so it is counterproductive when processes compete for cores (for example, other processes sharing the node). Together with the rewritten axpy and the fused <code>pcg</code> kernels that are enabled in this build, the effects and caveats are described in <a href="kernel-opt.html#kopt-a64fx">Optimizations for A64FX</a>.</p>
+<p>In code before 2026-10-10, the prohibition of FMA for the <a href="glossary.html#g-dd">double-double</a> arithmetic (<code>#pragma clang fp contract(off)</code>) did not end at the end of <code>ddlib.hpp</code> with the Fujitsu compiler, so no FMA instructions were used in any of the following kernels (the clang mode of the Fujitsu compiler does not know the push / pop of <code>float_control</code>). The current code limits the prohibition to the double-double functions, and the other kernels use FMA as the compiler options say (<code>-ffp-contract=fast</code> above). Results in double precision and other precisions differ from earlier builds in the last digits.</p>
+<h3 data-number="4.5.4" id="install-aquarius"><span class="header-section-number">4.5.4</span> Aquarius</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;Aquarius&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_80 <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.5" id="install-miyabi-c"><span class="header-section-number">4.5.5</span> Miyabi-C</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;Miyabi-C&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.6" id="install-miyabi-g"><span class="header-section-number">4.5.6</span> Miyabi-G</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;Miyabi-G&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>cuda:sm_90 <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-lopenblas</span></span></code></pre></div>
+<h3 data-number="4.5.7" id="install-ps-a"><span class="header-section-number">4.5.7</span> PS-A</h3>
+<p>The PS compute nodes do not have <code>/usr/include/openblas/lapacke.h</code> (it exists only on the login nodes). In addition, MKL provides only <code>mkl_lapacke.h</code>. Therefore, the <code>lapacke.h</code> shipped with nvhpc is borrowed as the header, and the implementation is resolved to the OS OpenBLAS (the <a href="glossary.html#g-openmp">OpenMP</a> version <code>libopenblaso</code>). Set <code>OPENBLAS_NUM_THREADS=1</code> so that OpenBLAS threads are not nested inside PARCEL’s OpenMP threads. Since the <a href="glossary.html#g-mpi">MPI</a> is Intel MPI, <code>acpp</code> is also specified with <code>I_MPI_CXX</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;PS-A&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/system/apps/rhel9/dev/nvhpc/25.3/Linux_x86_64/25.3/compilers/include/lp64 <span class="dt">\</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-l:libopenblaso.so.0</span></span></code></pre></div>
+<h3 data-number="4.5.8" id="install-ps-b"><span class="header-section-number">4.5.8</span> PS-B</h3>
+<p>LAPACKE is handled in the same way as on <a href="glossary.html#g-ps-a">PS-A</a>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;PS-B&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>hip:gfx942 <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DNDEBUG</span> <span class="at">-fno-math-errno</span> <span class="at">-fno-trapping-math</span> <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DPARCEL_SPMV_LADDER</span><span class="op">=</span>1 <span class="at">-DPARCEL_PRECON_LADDER</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/system/apps/rhel9/dev/nvhpc/25.3/Linux_x86_64/25.3/compilers/include/lp64 <span class="dt">\</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="at">-l:libopenblaso.so.0</span></span></code></pre></div>
+<h3 data-number="4.5.9" id="install-c-fortran"><span class="header-section-number">4.5.9</span> C and Fortran Programs</h3>
+<p>Programs that use the C or Fortran API compile the wrapper <code>capi/wrapper_parcel_sycl.cpp</code> with the same flags as the <code>mpicxx</code> command of each environment above (<code>--acpp-targets</code>, kernel optimization, LAPACKE), and link it with the C or Fortran main program using the SYCL compiler. Use the same <code>--acpp-targets</code> for compiling and linking the wrapper. acpp (clang) links as <a href="glossary.html#g-pie">PIE</a>, so add <code>-fPIE</code> to objects built with gcc or gfortran. An example for <a href="glossary.html#g-s86">s86 CPU</a> (Open MPI) follows; in other environments, replace the flags on the first line by those of the environment.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment: apply &quot;Settings for use&quot; of &quot;s86&quot; in the chapter &quot;Installing a SYCL Compiler&quot;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="va">FLAGS</span><span class="op">=</span><span class="st">&quot;-O3 --acpp-targets=omp -march=native -mtune=native -D_BLOCKING_LOOP_DOT_=1&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="va">${FLAGS}</span> <span class="at">-I</span>/usr/include/openblas <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># C</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span>  <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-Icapi</span> <span class="at">-c</span> prog.c <span class="at">-o</span> prog.o</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> prog prog.o wrapper_parcel_sycl.o <span class="at">-lopenblas</span> <span class="at">-lm</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fortran (compile the PARCEL module first)</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> capi/parcel_sycl_mod.f90 <span class="at">-o</span> parcel_sycl_mod.o</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-fPIE</span> <span class="at">-c</span> prog.f90 <span class="at">-o</span> prog.o</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-o</span> prog prog.o parcel_sycl_mod.o wrapper_parcel_sycl.o <span class="dt">\</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>       <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">--showme:link</span><span class="va">)</span> <span class="at">-L</span><span class="va">$(</span><span class="fu">dirname</span> <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">-print-file-name</span><span class="op">=</span>libgfortran.so<span class="va">))</span> <span class="at">-lgfortran</span> <span class="at">-lopenblas</span></span></code></pre></div>
+<ul>
+<li>The MPI Fortran libraries to add at link time are obtained from the MPI wrapper (<code>mpif90 --showme:link</code> for Open MPI, <code>mpif90 -show</code> for Intel MPI).</li>
+<li>On <a href="glossary.html#g-ps-a">PS-A</a> and <a href="glossary.html#g-ps-b">PS-B</a>, specify LAPACKE (<code>-I</code> and <code>-l:libopenblaso.so.0</code>) as in the sections above. With Intel MPI on <a href="glossary.html#g-ps-a">PS-A</a>, use <code>mpif90</code> (gfortran inside) as the Fortran wrapper.</li>
+<li>With Fujitsu Fortran (frt, <code>mpifrt</code>) and Fujitsu C (fcc, <code>mpifcc</code>), add <code>-Kopenmp</code> (<a href="usage.html#usage-fortran">Fortran in “Usage”</a>).</li>
+<li><code>examples/build_examples.sh</code> builds the samples in <code>examples/</code> with the same steps. The compilers, target and LAPACK are changed with environment variables (<code>SYCL_TARGET</code>, <code>CXXFLAGS</code>, <code>LAPACK_INC</code>, <code>LAPACK_LIB</code>, <code>MPICXX</code> / <code>MPICC</code> / <code>MPIFC</code>, <code>FC_LINK</code>).</li>
+</ul>
+<h3 data-number="4.5.10" id="install-mac"><span class="header-section-number">4.5.10</span> macOS (Homebrew)</h3>
+<p>In an environment installed with Homebrew (<a href="sycl-compiler.html#env-mac">“macOS (Homebrew)” in “Installing a SYCL Compiler”</a>), use <code>--acpp-targets=omp.library-only</code> with blocking of the reductions only (<code>-D_BLOCKING_LOOP_DOT_=1</code>, as on other CPUs), and specify the Homebrew OpenBLAS for LAPACKE. With the Homebrew <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a>, <code>--acpp-targets=omp</code> gives the same compilation. <code>-march=native</code> is not needed (it makes no difference in speed). Start with <code>mpirun -n &lt;processes&gt; --bind-to none</code>. The following was confirmed with the programs of the four languages in the <a href="quickstart.html#quickstart">Quick Start</a>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">/opt/homebrew/bin/brew</span> shellenv<span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="va">B</span><span class="op">=</span>/opt/homebrew</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="va">T</span><span class="op">=</span><span class="st">&quot;--acpp-targets=omp.library-only&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="va">LAPACK_INC</span><span class="op">=</span><span class="st">&quot;-I</span><span class="va">$B</span><span class="st">/opt/openblas/include&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="va">LAPACK_LIB</span><span class="op">=</span><span class="st">&quot;-L</span><span class="va">$B</span><span class="st">/opt/openblas/lib -lopenblas -Wl,-rpath,</span><span class="va">$B</span><span class="st">/opt/openblas/lib&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="va">FC_RT</span><span class="op">=</span><span class="st">&quot;-L</span><span class="va">$B</span><span class="st">/opt/gcc/lib/gcc/current -lgfortran -Wl,-rpath,</span><span class="va">$B</span><span class="st">/opt/gcc/lib/gcc/current&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># C++ (with MPI; without MPI, replace mpicxx by acpp and add -DPARCEL_MPI=0)</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="va">$T</span> <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="va">${LAPACK_INC}</span> <span class="dt">\</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> verify_double tests/verify/parcel_krylov_sample_verify.cpp <span class="va">${LAPACK_LIB}</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># C and Fortran (with MPI)</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="at">-O3</span> <span class="va">$T</span> <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="va">${LAPACK_INC}</span> <span class="at">-c</span> capi/wrapper_parcel_sycl.cpp <span class="at">-o</span> wrapper_parcel_sycl.o</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicc</span>  <span class="at">-O2</span> <span class="at">-Icapi</span> <span class="at">-c</span> prog.c <span class="at">-o</span> prog_c.o</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="va">$T</span> <span class="at">-o</span> prog_c prog_c.o wrapper_parcel_sycl.o <span class="va">${LAPACK_LIB}</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-c</span> capi/parcel_sycl_mod.f90 <span class="at">-o</span> parcel_sycl_mod.o</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="ex">mpif90</span> <span class="at">-O2</span> <span class="at">-c</span> prog.f90 <span class="at">-o</span> prog_f.o</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="ex">mpicxx</span> <span class="va">$T</span> <span class="at">-o</span> prog_f prog_f.o parcel_sycl_mod.o wrapper_parcel_sycl.o <span class="va">$(</span><span class="ex">mpif90</span> <span class="at">--showme:link</span><span class="va">)</span> <span class="va">${FC_RT}</span> <span class="va">${LAPACK_LIB}</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 <span class="at">--bind-to</span> none ./prog_c</span></code></pre></div>
+<p>The gfortran runtime library on macOS is a <code>.dylib</code>, so its location (<code>$B/opt/gcc/lib/gcc/current</code>) is given with <code>-L</code> and <code>-Wl,-rpath</code>. Sourcing <code>python/envs/mac_brew.sh</code> puts the same values into environment variables (<code>SYCL_TARGET</code>, <code>CXXFLAGS</code>, <code>LAPACK_INC</code>, <code>LAPACK_LIB</code>, <code>FC_LINK</code>), so <code>examples/build_examples.sh</code> can build the samples. The Python package is described in <a href="installation.html#install-python-envs">“Python Package”</a>.</p>
+<h2 data-number="4.6" id="install-mpi-default"><span class="header-section-number">4.6</span> Default of MPI</h2>
+<p>Whether PARCEL is built with <a href="glossary.html#g-mpi">MPI</a> or as the single-process version without MPI is decided by the macro <code>PARCEL_MPI</code> (1: with, 0: without). The default differs by usage as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Usage</th>
+<th>Default of <code><span class="tok">PARCEL_MPI</span></code></th>
+<th>Where it is decided</th>
+<th>How to build without / with MPI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C++ (including <code><span class="tok">Include/parcel_sycl.hpp</span></code>)</td>
+<td>1 (with MPI)</td>
+<td>Headers in <code><span class="tok">Include/</span></code></td>
+<td>Add <code><span class="tok">-DPARCEL_MPI=0</span></code></td>
+</tr>
+<tr>
+<td>C (<code><span class="tok">capi/parcel_sycl_c.h</span></code>)</td>
+<td>1 (with MPI)</td>
+<td><code><span class="tok">parcel_sycl_c.h</span></code> and the wrapper</td>
+<td>Add <code><span class="tok">-DPARCEL_MPI=0</span></code> to both the wrapper and the main program</td>
+</tr>
+<tr>
+<td>Fortran (<code><span class="tok">capi/parcel_sycl_mod.f90</span></code>)</td>
+<td>1 (with MPI)</td>
+<td>The wrapper (the module does not depend on MPI)</td>
+<td>Add <code><span class="tok">-DPARCEL_MPI=0</span></code> to the wrapper and satisfy <code><span class="tok">use</span> <span class="tok">mpi</span></code> with the substitute module</td>
+</tr>
+<tr>
+<td><code><span class="tok">examples/build_examples.sh</span></code></td>
+<td>1 (with MPI)</td>
+<td>Environment variable <code><span class="tok">PARCEL_MPI</span></code></td>
+<td><code><span class="tok">PARCEL_MPI=0</span> <span class="tok">bash</span> <span class="tok">examples/build_examples.sh</span></code></td>
+</tr>
+<tr>
+<td>Python (<code><span class="tok">python/</span></code>, pip)</td>
+<td>0 (without MPI)</td>
+<td><code><span class="tok">python/CMakeLists.txt</span></code></td>
+<td><code><span class="tok">-C</span> <span class="tok">cmake.define.PARCEL_MPI=1</span></code> for MPI</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-spack">spack</a> (<code><span class="tok">parcel-sycl</span></code>, <code><span class="tok">py-parcel-sycl</span></code>)</td>
+<td>0 (without MPI; variant <code><span class="tok">~mpi</span></code>)</td>
+<td>The recipe variant <code><span class="tok">mpi</span></code></td>
+<td><code><span class="tok">+mpi</span></code> for MPI</td>
+</tr>
+</tbody>
+</table>
+<p>C++, C and Fortran default to MPI so that programs written as for v1.0 (compiled with the MPI wrappers and started with <code>mpirun</code>) run as they are. Python and spack default to no MPI so that the package can be installed and tried immediately on machines without MPI (local computers, macOS, etc.). To use the version with MPI, specify it as above. In C and Fortran, if the wrapper and the main program are built with different settings, the types of the communicator argument do not match and the program does not work correctly (this is not detected at link time), so build both with the same setting. C++ is a header-only library, so the setting of the user program is used as it is. The computation is the same in both versions, and the results of the MPI version run with one process and of the version without MPI agree bit for bit.</p>
+<h2 data-number="4.7" id="install-nompi"><span class="header-section-number">4.7</span> Build without MPI</h2>
+<p>With <code>-DPARCEL_MPI=0</code>, a single-process version that does not use <a href="glossary.html#g-mpi">MPI</a> can be built. It does not include <code>mpi.h</code> or link the MPI library, so compile it directly with the SYCL compiler (<code>acpp</code>, etc.) instead of the MPI compiler wrapper (<code>mpicxx</code>), and run it without <code>mpirun</code>. Without the option (the default), MPI is used. The computation is the same as running the MPI build with one process, and the results agree bit for bit.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-march</span><span class="op">=</span>native <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="dt">\</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span>/usr/include/openblas <span class="at">-o</span> quick_start examples/quick_start.cpp <span class="at">-lopenblas</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./quick_start</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the four programs in examples/ (C / Fortran are compiled with gcc / gfortran)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_MPI</span><span class="op">=</span>0 <span class="fu">bash</span> examples/build_examples.sh</span></code></pre></div>
+<p>To build C and Fortran programs by hand, add <code>-DPARCEL_MPI=0</code> to both the wrapper and the C main program, and use <code>acpp</code>, <code>gcc</code> and <code>gfortran</code> instead of the MPI wrappers (<code>mpicxx</code>, <code>mpicc</code>, <code>mpif90</code>). <code>use mpi</code> in Fortran is satisfied by the single-process substitute module <code>examples/sample_f_mpi_stub.f90</code> (which implements <code>MPI_Init</code>, <code>MPI_Comm_rank</code>, <code>MPI_Comm_size</code>, <code>MPI_Finalize</code> and others for one process). Example commands are in the “without MPI” parts of <a href="quickstart.html#qs-c">“C”</a> and <a href="quickstart.html#qs-fortran">“Fortran”</a> of the Quick Start.</p>
+<p>User programs are written in the same way as with MPI. The differences are:</p>
+<ul>
+<li>C++: create the communicator with <code>parcel::comm comm(&amp;q);</code> (corresponding to <code>parcel::comm comm(MPI_COMM_WORLD, &amp;q);</code> with MPI). <code>mpi_rank()</code> returns 0 and <code>mpi_size()</code> returns 1. <code>set_crsMat(&amp;comm, nstart, nend, n, nnz, ...)</code> can be used as is, but since one process owns everything, use <code>nstart = 0</code> and <code>nend = n - 1</code> (otherwise <code>std::invalid_argument</code>). Functions that use MPI types (<code>comm::mpi_comm()</code>, etc.) do not exist. Guard the MPI calls in the user program (<code>MPI_Init</code>, etc.) with <code>#if PARCEL_MPI</code> (see <code>examples/quick_start.cpp</code>).</li>
+<li>C: compile both the wrapper (<code>capi/wrapper_parcel_sycl.cpp</code>) and the program that includes <code>parcel_sycl_c.h</code> with <code>-DPARCEL_MPI=0</code> (otherwise the type of the communicator argument does not match). The function names and argument order are unchanged; the communicator argument (<code>PARCEL_C_COMM</code>) becomes <code>int</code> and its value is ignored (pass 0). Use <code>nstart = index_base</code> and <code>n_local = n_global</code> (otherwise <code>PARCEL_ERR_DISTRIBUTION</code>). Exceptions inside the library do not call <code>MPI_Abort</code>; a message is printed and <code>PARCEL_ERR_RUNTIME</code> is returned. <code>MPI_Init</code> is not needed.</li>
+<li>Python: the version without MPI is the default (<a href="installation.html#install-python-nompi">Python Package in “Installation”</a>). Run with <code>python script.py</code> without <code>mpirun</code>.</li>
+<li>Fortran: use <code>capi/parcel_sycl_mod.f90</code> as is (the communicator integer is ignored). Compile <code>examples/sample_f.f90</code> unchanged together with <code>examples/sample_f_mpi_stub.f90</code>, a single-process substitute for the <code>mpi</code> module, using gfortran.</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="4.8" id="install-python"><span class="header-section-number">4.8</span> Python Package</h2>
+<p>The Python package <code>parcel</code> (<code>python/</code> in the distribution package) is installed by building, from source, its native layer (<code>libparcel_py.so</code>) that calls the C++ library of PARCEL directly. You need an environment in which PARCEL can be built (“Settings for use” in the chapter <a href="sycl-compiler.html#sycl-compiler">Installing a SYCL Compiler</a>), Python 3.8 or later, and NumPy. SciPy is convenient for building matrices, and the Python test of the regression tests (<code>tests/regression/sample_py.py</code>) uses it. The native layer is built with <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a>. The default is the single-process version without <a href="glossary.html#g-mpi">MPI</a>; the build setting <code>PARCEL_MPI=1</code> gives the version with MPI. There are three ways to install it. Usage is described in <a href="usage.html#usage-python">Python in “Usage”</a>.</p>
+<ul>
+<li>Install it with the <a href="glossary.html#g-spack">spack</a> recipe <code>py-parcel-sycl</code> (<a href="installation.html#install-spack">“Installing with spack”</a>). The script that installs everything from scratch, <code>spack/stack/install_stack.sh</code>, installs this package together with the C++ headers and the C / Fortran API.</li>
+<li>Run <code>pip install .</code> in <code>python/</code> (<a href="installation.html#install-python-nompi">“Without MPI (Default)”</a> below).</li>
+<li>Build the native layer directly without pip and give its location with environment variables (same section).</li>
+</ul>
+<h3 data-number="4.8.1" id="install-python-envs"><span class="header-section-number">4.8.1</span> Settings per Environment</h3>
+<p>The native layer is built for each environment (SYCL target and with or without MPI). The build settings are given with pip’s <code>-C cmake.define.&lt;name&gt;=&lt;value&gt;</code> (<a href="installation.html#install-python-cmake">“Build Settings”</a>). The values used in the test environments of this manual are shown below (the same as in <a href="installation.html#install-recommended-flags">Recommended Options</a>). Blank cells can be left at their defaults.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th><code><span class="tok">PARCEL_TARGET</span></code></th>
+<th><code><span class="tok">PARCEL_KERNEL_FLAGS</span></code></th>
+<th><code><span class="tok">PARCEL_EXTRA_FLAGS</span></code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86</a> (CPU), <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap">(<code><span class="tok">omp</span></code>)</td>
+<td>(<code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code>)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap"><code><span class="tok">cuda:sm_70</span></code></td>
+<td>(<code><span class="tok">-DPARCEL_SPMV_LADDER=0</span> <span class="tok">-DPARCEL_PRECON_LADDER=0</span></code>; no ladder splitting)</td>
+<td><code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td class="nowrap"><code><span class="tok">cuda:sm_80</span></code></td>
+<td>(same as above)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td class="nowrap"><code><span class="tok">cuda:sm_90</span></code></td>
+<td>(same as above)</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap"><code><span class="tok">hip:gfx942</span></code></td>
+<td>(<code><span class="tok">-DPARCEL_SPMV_LADDER=1</span> <span class="tok">-DPARCEL_PRECON_LADDER=1</span></code>)</td>
+<td></td>
+</tr>
+<tr>
+<td>macOS (Apple silicon) + Homebrew</td>
+<td class="nowrap"><code><span class="tok">omp.library-only</span></code></td>
+<td>(<code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code>)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Values in parentheses are the defaults (for <code>PARCEL_KERNEL_FLAGS</code>, the value chosen from the target). Give the location of <a href="glossary.html#g-lapack">LAPACKE</a> (<code>LAPACKE_INCLUDE_DIR</code>, <code>LAPACK_LIBS</code>) for your environment (for example <code>-l:libopenblaso.so.0</code> on <a href="glossary.html#g-ps-a">PS-A</a> and <a href="glossary.html#g-ps-b">PS-B</a>; see the section of each environment in <a href="installation.html#install-recommended-flags">Recommended Options</a>). Build, install and run in the same environment (“Settings for use” in the chapter <a href="sycl-compiler.html#sycl-compiler">Installing a SYCL Compiler</a>; the AdaptiveCpp, LAPACK and MPI libraries must be found).</p>
+<p>On macOS, in an environment installed with Homebrew (<a href="sycl-compiler.html#env-mac">“macOS (Homebrew)” in “Installing a SYCL Compiler”</a>), sourcing <code>python/envs/mac_brew.sh</code> sets the values in the table above and the location of the Homebrew OpenBLAS in environment variables; then use pip or the direct build below.</p>
+<h3 data-number="4.8.2" id="install-python-nompi"><span class="header-section-number">4.8.2</span> Without MPI (Default)</h3>
+<p>Run pip in <code>python/</code>. pip uses scikit-build-core and CMake 3.18 or later for the build (and fetches them if missing), so the package index must be reachable. Upgrade pip in the <a href="glossary.html#g-venv">venv</a> first (an old pip may not accept <code>-C</code>, which passes the build settings). It may be run on a login node and takes 1 to 2 minutes.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv <span class="va">$HOME</span>/venv_parcel</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install <span class="at">-U</span> pip</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install scipy           <span class="co"># optional; convenient for building matrices (parcel depends only on NumPy)</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> python</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-m</span> pip install . <span class="at">-C</span> cmake.define.PARCEL_TARGET=cuda:sm_70 <span class="dt">\</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-C</span> <span class="st">&quot;cmake.define.PARCEL_EXTRA_FLAGS=-Xcuda-ptxas -maxrregcount=255&quot;</span>     <span class="co"># example for s86 (V100)</span></span></code></pre></div>
+<p>The native layer is built directly with <code>acpp</code> and does not link the <a href="glossary.html#g-mpi">MPI</a> library.</p>
+<p>Without pip, build the native layer directly, and set the environment variable <code>PARCEL_PY_LIB</code> to its location and add <code>python/</code> to <code>PYTHONPATH</code> (run in the top directory of the package; the Python jobs of the regression tests work this way, and <code>tests/regression/sub_build_lang_&lt;environment&gt;.sh</code> builds <code>bin/&lt;environment&gt;/libparcel_py.so</code>).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="at">-O3</span> <span class="at">--acpp-targets</span><span class="op">=</span>omp <span class="at">-DPARCEL_MPI</span><span class="op">=</span>0 <span class="at">-march</span><span class="op">=</span>native <span class="at">-mtune</span><span class="op">=</span>native <span class="at">-D_BLOCKING_LOOP_DOT_</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">-fPIC</span> <span class="at">-shared</span> <span class="at">-IInclude</span> <span class="at">-I</span>/usr/include/openblas <span class="at">-o</span> libparcel_py.so python/src/parcel_py.cpp <span class="at">-lopenblas</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>python <span class="va">PARCEL_PY_LIB</span><span class="op">=</span><span class="va">$PWD</span>/libparcel_py.so <span class="ex">python</span> script.py</span></code></pre></div>
+<p>Check the installation as follows. <code>parcel.has_mpi()</code> returns <code>True</code> for the version with MPI, <code>parcel.build_info()</code> returns the build settings, and <code>parcel.device_name()</code> returns the name of the <a href="glossary.html#g-device">device</a> used.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel/bin/python</span> <span class="at">-c</span> <span class="st">&quot;import parcel; print(parcel.has_mpi(), parcel.build_info(), parcel.device_name())&quot;</span></span></code></pre></div>
+<p>The Python API test <code>tests/regression/sample_py.py</code> performs, from Python, the same problem, items and checks as the C sample <code>examples/sample_c.c</code> (the 7 solvers, pcagmres without building <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> in two ways, ks_arnoldi with <a href="glossary.html#g-shift-invert">shift-invert</a>, etc.). It can be run as the language <code>python</code> of the regression tests (<a href="installation.html#install-layout">Package Layout</a>) or on its own. The argument is <a href="glossary.html#g-nx">NX</a>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_TEST_FROM_SOURCE</span><span class="op">=</span>1 <span class="va">PARCEL_PY_LIB</span><span class="op">=</span><span class="va">$PWD</span>/libparcel_py.so <span class="ex">python</span> tests/regression/sample_py.py 16   <span class="co"># reads python/ of the package</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> tests/regression/sample_py.py 16                                                                <span class="co"># reads the installed parcel</span></span></code></pre></div>
+<h3 data-number="4.8.3" id="install-python-mpi"><span class="header-section-number">4.8.3</span> With MPI</h3>
+<p>With the build setting <code>PARCEL_MPI=1</code>, the native layer is built with the <a href="glossary.html#g-mpi">MPI</a> C++ wrapper (<code>mpicxx</code> by default). Set <code>OMPI_CXX=acpp</code> (Open MPI) or the equivalent beforehand so that the wrapper calls <code>acpp</code>. mpi4py is optional; to use it, install one built with the same MPI into the venv.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv <span class="va">$HOME</span>/venv_parcel_mpi                       <span class="co"># a separate venv from the version without MPI</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel_mpi/bin/python</span> <span class="at">-m</span> pip install <span class="at">-U</span> pip</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> python</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="va">$HOME</span><span class="ex">/venv_parcel_mpi/bin/python</span> <span class="at">-m</span> pip install . <span class="at">-C</span> cmake.define.PARCEL_MPI=1</span></code></pre></div>
+<p>Without pip, replace <code>acpp</code> by <code>mpicxx</code> in the build line above and remove <code>-DPARCEL_MPI=0</code>. Running is described in <a href="usage.html#usage-python-run-mpi">“Running with MPI”</a>.</p>
+<p>Test status: both the package installed with pip and the one built from source passed all items in the version with MPI on <a href="glossary.html#g-s86">s86</a> (CPU, <a href="glossary.html#g-v100">V100</a>), <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-miyabi-g">Miyabi-G</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-ps-b">PS-B</a> and <a href="glossary.html#g-aquarius">Aquarius</a>. The version without MPI was confirmed on <a href="glossary.html#g-s86">s86</a>, <a href="glossary.html#g-aquarius">Aquarius</a> and macOS (Homebrew; also the version with MPI). The checks of <code>py-parcel-sycl</code> installed with <a href="glossary.html#g-spack">spack</a> are given in <a href="installation.html#install-spack-envs">“Installing with spack”</a>.</p>
+<h3 data-number="4.8.4" id="install-python-cmake"><span class="header-section-number">4.8.4</span> Build Settings</h3>
+<p>The names given with pip’s <code>-C cmake.define.&lt;name&gt;=&lt;value&gt;</code> are listed below (the same list is at the top of <code>python/CMakeLists.txt</code>). Names not given take the defaults in the right column.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Meaning</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_MPI</span></code></td>
+<td>0: single-process version without <a href="glossary.html#g-mpi">MPI</a>, 1: with MPI</td>
+<td><code><span class="tok">0</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_TARGET</span></code></td>
+<td>The value of <code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">omp</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_KERNEL_FLAGS</span></code></td>
+<td>Kernel optimization macros</td>
+<td>Chosen from <code><span class="tok">PARCEL_TARGET</span></code> (<code><span class="tok">-D_BLOCKING_LOOP_DOT_=1</span></code> for <code><span class="tok">omp</span></code>, the two ladder macros for <code><span class="tok">hip</span></code>, no ladder splitting for <code><span class="tok">cuda</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_HOST_FLAGS</span></code></td>
+<td>Host optimization</td>
+<td><code><span class="tok">-march=native</span> <span class="tok">-mtune=native</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_EXTRA_FLAGS</span></code></td>
+<td>Other flags</td>
+<td>None</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_INCLUDE_DIR</span></code></td>
+<td>The <code><span class="tok">Include/</span></code> of PARCEL</td>
+<td><code><span class="tok">Include/</span></code> next to <code><span class="tok">python/</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">LAPACKE_INCLUDE_DIR</span></code></td>
+<td>Location of <code><span class="tok">lapacke.h</span></code></td>
+<td><code><span class="tok">/usr/include/openblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">LAPACK_LIBS</span></code></td>
+<td>LAPACK libraries</td>
+<td><code><span class="tok">-lopenblas</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_MPICXX</span></code></td>
+<td>C++ compiler</td>
+<td><code><span class="tok">acpp</span></code> without MPI, <code><span class="tok">mpicxx</span></code> with MPI</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<h2 data-number="4.9" id="install-spack"><span class="header-section-number">4.9</span> Installing with spack</h2>
+<p><code>spack/</code> in the distribution package contains recipes for installing PARCEL with <a href="glossary.html#g-spack">spack</a>, and a script that installs everything from scratch, from fetching spack through LLVM, <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a>, OpenBLAS and Python to PARCEL. The original description is <code>spack/README.md</code>. The target is spack 1.x (package repository API v2.2).</p>
+<h3 data-number="4.9.1" id="install-spack-recipe"><span class="header-section-number">4.9.1</span> Recipes</h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">parcel-sycl</span></code></td>
+<td>Headers (<code><span class="tok">include/</span></code>), C API (<code><span class="tok">lib/libparcel_sycl_c.so</span></code> and <code><span class="tok">include/parcel_sycl_c.h</span></code>), Fortran module (<code><span class="tok">include/parcel_sycl_mod.mod</span></code> and <code><span class="tok">lib/libparcel_sycl_f.a</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">py-parcel-sycl</span></code></td>
+<td>The Python package <code><span class="tok">parcel</span></code> (builds <code><span class="tok">python/</span></code> with scikit-build-core; <a href="installation.html#install-python">“Python Package”</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The variants are common to both.</p>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">mpi</span></code></td>
+<td class="nowrap">off</td>
+<td>With <a href="glossary.html#g-mpi">MPI</a> (the default is the single-process version without MPI)</td>
+</tr>
+<tr>
+<td><code><span class="tok">cuda</span></code> + <code><span class="tok">cuda_arch=&lt;n&gt;</span></code></td>
+<td class="nowrap">off</td>
+<td><code><span class="tok">--acpp-targets=cuda:sm_&lt;n&gt;</span></code>. With <code><span class="tok">cuda_arch=70</span></code> (<a href="glossary.html#g-v100">V100</a>), <code><span class="tok">-Xcuda-ptxas</span> <span class="tok">-maxrregcount=255</span></code> is added automatically</td>
+</tr>
+<tr>
+<td><code><span class="tok">rocm</span></code> + <code><span class="tok">amdgpu_target=&lt;gfx&gt;</span></code></td>
+<td class="nowrap">off</td>
+<td><code><span class="tok">--acpp-targets=hip:&lt;gfx&gt;</span></code></td>
+</tr>
+<tr>
+<td>(neither <code><span class="tok">cuda</span></code> nor <code><span class="tok">rocm</span></code>)</td>
+<td class="nowrap"></td>
+<td><code><span class="tok">--acpp-targets=omp</span></code> (CPU)</td>
+</tr>
+<tr>
+<td><code><span class="tok">native</span></code></td>
+<td class="nowrap">on</td>
+<td><code><span class="tok">-march=native</span> <span class="tok">-mtune=native</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">kernel</span></code></td>
+<td class="nowrap"><code><span class="tok">auto</span></code></td>
+<td>Kernel optimization (<a href="installation.html#install-kernel-opt">“Optimization”</a>): <code><span class="tok">auto</span></code> (<code><span class="tok">blocking_dot</span></code> on CPUs, <code><span class="tok">ladder</span></code> on AMD GPUs (<code><span class="tok">+rocm</span></code>), <code><span class="tok">none</span></code> on NVIDIA GPUs (<code><span class="tok">+cuda</span></code>), <code><span class="tok">a64fx</span></code> for <code><span class="tok">+fj</span></code>), <code><span class="tok">blocking_dot</span></code>, <code><span class="tok">a64fx</span></code>, <code><span class="tok">ladder</span></code>, <code><span class="tok">none</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">fj</span></code></td>
+<td class="nowrap">off</td>
+<td>For <a href="glossary.html#g-a64fx">A64FX</a>: compiles the host side with the Fujitsu compiler (FCC) and builds the Fortran module with frt (confirmed with the <a href="glossary.html#g-odyssey">Odyssey</a> definition <code><span class="tok">wis_ody</span></code>). Adds <code><span class="tok">-std=c++17</span> <span class="tok">-ffp-contract=fast</span></code> (<a href="installation.html#install-odyssey">Recommended Options</a>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">capi</span></code> (<code><span class="tok">parcel-sycl</span></code> only)</td>
+<td class="nowrap">on</td>
+<td>Builds the C / Fortran API</td>
+</tr>
+<tr>
+<td><code><span class="tok">scipy</span></code> (<code><span class="tok">py-parcel-sycl</span></code> only)</td>
+<td class="nowrap">on</td>
+<td>Also installs SciPy (used by <code><span class="tok">DistributedCSR.from_scipy()</span></code> / <code><span class="tok">from_global()</span></code> and <code><span class="tok">examples/quick_start.py</span></code>; corresponds to <code><span class="tok">parcel[scipy]</span></code> with pip)</td>
+</tr>
+<tr>
+<td><code><span class="tok">ks_ortho</span></code></td>
+<td class="nowrap"><code><span class="tok">cgs2</span></code></td>
+<td>Default orthogonalization of <code><span class="tok">ks_arnoldi</span></code> (<a href="installation.html#install-ks-ortho">“Default Orthogonalization of ks_arnoldi”</a>). <code><span class="tok">mgs</span></code> adds <code><span class="tok">-DPARCEL_KS_ORTHO_DEFAULT=mgs</span></code> (also in <code><span class="tok">PARCEL_CXXFLAGS</span></code>). A value given by the program with <code><span class="tok">set_qr_algo()</span></code> takes precedence. <code><span class="tok">py-parcel-sycl</span></code> is built with <code><span class="tok">parcel-sycl</span></code> of the same value</td>
+</tr>
+</tbody>
+</table>
+<p>To add them to an existing spack environment, use the local distribution package with <code>spack develop</code>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> repo add <span class="op">&lt;</span>package<span class="op">&gt;</span>/spack/spack_repo/parcel</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> config add <span class="st">&quot;concretizer:unify:when_possible&quot;</span>          <span class="co"># when installing CPU and GPU versions side by side</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> develop <span class="at">--no-clone</span> <span class="at">--path</span> <span class="op">&lt;</span>package<span class="op">&gt;</span> parcel-sycl@1.2.0</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> develop <span class="at">--no-clone</span> <span class="at">--path</span> <span class="op">&lt;</span>package<span class="op">&gt;</span> py-parcel-sycl@1.2.0</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> add <span class="st">&quot;parcel-sycl@1.2.0 ~mpi ~cuda ~rocm&quot;</span> <span class="st">&quot;py-parcel-sycl@1.2.0 ~mpi ~cuda ~rocm&quot;</span>                    <span class="co"># CPU</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> add <span class="st">&quot;parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=70&quot;</span> <span class="st">&quot;py-parcel-sycl@1.2.0 ~mpi +cuda cuda_arch=70&quot;</span>     <span class="co"># GPU</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> concretize <span class="at">-f</span> <span class="kw">&amp;&amp;</span> <span class="ex">spack</span> <span class="at">-e</span> <span class="op">&lt;</span>env<span class="op">&gt;</span> install</span></code></pre></div>
+<p>To use them, <code>spack load</code> with the configuration specified. <code>spack load parcel-sycl</code> sets <code>PARCEL_CXXFLAGS</code> (target, optimization, with or without MPI, header location) and <code>PARCEL_LDFLAGS</code> (RPATHs of the libraries needed at run time (LLVM libomp, AdaptiveCpp, LAPACK, MPI) and LAPACK) so that user programs are compiled with the same settings as PARCEL. The version with MPI also sets <code>OMPI_CXX=acpp</code> etc., so compile with <code>mpicxx</code> in the same way. The <a href="glossary.html#g-rpath">RPATH</a> of libomp is not added through the MPI wrapper, so always add <code>PARCEL_LDFLAGS</code>. <code>spack load</code> does not set the locations of the headers (<code>parcel_sycl_c.h</code>, <code>parcel_sycl_mod.mod</code>) and libraries of the C and Fortran APIs; find them with <code>spack location -i</code> and give them with <code>-I</code>, <code>-L</code> and <code>-Wl,-rpath</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>env<span class="op">&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load parcel-sycl+cuda py-parcel-sycl+cuda                   <span class="co"># load with the configuration specified</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">acpp</span> <span class="va">$PARCEL_CXXFLAGS</span> <span class="at">-O3</span> <span class="at">-o</span> prog prog.cpp <span class="va">$PARCEL_LDFLAGS</span>        <span class="co"># C++</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="va">P</span><span class="op">=</span><span class="va">$(</span><span class="ex">spack</span> location <span class="at">-i</span> parcel-sycl+cuda<span class="va">)</span>                           <span class="co"># C (version without MPI): give the location yourself</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-I</span><span class="va">$P</span>/include <span class="at">-o</span> prog prog.c <span class="at">-L</span><span class="va">$P</span>/lib <span class="at">-lparcel_sycl_c</span> <span class="at">-Wl,-rpath,</span><span class="va">$P</span>/lib</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> script.py                                                  <span class="co"># Python</span></span></code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>Specify the root specs down to <code>~cuda ~rocm</code>. With only <code>parcel-sycl ~mpi</code>, unification may merge it with the GPU version.</li>
+<li>CPU and GPU versions in the same environment collide in the view, so exclude <code>parcel-sycl</code> and <code>py-parcel-sycl</code> from the view of the environment (<code>view: default: {root: .spack-env/view, exclude: [parcel-sycl, py-parcel-sycl]}</code>).</li>
+<li>Adding specs to an already concretized environment may cause an internal error (unsatisfiable) in <code>concretize</code>. Re-concretize with <code>concretize -f</code>.</li>
+<li>Use a single MPI and a single <code>hipsycl</code> (AdaptiveCpp) in an environment (<code>packages:mpi:require:</code> including the version and configuration, <code>packages:hipsycl:require:</code>). With several external MPIs, another configuration (such as a <a href="glossary.html#g-cuda">CUDA</a> build) may be selected.</li>
+<li>The CUDA used by AdaptiveCpp is recorded from <code>ACPP_CUDA_PATH</code> (or the spack <code>cuda</code>) at build time, and <code>spack load</code> sets the same value. To avoid a CUDA newer than the driver, specify it as the external <code>cuda</code> package or with this variable.</li>
+<li>The <a href="glossary.html#g-lapack">LAPACKE</a> headers are copied to <code>include/lapacke/</code> (for systems whose compute nodes lack <code>lapacke.h</code>).</li>
+<li>Running tests inside the <code>spack develop</code> source (which creates <code>bin/</code>, <code>__pycache__</code>, etc.) makes spack consider it modified, and PARCEL is rebuilt at the next <code>install</code>. Run tests in a copy of the source.</li>
+</ul>
+<h3 data-number="4.9.2" id="install-spack-tarball"><span class="header-section-number">4.9.2</span> Installing from the Distribution Tarball</h3>
+<p>The recipes hold the <code>url</code> and <code>sha256</code> of the distribution tarball. The <code>url</code> points to the tarball on the GitHub Release (<code>https://github.com/parcel-jaea/PARCEL-release/releases/download/v1.2.0/parcel_sycl-1.2.0.tar.gz</code>), and <code>tools/make_tarball.py --pin</code> writes the sha256 into the recipes (<a href="versions.html#versions-tarball">“Verifying the Distribution”</a>). Without <code>spack develop</code>, spack fetches the tarball from the <code>url</code> (<code>parcel-sycl</code> and <code>py-parcel-sycl</code> use the same tarball). When the computer cannot connect to the outside, place the tarball in the layout of a spack mirror (<code>&lt;mirror&gt;/_source-cache/archive/&lt;first two characters of the sha256&gt;/&lt;sha256&gt;.tar.gz</code>) and register it with <code>spack mirror add</code>. spack checks the fetched tarball against the sha256 in the recipe and stops if it differs. The sha256 is part of the spack hash, so rewriting it rebuilds PARCEL (also when it is used with <code>spack develop</code>). The procedure is given in the section “Installing from the Release Tarball” of <code>spack/README.md</code>.</p>
+<h3 data-number="4.9.3" id="install-spack-select"><span class="header-section-number">4.9.3</span> Choosing the Configurations</h3>
+<p>The configurations to install are chosen by the combination of packages (<code>parcel-sycl</code>, <code>py-parcel-sycl</code>) and variants (the spec). Examples of specs by purpose are shown below (the version <code>@1.2.0</code> is omitted).</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Spec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU, without MPI (C++, C, Fortran)</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code></td>
+</tr>
+<tr>
+<td>CPU, with MPI</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">+mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code></td>
+</tr>
+<tr>
+<td>NVIDIA GPU (example: <a href="glossary.html#g-a100">A100</a>)</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">+cuda</span> <span class="tok">cuda_arch=80</span></code></td>
+</tr>
+<tr>
+<td>NVIDIA GPU, with MPI</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">+mpi</span> <span class="tok">+cuda</span> <span class="tok">cuda_arch=80</span></code></td>
+</tr>
+<tr>
+<td>AMD GPU (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">+rocm</span> <span class="tok">amdgpu_target=gfx942</span></code></td>
+</tr>
+<tr>
+<td>C++ (headers) only, without the C and Fortran APIs</td>
+<td><code><span class="tok">parcel-sycl</span> <span class="tok">~capi</span> <span class="tok">~mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code></td>
+</tr>
+<tr>
+<td>Python as well</td>
+<td>Add <code><span class="tok">py-parcel-sycl</span></code> with the same configuration (e.g., <code><span class="tok">py-parcel-sycl</span> <span class="tok">~mpi</span> <span class="tok">~cuda</span> <span class="tok">~rocm</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Choosing languages: C++ (headers) is always installed with <code>parcel-sycl</code>. The C and Fortran APIs are installed or omitted together by the variant <code>capi</code> (on by default); one of them alone cannot be chosen. Python is chosen by whether the separate package <code>py-parcel-sycl</code> is added.</li>
+<li>With <code>+capi</code> (the default), a Fortran compiler is required (to build the Fortran module). On systems without a Fortran compiler, use <code>~capi</code>.</li>
+<li><code>py-parcel-sycl</code> uses <code>parcel-sycl</code> for its build, so <code>parcel-sycl</code> is installed even when only Python is wanted. In that case <code>parcel-sycl</code> has the default <code>+capi</code>. On systems without a Fortran compiler, add the variant of <code>parcel-sycl</code>, as in <code>py-parcel-sycl ~mpi ~cuda ~rocm ^parcel-sycl ~capi</code> (confirmed on <a href="glossary.html#g-s86">s86</a> that it concretizes and that <code>parcel-sycl</code> then no longer uses a Fortran compiler). OpenBLAS, used for LAPACK, also uses a Fortran compiler by default, so on systems with no Fortran compiler at all also specify <code>openblas ~fortran</code> (as in the <a href="glossary.html#g-odyssey">Odyssey</a> definition <code>wis_ody</code>).</li>
+<li><code>+cuda</code> and <code>+rocm</code> cannot be specified together (the recipe raises an error). Without either, the CPU (<a href="glossary.html#g-openmp">OpenMP</a>) version is built. For GPUs, specify one <code>cuda_arch</code> (CUDA compute capability: <a href="glossary.html#g-v100">V100</a> 70, <a href="glossary.html#g-a100">A100</a> 80, <a href="glossary.html#g-gh200">GH200</a> 90) or <code>amdgpu_target</code>.</li>
+<li><code>+mpi</code> requires MPI. Register the system MPI as an external package in the environment definition (use a single <a href="glossary.html#g-mpi">MPI</a> and a single <code>hipsycl</code> in an environment; notes above).</li>
+<li><code>mpi</code>, <code>cuda</code>, <code>rocm</code>, etc. of <code>py-parcel-sycl</code> must match those of the <code>parcel-sycl</code> it is combined with (the recipe requires <code>parcel-sycl</code> with the same configuration).</li>
+</ul>
+<p>With <a href="installation.html#install-spack-stack">installation from scratch</a>, the configurations installed are those listed in <code>specs:</code> of <code>spack/stack/envs/&lt;env&gt;/spack.yaml</code>. The bundled definitions list all configurations available on each system (for example, 8 lines on <a href="glossary.html#g-s86">s86</a>: CPU / GPU × without / with MPI × <code>parcel-sycl</code> / <code>py-parcel-sycl</code>). To narrow or change the configurations, edit <code>specs:</code> before running <code>install_stack.sh</code>. For example, to install only C++, C, Fortran and Python for the CPU with MPI, write as follows. If the list is edited after installation, rerunning <code>install_stack.sh</code> with the same command re-concretizes and installs only what is missing.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spack</span><span class="kw">:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">specs</span><span class="kw">:</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> parcel-sycl@1.2.0 +mpi ~cuda ~rocm</span><span class="co">         # CPU with MPI (C++, C, Fortran)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> py-parcel-sycl@1.2.0 +mpi ~cuda ~rocm</span><span class="co">      # Python with the same configuration</span></span></code></pre></div>
+<h3 data-number="4.9.4" id="install-spack-stack"><span class="header-section-number">4.9.4</span> Installing from Scratch</h3>
+<p>Without an existing spack, <code>spack/stack/install_stack.sh</code> installs everything from fetching spack to PARCEL in one run. The arguments are the environment name (a directory under <code>spack/stack/envs/</code>), the installation directory and the number of parallel jobs.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/install_stack.sh s86 <span class="va">$HOME</span>/parcel_stack 16           <span class="co"># &lt;env&gt; &lt;prefix&gt; [jobs]</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/check_stack.sh <span class="va">$HOME</span>/parcel_stack <span class="va">$HOME</span>/parcel_check  <span class="co"># check on the login node</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$HOME</span>/parcel_stack/setup.sh                                          <span class="co"># when using it</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load parcel-sycl+mpi+cuda py-parcel-sycl+mpi+cuda</span></code></pre></div>
+<ul>
+<li>Built by spack: LLVM 18.1.8, AdaptiveCpp (<code>hipsycl</code> 24.10.0), OpenBLAS, binutils, Python 3.11 with NumPy, SciPy and pip, PARCEL itself, the C / Fortran API and the Python package.</li>
+<li>Taken from each system: compilers, <a href="glossary.html#g-cuda">CUDA</a> / ROCm and <a href="glossary.html#g-mpi">MPI</a>. They are tied to the network and drivers of the machine, and are written as external packages in <code>spack/stack/envs/&lt;env&gt;/spack.yaml</code>.</li>
+<li>spack itself (1.1.0.dev0) and the recipe collection (spack-packages) are pinned to the confirmed versions (at the top of <code>install_stack.sh</code>).</li>
+<li>spack, its configuration and caches are all placed in the installation directory, and <code>~/.spack</code> and <code>/etc/spack</code> are not read (<code>SPACK_DISABLE_LOCAL_CONFIG=1</code>). Existing spack environments neither affect it nor are affected.</li>
+<li>The PARCEL source is the directory two levels above <code>install_stack.sh</code> (the top of the distribution package, which must contain <code>Include/</code>, <code>capi/</code> and <code>python/</code>). To use another location, give <code>PARCEL_SRC=&lt;directory&gt;</code>.</li>
+<li><code>envs/&lt;env&gt;/site_env.sh</code> is read during the installation and when <code>setup.sh</code> is read (site modules for MPI, etc.). <code>after_activate.sh</code> is read after the environment is activated. <code>compilers.yaml</code> lists compilers installed before the main environment (to build a newer GCC on systems whose OS GCC is old).</li>
+<li>If interrupted, rerun the same command to resume (installed packages are reused). With <code>CONCRETIZE_ONLY=1</code>, only concretization is performed.</li>
+<li><code>check_stack.sh</code> runs <code>spack load</code> for each installed configuration and checks that <code>parcel</code> can be imported from Python and that <code>sample_c.c</code>, <code>sample_f.f90</code> and <code>quick_start.cpp</code> in <code>examples/</code> build and find all libraries needed at run time (they are not run). The Fortran sample without MPI is compiled together with <code>examples/sample_f_mpi_stub.f90</code>.</li>
+<li>The post-installation test is <code>spack test run parcel-sycl py-parcel-sycl</code> (results with <code>spack test results</code>). It builds and runs the <a href="quickstart.html#quickstart">Quick Start</a> examples with the installed headers and libraries (<code>parcel-sycl</code>: C++, and C and Fortran with <code>+capi</code>; <code>py-parcel-sycl</code>: <code>quick_start.py</code>) and checks that the maximum relative error against the exact solution is at most 1e-6 (the same as <a href="installation.html#install-quick-checks">“Checking After the Build”</a>). Versions with MPI are started with <code>MPIEXEC</code> (default: <code>bin/mpiexec</code> of the MPI), <code>MPIEXEC_NP_FLAG</code>, <code>MPI_NP</code> (default 2) and <code>MPIEXEC_ARGS</code>. On a node without a GPU (a login node), the GPU versions only test the build and the runs are SKIPPED, so run the test on a GPU compute node as well. <code>PARCEL_TEST_RUN=0</code> disables the runs. The number of threads and the decision on where it runs are the same as in <a href="installation.html#install-quick-checks">“Checking After the Build”</a> (if <code>OMP_NUM_THREADS</code> is not set, all available logical CPUs on a compute node and 4 on a login node; forced with <code>QUICK_NODE</code>), and the decision and the values used appear in the output of <code>spack test results -l</code>. For <code>+fj +mpi</code> (Fujitsu <code>mpiexec</code>), <code>RC_ONLY=1</code> is the default (use <code>RC_ONLY=0</code> to turn it off). With Intel MPI, the C and Fortran tests are built with the generic wrappers in the same place (<code>mpicc</code>, <code>mpif90</code>), and the underlying compiler is set to spack’s compiler (gfortran, etc.) with <code>I_MPI_CC</code> and <code>I_MPI_F90</code> (and <code>I_MPI_FC</code>) (the <code>mpiifx</code> returned by spack calls ifx, which cannot read <code>parcel_sycl_mod.mod</code> built by gfortran). Run the GPU versions and <code>+fj</code> on compute nodes (a short batch job or an interactive job). The CPU versions may be run on a login node (follow the rules of the site).</li>
+</ul>
+<h3 data-number="4.9.5" id="install-spack-envs"><span class="header-section-number">4.9.5</span> Provided Environments</h3>
+<table>
+<thead>
+<tr>
+<th><code><span class="tok">envs/</span></code></th>
+<th>System</th>
+<th>Configurations</th>
+<th>Taken from the system</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">s86</span></code></td>
+<td><a href="glossary.html#g-s86">s86</a> (<a href="glossary.html#g-xeon">Xeon</a> + <a href="glossary.html#g-v100">V100</a>)</td>
+<td>CPU / GPU (<code><span class="tok">cuda_arch=70</span></code>) × without / with MPI</td>
+<td>GCC 9.5.0, CUDA 12.6, Open MPI 4.1.6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">miyc</span></code></td>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td>CPU × without / with MPI</td>
+<td>GCC 11.4.1, Open MPI 4.1.6</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">miyg</span></code></td>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a></td>
+<td>GPU (<code><span class="tok">cuda_arch=90</span></code>) × without / with MPI</td>
+<td>GCC 11.4.1, CUDA 12.6, Open MPI 4.1.6 (CUDA build)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">psa</span></code></td>
+<td><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td>CPU × without / with MPI (<code><span class="tok">ks_ortho=mgs</span></code>: MGS2 is the default orthogonalization of <code><span class="tok">ks_arnoldi</span></code>)</td>
+<td>GCC 11.5.0, Intel MPI 2021.18</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">psb</span></code></td>
+<td><a href="glossary.html#g-ps-b">PS-B</a></td>
+<td>GPU (<code><span class="tok">amdgpu_target=gfx942</span></code>) × without / with MPI</td>
+<td>GCC 11.5.0, ROCm 6.3.3, Open MPI 5.0.7 (ROCm build)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">wis_aqu</span></code></td>
+<td><a href="glossary.html#g-aquarius">Aquarius</a></td>
+<td>GPU (<code><span class="tok">cuda_arch=80</span></code>) × without / with MPI</td>
+<td>GCC 8.3.1 (used only to build GCC 12), CUDA 12.2, Open MPI 4.1.1</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">wis_ody</span></code></td>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td>CPU (<code><span class="tok">+fj</span></code>) × without / with MPI</td>
+<td>GCC 8.3.1, Fujitsu compilers, MPI and LAPACK (tcsds-1.2.43)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">generic</span></code></td>
+<td>Other Linux systems (template)</td>
+<td>CPU × without MPI (with MPI and NVIDIA GPUs added by uncommenting)</td>
+<td>Edit to use (GCC, MPI, CUDA)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>In all seven environments, the installation with <code>install_stack.sh</code> and the check with <code>check_stack.sh</code> passed, and the regression tests or the samples (with and without <a href="glossary.html#g-mpi">MPI</a>) passed with the installed PARCEL. With the recipes added to existing spack environments, the samples also passed on compute nodes of the six environments other than <a href="glossary.html#g-odyssey">Odyssey</a>.</li>
+<li>The locations of external packages (<code>prefix:</code>) and module names are those of each system. Edit them for other machines.</li>
+<li><a href="glossary.html#g-odyssey">Odyssey</a> (<code>wis_ody</code>) has x86 login nodes, so it is installed by a job on an <a href="glossary.html#g-a64fx">A64FX</a> compute node (<code>envs/wis_ody/install_job.sh</code> is an example; the notes on parallelism, memory limit and time are the same as in <a href="sycl-compiler.html#env-odyssey">the Odyssey section of “Installing a SYCL Compiler”</a>). LLVM 18 is built with the OS GCC 8.3.1, and its clang builds AdaptiveCpp and the C / C++ parts of NumPy and SciPy. Building a newer GCC such as GCC 12 would make the Fujitsu compiler (FCC) unable to read its libstdc++ and unable to link C++ programs. PARCEL is built <code>+fj</code>: the host side with FCC, MPI with <code>mpiFCC</code> and LAPACK with the Fujitsu <code>-lfjlapack</code>.</li>
+<li>On Linux systems other than the seven environments above, edit and use the <code>generic</code> template (<a href="installation.html#install-spack-generic">below</a>).</li>
+<li>On macOS, spack is not used; install with Homebrew (<a href="sycl-compiler.html#env-mac">“macOS (Homebrew)” in “Installing a SYCL Compiler”</a>).</li>
+<li>Example settings for running the regression and performance tests in the installed environment are in <code>tests/site_config.py</code> (<code>s86spack_cpu</code>, <code>s86spack_gpu</code>, etc.; the section on spack environments in <code>tests/regression/README.md</code>).</li>
+</ul>
+<h3 data-number="4.9.6" id="install-spack-generic"><span class="header-section-number">4.9.6</span> Other Systems</h3>
+<p>On Linux systems other than the seven environments above, copy and edit the template <code>spack/stack/envs/generic/</code>, and install with <code>install_stack.sh</code>. The template follows the definitions for <a href="glossary.html#g-s86">s86</a> and <a href="glossary.html#g-miyabi-c">Miyabi-C</a>. On Ubuntu 24.04 (<a href="sycl-compiler.html#env-linux-wsl">WSL2</a>; OS GCC 13.3.0, Open MPI 4.1.6, CUDA 12.6 from the NVIDIA repository, <a href="glossary.html#g-rtx-a6000">RTX A6000</a>), it was edited as in the steps below and the eight configurations CPU and GPU (<code>cuda_arch=86</code>) × without and with MPI were installed; <code>check_stack.sh</code>, the Quick Start (C++, C, Python) and the verification sample (<code>pcg</code>, <code>pgmres</code>, <code>ks_arnoldi</code>) passed. On Rocky Linux 9.8 (compatible with RHEL 9; WSL2; OS GCC 11.5.0, Open MPI 4.1.1, CUDA 12.6 from the NVIDIA repository), the same eight configurations were installed and the same tests passed. Register the OS Open MPI of the RHEL family after putting it, including the headers, in one directory (<a href="sycl-compiler.html#env-linux-external">“Registering MPI and CUDA”</a>).</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> spack/stack/envs/generic spack/stack/envs/mysite           <span class="co"># copy and edit</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="va">CONCRETIZE_ONLY</span><span class="op">=</span>1 <span class="fu">bash</span> spack/stack/install_stack.sh mysite <span class="va">$HOME</span>/parcel_stack   <span class="co"># try concretization only</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> spack/stack/install_stack.sh mysite <span class="va">$HOME</span>/parcel_stack 16                  <span class="co"># install</span></span></code></pre></div>
+<p>The places to edit are listed as steps in the comments at the top of <code>spack.yaml</code>.</p>
+<ul>
+<li>The version and location of the compiler (GCC) (check with <code>gcc --version</code> and <code>which gcc g++ gfortran</code>).</li>
+<li>To use <a href="glossary.html#g-mpi">MPI</a>, uncomment the two <code>+mpi</code> lines of <code>specs:</code> and the <code>mpi</code> and <code>openmpi</code> lines of <code>packages:</code>, and edit the version and location (see <a href="sycl-compiler.html#env-linux-external">“Generic Linux”</a> for the format).</li>
+<li>To use NVIDIA GPUs, uncomment the <code>+cuda</code> lines and the <code>cuda</code> lines, edit <code>cuda_arch</code> (found as in <a href="running.html#run-gpu">“Running on GPUs”</a>) and the version and location of CUDA, and change the <code>hipsycl</code> and <code>llvm</code> lines for the GPU. For AMD GPUs, start from the <a href="glossary.html#g-ps-b">PS-B</a> definition <code>psb</code> (external ROCm).</li>
+<li>If the CPU is not x86_64, edit <code>targets</code> of <code>llvm</code> (<code>aarch64</code> for Arm).</li>
+<li>On systems that load MPI etc. with modules, write <code>module load</code> in <code>site_env.sh</code> (<code>module load mpi/openmpi-x86_64</code> for the OS Open MPI of the RHEL family; the <code>site_env.sh</code> of the template has an example). On systems with little memory, lower the number of concurrent compilations with <code>PARCEL_STACK_JOBS</code>.</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="sycl-compiler.html" rel="previous">← Installing a SYCL Compiler</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="usage.html" rel="next">Usage →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

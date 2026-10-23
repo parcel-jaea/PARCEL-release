@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>数値精度と再現性 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/accuracy.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li class="current"><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="qr.html" rel="previous" accesskey="p">← QR分解</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="kernel-opt.html" rel="next" accesskey="n">最適化 →</a></span>
+</nav>
+<h1 data-number="12" id="accuracy"><span class="header-section-number">12</span> 数値精度と再現性</h1>
+<p>　ソルバが返す結果の確かめ方と, 精度の指定・並列数・実行環境によって結果がどう変わるかを示す. 精度の指定方法は<a href="concepts.html#precision-configs">「精度構成」</a>に示す.</p>
+<p><br />
+</p>
+<h2 data-number="12.1" id="accuracy-reason"><span class="header-section-number">12.1</span> 収束状態の確かめ方</h2>
+<p>　<code>solver()</code>は収束しなくても例外やエラーを返さない. 結果を使う前に<code>is_converged()</code> (または<code>get_converged_reason() &gt; 0</code>) で確かめる. 値は全<a href="glossary.html#g-rank">ランク</a>で同じである.</p>
+<table>
+<thead>
+<tr>
+<th>収束状態</th>
+<th>主な原因</th>
+<th>対処の例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">CONVERGED_RTOL</span></code> (1)</td>
+<td>収束判定値を満たした</td>
+<td>線形ソルバでは真の残差 (次節) も確かめる</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">DIVERGED_ITS</span></code> (-1)</td>
+<td>最大反復回数 (<code><span class="tok">ks_arnoldi</span></code>は最大<a href="glossary.html#g-restart">リスタート</a>回数) に達した</td>
+<td><a href="glossary.html#g-precon">前処理</a>を付ける, <code><span class="tok">pgmres</span></code>のリスタート周期を増やす, 収束判定値が精度構成で到達できる値か確かめる</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">DIVERGED_NANORINF</span></code> (-2)</td>
+<td>残差や固有値の推定値が NaN / Inf になった</td>
+<td>低精度の構成を見直す (後述), 行列と右辺に非有限値が無いか確かめる</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">DIVERGED_BREAKDOWN</span></code> (-3)</td>
+<td>アルゴリズムの破綻 (0 による除算など)</td>
+<td><code><span class="tok">pbicgstab</span></code>なら<code><span class="tok">pgmres</span></code>に替える, 内積の精度を上げる</td>
+</tr>
+</tbody>
+</table>
+<p>　各ソルバで各状態が起こる条件は<a href="../reference/common.html#common-reason">API リファレンスの「収束状態の定数と標準出力」</a>に, 値を文字列にするには<code>parcel::krylov::converged_reason_name()</code>を用いる. 固有値ソルバの<code>inverse_power</code>と <a href="glossary.html#g-shift-invert">shift-invert</a> では, 内部の線形ソルバが収束しなかった回数を<code>get_linsolve_failures()</code>で確かめる (外側の収束状態には反映しない).</p>
+<p><br />
+</p>
+<h2 data-number="12.2" id="accuracy-residual"><span class="header-section-number">12.2</span> 漸化式の残差と真の残差</h2>
+<p>　線形ソルバの収束判定に用いる残差は, ソルバによって次の 2 種類がある.</p>
+<ul>
+<li><code>pcg</code>・<code>pbicgstab</code>: 反復の中で漸化式により更新した残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>. 真の残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">b - Ax</annotation></semantics></math>と数学的には等しいが, 丸め誤差により離れていく. <code>get_residual()</code>はこの値である.</li>
+<li><code>pgmres</code>・<code>pcagmres</code>: <a href="glossary.html#g-restart">リスタート</a>の先頭で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>から計算した真の残差.</li>
+</ul>
+<p>　どの線形ソルバも, 終了時に真の<a href="glossary.html#g-relres">相対残差</a><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax\| / \|b\|</annotation></semantics></math>を計算して表示し (<code>finish : residual true norm</code>), <code>get_true_residual()</code>で返す. <code>pcg</code>・<code>pbicgstab</code>で解の精度を確かめる場合は<code>get_true_residual()</code>を見る. 漸化式の残差と真の残差の差は, ベクトルを低精度で保持すると大きくなる. <code>dataF16</code>の収束判定値の目安を 1e-2 としているのはこのためである (<a href="concepts.html#precision-configs">「精度構成」</a>).</p>
+<p>　<code>-DRESIDUAL_REPLACE</code>を付けてビルドすると, <code>pcg</code>・<code>pbicgstab</code>は反復ごとに真の残差も計算して表示する (診断用. 1 反復に <a href="glossary.html#g-spmv">SpMV</a> が 1 回増える). <code>pcg</code>の解の更新は<code>PARCEL_PSTEP</code> (既定 1) 反復ごとに行う. 2 以上にすると間の反復では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>が前の値のままなので, 反復ごとの真の残差を見る場合は既定の 1 のままにする (<a href="linear-solvers.html#alg-pcg">前処理付共役勾配法</a>).</p>
+<p>　残差が小さくても解の誤差が同じだけ小さいとは限らない. 解の相対誤差はおおよそ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の条件数と相対残差の積で抑えられるので, 条件数の大きい行列では相対残差に比べて解の誤差が大きくなる.</p>
+<p>　固有値ソルバの収束判定は, <code>power</code>と<code>inverse_power</code>では固有値の推定値の相対変化, <code>ks_arnoldi</code>では Ritz 残差の推定値であり, いずれも真の残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>A</mi><mi>x</mi><mo>−</mo><mi>λ</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|Ax - \lambda x\|</annotation></semantics></math>そのものではない. 固有値ソルバの<code>get_true_residual()</code>は NaN を返す. 固有対の精度を確かめる場合は, 返された固有ベクトルから残差を計算する.</p>
+<p><br />
+</p>
+<h2 data-number="12.3" id="accuracy-reproducibility"><span class="header-section-number">12.3</span> 並列数と実行環境による違い</h2>
+<p>　同じ実行環境・同じビルド・同じ<a href="glossary.html#g-rank">ランク</a>数とスレッド数・同じ精度構成で実行すれば, 結果 (反復回数と解) は実行のたびに同じになる. ランク数・スレッド数・装置を変えると, 次の理由で最後の桁が変わる.</p>
+<table>
+<thead>
+<tr>
+<th>要因</th>
+<th>変わるもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内積・ノルムの部分和の順序 (ランク内)</td>
+<td>CPU で<code><span class="tok">_BLOCKING_LOOP_DOT_=1</span></code>の場合はブロック数 (既定はスレッド数) で, GPU では<a href="glossary.html#g-workitem">ワークグループ</a>の大きさで順序が決まる</td>
+</tr>
+<tr>
+<td>ランク間の集約</td>
+<td><code><span class="tok">MPI_Allreduce</span></code>のアルゴリズム (<a href="glossary.html#g-mpi">MPI</a> の実装・ランク数・メッセージ長で変わる)</td>
+</tr>
+<tr>
+<td>行の分割</td>
+<td>ランク数によって各ランクの部分和の中身が変わる</td>
+</tr>
+<tr>
+<td>積和 (FMA) の融合</td>
+<td>コンパイラと<a href="glossary.html#g-device">デバイス</a>で異なる. <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は全ターゲットに<code><span class="tok">-ffp-contract=fast</span></code>を付け (<code><span class="tok">omp.library-only</span></code>ではホストコンパイラに付けないので, <a href="glossary.html#g-a64fx">A64FX</a> では<a href="installation.html#install-odyssey">推奨オプション</a>で明示する), <a href="glossary.html#g-cuda">CUDA</a> の<a href="glossary.html#g-backend">バックエンド</a>は積と和を FMA に融合する</td>
+</tr>
+</tbody>
+</table>
+<p>　倍精度では, この差は反復回数に表れないことが多い. <a href="glossary.html#g-nx">NX</a>=512 の Poisson 問題を Jacobi <a href="glossary.html#g-precon">前処理</a>で解いた測定 (<a href="performance.html#perf-conv512">「性能」の章</a>) では, <code>pcg</code> (611 反復) の反復回数が 8 環境・全装置数で一致した. 移流拡散方程式の<code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 60, 1140 反復) と<code>pcagmres</code>の <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る方式 (1152 反復) も一致した. ただし解の最後の桁まで一致するとは限らない. 同じ測定で, <code>pbicgstab</code> (397〜466 反復) と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らない <code>pcagmres</code> (1152〜1216 反復) は環境・装置数によって反復回数が変わった.</p>
+<p>　一方, 次のものはランク数によらない.</p>
+<ul>
+<li><code>power</code>・<code>inverse_power</code>の初期ベクトルと, <code>ks_arnoldi</code>の置き換え用の初期ベクトル・乱数方向. いずれも大域行番号から作る.</li>
+<li><code>ks_arnoldi</code>の Hessenberg 行列の固有分解・Schur 分解. rank 0 が計算して全ランクに配るので, ランクごとに分岐が割れることはない.</li>
+<li>ポイント Jacobi 前処理と Jacobi 前処理の作用 (丸め誤差を除く).</li>
+</ul>
+<p>　<a href="glossary.html#g-jacobi">ブロック Jacobi</a> 前処理はブロックがランクをまたがないため, 前処理の作用そのものがランク数と分割数<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">nb</annotation></semantics></math>で変わる. 分割数の既定は CPU ではランクあたりのスレッド数, GPU では 1 ブロック 2 行となる値であり, 倍精度でもランク数・スレッド数・装置によって反復回数が変わる. 比べる場合は<code>set_blockjacobi()</code>で分割数を固定するか, Jacobi 前処理を用いる.</p>
+<p>　精度を下げた構成では, 倍精度の最後の桁の差が低精度への丸めで増幅され, 環境によって反復回数が変わる. 環境間で反復回数が揃うことは保証しない. 収束判定値への到達と解の精度は保たれ, 変わるのは到達までの反復回数である. 前処理のデータ精度だけを単精度にした構成 (<code>precon_dataF</code>) は, 上の NX=512 の測定で倍精度と同じ反復回数 (<code>pcg</code> 611, 移流拡散方程式の<code>pgmres</code> 1140) であった.</p>
+<p>　低精度の構成を環境間で比べる場合は, ビルドフラグ (<code>_BLOCKING_LOOP_DOT_</code>など) と実行構成 (ランク数×スレッド数) を揃え, 最大反復回数に余裕を持たせる. 環境をまたいで反復回数まで揃えたい場合は, 倍精度 (または前処理のデータ精度だけを下げた構成) を用いる.</p>
+<p>　同じソース・同じフラグでも, 実行ファイルを作り直すと結果が変わる場合がある. <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は全ターゲットに<code>-ffp-contract=fast</code>を付けるので, 積と和を FMA に融合するかどうかをコンパイラが箇所ごとに決め, その選択がビルドごとに変わりうるためである. <a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>, <code>hip:gfx942</code>) では, 作り直した実行ファイルどうしで, 単精度の構成を中心に反復回数が数回ずれた (同じ実行ファイルなら何度実行してもビット単位で一致する). <a href="glossary.html#g-s86">s86</a> では起きていない. 作り直しても結果を一致させたい場合は, コンパイルに<code>-ffp-contract=off</code>を付ける. <code>-ffp-contract=off</code>で作った 2 つの実行ファイルの結果は一致した (性能への影響は測っていない). マクロ<code>PARCEL_FP_CONTRACT_OFF</code>はヘッダの<code>#pragma clang fp contract(off)</code>を有効にするが, <code>-ffp-contract=fast-honor-pragmas</code>と併用したときだけ効くので, 通常は<code>-ffp-contract=off</code>を用いる.</p>
+<p><br />
+</p>
+<h2 data-number="12.4" id="accuracy-lowprec"><span class="header-section-number">12.4</span> 低精度での既知の限界</h2>
+<p>　次の制約は実装の欠陥ではなく, 精度そのものの限界である (FP32・<a href="glossary.html#g-fp16">FP16</a> の構成の一覧は<a href="concepts.html#precision-configs">「精度構成」</a>). FP16 を含む構成では, 精度で届く<a href="glossary.html#g-relres">相対残差</a>に下限 (残差の床) があり, それより小さい収束判定値を与えると停滞するか NaN で破綻する. 同梱の回帰試験 (<a href="glossary.html#g-nx">NX</a>=8) では, 次の組合せの収束判定値を緩めている. 自分の問題で判定値を決める目安にする.</p>
+<table>
+<thead>
+<tr>
+<th>精度構成</th>
+<th>ソルバ</th>
+<th><a href="glossary.html#g-precon">前処理</a></th>
+<th>回帰試験の収束判定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">calcF16</span></code></td>
+<td><code><span class="tok">pbicgstab</span></code></td>
+<td>ポイント Jacobi, <a href="glossary.html#g-jacobi">ブロック Jacobi</a></td>
+<td>3e-2</td>
+</tr>
+<tr>
+<td><code><span class="tok">calcF16</span></code></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td>ポイント Jacobi</td>
+<td>1e-2</td>
+</tr>
+<tr>
+<td><code><span class="tok">calcF16</span></code>, <code><span class="tok">dataF16</span></code></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td>ブロック Jacobi</td>
+<td>1e-1 (動作の確認にとどまる)</td>
+</tr>
+<tr>
+<td><code><span class="tok">calcF16</span></code></td>
+<td><code><span class="tok">pcagmres</span></code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る方式)</td>
+<td>4 種</td>
+<td>1e-2</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_calcF16</span></code>, <code><span class="tok">precon_allF16</span></code></td>
+<td><code><span class="tok">pcg</span></code>, <code><span class="tok">pgmres</span></code>, <code><span class="tok">pcagmres</span></code></td>
+<td>ポイント Jacobi</td>
+<td>1e-5</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_calcF16</span></code>, <code><span class="tok">precon_allF16</span></code></td>
+<td><code><span class="tok">power</span></code></td>
+<td>ブロック Jacobi, Jacobi</td>
+<td>1e-5</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>FP16 のデータ精度・計算精度 (<code>calcF16</code>, <code>dataF16</code>) では, <code>pcagmres</code>の Cholesky QR 系 (<code>set_explicit_q(CAGMRES_Q_IMPLICIT)</code>と<a href="glossary.html#g-moment">モーメント法</a><code>QR_CAGMRES_CHOLESKYQR</code>) を使わない. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>によらず NaN または未収束になる. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る方式 (既定の<code>CAGMRES_Q_AUTO</code>で QR 分解が<code>QR_CGS</code>・<code>QR_MGS</code>の場合, または<code>CAGMRES_Q_EXPLICIT</code>) は既定の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>8</mn><mo>,</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s, t) = (8, 4)</annotation></semantics></math>で使える.</li>
+<li><code>pgmres</code>・<code>pcagmres</code>は<a href="glossary.html#g-restart">リスタート</a>の先頭でしか収束を判定しない. 収束判定値が残差の床に近いと, 残差が判定値のそばで停滞し, リスタート周期が長いほど止まるまでの反復が長くなる. 収束判定値は床より余裕をもって決める. FP16 の演算では<code>pgmres</code>のリスタート周期を短くすると早く止まる場合がある (回帰試験では<code>calcF16</code>の<code>pgmres</code>を周期 15 で解いている).</li>
+<li>残差の床は構成と装置で異なる. GPU の FP16 の演算は CPU より床が高い. CPU でもブロック Jacobi 前処理は分割 (ランク数とスレッド数) によって FP16 の<code>pcg</code>・<code>pbicgstab</code>が破綻する場合がある. 前処理の計算精度が FP16 の場合, ポイント Jacobi 前処理は Jacobi 前処理より床が高い.</li>
+<li>FP16 を含む構成の<code>inverse_power</code>では, 内部の線形ソルバが床で停滞し, 外側の反復が遅くなる (回帰試験では内部の収束判定値を緩めている). 内部の線形ソルバが非有限値で失敗した場合は, 外側も<code>DIVERGED_NANORINF</code>で止まる. 内部の収束の確かめ方は<a href="accuracy.html#accuracy-reason">「収束状態の確かめ方」</a>に示す. 前処理を FP16 にした構成では, <code>set_linsolve_precon_algo(parcel::PRECON_NONE)</code>で内部の前処理を外した方が速い場合がある.</li>
+<li>FP16 を使うなら前処理のデータ精度だけを下げる. <code>precon_dataF16</code> (演算は倍精度) は, 回帰試験で倍精度と同じ収束判定値 (1e-9) で全ソルバ・前処理 4 種の組合せが合格している (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> モードの<code>inverse_power</code>とブロック Jacobi 前処理の組合せだけ, 内部の判定値を緩めている).</li>
+<li>単精度の<code>power</code>に前処理を付けると, 前処理で作る<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>の丸めがそのまま固有値の誤差になる (回帰試験では, <code>calcF</code>・<code>dataF</code>の<code>power</code>とブロック Jacobi・Jacobi 前処理の組合せの誤差の許容値を 5e-4 に緩めている).</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="12.5" id="accuracy-dd"><span class="header-section-number">12.5</span> double-double</h2>
+<p>　<a href="glossary.html#g-dd">double-double</a> (<code>parcel_doubledouble</code>) [12,13] は 1 つの値を上位 (hi) と下位 (lo) の 2 つの倍精度数で表し, 演算の丸め誤差を誤差なし変換 (和の TwoSum, 積の TwoProd [14]) で取り出して lo に保持する. 固有値ソルバが返す固有値はホスト側で倍精度で計算するため, dd を指定しても倍精度相当にとどまる.</p>
+<p>　積の誤差なし変換 (TwoProd) は<code>fma</code>で組む (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p = \mathrm{fma}(a,b,0)</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>−</mi><mi>p</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">e = \mathrm{fma}(a,b,-p)</annotation></semantics></math>). <code>fma</code>の結果はそれ以上融合されないので, コンパイラが縮約を行っても値が変わらない. あわせて, ホスト側の dd 演算の範囲では<code>float_control(precise)</code>と<code>fp contract(off)</code>で式の書き換えと縮約を禁じている. <code>-DPARCEL_DD_NO_FMA</code>を付けると Dekker の分割 [12] を用いる. FMA 命令を持たない CPU のためのものであり, GPU (<a href="glossary.html#g-cuda">CUDA</a>) では積と和が FMA に融合されて Dekker の分割が壊れる (dd の積が倍精度相当に落ちる) ので使わない.</p>
+<p><br />
+</p>
+<h2 data-number="12.6" id="accuracy-fast-math"><span class="header-section-number">12.6</span> -ffast-math を使わない</h2>
+<p>　<code>-ffast-math</code>または<code>-ffinite-math-only</code>を付けてビルドすると, <code>parcel_sycl.hpp</code>が<code>#error</code>でビルドを止める (<code>__FAST_MATH__</code>・<code>__FINITE_MATH_ONLY__</code>で判定する). 理由は次の 2 つである.</p>
+<ul>
+<li><a href="glossary.html#g-dd">double-double</a> の誤差なし変換は, 丸め誤差をそのまま取り出す計算で成り立っている. 結合則による式の書き換えを許すと誤差項が 0 に簡約され, dd が黙って倍精度に落ちる. 特に dd の内積 (<code>dot</code>) と行列ベクトル積 (<code>gemv</code>) で精度が失われる.</li>
+<li>NaN / Inf の検査 (<code>std::isfinite</code>) が消され, <code>DIVERGED_NANORINF</code>が働かなくなる.</li>
+</ul>
+<p>　承知のうえでビルドする場合は<code>-DPARCEL_ALLOW_FAST_MATH</code>を付ける. このとき dd の精度と NaN の検出は保証しない. <a href="glossary.html#g-ps-b">PS-B</a> のビルドフラグでは, 値を変えない<code>-fno-math-errno -fno-trapping-math</code>だけを用いる (<a href="installation.html#install-options">インストールの「コンパイルオプション」</a>). <code>-fno-exceptions</code>も, 引数検査の<code>std::invalid_argument</code>と両立しないので使わない.</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="qr.html" rel="previous">← QR分解</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="kernel-opt.html" rel="next">最適化 →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+# Wisteria-Odyssey (A64FX): PARCEL をゼロから入れる spack 環境。A64FX の計算ノードのジョブで入れる (ログインノードは x86)
+#   spack で作るもの: LLVM 18 (compilers.yaml で先に作る), AdaptiveCpp (hipsycl), OpenBLAS (numpy 用), binutils,
+#                     Python と numpy / SciPy, PARCEL (+fj)
+#   既存品を使うもの: GCC 8.3.1 (OS。LLVM・boost・Python などと gfortran), 富士通のコンパイラ (FCC・frt。AdaptiveCpp のホスト側と
+#                     Fortran のモジュール), 富士通 MPI (mpiFCC) と富士通 LAPACK (-lfjlapack) はレシピが富士通コンパイラの場所から使う
+#   @PARCEL_SRC@ と @PARCEL_REPO@ は install_stack.sh が置き換える
+spack:
+  specs:
+  - parcel-sycl@1.2.0 ~mpi +fj
+  - py-parcel-sycl@1.2.0 ~mpi +fj
+  - parcel-sycl@1.2.0 +mpi +fj
+  - py-parcel-sycl@1.2.0 +mpi +fj
+  - py-scipy
+  - py-pip
+  concretizer:
+    unify: when_possible
+  view:
+    default:
+      root: .spack-env/view
+      # parcel は構成違いを並べて入れるのでビューに入れない (spack load parcel-sycl+mpi のように構成を指定して読む)
+      exclude: [parcel-sycl, py-parcel-sycl]
+  repos:
+    parcel: '@PARCEL_REPO@'
+  develop:
+    parcel-sycl:
+      spec: parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+    py-parcel-sycl:
+      spec: py-parcel-sycl@=1.2.0
+      path: '@PARCEL_SRC@'
+  packages:
+    c:
+      # OS の GCC 8.3.1 のほか, AdaptiveCpp と numpy / SciPy は clang (LLVM 18) で作る。版まで指定する: 入れ先に別の
+      #   GCC (途中で止めた作業の GCC 12 など) があると, spack はそれを選び, その libstdc++ が先に読み込まれて実行時に落ちた
+      require:
+      - one_of: ['gcc@8.3.1', 'llvm@18.1.8']
+    cxx:
+      # OS の GCC 8.3.1 のほか, AdaptiveCpp と numpy / SciPy は clang (LLVM 18) で作る。版まで指定する: 入れ先に別の
+      #   GCC (途中で止めた作業の GCC 12 など) があると, spack はそれを選び, その libstdc++ が先に読み込まれて実行時に落ちた
+      require:
+      - one_of: ['gcc@8.3.1', 'llvm@18.1.8']
+    fortran:
+      require: ['gcc@8.3.1']
+    gcc:
+      externals:
+      - spec: gcc@8.3.1 languages:='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    fj:
+      buildable: false
+      externals:
+      - spec: fj@4.12.2
+        prefix: /opt/FJSVxtclanga/tcsds-1.2.43
+        extra_attributes:
+          compilers:
+            c: /opt/FJSVxtclanga/tcsds-1.2.43/bin/fcc
+            cxx: /opt/FJSVxtclanga/tcsds-1.2.43/bin/FCC
+            fortran: /opt/FJSVxtclanga/tcsds-1.2.43/bin/frt
+    tar:
+      # spack の tar 1.35 は RHEL の libacl のヘッダと型が合わずビルドできないことがある。OS の tar を使う
+      buildable: false
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+    hipsycl:
+      # clang 18 (OS の GCC 8.3.1 の libstdc++ を使う) で作る。理由は compilers.yaml
+      require: ['@24.10.0 ~cuda ~rocm %c,cxx=llvm@18.1.8']
+    boost:
+      # AdaptiveCpp が使う。同じ理由で OS の GCC 8.3.1 で作る (GCC 12 で作ると新しい libstdc++ が要る)
+      require: ['%gcc@8.3.1']
+    llvm:
+      # AdaptiveCpp 24.10 は LLVM 14〜18。使わない部品は作らない (lldb, lua, polly, flang, mlir)
+      require: ['@18.1.8 +clang +lld ~lldb ~lua ~polly ~flang ~mlir ~python ~gold targets:=aarch64 %gcc@8.3.1']   # compilers.yaml で先に入れたものを使う
+    openblas:
+      # numpy / SciPy 用。C は clang 18 で作るので OpenBLAS は TARGET=A64FX を選び, Fortran (OS の gfortran 8.3) にも
+      #   -mtune=a64fx を渡す。gfortran 8.3 はこの値を知らず LAPACK のコンパイルで止まった。
+      #   ~fortran では LAPACK を C 版 (C_LAPACK) で作るので Fortran コンパイラを使わない
+      require: ['~fortran']
+    blas:
+      require: [openblas]
+    lapack:
+      require: [openblas]
+    python:
+      require: ['@3.11']
+    py-numpy:
+      # numpy 2 は GCC 9.3 以上が要る。OS の GCC 8.3 では作れないので clang 18 で作る。
+      #   版も 1 つに固定する: 固定しないと unify:when_possible で py-parcel-sycl ~mpi だけが 2.3.2 を選び,
+      #   SciPy 側の 2.2.6 と同じビューの場所に重なってビューを作れなかった。
+      #   2.2 系にするのは, Fortran が OS の gfortran 8.3 なので SciPy が 1.13 (1.14 以上は GCC 9.1 以上が要る) になり,
+      #   SciPy 1.13 は numpy 2.2 までしか使えないため (2.3.2 に固定すると SciPy を解決できなかった)
+      require: ['@2.2.6 %c,cxx=llvm@18.1.8']
+    py-scipy:
+      # C / C++ は clang 18 (GCC 9 以上が要る), Fortran は OS の gfortran 8.3
+      require: ['%c,cxx=llvm@18.1.8']
+    py-hatchling:
+      # 古い版 (1.13) が選ばれると Python 3.13 の分類子を知らず scikit-build-core のビルドで止まる
+      require: ['@1.21:']

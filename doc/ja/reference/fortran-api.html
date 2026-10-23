@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Fortran の API – PARCEL SYCL v1.2 API リファレンス</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API リファレンス</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/reference/fortran-api.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="function-index.html#function-index">関数索引</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> 共通事項</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> 各項目の書式</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> ソルバ</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> 記号と用語</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> 入力の行列</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> 設定</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> 定数</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> 結果</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> 収束状態</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> 設定の扱いと MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> 精度</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> ソルバごとの収束判定</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> SYCL版PARCELクラス</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> 共通事項との対応</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCELデータ型</a></li>
+<li class="otherlang" data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> コンストラクタ</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> コンストラクタ</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> コンストラクタ / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> ソルバ共通の事項</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> クラステンプレート引数 (演算精度)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> solver() のテンプレート引数 (データ精度)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> 設定の扱いと例外</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> 定数</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> 共通メンバ関数</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> 固有値ソルバ共通のメンバ関数</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (クラス)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (クラス)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (クラス)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (クラス)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (クラス)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (クラス)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (クラス)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C言語の API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> 共通事項との対応</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> 定数</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (非推奨)</a></li>
+</ul></li>
+<li class="current" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran の API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> 共通事項との対応</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> 定数</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python の API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> 共通事項との対応</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> 例外</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← ソルバごとの収束判定</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="言語">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="false">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C言語</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="true">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="19" id="fortran-api"><span class="header-section-number">19</span> Fortran の API</h1>
+<p>　Fortran からはモジュール <code>parcel_sycl_mod</code> (<code>capi/parcel_sycl_mod.f90</code>) を <code>use</code> し, 本章の手続きを呼ぶ. 実装は C言語の API と同じラッパ (<code>capi/wrapper_parcel_sycl.cpp</code>) であり, ライブラリの同じソルバを実行する. 設定の意味と既定値, 結果, 収束状態は<a href="common.html#common">共通事項</a>と<a href="convergence.html#convergence">ソルバごとの収束判定</a>に, 使い方の流れと例は<a href="../user/usage.html#usage-fortran">利用者ガイドの使用方法の「Fortran」</a>に示す.</p>
+<ul>
+<li>7 つのソルバすべてを実行時に選べる. 線形方程式は <a href="fortran-api.html#api-f-solve-linear">parcel_solve_linear</a>, 固有値問題は <a href="fortran-api.html#api-f-solve-eigen">parcel_solve_eigen</a> で解く. 設定は派生型 <a href="fortran-api.html#api-f-types">parcel_options</a> に入れ, 結果は派生型 <a href="fortran-api.html#api-f-types">parcel_result</a> で受け取る.</li>
+<li>行番号・列番号・行数・非零要素数の種別定数<code>parcel_int_kind</code> (= <code>c_int64_t</code>. 64 ビット) を持つ. 整数の引数と配列は<code>integer(parcel_int_kind)</code>, 行列要素とベクトルは<code>real(c_double)</code>で渡す. 既定の<code>integer</code>の変数を渡すとインタフェースが一致せずコンパイルエラーになる. ラッパを<code>-DPARCEL_INT32</code>でビルドした場合に値が 32 ビットに収まらなければ<code>PARCEL_ERR_ARG</code>を返す.</li>
+<li>行列は各<a href="../user/glossary.html#g-rank">ランク</a>が担当する行ブロックを <a href="../user/glossary.html#g-crs">CRS</a> 形式で渡す (<a href="common.html#common-matrix">共通事項の「入力の行列」</a>). <code>opt%index_base = 1</code>とすれば, <code>nstart</code>と列番号を Fortran 流の 1 始まりで渡せる. 行ポインタは先頭からの差だけを使うので, 1 始まりのままでよい. 入力配列は書き換えない.</li>
+<li>コミュニケータは Fortran の整数ハンドル (<code>mpi</code>モジュールの<code>MPI_COMM_WORLD</code>など) をそのまま渡す. ラッパが<code>MPI_Comm_f2c()</code>で変換する. <a href="../user/glossary.html#g-mpi">MPI</a> ありでは呼ぶ前に<code>MPI_Init</code>を済ませる (1 プロセスの場合も). MPI なしのビルド (<code>-DPARCEL_MPI=0</code>) では値は使われない (<code>examples/sample_f_mpi_stub.f90</code>が<code>use mpi</code>の代わりになる).</li>
+<li>呼び出しごとに <a href="../user/glossary.html#g-sycl">SYCL</a> キュー (既定<a href="../user/glossary.html#g-device">デバイス</a>の <a href="../user/glossary.html#g-inorder">in-order</a> キュー) の作成と行列の登録を行う. デバイスは<code>ACPP_VISIBILITY_MASK</code>など SYCL 実装の環境変数で選ぶ.</li>
+<li>精度 (<a href="common.html#common-precision">共通事項の「精度」</a>) はラッパのコンパイル時のマクロ (既定値は<code>capi/parcel_capi_default.hpp</code>. すべて倍精度) で決まり, 実行時には変えられない. 入出力の配列は<code>real(c_double)</code>である.</li>
+<li>手続きは引数と設定を検査し, 誤りを戻り値 (<code>PARCEL_ERR_ARG</code>など) で知らせる (<a href="fortran-api.html#f-constants">定数</a>).</li>
+<li><code>bind(C)</code>の手続きの省略可能な引数 (Fortran 2018 の機能) を使わないので, 富士通 Fortran (frt) でもコンパイルできる. frt (<code>mpifrt</code>) で利用者のプログラムをコンパイルするときは<code>-Kopenmp</code>を付ける (付けないと複数スレッドで線形ソルバが発散した).</li>
+</ul>
+<h2 data-number="19.1" id="f-mapping"><span class="header-section-number">19.1</span> 共通事項との対応</h2>
+<p>　<a href="common.html#common-settings">共通事項の設定</a>と<code>parcel_options</code>の成分, <a href="common.html#common-results">結果</a>と<code>parcel_result</code>の成分の対応を示す. 既定値と意味は共通事項と同じである. 共通事項と表し方が異なるものは右の列に示す.</p>
+<div class="nowrap-c2 nowrap-code">
+<table>
+<thead>
+<tr>
+<th>共通事項の設定</th>
+<th><code><span class="tok">parcel_options</span></code>の成分</th>
+<th>表し方の違い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="common.html#set-tol">収束判定値</a></td>
+<td><code><span class="tok">tolerance</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-maxiter">最大反復回数</a></td>
+<td><code><span class="tok">max_iteration</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon">前処理の種類</a></td>
+<td><code><span class="tok">precon_algo</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-jacobi-iter">Jacobi 前処理の反復回数</a></td>
+<td><code><span class="tok">jacobi_iter</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-blocks">ブロック Jacobi 前処理のブロック数</a></td>
+<td><code><span class="tok">blockjacobi</span></code></td>
+<td>0 で自動</td>
+</tr>
+<tr>
+<td><a href="common.html#set-scaling">スケーリング</a></td>
+<td><code><span class="tok">scaling_matrix</span></code>, <code><span class="tok">scaling_vector</span></code></td>
+<td>-1: 自動, 0: 無, 1: 有</td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-restart">リスタート周期</a> (pgmres)</td>
+<td><code><span class="tok">gmres_restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-qr">直交化の方式</a> (pgmres)</td>
+<td><code><span class="tok">gmres_qr_algo</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-st">基底生成の大きさ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></a></td>
+<td><code><span class="tok">cagmres_s</span></code>, <code><span class="tok">cagmres_t</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-qr">QR 分解の方式</a> (pcagmres)</td>
+<td><code><span class="tok">cagmres_qr_algo</span></code></td>
+<td>成分の既定値は<code><span class="tok">PARCEL_QR_MGS</span></code>. IMPLICIT でこの既定値のままなら Cholesky QR を使う</td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方</a></td>
+<td><code><span class="tok">cagmres_q_mode</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a></td>
+<td><code><span class="tok">precon_spectrum</span></code></td>
+<td>0: 偽, 1: 真</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-algo">内部線形ソルバの種類</a></td>
+<td><code><span class="tok">linsolve_algo</span></code></td>
+<td><code><span class="tok">precon_spectrum</span> <span class="tok">=</span> <span class="tok">1</span></code>との併用は<code><span class="tok">PARCEL_ERR_ARG</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-tol">内部線形ソルバの収束判定値</a></td>
+<td><code><span class="tok">linsolve_tolerance</span></code></td>
+<td>0 以下でソルバの既定値 (成分の既定値は 0)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-maxiter">内部線形ソルバの最大反復回数</a></td>
+<td><code><span class="tok">linsolve_max_iteration</span></code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-restart">内部線形ソルバのリスタート周期</a></td>
+<td><code><span class="tok">linsolve_restart</span></code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-precon">内部線形ソルバの前処理</a></td>
+<td><code><span class="tok">linsolve_precon_algo</span></code>, <code><span class="tok">linsolve_jacobi_iter</span></code>, <code><span class="tok">linsolve_blockjacobi</span></code></td>
+<td>ブロック数は 0 で自動. スケーリングは指定できない (常に自動)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-shift">shift-invert</a></td>
+<td><code><span class="tok">shift_enable</span></code>, <code><span class="tok">shift_sigma</span></code></td>
+<td><code><span class="tok">shift_enable</span> <span class="tok">=</span> <span class="tok">1</span></code>で有効. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>はラッパが組み立てる</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-subspace">Krylov 部分空間の大きさ</a></td>
+<td><code><span class="tok">ks_m</span></code>, <code><span class="tok">ks_k_keep</span></code>, <code><span class="tok">ks_nev</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-max-restart">最大リスタート回数</a></td>
+<td><code><span class="tok">ks_max_restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-qr">直交化の方式</a> (ks_arnoldi)</td>
+<td><code><span class="tok">ks_qr_algo</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-init-vector">初期ベクトル</a></td>
+<td><code><span class="tok">eigvec_seed</span></code>と<code><span class="tok">eigvec</span></code>の先頭<code><span class="tok">n_local</span></code>要素</td>
+<td><code><span class="tok">eigvec_seed</span> <span class="tok">=</span> <span class="tok">1</span></code>で<code><span class="tok">eigvec</span></code>を初期ベクトルに使う</td>
+</tr>
+</tbody>
+</table>
+</div>
+<table>
+<thead>
+<tr>
+<th>共通事項の結果</th>
+<th><code><span class="tok">parcel_result</span></code>の成分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="common.html#res-reason">収束状態</a></td>
+<td><code><span class="tok">converged_reason</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-iter">反復回数</a></td>
+<td><code><span class="tok">iterations</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-resid">残差</a></td>
+<td><code><span class="tok">residual</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-true">真の残差</a></td>
+<td><code><span class="tok">true_residual</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-nconv">収束した固有対の数</a></td>
+<td><code><span class="tok">ks_nconv</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-inner-fail">内部線形ソルバの失敗回数</a></td>
+<td><code><span class="tok">linsolve_failures</span></code></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="19.2" id="f-constants"><span class="header-section-number">19.2</span> 定数</h2>
+<p>　モジュールは次の名前付き定数を持つ. 型はいずれも<code>integer(c_int)</code>である. 設定の値の意味は<a href="common.html#common-constants">共通事項の定数</a>, 収束状態の意味は<a href="common.html#common-reason">共通事項の「収束状態」</a>に示す.</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th>値</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">PARCEL_SOLVER_PCG</span></code>, <code><span class="tok">PARCEL_SOLVER_PBICGSTAB</span></code>, <code><span class="tok">PARCEL_SOLVER_PGMRES</span></code>, <code><span class="tok">PARCEL_SOLVER_PCAGMRES</span></code></td>
+<td class="nowrap">0, 1, 2, 3</td>
+<td>線形ソルバ (<a href="fortran-api.html#api-f-solve-linear">parcel_solve_linear</a> の<code><span class="tok">solver</span></code>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_SOLVER_POWER</span></code>, <code><span class="tok">PARCEL_SOLVER_INVERSE_POWER</span></code>, <code><span class="tok">PARCEL_SOLVER_KS_ARNOLDI</span></code></td>
+<td class="nowrap">4, 5, 6</td>
+<td>固有値ソルバ (<a href="fortran-api.html#api-f-solve-eigen">parcel_solve_eigen</a> の<code><span class="tok">solver</span></code>)</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_PRECON_NONE</span></code>, <code><span class="tok">PARCEL_PRECON_POINTJACOBI</span></code>, <code><span class="tok">PARCEL_PRECON_BLOCKJACOBI</span></code>, <code><span class="tok">PARCEL_PRECON_JACOBI</span></code></td>
+<td class="nowrap">0, 1, 2, 4</td>
+<td><code><span class="tok">precon_algo</span></code>, <code><span class="tok">linsolve_precon_algo</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_QR_CGS</span></code>, <code><span class="tok">PARCEL_QR_MGS</span></code>, <code><span class="tok">PARCEL_QR_CHOLESKYQR</span></code>, <code><span class="tok">PARCEL_QR_CAGMRES_CHOLESKYQR</span></code></td>
+<td class="nowrap">0, 1, 2, 202</td>
+<td><code><span class="tok">gmres_qr_algo</span></code> と <code><span class="tok">ks_qr_algo</span></code> (CGS, MGS だけ), <code><span class="tok">cagmres_qr_algo</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_LINSOLVE_PGMRES</span></code>, <code><span class="tok">PARCEL_LINSOLVE_PCG</span></code></td>
+<td class="nowrap">0, 1</td>
+<td><code><span class="tok">linsolve_algo</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_CAGMRES_Q_AUTO</span></code>, <code><span class="tok">PARCEL_CAGMRES_Q_EXPLICIT</span></code>, <code><span class="tok">PARCEL_CAGMRES_Q_IMPLICIT</span></code></td>
+<td class="nowrap">0, 1, 2</td>
+<td><code><span class="tok">cagmres_q_mode</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_CONVERGED_RTOL</span></code>, <code><span class="tok">PARCEL_ITERATING</span></code>, <code><span class="tok">PARCEL_DIVERGED_ITS</span></code>, <code><span class="tok">PARCEL_DIVERGED_NANORINF</span></code>, <code><span class="tok">PARCEL_DIVERGED_BREAKDOWN</span></code></td>
+<td class="nowrap">1, 0, -1, -2, -3</td>
+<td>収束状態 (<code><span class="tok">res%converged_reason</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<p>　関数の戻り値は次のとおりである. 引数検査の結果は全ランクにそろえてから返すので, 1 つのランクだけが不正な場合も全ランクが同じエラーを返す.</p>
+<table>
+<thead>
+<tr>
+<th>戻り値</th>
+<th>値</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_OK</span></code></td>
+<td class="nowrap">0</td>
+<td>正常に終了した. 反復が収束したかどうかは含まない (<code><span class="tok">res%converged_reason</span></code> で確かめる)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_ERR_ARG</span></code></td>
+<td class="nowrap">-1</td>
+<td>引数・設定が不正</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_ERR_DISTRIBUTION</span></code></td>
+<td class="nowrap">-2</td>
+<td>各ランクの行ブロックが全体を重複・欠落なく覆わない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_ERR_NOT_BUILT</span></code></td>
+<td class="nowrap">-3</td>
+<td>指定したソルバがビルドから外されている (<a href="../user/installation.html#install-macros">「ビルドするソルバの取捨」</a>参照)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">PARCEL_ERR_RUNTIME</span></code></td>
+<td class="nowrap">-4</td>
+<td>ライブラリ内の失敗. MPI ありのビルドでは呼び出し側に返らない (下記)</td>
+</tr>
+</tbody>
+</table>
+<p>　ライブラリ内で失敗が起きた場合 (<a href="../user/glossary.html#g-device">デバイス</a>のメモリ不足, 行列の大きさがライブラリ内部の整数の範囲を超えるなど), ラッパはメッセージ (<code>[parcel_c] exception: ...</code>) を標準エラー出力に書いてから<code>MPI_Abort</code>を呼び, 全ランクを終了させる. この失敗は 1 つのランクだけで起きうるので, 呼び出し側に任せると他のランクが集団通信で待ち続けるためである. MPI なしのビルドでは<code>PARCEL_ERR_RUNTIME</code>を返す.</p>
+<h2 data-number="19.3" id="api-f-types"><span class="header-section-number">19.3</span> parcel_options / parcel_result</h2>
+<p><strong>概要</strong>　設定をまとめた派生型<code>parcel_options</code>と, 結果を受け取る派生型<code>parcel_result</code>. どちらも<code>bind(C)</code>である.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">type(parcel_options)</span> <span class="dt">::</span> opt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">type(parcel_result)</span>  <span class="dt">::</span> res</span></code></pre></div>
+<p><strong>項目</strong>　<code>opt%tolerance</code>, <code>res%converged_reason</code>のように参照する. <code>parcel_options</code>の成分と, <a href="fortran-api.html#api-f-options-init">parcel_options_init</a> が入れる既定値は次のとおりである. 意味は<a href="common.html#common-settings">共通事項の設定</a>のとおりである. 内部線形ソルバの<code>linsolve_tolerance</code>, <code>linsolve_max_iteration</code>, <code>linsolve_restart</code>は 0 (0 以下は「ソルバの既定値を使う」の意味) を入れる. 最大反復回数の既定値が inverse_power (5000) と ks_arnoldi (2000) で異なり, 1 つの成分では両方を表せないためである.</p>
+<div class="nowrap-c1 nowrap-code">
+<table>
+<thead>
+<tr>
+<th>成分</th>
+<th>型</th>
+<th>既定値</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">tolerance</span></code></td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td>1.0d-8</td>
+<td><a href="common.html#set-tol">収束判定値</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_tolerance</span></code></td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td>0</td>
+<td><a href="common.html#set-inner-tol">内部線形ソルバの収束判定値</a>. 0 以下はソルバの既定値 (inverse_power, ks_arnoldi とも 1.0d-10)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">shift_sigma</span></code></td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td>0.0</td>
+<td><a href="common.html#set-shift">shift-invert</a> のシフト σ (<code><span class="tok">shift_enable=1</span></code> のとき)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">max_iteration</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>10000</td>
+<td><a href="common.html#set-maxiter">最大反復回数</a> (ks_arnoldi は使わない)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_algo</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_PRECON_NONE</span></code></td>
+<td><a href="common.html#set-precon">前処理の種類</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">jacobi_iter</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>1</td>
+<td><a href="common.html#set-jacobi-iter">Jacobi 前処理の反復回数</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">blockjacobi</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td><a href="common.html#set-blocks">ブロック Jacobi 前処理のブロック数</a>. 0 は自動</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">scaling_matrix</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>-1</td>
+<td>前処理行列の<a href="common.html#set-scaling">スケーリング</a>. -1: 自動, 0: 無効, 1: 有効</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">scaling_vector</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>-1</td>
+<td>前処理ベクトルの<a href="common.html#set-scaling">スケーリング</a> (値の意味は同上)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">index_base</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td><code><span class="tok">nstart</span></code> と <code><span class="tok">col</span></code> の番号付け (0 または 1)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">verbose</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td>1 で rank 0 がデバイス名と設定を表示する</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">gmres_restart</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>30</td>
+<td>pgmres の<a href="common.html#set-gmres-restart">リスタート周期</a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">gmres_qr_algo</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_QR_MGS</span></code></td>
+<td>pgmres の<a href="common.html#set-gmres-qr">直交化の方式</a>. <code><span class="tok">PARCEL_QR_CGS</span></code> または <code><span class="tok">PARCEL_QR_MGS</span></code>. それ以外は <code><span class="tok">PARCEL_ERR_ARG</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_s</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>8</td>
+<td>pcagmres の <a href="common.html#set-cagmres-st"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math></a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_t</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>4</td>
+<td>pcagmres の <a href="common.html#set-cagmres-st"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_qr_algo</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_QR_MGS</span></code></td>
+<td>pcagmres の<a href="common.html#set-cagmres-qr">QR 分解の方式</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precon_spectrum</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td><a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a>. 0: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> の固有値, 1: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> の固有値</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_algo</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_LINSOLVE_PGMRES</span></code></td>
+<td>inverse_power の<a href="common.html#set-inner-algo">内部線形ソルバの種類</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_max_iteration</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td><a href="common.html#set-inner-maxiter">内部線形ソルバの最大反復回数</a>. 0 以下はソルバの既定値 (inverse_power 5000, ks_arnoldi の shift-invert 2000)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_restart</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td><a href="common.html#set-inner-restart">内部 pgmres のリスタート周期</a>. 0 以下はソルバの既定値 (どちらも 30)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_precon_algo</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_PRECON_JACOBI</span></code></td>
+<td><a href="common.html#set-inner-precon">内部線形ソルバの前処理</a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> の種類. <code><span class="tok">precon_spectrum=1</span></code> では使われない</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_jacobi_iter</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>1</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> の Jacobi 前処理の反復回数</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_blockjacobi</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math> のブロック Jacobi 前処理のブロック数 (0 は自動)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ks_m</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>30</td>
+<td>ks_arnoldi の <a href="common.html#set-ks-subspace">Krylov 部分空間の最大次元</a> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ks_k_keep</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>10</td>
+<td>ks_arnoldi のリスタートで保持する Ritz 対の数 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ks_nev</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>4</td>
+<td>ks_arnoldi で求める固有値の数 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ks_max_restart</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>200</td>
+<td>ks_arnoldi の<a href="common.html#set-ks-max-restart">最大リスタート回数</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">shift_enable</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td>1 で <a href="common.html#set-shift">shift-invert</a>. ks_arnoldi のみ</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">eigvec_seed</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>0</td>
+<td>1 で ks_arnoldi の<a href="common.html#set-init-vector">初期ベクトル</a>に <code><span class="tok">eigvec</span></code> の先頭 <code><span class="tok">n_local</span></code> 要素を使う. 0 ではラッパが大域行番号から作る</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_q_mode</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_CAGMRES_Q_AUTO</span></code></td>
+<td>pcagmres の <a href="common.html#set-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方</a>. 組合せの規則は<a href="common.html#common-cagmres-q">共通事項</a>のとおりで, 規則に反する組合せは<code><span class="tok">PARCEL_ERR_ARG</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ks_qr_algo</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_QR_CGS</span></code> (ライブラリのビルド時の既定)</td>
+<td>ks_arnoldi の<a href="common.html#set-ks-qr">直交化の方式</a>. <code><span class="tok">PARCEL_QR_CGS</span></code> (CGS2) または <code><span class="tok">PARCEL_QR_MGS</span></code> (MGS2). それ以外は<code><span class="tok">PARCEL_ERR_ARG</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>　<code>parcel_result</code>の成分は次のとおりである. 値は全ランクで同じである. 引数検査で解かなかった場合は<code>converged_reason = PARCEL_ITERATING</code> (0), <code>iterations = 0</code>, 残差は NaN が入る.</p>
+<div class="nowrap-c1">
+<table>
+<thead>
+<tr>
+<th>成分</th>
+<th>型</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">converged_reason</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><a href="common.html#res-reason">収束状態</a>. 正なら収束, 負なら失敗</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">iterations</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><a href="common.html#res-iter">反復回数</a> (<a href="common.html#common-iter-resid">反復回数と残差の意味</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">residual</span></code></td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td><a href="common.html#res-resid">残差</a>. 未計算なら NaN</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">true_residual</span></code></td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td><a href="common.html#res-true">真の残差</a>. 固有値ソルバでは NaN</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ks_nconv</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><a href="common.html#res-nconv">収束した固有対の数</a>. ks_arnoldi 以外では 0</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">linsolve_failures</span></code></td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><a href="common.html#res-inner-fail">内部線形ソルバの失敗回数</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>前提条件</strong>　必ず <a href="fortran-api.html#api-f-options-init">parcel_options_init</a> で既定値を入れてから, 必要な成分だけを変える. 呼んだソルバが使わない成分は無視される. ただし<code>tolerance</code> (有限の正の数), <code>max_iteration</code> (1 以上) と前処理の成分 (<code>precon_algo</code> (定数のいずれか), <code>jacobi_iter</code> (1 以上), <code>blockjacobi</code> (0 以上), <code>scaling_matrix</code>・<code>scaling_vector</code> (-1, 0, 1)) は常に, <code>linsolve_algo</code>, <code>linsolve_precon_algo</code>, <code>linsolve_jacobi_iter</code>, <code>linsolve_blockjacobi</code>と<code>linsolve_tolerance</code> (NaN でないこと) は固有値ソルバでは常に値の範囲を検査し, 外れていれば<code>PARCEL_ERR_ARG</code>を返す. 派生型の大きさがラッパの構造体と一致することを <a href="fortran-api.html#api-f-check">parcel_options_check() / parcel_result_check()</a> で確かめるとよい.</p>
+<p><strong>MPI</strong>　全ランクで同じ内容を与える.</p>
+<h2 data-number="19.4" id="api-f-options-init"><span class="header-section-number">19.4</span> parcel_options_init</h2>
+<p><strong>概要</strong>　<code>parcel_options</code>に既定値を入れる.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">call parcel_options_init(opt)</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">opt</span></code></td>
+<td>出力</td>
+<td><code><span class="tok">type(parcel_options)</span></code></td>
+<td>既定値を入れる派生型</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>戻り値</strong>　無し (サブルーチン). 既定値は<a href="common.html#common-settings">共通事項の既定値</a>と一致する (<a href="fortran-api.html#api-f-types">parcel_options</a> の表).</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">type(parcel_options)</span> <span class="dt">::</span> opt</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">call parcel_options_init(opt)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>opt<span class="op">%</span>tolerance <span class="kw">=</span> <span class="fl">1.0d-9</span></span></code></pre></div>
+<h2 data-number="19.5" id="api-f-solve-linear"><span class="header-section-number">19.5</span> parcel_solve_linear</h2>
+<p><strong>概要</strong>　線形方程式<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math>を解く (pcg, pbicgstab, pgmres, pcagmres).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ierr <span class="kw">=</span> parcel_solve_linear(solver, opt, comm, n_local, nstart, n_global,<span class="co"> nnz_local, &amp;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                           rowptr, col, val, b, x <span class="kw">[</span>, res<span class="kw">]</span>)</span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">solver</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_SOLVER_PCG</span></code>, <code><span class="tok">PARCEL_SOLVER_PBICGSTAB</span></code>, <code><span class="tok">PARCEL_SOLVER_PGMRES</span></code>, <code><span class="tok">PARCEL_SOLVER_PCAGMRES</span></code> のいずれか. それ以外は<code><span class="tok">PARCEL_ERR_ARG</span></code></td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">opt</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">type(parcel_options)</span></code></td>
+<td>設定. 共通に使う成分は<code><span class="tok">tolerance</span></code>, <code><span class="tok">max_iteration</span></code>と前処理の成分. pgmres は<code><span class="tok">gmres_restart</span></code>, <code><span class="tok">gmres_qr_algo</span></code>を, pcagmres は<code><span class="tok">cagmres_s</span></code>, <code><span class="tok">cagmres_t</span></code>, <code><span class="tok">cagmres_qr_algo</span></code>, <code><span class="tok">cagmres_q_mode</span></code>を使う</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">comm</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td>コミュニケータ (Fortran の整数ハンドル. <code><span class="tok">MPI_COMM_WORLD</span></code>以外も可)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_local</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(parcel_int_kind)</span></code></td>
+<td>担当行数 (1 以上)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">nstart</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(parcel_int_kind)</span></code></td>
+<td>担当する最初の行の大域行番号 (<code><span class="tok">index_base</span></code>の番号付け)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_global</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(parcel_int_kind)</span></code></td>
+<td>大域行数 (全ランクの<code><span class="tok">n_local</span></code>の和)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">nnz_local</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(parcel_int_kind)</span></code></td>
+<td>担当行の非零要素数</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">rowptr(*)</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(parcel_int_kind)</span></code></td>
+<td>行ポインタ (長さ<code><span class="tok">n_local</span> <span class="tok">+</span> <span class="tok">1</span></code>). 先頭からの差だけを使うので 0 始まりでも 1 始まりでもよい</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">col(*)</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(parcel_int_kind)</span></code></td>
+<td>大域の列番号 (長さ<code><span class="tok">nnz_local</span></code>. <code><span class="tok">index_base</span></code>の番号付け)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">val(*)</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td>行列要素 (長さ<code><span class="tok">nnz_local</span></code>)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">b(*)</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td>右辺の担当行の部分 (長さ<code><span class="tok">n_local</span></code>)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">x(*)</span></code></td>
+<td class="nowrap">入出力</td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td>入力は初期値, 出力は解の担当行の部分 (長さ<code><span class="tok">n_local</span></code>)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">res</span></code></td>
+<td class="nowrap">出力 (省略可)</td>
+<td class="nowrap"><code><span class="tok">type(parcel_result)</span></code></td>
+<td>結果. 省略すると返さない</td>
+<td class="nowrap">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　行列は<a href="common.html#common-matrix">共通事項の「入力の行列」</a>の条件を満たす.</p>
+<ul>
+<li>全ランクの行ブロックを合わせたものが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math>を重複・欠落なく覆わなければならない (ランクごとに行数が異なってよく, ランク番号の順でなくてよい). ラッパは各ランクの (<code>nstart</code>, <code>n_local</code>) を集めて検査し, 満たさなければ全ランクで<code>PARCEL_ERR_DISTRIBUTION</code>を返す. MPI なしのビルドでは<code>nstart = index_base</code>, <code>n_local = n_global</code>とする.</li>
+<li>行ポインタが非減少で<code>rowptr(n_local+1) - rowptr(1) == nnz_local</code>であること, 列番号と行範囲が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math> (<code>index_base = 1</code>では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1, n_{global}]</annotation></semantics></math>) に収まることを検査し, 満たさなければ<code>PARCEL_ERR_ARG</code>を返す.</li>
+<li>pgmres は<code>gmres_restart &gt;= 1</code>, pcagmres は<code>cagmres_s &gt;= 1</code>, <code>cagmres_t &gt;= 1</code>を検査する.</li>
+</ul>
+<p><strong>戻り値</strong>　<code>integer(c_int)</code>. <code>PARCEL_OK</code>または負のエラーコード (<a href="fortran-api.html#f-constants">定数</a>). 反復が収束したかどうかは戻り値に含まない. <code>res%converged_reason</code>で確かめる.</p>
+<p><strong>MPI</strong>　集団操作. コミュニケータの全ランクで, 同じ<code>solver</code>と同じ内容の<code>opt</code>を与えて呼ぶ. 反復の途中経過と計算時間は rank 0 の標準出力に表示される (<a href="common.html#common-stdout">共通事項の「標準出力」</a>).</p>
+<p><strong>関連項目</strong>　<a href="fortran-api.html#api-f-types">parcel_options / parcel_result</a>, <a href="convergence.html#convergence">ソルバごとの収束判定</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">call parcel_options_init(opt)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>opt<span class="op">%</span>index_base  <span class="kw">=</span> <span class="dv">1</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>opt<span class="op">%</span>tolerance   <span class="kw">=</span> <span class="fl">1.0d-9</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>opt<span class="op">%</span>precon_algo <span class="kw">=</span> PARCEL_PRECON_BLOCKJACOBI</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>rc <span class="kw">=</span> parcel_solve_linear(PARCEL_SOLVER_PGMRES, opt, MPI_COMM_WORLD, n_local, nstart, n_global, <span class="kw">&amp;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">     n</span>nz_local, rowptr, col, val, b, x, res)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> (rc <span class="op">/=</span> PARCEL_OK) <span class="kw">then</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>   <span class="co">! 引数エラーなど</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">else if</span> (res<span class="op">%</span>converged_reason <span class="op">&lt;=</span> <span class="dv">0</span>) <span class="kw">then</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>   <span class="co">! 未収束 (PARCEL_DIVERGED_*)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">end if</span></span></code></pre></div>
+<h2 data-number="19.6" id="api-f-solve-eigen"><span class="header-section-number">19.6</span> parcel_solve_eigen</h2>
+<p><strong>概要</strong>　固有値問題<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>v</mi><mo>=</mo><mi>λ</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">Av = \lambda v</annotation></semantics></math> (<code>precon_spectrum=1</code>では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>) を解く (power, inverse_power, ks_arnoldi).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ierr <span class="kw">=</span> parcel_solve_eigen(solver, opt, comm, n_local, nstart, n_global, <span class="co">nnz_local, &amp;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                          rowptr, col, val, eigval, eigvec <span class="kw">[</span>, res<span class="kw">]</span>)</span></code></pre></div>
+<p><strong>引数</strong>　<code>opt</code>, <code>comm</code>, 行列の引数 (<code>n_local</code>から<code>val</code>まで), <code>res</code>は <a href="fortran-api.html#api-f-solve-linear">parcel_solve_linear</a> と同じである. k = <a href="fortran-api.html#api-f-eigen-count">parcel_eigen_count</a> として,</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">solver</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_SOLVER_POWER</span></code>, <code><span class="tok">PARCEL_SOLVER_INVERSE_POWER</span></code>, <code><span class="tok">PARCEL_SOLVER_KS_ARNOLDI</span></code>のいずれか</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">eigval(*)</span></code></td>
+<td class="nowrap">出力</td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td><code><span class="tok">2*k</span></code>要素. j 番目 (1 始まり) の固有値の実部が<code><span class="tok">eigval(2*j-1)</span></code>, 虚部が<code><span class="tok">eigval(2*j)</span></code>. power / inverse_power でも 2 要素要り, <code><span class="tok">eigval(1)</span></code>に固有値, <code><span class="tok">eigval(2)</span></code>に 0 が入る</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">eigvec(*)</span></code></td>
+<td class="nowrap">入出力</td>
+<td class="nowrap"><code><span class="tok">real(c_double)</span></code></td>
+<td><code><span class="tok">n_local*k</span></code>要素. j 番目の固有ベクトルの担当行の部分が<code><span class="tok">eigvec((j-1)*n_local+1</span> <span class="tok">:</span> <span class="tok">j*n_local)</span></code>. 複素共役対は実部と虚部の 2 本として格納する (<a href="common.html#common-eigen-output">固有値と固有ベクトルの出力</a>). <code><span class="tok">eigvec_seed=1</span></code>の ks_arnoldi では先頭<code><span class="tok">n_local</span></code>要素が初期ベクトル (入力)</td>
+<td class="nowrap">—</td>
+</tr>
+</tbody>
+</table>
+<p>　求める固有値と主に使う成分は次のとおりである.</p>
+<table>
+<thead>
+<tr>
+<th>ソルバ</th>
+<th>求めるもの</th>
+<th>主に使う成分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">power</td>
+<td>絶対値最大の固有値 1 個</td>
+<td><code><span class="tok">tolerance</span></code>, <code><span class="tok">max_iteration</span></code>, <code><span class="tok">precon_spectrum</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">inverse_power</td>
+<td>絶対値最小の固有値 1 個</td>
+<td>上記 + <code><span class="tok">linsolve_algo</span></code>, <code><span class="tok">linsolve_tolerance</span></code>, <code><span class="tok">linsolve_max_iteration</span></code>, <code><span class="tok">linsolve_restart</span></code>, <code><span class="tok">linsolve_precon_*</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>絶対値最大側の <code><span class="tok">ks_nev</span></code> 個 (shift-invert 時は σ 近傍)</td>
+<td><code><span class="tok">tolerance</span></code>, <code><span class="tok">precon_spectrum</span></code>, <code><span class="tok">ks_m</span></code>, <code><span class="tok">ks_k_keep</span></code>, <code><span class="tok">ks_nev</span></code>, <code><span class="tok">ks_max_restart</span></code>, <code><span class="tok">ks_qr_algo</span></code>, <code><span class="tok">shift_enable</span></code>, <code><span class="tok">shift_sigma</span></code>, <code><span class="tok">eigvec_seed</span></code>, shift-invert 時は <code><span class="tok">linsolve_*</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong></p>
+<ul>
+<li>ks_arnoldi は<code>1 &lt;= ks_nev &lt;= ks_k_keep &lt; ks_m &lt;= n_global</code>, <code>ks_max_restart &gt;= 1</code>, <code>ks_qr_algo</code>が<code>PARCEL_QR_CGS</code>か<code>PARCEL_QR_MGS</code>でなければ<code>PARCEL_ERR_ARG</code>を返す.</li>
+<li>inverse_power の<code>linsolve_algo = PARCEL_LINSOLVE_PCG</code>は<code>precon_spectrum=0</code>のときだけ使える (1 と併用すると<code>PARCEL_ERR_ARG</code>).</li>
+<li><code>shift_enable=1</code> (shift-invert) は ks_arnoldi だけで使える (power / inverse_power では<code>PARCEL_ERR_ARG</code>). <code>precon_spectrum=0</code>ではラッパが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A-\sigma I</annotation></semantics></math> (対角要素が無い行には<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>σ</mi></mrow><annotation encoding="application/x-tex">-\sigma</annotation></semantics></math>を加える) を組み立て, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>近傍の固有値を返す. 内部線形ソルバの前処理<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math>は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A-\sigma I</annotation></semantics></math>から作る. <code>precon_spectrum=1</code>ではシフト行列を作らず, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>近傍の固有値を返す.</li>
+<li>初期ベクトルは, power / inverse_power では内部で生成する. ks_arnoldi は既定 (<code>eigvec_seed=0</code>) ではラッパが大域行番号から作るので, 結果は行分割のしかたに依らない.</li>
+</ul>
+<p><strong>戻り値</strong>　<a href="fortran-api.html#api-f-solve-linear">parcel_solve_linear</a> と同じ. inverse_power と shift-invert では<code>res%linsolve_failures</code>が 0 でなければ内部線形ソルバが収束しなかった反復がある. ks_arnoldi の<code>res%ks_nconv</code>は判定値を満たした固有対の数である.</p>
+<p><strong>MPI</strong>　集団操作 (<a href="fortran-api.html#api-f-solve-linear">parcel_solve_linear</a> と同じ).</p>
+<p><strong>関連項目</strong>　<a href="fortran-api.html#api-f-eigen-count">parcel_eigen_count</a>, <a href="common.html#common-eigen-notes">固有値ソルバの補足</a>, <a href="convergence.html#convergence">ソルバごとの収束判定</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">integer(c_int)</span> <span class="dt">::</span> k</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">real(c_double)</span>, <span class="dt">allocatable</span> <span class="dt">::</span> ev(:), v(:)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>k <span class="kw">=</span> parcel_eigen_count(PARCEL_SOLVER_KS_ARNOLDI, opt)     <span class="co">! = ks_k_keep</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">allocate</span>(ev(<span class="dv">2</span><span class="kw">*</span>k), v(n_local<span class="kw">*</span>k))                             <span class="co">! ev は Re, Im 交互, v は列ごと</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>rc <span class="kw">=</span> parcel_solve_eigen(PARCEL_SOLVER_KS_ARNOLDI, opt, MPI_COMM_WORLD, n<span class="co">_local, nstart, n_global, &amp;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">     n</span>nz_local, rowptr, col, val, ev, v, res)</span></code></pre></div>
+<h2 data-number="19.7" id="api-f-eigen-count"><span class="header-section-number">19.7</span> parcel_eigen_count</h2>
+<p><strong>概要</strong>　固有値ソルバが返す固有対の個数 k を返す. <code>parcel_solve_eigen</code>に渡す配列の大きさを決めるのに使う.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>k <span class="kw">=</span> parcel_eigen_count(solver, opt)      <span class="co">! integer(c_int)</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">solver</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">integer(c_int)</span></code></td>
+<td><code><span class="tok">PARCEL_SOLVER_*</span></code></td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">opt</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">type(parcel_options)</span></code></td>
+<td>設定 (ks_arnoldi では<code><span class="tok">ks_k_keep</span></code>を使う)</td>
+<td class="nowrap">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>戻り値</strong>　power / inverse_power では 1, ks_arnoldi では<code>opt%ks_k_keep</code> (このうち収束が保証されるのは先頭<code>ks_nev</code>個), 線形ソルバと不正な値では 0.</p>
+<p><strong>MPI</strong>　局所操作.</p>
+<h2 data-number="19.8" id="api-f-check"><span class="header-section-number">19.8</span> parcel_options_check() / parcel_result_check()</h2>
+<p><strong>概要</strong>　Fortran の派生型とラッパの構造体の大きさが一致するかを確かめる.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">logical</span> <span class="dt">::</span> ok</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ok <span class="kw">=</span> parcel_options_check() <span class="op">.and.</span> parcel_result_check()</span></code></pre></div>
+<p><strong>戻り値</strong>　一致すれば<code>.true.</code>. 内部で <a href="fortran-api.html#api-f-sizes">parcel_options_size() / parcel_result_size()</a> と<code>c_sizeof</code>を比べる.</p>
+<p><strong>注意</strong>　自動では呼ばれないので, プログラムの最初で確かめるとよい. 一致しなければ, ラッパとモジュールを同じ版でビルドし直す.</p>
+<h2 data-number="19.9" id="api-f-sizes"><span class="header-section-number">19.9</span> parcel_options_size() / parcel_result_size()</h2>
+<p><strong>概要</strong>　ラッパ側の構造体<code>parcel_options</code>, <code>parcel_result</code>の大きさ [バイト] を返す.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>n <span class="kw">=</span> parcel_options_size()      <span class="co">! integer(c_int)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>n <span class="kw">=</span> parcel_result_size()</span></code></pre></div>
+<p><strong>注意</strong>　構造体の大きさは版によって変わりうるので, ラッパ, モジュール, 利用者のプログラムは同じ版でビルドする.</p>
+<h2 data-number="19.10" id="api-f-version"><span class="header-section-number">19.10</span> parcel_get_version / parcel_version_string</h2>
+<p><strong>概要</strong>　ライブラリの版を返す (<a href="../reference/c-api.html#api-c-version">C言語の parcel_get_version() / parcel_version_string()</a> と同じ値).</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">integer(c_int)</span> <span class="dt">::</span> major, minor, patch, ierr</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">character(len=32) :: str</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ierr <span class="kw">=</span> parcel_get_version(major, minor, patch)   <span class="co">! PARCEL_OK</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">call parcel_version_string(str)                  ! &quot;1.2.0&quot; (短ければ切り詰め, 残りは空白)</span></span></code></pre></div>
+<h2 data-number="19.11" id="api-f-run-parcel-sycl"><span class="header-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</h2>
+<p><strong>概要</strong>　v1.0 の Fortran の API (旧 API). pcg で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math>を解く. 互換のために残している. 新しく作るプログラムでは <a href="fortran-api.html#api-f-solve-linear">parcel_solve_linear</a> を使う.</p>
+<p><strong>書式</strong>　モジュールには含まれないので, 次のインタフェースを利用者が書く. コミュニケータは参照渡し, <code>n</code>と<code>nnz</code>は値渡しであり, 整数の引数と配列は 64 ビット (<code>integer(c_int64_t)</code>) である. <a href="../user/glossary.html#g-crs">CRS</a> は 0 始まりで渡す.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>   <span class="kw">subroutine</span> run_parcel_sycl(mpi_comm_f, n, nnz, crsA, crsCol, crsRow_ptr, vecx, vecb) <span class="kw">&amp;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        bind(c, name<span class="kw">=</span><span class="st">&quot;run_parcel_sycl_f&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">     u</span>se iso_c_binding</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>mplicit <span class="kw">none</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>nteger(c_int) mpi_comm_f</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>nteger(c_int64_t), value <span class="dt">::</span> n</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>nteger(c_int64_t), value <span class="dt">::</span> nnz</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">     r</span>eal(c_double) crsA(<span class="kw">*</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>nteger(c_int64_t) crsCol(<span class="kw">*</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="bu">     i</span>nteger(c_int64_t) crsRow_ptr(<span class="kw">*</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="bu">     r</span>eal(c_double) vecx(<span class="kw">*</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="bu">     r</span>eal(c_double) vecb(<span class="kw">*</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>   <span class="kw">end subroutine</span> run_parcel_sycl</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="kw">end interface</span></span></code></pre></div>
+<p><strong>引数</strong>　<code>n</code>は担当行数, <code>nnz</code>は担当行の非零要素数, <code>crsA</code>は行列要素, <code>crsCol</code>は大域の列番号 (0 始まり), <code>crsRow_ptr</code>は行ポインタ (0 始まり), <code>vecx</code>は入力が初期値で出力が解, <code>vecb</code>は右辺である.</p>
+<p><strong>前提条件</strong>　担当範囲の先頭行は各ランクの<code>n</code>の累積和で求める. 全ランクの<code>n</code>が等しければ<code>n*myrank</code>となり, 不均等な分割も扱える. 入力配列は書き換えない.</p>
+<p><strong>戻り値</strong>　無し. 失敗した場合は rank 0 が標準エラー出力にエラーコードを表示する.</p>
+<p><strong>MPI</strong>　集団操作.</p>
+<p><strong>注意</strong>　収束判定値は 1.0e-9 固定, 最大反復回数はラッパのコンパイル時マクロ<code>MAX_ITERATION</code> (既定 10000), 前処理は<code>-Dparcel_solver_precon_algo=&lt;0|1|2|4&gt;</code>で決まる. ブロック Jacobi (2) と Jacobi (4) では行列・ベクトルのスケーリングを有効にし, 分割数・反復回数には<code>BLOCKJACOBI_BLOCK</code> (既定 1) と<code>JACOBI_ITER</code> (既定 1) を用いる. 整数引数は v1.0 の 32 ビットから 64 ビットに変わった (<a href="../user/versions.html">利用者ガイドの「版と互換性」</a>).</p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode fortran"><code class="sourceCode fortranfixed"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rowptr0 <span class="kw">=</span> rowptr <span class="kw">-</span> <span class="dv">1</span>          <span class="co">! 1 始まりの CRS を 0 始まりに直して渡す</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">col0    = col - 1</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">call run_parcel_sycl(MPI_COMM_WORLD, n_local, nnz_local, val, col0, rowptr0, x, b)</span></span></code></pre></div>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← ソルバごとの収束判定</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'f';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

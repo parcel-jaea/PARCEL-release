@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+repo:
+  namespace: 'parcel'
+  api: v2.2

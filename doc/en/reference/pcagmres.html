@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>parcel::krylov::pcagmres – PARCEL SYCL v1.2 API Reference</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API Reference</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/reference/pcagmres.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="function-index.html#function-index">Function Index</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> Common Items</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> Format of the Entries</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> Solvers</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> Symbols and Terms</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> Input Matrix</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> Settings</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> Constants</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> Results</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> Convergence Status</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> Settings and MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> Precision</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> Convergence by Solver</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (Q Not Formed)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> PARCEL SYCL Classes</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> Mapping to the Common Items</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCEL Data Types</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> Constructor</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> Constructor</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> Constructor / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> Items Common to All Solvers</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> Class Template Arguments (Arithmetic Precision)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> Template Arguments of solver() (Data Precision)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> Handling of Settings and Exceptions</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> Constants</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> Common Member Functions</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (class)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (class)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (class)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li class="current" data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (class)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (class)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (class)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (class)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> Mapping to the Common Items</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> Constants</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> Mapping to the Common Items</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> Constants</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> Mapping to the Common Items</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> Exceptions</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="pgmres.html" rel="previous" accesskey="p">← parcel::krylov::pgmres</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="power.html" rel="next" accesskey="n">parcel::krylov::power →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="Language">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="14" id="pcagmres"><span class="header-section-number">14</span> parcel::krylov::pcagmres</h1>
+<p>This is the class of the communication-avoiding generalized minimal residual method (CA-GMRES). Whether the orthonormal basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed explicitly is selected with <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a>. The case where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed (<code>CAGMRES_Q_IMPLICIT</code>) is described in <a href="pcagmres.html#api-pcagmres-implicit">“Without forming Q”</a> later in this chapter.</p>
+<h2 data-number="14.1" id="api-pcagmres"><span class="header-section-number">14.1</span> pcagmres (class)</h2>
+<p><strong>Description</strong> Preconditioned communication-avoiding generalized minimal residual method. Generates <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> basis vectors at once and orthogonalizes them by a QR factorization.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> Tspmv <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tprecon <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Taxpy <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tdot    <span class="op">=</span> parcel_double <span class="op">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> pcagmres <span class="op">:</span> <span class="kw">public</span> krylov_param<span class="op">;</span></span></code></pre></div>
+<p><strong>Notes</strong> With <a href="../user/glossary.html#g-fp16">FP16</a> data or arithmetic precision, do not use the Cholesky QR variants (<code>CAGMRES_Q_IMPLICIT</code> and <code>QR_CAGMRES_CHOLESKYQR</code>): they give NaN or do not converge for any <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> (not checked). The variants that form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> work with the default <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s, t)</annotation></semantics></math> (<a href="../user/accuracy.html#accuracy-lowprec">“Known Limits at Low Precision” in the User Guide</a>). The class can be excluded from the build with <code>-DPARCEL_ENABLE_PCAGMRES=0</code> (the whole class is excluded regardless of how <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed).</p>
+<p><strong>See Also</strong> <a href="convergence.html#conv-pcagmres">Convergence check and breakdown</a>, <a href="pcagmres.html#api-pcagmres-set-restart">set_restart()</a>, <a href="pcagmres.html#api-pcagmres-set-qr-algo">set_qr_algo()</a>, <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a>, <a href="../user/linear-solvers.html#alg-pcagmres">the “Linear Solvers” chapter</a></p>
+<h2 data-number="14.2" id="api-pcagmres-solver"><span class="header-section-number">14.2</span> solver()</h2>
+<p><strong>Description</strong> Solves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math>.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> Tmat<span class="op">,</span> <span class="kw">class</span> Tvecx<span class="op">,</span> <span class="kw">class</span> Tvecb<span class="op">,</span> <span class="kw">class</span> Tvec <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Tprecon_mat <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tprecon_vec <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Tbasis <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> TcalcQR <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> THessenberg <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Todd_basis <span class="op">=</span> Tbasis<span class="op">,</span> <span class="kw">class</span> Teven_basis <span class="op">=</span> Tbasis <span class="op">&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> solver<span class="op">(</span>parcel<span class="op">::</span>matrix<span class="op">&lt;</span>Tmat<span class="op">&gt;</span> <span class="op">&amp;</span>Mat<span class="op">,</span> parcel<span class="op">::</span>vector<span class="op">&lt;</span>Tvecx<span class="op">&gt;</span> <span class="op">&amp;</span>x0<span class="op">,</span> parcel<span class="op">::</span>vector<span class="op">&lt;</span>Tvecb<span class="op">&gt;</span> <span class="op">&amp;</span>b0<span class="op">);</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">Tbasis</span></code></td>
+<td class="nowrap">In (template)</td>
+<td class="nowrap">PARCEL data type</td>
+<td>Data precision of the basis vectors. With <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>, the data precision of the input and output of the preconditioner (the work vectors built from the basis), and the default of <code><span class="tok">Todd_basis</span></code> and <code><span class="tok">Teven_basis</span></code></td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">TcalcQR</span></code></td>
+<td class="nowrap">In (template)</td>
+<td class="nowrap">PARCEL data type</td>
+<td>Arithmetic precision of the QR factorization (with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>, of the Gram matrix)</td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">THessenberg</span></code></td>
+<td class="nowrap">In (template)</td>
+<td class="nowrap">PARCEL data type</td>
+<td>Precision of the Hessenberg matrix (with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>, also used to store the Gram matrix)</td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">Todd_basis</span></code></td>
+<td class="nowrap">In (template)</td>
+<td class="nowrap">PARCEL data type</td>
+<td>Storage precision of the odd-numbered basis vectors. Used only with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code></td>
+<td class="nowrap"><code><span class="tok">Tbasis</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">Teven_basis</span></code></td>
+<td class="nowrap">In (template)</td>
+<td class="nowrap">PARCEL data type</td>
+<td>Storage precision of the even-numbered basis vectors. Used only with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code></td>
+<td class="nowrap"><code><span class="tok">Tbasis</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">Mat</span></code>, <code><span class="tok">x0</span></code>, <code><span class="tok">b0</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td>Same as <a href="pcg.html#api-pcg-solver">solver()</a> of <code><span class="tok">pcg</span></code></td>
+<td class="nowrap">none</td>
+</tr>
+</tbody>
+</table>
+<p>The arguments from <code>Tmat</code> to <code>Tprecon_vec</code> are the same as in <a href="solver-common.html#api-solver-template">“Template arguments of solver()”</a>.</p>
+<p><strong>Requirements</strong> Satisfy the <a href="solver-common.html#api-settings-mpi">common requirements</a> (an <a href="../user/glossary.html#g-inorder">in-order</a> queue, a registered matrix, and the queues and lengths of the vectors). The combination of the Q mode and the QR factorization satisfies the rules of <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a> (checked at the entry; on violation, all <a href="../user/glossary.html#g-rank">ranks</a> throw <code>std::invalid_argument</code>). <code>get_max_iteration()</code> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">\geq s \times t</annotation></semantics></math> (not checked). If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">b = 0</annotation></semantics></math>, the solver returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math> as <code>pcg</code> does.</p>
+<p><strong>Return Value</strong> None.</p>
+<p><strong>MPI</strong> Collective. All ranks must call it with the same settings.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>krylov<span class="op">::</span>pcagmres<span class="op">&lt;&gt;</span> ca<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>solver<span class="op">(</span>A<span class="op">,</span> x<span class="op">,</span> b<span class="op">);</span>   <span class="co">// all precisions that cannot be deduced are parcel_double</span></span></code></pre></div>
+<h2 data-number="14.3" id="api-pcagmres-set-restart"><span class="header-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</h2>
+<p><strong>Description</strong> Sets or gets the number of vectors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> generated in one basis generation step and the number <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> of basis generation steps before a restart. The restart length is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s \times t</annotation></semantics></math>.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_restart<span class="op">(</span>PARCEL_INT cagmres_s<span class="op">,</span> PARCEL_INT <span class="dt">cagmres_t</span><span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_restart_s<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>PARCEL_INT <span class="dt">get_restart_t</span><span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_s</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math></td>
+<td class="nowrap">8</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_t</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></td>
+<td class="nowrap">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> Both 1 or greater. 0 or less throws <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>Notes</strong> With <code>CAGMRES_Q_IMPLICIT</code>, the orthogonality error of the Cholesky QR method grows with the square of the condition number of the basis, so a large <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> can degrade convergence.</p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>set_restart<span class="op">(</span><span class="dv">8</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span></code></pre></div>
+<h2 data-number="14.4" id="api-pcagmres-set-qr-algo"><span class="header-section-number">14.4</span> set_qr_algo() / get_qr_algo()</h2>
+<p><strong>Description</strong> Sets or gets the QR factorization method for the basis.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_qr_algo<span class="op">(</span>PARCEL_INT qrdecomposition_algo<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_qr_algo<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">qrdecomposition_algo</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><code><span class="tok">parcel::qr::QR_CGS</span></code> (0), <code><span class="tok">QR_MGS</span></code> (1), <code><span class="tok">QR_CHOLESKYQR</span></code> (2), <code><span class="tok">QR_CAGMRES_CHOLESKYQR</span></code> (202, <a href="../user/glossary.html#g-moment">moment method</a>; only with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code>)</td>
+<td><code><span class="tok">QR_MGS</span></code> (<code><span class="tok">QR_CHOLESKYQR</span></code> with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> if not called)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> One of the four values above. Any other value throws <code>std::invalid_argument</code>. The combination with <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a> is checked at the entry of <code>solver()</code>.</p>
+<p><strong>Return Value</strong> <code>get_qr_algo()</code> returns the value actually used by <code>solver()</code> (<code>QR_CHOLESKYQR</code> with <code>CAGMRES_Q_IMPLICIT</code> if this function has not been called).</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all <a href="../user/glossary.html#g-rank">ranks</a>.</p>
+<p><strong>See Also</strong> <a href="../user/qr.html">The “QR Factorization” chapter</a>, <a href="pcagmres.html#api-pcagmres-implicit">Without forming Q</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>set_qr_algo<span class="op">(</span>parcel<span class="op">::</span>qr<span class="op">::</span>QR_MGS<span class="op">);</span></span></code></pre></div>
+<h2 data-number="14.5" id="api-pcagmres-set-explicit-q"><span class="header-section-number">14.5</span> set_explicit_q() / get_explicit_q()</h2>
+<p><strong>Description</strong> Sets or gets whether the orthonormal basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed explicitly.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> PARCEL_INT parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_AUTO     <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> PARCEL_INT parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_EXPLICIT <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> PARCEL_INT parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_IMPLICIT <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_explicit_q<span class="op">(</span>PARCEL_INT mode<span class="op">);</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_explicit_q<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>In/Out</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">mode</span></code></td>
+<td class="nowrap">In</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td>One of the constants in the table below</td>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_AUTO</span></code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Constant (<code><span class="tok">parcel::krylov::</span></code>)</th>
+<th style="text-align: right;">Value</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_AUTO</span></code></td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed only with <code><span class="tok">QR_CHOLESKYQR</span></code> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>; otherwise <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_EXPLICIT</span></code></td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is always formed (also with <code><span class="tok">QR_CHOLESKYQR</span></code> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_IMPLICIT</span></code></td>
+<td style="text-align: right;" class="nowrap">2</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is not formed for any <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>. The QR factorization is limited to the Cholesky QR methods (<code><span class="tok">QR_CHOLESKYQR</span></code> or <code><span class="tok">QR_CAGMRES_CHOLESKYQR</span></code>) (<a href="pcagmres.html#api-pcagmres-implicit">Without forming Q</a>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> One of the three values above. Any other value throws <code>std::invalid_argument</code>. The combination with <a href="pcagmres.html#api-pcagmres-set-qr-algo">set_qr_algo()</a> is checked at the entry of <code>solver()</code>, so that it does not depend on the order in which the setting functions are called, and <code>std::invalid_argument</code> is thrown in the following cases (all <a href="../user/glossary.html#g-rank">ranks</a> make the same judgment).</p>
+<ul>
+<li><code>QR_CGS</code> or <code>QR_MGS</code> is set explicitly with <code>CAGMRES_Q_IMPLICIT</code> (if <code>set_qr_algo()</code> has not been called, <code>QR_CHOLESKYQR</code> is used).</li>
+<li><code>QR_CAGMRES_CHOLESKYQR</code> is combined with <code>CAGMRES_Q_AUTO</code> or <code>CAGMRES_Q_EXPLICIT</code>.</li>
+<li>With <code>QR_CAGMRES_CHOLESKYQR</code>, preconditioning is not none (<code>PRECON_NONE</code>), or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> is not an even number of 2 or greater.</li>
+</ul>
+<p><code>QR_CAGMRES_CHOLESKYQR</code> is limited to a symmetric <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>. This is not checked; for a nonsymmetric <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>, a wrong <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is used and wrong results are returned.</p>
+<p><strong>Return Value</strong> <code>get_explicit_q()</code> returns the value set.</p>
+<p><strong>MPI</strong> Local operation. Give the same value on all ranks.</p>
+<p><strong>Notes</strong> <code>CAGMRES_Q_AUTO</code> and <code>CAGMRES_Q_EXPLICIT</code> perform the same computation except for <code>QR_CHOLESKYQR</code> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>. <code>CAGMRES_Q_IMPLICIT</code> computes in a different order, so even with the same <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>, and QR factorization, the results differ within rounding error.</p>
+<p><strong>See Also</strong> <a href="pcagmres.html#api-pcagmres-implicit">Without forming Q</a>, <a href="../user/qr.html">the “QR Factorization” chapter</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>set_explicit_q<span class="op">(</span>parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_IMPLICIT<span class="op">);</span>   <span class="co">// QR_CHOLESKYQR unless the QR factorization is specified</span></span></code></pre></div>
+<h2 data-number="14.6" id="api-pcagmres-implicit"><span class="header-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</h2>
+<p><strong>Description</strong> With <code>set_explicit_q(CAGMRES_Q_IMPLICIT)</code>, the same CA-GMRES(s,t) is solved without forming the orthonormal basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> explicitly. Only <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> is obtained, from the Cholesky factorization of the Gram matrix of the basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>, and the solution is updated with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>R</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V(R^{-1}y)</annotation></semantics></math>. The storage precision of the basis can be chosen separately for the odd- and even-numbered vectors (the type arguments <code>Todd_basis</code> and <code>Teven_basis</code> of <code>solver()</code>).</p>
+<p><strong>Requirements</strong> The QR factorization is limited to the Cholesky QR methods (<code>QR_CHOLESKYQR</code> or <code>QR_CAGMRES_CHOLESKYQR</code> (<a href="../user/glossary.html#g-moment">moment method</a>)). The rules for the combinations are given in <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a>.</p>
+<p><strong>Notes</strong> The convergence check, the convergence state, and the handling of a <a href="../user/glossary.html#g-lucky">lucky breakdown</a> are the same as when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed. The true relative residual is computed at the end and returned by <code>get_true_residual()</code>.</p>
+<p><strong>See Also</strong> <a href="convergence.html#conv-pcagmres-implicit">Convergence check and breakdown</a>, <a href="../user/linear-solvers.html#alg-pcagmres-implicit">the section on CA-GMRES without forming Q in the “Linear Solvers” chapter</a>, <a href="../user/qr.html#qr-cagmres-choleskyqr">the moment method in the “QR Factorization” chapter</a>, <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>krylov<span class="op">::</span>pcagmres<span class="op">&lt;&gt;</span> cq<span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>set_explicit_q<span class="op">(</span>parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_IMPLICIT<span class="op">);</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>set_restart<span class="op">(</span><span class="dv">8</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>set_qr_algo<span class="op">(</span>parcel<span class="op">::</span>qr<span class="op">::</span>QR_CAGMRES_CHOLESKYQR<span class="op">);</span>   <span class="co">// only for a symmetric A without preconditioning; QR_CHOLESKYQR if omitted</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>solver<span class="op">(</span>A<span class="op">,</span> x<span class="op">,</span> b<span class="op">);</span></span></code></pre></div>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="pgmres.html" rel="previous">← parcel::krylov::pgmres</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="power.html" rel="next">parcel::krylov::power →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'cpp';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

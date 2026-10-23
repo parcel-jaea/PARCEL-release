@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>版と互換性 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/versions.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li class="current"><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="performance.html" rel="previous" accesskey="p">← 性能</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="glossary.html" rel="next" accesskey="n">用語集 →</a></span>
+</nav>
+<h1 data-number="15" id="versions"><span class="header-section-number">15</span> 版と互換性</h1>
+<p>　公開版 v1.0 から v1.2 への変更のうち利用者のプログラムに影響するものをまとめる. 非推奨の関数は <a href="../reference/index.html">API リファレンス</a>の各関数に記す. 変更の詳細な経緯はリポジトリの <code>CHANGELOG.ja.md</code> (英語版は <code>CHANGELOG.md</code>) を参照する.</p>
+<h2 data-number="15.1" id="互換性の方針"><span class="header-section-number">15.1</span> 互換性の方針</h2>
+<ul>
+<li>公開 API (マニュアル「<a href="../reference/index.html">API リファレンス</a>」「<a href="usage.html#usage">使用方法</a>」に記載したクラス・関数・マクロ・C/Fortran 関数) の名前, 引数, 既定の動作を変えるときは, この章に記載する.</li>
+<li>名前を変えた関数は, 少なくとも次の版まで旧名を別名として残し, <a href="../reference/index.html">API リファレンス</a>に非推奨と記載する.</li>
+<li>実行時間の出力, 途中経過の表示など, 標準出力の書式は API に含めない. プログラムから結果を得る場合は, 収束状態の取得関数 (<a href="../reference/common-members.html">API リファレンスの「共通メンバ関数」</a>) を用いる.</li>
+</ul>
+<h2 data-number="15.2" id="versions-api"><span class="header-section-number">15.2</span> 版の確かめ方</h2>
+<p>　版は <code>Include/parcel_version.hpp</code> の 1 か所で定義する (この版は 1.2.0, 公開日 2026-10-23). 各言語では次で得る (<a href="../reference/common-members.html#api-version">API リファレンスの C++</a>, <a href="../reference/c-api.html#api-c-version">C言語</a>, <a href="../reference/fortran-api.html#api-f-version">Fortran</a>, <a href="../reference/python-api.html#api-py-version">Python</a>).</p>
+<table>
+<thead>
+<tr>
+<th>言語</th>
+<th>版を得る方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>マクロ <code><span class="tok">PARCEL_VERSION_MAJOR</span></code> / <code><span class="tok">PARCEL_VERSION_MINOR</span></code> / <code><span class="tok">PARCEL_VERSION_PATCH</span></code>, <code><span class="tok">PARCEL_VERSION_STRING</span></code>, <code><span class="tok">PARCEL_VERSION_NUMBER</span></code>, <code><span class="tok">PARCEL_VERSION_GE(a,</span> <span class="tok">b,</span> <span class="tok">c)</span></code>. 関数 <code><span class="tok">parcel::version_string()</span></code>, <code><span class="tok">parcel::get_version()</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">C言語</td>
+<td><code><span class="tok">parcel_get_version()</span></code>, <code><span class="tok">parcel_version_string()</span></code> (ラッパをビルドしたときの値)</td>
+</tr>
+<tr>
+<td class="nowrap">Fortran</td>
+<td><code><span class="tok">parcel_get_version()</span></code>, <code><span class="tok">parcel_version_string()</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td><code><span class="tok">parcel.__version__</span></code> (パッケージの版), <code><span class="tok">parcel.library_version()</span></code> (ネイティブ層をビルドしたときの値). 両者は同じ値になる</td>
+</tr>
+</tbody>
+</table>
+<p>　Python のパッケージの版は本体と同じ番号である. 回帰試験は, 実行したプログラムの版が生成器がヘッダから読んだ版と一致することを確かめる.</p>
+<h2 data-number="15.3" id="versions-cite"><span class="header-section-number">15.3</span> 引用と問い合わせ</h2>
+<p>　引用するときの情報は配布パッケージの <code>CITATION.cff</code> (Citation File Format 1.2.0) に記す. PARCEL を引用するときは<a href="references.html#references">参考文献 [3]</a> (Idomura et al., ScalA 17, 2017) を挙げる. 質問・不具合の報告は GitHub の Issues (<a href="https://github.com/parcel-jaea/PARCEL-release/issues" class="uri">https://github.com/parcel-jaea/PARCEL-release/issues</a>) で受け付ける. 問い合わせの案内と報告に添える情報 (版, 入れ方とビルドのコマンド, 計算機, SYCL 処理系・MPI の版, 再現の手順) は <code>SUPPORT.ja.md</code> (英語版は <code>SUPPORT.md</code>) に記す. 公開用のリポジトリは <a href="https://github.com/parcel-jaea/PARCEL-release" class="uri">https://github.com/parcel-jaea/PARCEL-release</a> である (配布 tarball は Release に置く).</p>
+<h2 data-number="15.4" id="versions-tarball"><span class="header-section-number">15.4</span> 配布物の確認</h2>
+<p>　配布 tarball <code>parcel_sycl-1.2.0.tar.gz</code> は GitHub の Release (<a href="https://github.com/parcel-jaea/PARCEL-release/releases" class="uri">https://github.com/parcel-jaea/PARCEL-release/releases</a>, タグ <code>v1.2.0</code>) に置き, sha256 のファイル <code>parcel_sycl-1.2.0.tar.gz.sha256</code> を添える. 受け取った tarball は <code>sha256sum -c parcel_sycl-1.2.0.tar.gz.sha256</code> (macOS は <code>shasum -a 256 -c</code>) で確かめる. tarball は <code>tools/make_tarball.py</code> で作り, 同じ中身からは同じ tarball (同じ sha256) ができる. spack のレシピに書いた sha256 が今のパッケージの tarball と一致するかは <code>python3 tools/make_tarball.py --check</code> で確かめる. レシピは tarball の中にも入るので, tarball の中のレシピは sha256 を持たない形にしてある.</p>
+<p>　過去の版も GitHub の Release に置く. SYCL 版の v1.0 は同じリポジトリの Release (タグ <code>v1.0.0</code>) に, SYCL 版より前の PARCEL 1.0〜1.2 (Fortran, CUDA) は <a href="https://github.com/parcel-jaea/PARCEL-legacy" class="uri">https://github.com/parcel-jaea/PARCEL-legacy</a> の Release に置く.</p>
+<h2 data-number="15.5" id="v1.0-から-v1.2-への変更"><span class="header-section-number">15.5</span> v1.0 から v1.2 への変更</h2>
+<h3 data-number="15.5.1" id="動作が変わった機能"><span class="header-section-number">15.5.1</span> 動作が変わった機能</h3>
+<p>　v1.0 にあった機能のうち, v1.2 で動作が変わったものを示す. v1.0 には収束状態を取得する関数が無いため, v1.0 の欄は反復の終わり方で示す.</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>v1.0</th>
+<th>v1.2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">pbicgstab</span></code> のクラステンプレート引数</td>
+<td>先頭に未使用の <code><span class="tok">Tdata</span></code> を含む 5 引数. 他のソルバと同じ 4 引数を渡すと 1 つずつずれ, <a href="glossary.html#g-spmv">SpMV</a> が<a href="glossary.html#g-precon">前処理</a>の精度, 内積が常に double で計算されていた</td>
+<td>他のソルバと同じ <code><span class="tok">&lt;Tspmv,</span> <span class="tok">Tprecon,</span> <span class="tok">Taxpy,</span> <span class="tok">Tdot&gt;</span></code></td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-jacobi">ブロック Jacobi</a> 前処理のブロック数</td>
+<td>既定 1</td>
+<td><code><span class="tok">set_blockjacobi()</span></code> を呼ばなければ<a href="glossary.html#g-device">デバイス</a>の並列度から自動で決める</td>
+</tr>
+<tr>
+<td>前処理の行列・ベクトルスケーリング</td>
+<td>既定は無効</td>
+<td><code><span class="tok">set_scaling_matrix()</span></code> / <code><span class="tok">set_scaling_vector()</span></code> を呼ばなければ前処理の種類と精度から自動で決める (ブロック Jacobi は常に有効, Jacobi は半精度のときだけ有効)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-sycl">SYCL</a> キュー</td>
+<td>既定 (out-of-order) キューも受け付けた (同梱のサンプルとラッパは <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> では既定キューを使っていた)</td>
+<td><a href="glossary.html#g-inorder">in-order</a> キューでなければ <code><span class="tok">set_crsMat()</span></code> と全ソルバの <code><span class="tok">solver()</span></code> が <code><span class="tok">std::invalid_argument</span></code> を投げる</td>
+</tr>
+<tr>
+<td>設定関数の引数</td>
+<td>範囲外の値も受け取り, 結果は不定 (例: <code><span class="tok">set_precon_algo(3)</span></code> は黙って前処理なし, <code><span class="tok">set_tolerance(0)</span></code> は最大反復回数まで反復)</td>
+<td>範囲外の値は <code><span class="tok">std::invalid_argument</span></code> (<a href="../reference/solver-common.html#api-settings-mpi">API リファレンスの「設定の扱いと例外」</a>)</td>
+</tr>
+<tr>
+<td>線形ソルバで <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math></td>
+<td><a href="glossary.html#g-relres">相対残差</a>が NaN となり, 最大反復回数まで反復して終わる</td>
+<td>反復せずに <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math>, <code><span class="tok">CONVERGED_RTOL</span></code> (反復回数 0)</td>
+</tr>
+<tr>
+<td>線形ソルバで残差が非有限</td>
+<td>最大反復回数まで反復</td>
+<td>その場で打ち切り <code><span class="tok">DIVERGED_NANORINF</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">pbicgstab</span></code> の破綻</td>
+<td>検出せず, NaN / Inf のまま最大反復回数まで反復</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msup><mi>r</mi><mo>*</mo></msup><mo>,</mo><mi>q</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r^{\ast},q \rangle</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math> の 0 などを検出して <code><span class="tok">DIVERGED_BREAKDOWN</span></code>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = 0</annotation></semantics></math> は<a href="glossary.html#g-lucky">幸運な破綻</a>として判定</td>
+</tr>
+<tr>
+<td><code><span class="tok">pgmres</span></code> / <code><span class="tok">pcagmres</span></code> の幸運な破綻</td>
+<td>0 による除算で NaN,またはゴミを含む解の更新</td>
+<td>有効な列だけで解を更新し, 次の<a href="glossary.html#g-restart">リスタート</a>で判定. 更新できなければ <code><span class="tok">DIVERGED_BREAKDOWN</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">-ffast-math</span></code> / <code><span class="tok">-ffinite-math-only</span></code></td>
+<td>ビルドできた</td>
+<td><code><span class="tok">#error</span></code> でビルドを止める</td>
+</tr>
+<tr>
+<td>double-double の積の誤差なし変換 (TwoProd)</td>
+<td>Dekker の分割. <a href="glossary.html#g-cuda">CUDA</a> では積と和が FMA に融合され, dd の積が倍精度相当に落ちうる</td>
+<td><code><span class="tok">fma</span></code> を用いる. dd の結果が最後の桁で変わりうる</td>
+</tr>
+<tr>
+<td><code><span class="tok">pbicgstab</span></code> の <a href="glossary.html#g-fp16">FP16</a> 内積</td>
+<td>テンプレート引数のずれにより内積が常に倍精度で計算されていた (FP16 の構成でも内積は倍精度)</td>
+<td>内積が FP16 で計算される. 精度の下限に近い判定値では <code><span class="tok">DIVERGED_BREAKDOWN</span></code> となりうる</td>
+</tr>
+<tr>
+<td><code><span class="tok">set_tolerance()</span></code> の既定 (全ソルバ)</td>
+<td>1.0e-4</td>
+<td>1.0e-8</td>
+</tr>
+<tr>
+<td><code><span class="tok">set_max_iteration()</span></code> の既定</td>
+<td>100</td>
+<td>10000</td>
+</tr>
+<tr>
+<td><code><span class="tok">pgmres</span></code> の <code><span class="tok">set_restart()</span></code> の既定</td>
+<td>4</td>
+<td>30 (作業ベクトルは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m+1</annotation></semantics></math>本なので, 既定のメモリ使用量が増える)</td>
+</tr>
+<tr>
+<td><code><span class="tok">pcagmres</span></code> の <code><span class="tok">set_restart(s,</span> <span class="tok">t)</span></code> の既定</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">s = 1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><code><span class="tok">pcagmres</span></code> の <code><span class="tok">set_qr_algo()</span></code> の既定</td>
+<td><code><span class="tok">QR_CGS</span></code></td>
+<td><code><span class="tok">QR_MGS</span></code> (<code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> で指定しなければ <code><span class="tok">QR_CHOLESKYQR</span></code>). C / Fortran の <code><span class="tok">cagmres_qr_algo</span></code> の既定も <code><span class="tok">PARCEL_QR_MGS</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">pgmres</span></code> / <code><span class="tok">pcagmres</span></code> の反復上限がリスタート周期 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">st</annotation></semantics></math>) の倍数でない場合</td>
+<td>周回数を切り捨て, 端数の反復を行わない (上限が周期より小さいと反復しない)</td>
+<td>最後のリスタートを端数の列数にし, 上限ちょうどまで反復する. 上限に達した場合の反復回数は上限の値</td>
+</tr>
+<tr>
+<td><code><span class="tok">pcg</span></code> / <code><span class="tok">pbicgstab</span></code> で初期残差の相対残差が収束判定値未満</td>
+<td>1 反復以上行う (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">x^{(0)}</annotation></semantics></math> が厳密解で初期残差が 0 なら 0 による除算で NaN となる)</td>
+<td>反復せずに <code><span class="tok">CONVERGED_RTOL</span></code> (反復回数 0,<code><span class="tok">x</span></code> は初期値のまま)</td>
+</tr>
+<tr>
+<td><code><span class="tok">PARCEL_INT</span></code> (行番号・列番号などの整数) の既定</td>
+<td><code><span class="tok">int32_t</span></code> (<code><span class="tok">-DPARCEL_INT</span></code> で <code><span class="tok">int64_t</span></code>)</td>
+<td>大域の添字 <code><span class="tok">PARCEL_INT</span></code> は <code><span class="tok">int64_t</span></code>. <a href="glossary.html#g-rank">ランク</a>内の添字 (<a href="glossary.html#g-device">デバイス</a>上の <a href="glossary.html#g-crs">CRS</a> の列番号・行ポインタなど) は新設の <code><span class="tok">PARCEL_LINT</span></code> で持ち, 既定は <code><span class="tok">int32_t</span></code> なので, デバイスのメモリ量と SpMV の転送量は v1.0 と同じ. <code><span class="tok">set_crsMat()</span></code> に渡す配列は <code><span class="tok">PARCEL_INT</span></code> (8 バイト) になる (<a href="concepts.html#precision-int">基本構成の「整数型」</a>). <code><span class="tok">-DPARCEL_INT</span></code> は互換のため受け付ける</td>
+</tr>
+<tr>
+<td><code><span class="tok">set_crsMat()</span></code> の入力</td>
+<td>検査しない (分割の隙間・重複や <code><span class="tok">rowptr</span></code> の誤りは誤った結果または範囲外アクセスになる)</td>
+<td>分割・局所行数・<code><span class="tok">rowptr</span></code>・列番号を検査し, 崩れていれば全<a href="glossary.html#g-rank">ランク</a>が <code><span class="tok">std::invalid_argument</span></code> を投げる (<a href="usage.html#usage-cpp-matrix">使用方法の「行列の設定」</a>)</td>
+</tr>
+<tr>
+<td>デバイスのメモリ確保の失敗</td>
+<td>検査せず, segmentation fault などで異常終了する</td>
+<td><code><span class="tok">util_sycl::device_bad_alloc</span></code> (<code><span class="tok">std::bad_alloc</span></code> の派生) を投げる</td>
+</tr>
+<tr>
+<td>Jacobi 前処理 (<code><span class="tok">PRECON_JACOBI</span></code>) と行列<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の寿命</td>
+<td>前処理が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の行ポインタ・列番号を複製して持つ</td>
+<td>複製せず<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>と共有し, 既定では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の値も適用のたびに読む. <code><span class="tok">solver()</span></code>の実行中に<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>を破棄・変更しなければ影響しない. 前処理行列<code><span class="tok">parcel::precon_matrix</span></code>を直接作って使う場合は, 使い終えるまで<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>を破棄・変更しない</td>
+</tr>
+<tr>
+<td>Jacobi 前処理の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math>の値</td>
+<td>保持する</td>
+<td>保持せず, 適用のたびに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の値から計算する (メモリが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零 1 個あたり前処理行列の精度 1 個分少ない. GPU では前処理が遅い. <code><span class="tok">-ffp-contract=off</span></code>なら結果は同じ)</td>
+</tr>
+<tr>
+<td><code><span class="tok">pcg</span></code>の解<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>の更新</td>
+<td>探索方向を 4 本貯めて 4 反復ごとにまとめて更新する</td>
+<td>毎反復更新し, 探索方向を 1 本だけ持つ (ベクトル 3 本分メモリが少なく, 少し遅い. 丸めの桁で結果が変わる. 反復回数は同じ)</td>
+</tr>
+<tr>
+<td>C / Fortran の旧 API <code><span class="tok">run_parcel_sycl_c()</span></code> / <code><span class="tok">run_parcel_sycl_f()</span></code> の整数引数</td>
+<td><code><span class="tok">int</span></code> (C) / <code><span class="tok">integer(kind=4)</span></code> (Fortran) の 32 ビット</td>
+<td><code><span class="tok">parcel_int</span></code> (C) / <code><span class="tok">integer(c_int64_t)</span></code> (Fortran) の 64 ビット. 呼び出し側の配列も 64 ビットにする</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="15.5.2" id="追加した機能"><span class="header-section-number">15.5.2</span> 追加した機能</h3>
+<ul>
+<li>固有値ソルバ <code>parcel::krylov::power</code>, <code>parcel::krylov::inverse_power</code>, <code>parcel::krylov::ks_arnoldi</code> (v1.0 は線形ソルバのみ)</li>
+<li>固有値ソルバ共通の設定 (<code>set_precon_spectrum</code>, <code>set_linsolve_*</code>)</li>
+<li>右前処理 <code>pgmres</code> の内部変数出力とシフト (<code>set_precon_space_output</code>, <code>set_shift</code>), 外部で構築した前処理行列を渡す <code>solver()</code> の第 4 引数</li>
+<li>収束状態の取得 (<code>get_converged_reason()</code>, <code>get_iterations()</code>, <code>get_residual()</code> ほか)</li>
+<li><code>pcagmres</code> の直交基底 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> の作り方の選択 <code>set_explicit_q()</code> / <code>get_explicit_q()</code> と定数 <code>parcel::krylov::CAGMRES_Q_AUTO</code> / <code>CAGMRES_Q_EXPLICIT</code> / <code>CAGMRES_Q_IMPLICIT</code> (<a href="linear-solvers.html#alg-pcagmres-q">線形ソルバの章</a>). <code>CAGMRES_Q_IMPLICIT</code> では <code>parcel::qr::QR_CAGMRES_CHOLESKYQR</code> (<a href="glossary.html#g-moment">モーメント法</a>) も使える. <code>solver()</code> のテンプレート引数の末尾に <code>Todd_basis</code>, <code>Teven_basis</code> (既定 <code>Tbasis</code>) を追加. C / Fortran からは <code>parcel_options</code> の <code>cagmres_q_mode</code> と <code>PARCEL_CAGMRES_Q_*</code></li>
+<li>精度のテンプレート引数の既定 <code>parcel_double</code> (<code>parcel::matrix&lt;&gt;</code>, <code>parcel::vector&lt;&gt;</code>, 各ソルバの <code>solver()</code> のうち実引数から推論できないデータ精度). <code>parcel::krylov::pcg&lt;&gt; s; s.solver(A, x, b);</code> と書ける</li>
+<li><code>parcel::matrix::n_local()</code> (局所行数)</li>
+<li><a href="glossary.html#g-dd">double-double</a> の上位・下位を別配列で渡す <code>set_crsMat(comm, nstart, nend, n, nnz, rowptr, crsCol, hi, lo)</code> の <a href="glossary.html#g-mpi">MPI</a> 対応 (v1.0 ではコミュニケータを登録せず, <code>PARCEL_MPI=1</code> では使えなかった)</li>
+<li>ビルドするソルバを選ぶマクロ <code>PARCEL_ENABLE_ALL_SOLVERS</code>, <code>PARCEL_ENABLE_&lt;ソルバ&gt;</code> (<a href="installation.html#install-macros">インストールの「マクロ」</a>)</li>
+<li>ビルド時の検査と数値演算のマクロ <code>PARCEL_REQUIRE_IN_ORDER</code>, <code>PARCEL_NO_CRS_CHECK</code>, <code>PARCEL_ALLOW_FAST_MATH</code>, <code>PARCEL_DD_NO_FMA</code></li>
+<li>メモリと速さを選ぶマクロ <code>PARCEL_JACOBI_ONTHEFLY</code>, <code>PARCEL_PCG_NO_XHIST</code> と環境変数 <code>PARCEL_PSTEP</code> (<a href="installation.html#install-kernel-opt">インストールの「最適化」</a>)</li>
+<li><a href="glossary.html#g-rank">ランク</a>内の添字の型 <code>PARCEL_LINT</code> (既定 32 ビット). 整数型のマクロ <code>PARCEL_INT32</code>, <code>PARCEL_LOCAL_INT64</code> と, 選ばれた幅を示す <code>PARCEL_INT_BITS</code>, <code>PARCEL_LINT_BITS</code> (<a href="installation.html#install-int-type">インストールの「整数型」</a>)</li>
+<li><code>ks_arnoldi</code> の直交化の既定をビルド時に選ぶマクロ <code>PARCEL_KS_ORTHO_DEFAULT</code> と spack のバリアント <code>ks_ortho</code> (<a href="installation.html#install-ks-ortho">インストールの「ks_arnoldi の直交化の既定」</a>)</li>
+<li><code>ks_arnoldi</code> の直交化を選ぶ <code>set_qr_algo()</code> / <code>get_qr_algo()</code> (<code>pgmres</code> と同じ定数. C言語・Fortran は <code>parcel_options</code> の <code>ks_qr_algo</code>, Python は <code>eigs()</code> の <code>orthogonalization</code>)</li>
+<li>実行時の環境変数 <code>PARCEL_TIMER_SYNC</code> (時間計測の同期), <code>PARCEL_MEM_REPORT</code> (PARCEL が確保したデバイスメモリのピークの記録. <code>util_sycl::device_mem_peak_bytes()</code>) (<a href="usage.html#usage-verify-options">使用方法の環境変数の表</a>)</li>
+<li><a href="glossary.html#g-workitem">ワークグループ</a>同期 <code>util_sycl::group_barrier()</code> (使い方は<a href="usage.html#usage">使用方法の C++ の「コンパイルと実行」</a>)</li>
+<li>MPI なしのビルド (<code>-DPARCEL_MPI=0</code>. v1.0 では <code>PARCEL_MPI</code> が 1 に固定されていた. <a href="installation.html#install-nompi">「MPI なしのビルド」</a>). MPI なしのビルド用の <code>parcel::comm</code> のコンストラクタ <code>comm(sycl::queue*)</code></li>
+<li>検証用サンプル <code>tests/verify/parcel_krylov_sample_verify.cpp</code> (参照解との比較. ソルバ・前処理・問題を実行時に選ぶ) と回帰試験・性能試験の生成器 (<code>tests/</code>)</li>
+<li>Python のパッケージ <code>parcel</code> (<code>python/</code>. 全ソルバを呼べる. 倍精度のみ. <a href="usage.html#usage-python">使用方法の Python</a>)</li>
+<li><a href="glossary.html#g-spack">spack</a> のレシピ <code>parcel-sycl</code>・<code>py-parcel-sycl</code> と, spack の取得から PARCEL までをゼロから入れるスクリプト (<code>spack/</code>. <a href="installation.html#install-spack">インストールの「spack によるインストール」</a>)</li>
+<li>回帰試験の C言語・Fortran・Python の API の試験, <a href="glossary.html#g-mpi">MPI</a> あり・なしと言語を選んで流す仕組み, スケジューラの無い計算機での実行 (<code>tests/regression/</code>)</li>
+<li>C / Fortran から全ソルバを呼ぶ API (<code>capi/parcel_sycl_c.h</code>, <code>capi/parcel_sycl_mod.f90</code>). 整数の型 <code>parcel_int</code> (C) / <code>parcel_int_kind</code> (Fortran) は 64 ビット. v1.0 の C / Fortran API は pcg だけを解く旧 API <code>run_parcel_sycl_c()</code> / <code>run_parcel_sycl_f()</code> のみである</li>
+</ul>
+<h3 data-number="15.5.3" id="削除した機能"><span class="header-section-number">15.5.3</span> 削除した機能</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>代わりの機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">parcel:<wbr />:<wbr />krylov:<wbr />:<wbr />cholQR_pcagmres</span></code> (v1.0 では <code><span class="tok">solver()</span></code> を実体化するとコンパイルできず, 使えなかった)</td>
+<td><code><span class="tok">parcel::krylov::pcagmres</span></code> に <code><span class="tok">set_explicit_q(parcel:<wbr />:<wbr />krylov:<wbr />:<wbr />CAGMRES_Q_IMPLICIT)</span></code> を指定する (QR 分解は指定しなければ <code><span class="tok">QR_CHOLESKYQR</span></code>)</td>
+</tr>
+<tr>
+<td>サンプル <code><span class="tok">parcel_krylov_sample.cpp</span></code> とその設定 <code><span class="tok">parcel_default.hpp</span></code> (トップディレクトリ)</td>
+<td>検証用サンプル <code><span class="tok">tests/<wbr />verify/<wbr />parcel_krylov_sample_verify.cpp</span></code> (ソルバは実行時に <code><span class="tok">PARCEL_SOLVER</span></code> で選ぶ) と <code><span class="tok">examples/</span></code> のサンプル</td>
+</tr>
+</tbody>
+</table>
+<p>　ファイルの配置も変わった. C / Fortran の API (<code>wrapper_parcel_sycl.cpp</code>, <code>parcel_sycl_c.h</code>, <code>parcel_sycl_mod.f90</code>) は <code>capi/</code> に, サンプル (<code>sample_c.c</code>, <code>sample_f.f90</code>, <code>problem.f90</code>) は <code>examples/</code> に置いた (<a href="installation.html#install-layout">「パッケージの構成」</a>).</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="performance.html" rel="previous">← 性能</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="glossary.html" rel="next">用語集 →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

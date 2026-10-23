@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Function Index – PARCEL SYCL v1.2 API Reference</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API Reference</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/reference/function-index.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li class="current"><a href="function-index.html#function-index">Function Index</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> Common Items</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> Format of the Entries</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> Solvers</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> Symbols and Terms</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> Input Matrix</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> Settings</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> Constants</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> Results</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> Convergence Status</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> Settings and MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> Precision</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> Convergence by Solver</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (Q Not Formed)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> PARCEL SYCL Classes</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> Mapping to the Common Items</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCEL Data Types</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> Constructor</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> Constructor</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> Constructor / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> Items Common to All Solvers</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> Class Template Arguments (Arithmetic Precision)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> Template Arguments of solver() (Data Precision)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> Handling of Settings and Exceptions</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> Constants</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> Common Member Functions</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (class)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (class)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (class)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (class)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (class)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (class)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (class)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</a></li>
+</ul></li>
+<li data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> Mapping to the Common Items</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> Constants</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (deprecated)</a></li>
+</ul></li>
+<li data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> Mapping to the Common Items</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> Constants</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (deprecated)</a></li>
+</ul></li>
+<li data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> Mapping to the Common Items</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> Exceptions</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="index.html" rel="previous" accesskey="p">← PARCEL SYCL v1.2 API Reference</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="common.html" rel="next" accesskey="n">Common Items →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="Language">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 class="unnumbered" id="function-index">Function Index</h1>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-implicit"><code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> (without forming Q)</a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="solver-common.html#api-class-template"><code><span class="tok">Class</span></code> Template Arguments (Arithmetic Precision)</a></td>
+<td><a href="solver-common.html#solver-common">Items Common to All Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="comm.html#api-comm-ctor"><code><span class="tok">Constructor</span></code></a></td>
+<td><a href="comm.html#comm">parcel::comm</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="matrix.html#api-matrix-ctor"><code><span class="tok">Constructor</span></code></a></td>
+<td><a href="matrix.html#matrix">parcel::matrix</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-ctor"><code><span class="tok">Constructor</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-converged-reason-name"><code><span class="tok">converged_reason_name()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-data"><code><span class="tok">data()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-data"><code><span class="tok">data_hi()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-data"><code><span class="tok">data_lo()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-ks-set-shift"><code><span class="tok">disable_shift()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-csr-from"><code><span class="tok">DistributedCSR.from_global()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-csr-from"><code><span class="tok">DistributedCSR.from_scipy()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-local-slice"><code><span class="tok">DistributedCSR.local_slice()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-blockjacobi"><code><span class="tok">get_blockjacobi()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-get-converged-reason"><code><span class="tok">get_converged_reason()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-explicit-q"><code><span class="tok">get_explicit_q()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-get-iterations"><code><span class="tok">get_iterations()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-jacobi"><code><span class="tok">get_jacobi()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-ks-subspace"><code><span class="tok">get_ks_k_keep()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-ks-subspace"><code><span class="tok">get_ks_m()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-ks-max-restart"><code><span class="tok">get_ks_max_restart()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-get-ks-nconv"><code><span class="tok">get_ks_nconv()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-ks-subspace"><code><span class="tok">get_ks_nev()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-algo"><code><span class="tok">get_linsolve_algo()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-get-linsolve-failures"><code><span class="tok">get_linsolve_failures()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-max-iteration"><code><span class="tok">get_linsolve_max_iteration()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-precon"><code><span class="tok">get_linsolve_precon_param()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-restart"><code><span class="tok">get_linsolve_restart()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-tolerance"><code><span class="tok">get_linsolve_tolerance()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-max-iteration"><code><span class="tok">get_max_iteration()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-precon-algo"><code><span class="tok">get_precon_algo()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-precon-space-output"><code><span class="tok">get_precon_space_output()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-precon-spectrum"><code><span class="tok">get_precon_spectrum()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-ks-set-qr-algo"><code><span class="tok">get_qr_algo()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-qr-algo"><code><span class="tok">get_qr_algo()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-qr-algo"><code><span class="tok">get_qr_algo()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-get-residual"><code><span class="tok">get_residual()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-restart"><code><span class="tok">get_restart()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-restart"><code><span class="tok">get_restart_s()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-restart"><code><span class="tok">get_restart_t()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-scaling"><code><span class="tok">get_scaling_matrix()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-scaling"><code><span class="tok">get_scaling_vector()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-shift"><code><span class="tok">get_shift()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-tolerance"><code><span class="tok">get_tolerance()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-get-true-residual"><code><span class="tok">get_true_residual()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-version"><code><span class="tok">get_version()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-getvalue"><code><span class="tok">getValue()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-gethi"><code><span class="tok">getValue_hi()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-gethi"><code><span class="tok">getValue_lo()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="solver-common.html#api-settings-mpi"><code><span class="tok">Handling</span></code> of Settings and Exceptions</a></td>
+<td><a href="solver-common.html#solver-common">Items Common to All Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="inverse-power.html#api-inverse-power"><code><span class="tok">inverse_power</span></code> (class)</a></td>
+<td><a href="inverse-power.html#inverse-power">parcel::krylov::inverse_power</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-is-converged"><code><span class="tok">is_converged()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-ks-arnoldi"><code><span class="tok">ks_arnoldi</span></code> (class)</a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="comm.html#api-comm-get"><code><span class="tok">mpi_comm()</span></code></a></td>
+<td><a href="comm.html#comm">parcel::comm</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="comm.html#api-comm-get"><code><span class="tok">mpi_rank()</span></code></a></td>
+<td><a href="comm.html#comm">parcel::comm</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="comm.html#api-comm-get"><code><span class="tok">mpi_size()</span></code></a></td>
+<td><a href="comm.html#comm">parcel::comm</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="matrix.html#api-matrix-n-local"><code><span class="tok">n_local()</span></code></a></td>
+<td><a href="matrix.html#matrix">parcel::matrix</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-version"><code><span class="tok">parcel.</span></code>__version__</a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-build-info"><code><span class="tok">parcel.build_info()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-comm"><code><span class="tok">parcel.Comm</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-build-info"><code><span class="tok">parcel.device_name()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-distributedcsr"><code><span class="tok">parcel.DistributedCSR</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-info"><code><span class="tok">parcel.EigInfo</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-eigs"><code><span class="tok">parcel.eigs()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-build-info"><code><span class="tok">parcel.has_mpi()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-version"><code><span class="tok">parcel.library_version()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-partition-rows"><code><span class="tok">parcel.partition_rows()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-solve"><code><span class="tok">parcel.solve()</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="py">
+<td><a href="python-api.html#api-py-info"><code><span class="tok">parcel.SolveInfo</span></code></a></td>
+<td><a href="python-api.html#python-api">Python API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-eigen-count"><code><span class="tok">parcel_eigen_count</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-eigen-count"><code><span class="tok">parcel_eigen_count()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-version"><code><span class="tok">parcel_get_version</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-version"><code><span class="tok">parcel_get_version()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-parcel-options"><code><span class="tok">parcel_options</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-types"><code><span class="tok">parcel_options</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-check"><code><span class="tok">parcel_options_check()</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-options-init"><code><span class="tok">parcel_options_init</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-options-init"><code><span class="tok">parcel_options_init()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-sizes"><code><span class="tok">parcel_options_size()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-sizes"><code><span class="tok">parcel_options_size()</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-parcel-result"><code><span class="tok">parcel_result</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-types"><code><span class="tok">parcel_result</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-check"><code><span class="tok">parcel_result_check()</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-sizes"><code><span class="tok">parcel_result_size()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-sizes"><code><span class="tok">parcel_result_size()</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-solve-eigen"><code><span class="tok">parcel_solve_eigen</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-solve-eigen"><code><span class="tok">parcel_solve_eigen()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-solve-linear"><code><span class="tok">parcel_solve_linear</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-solve-linear"><code><span class="tok">parcel_solve_linear()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-solver-from-name"><code><span class="tok">parcel_solver_from_name()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-version"><code><span class="tok">PARCEL_VERSION_</span></code>*</a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-version"><code><span class="tok">parcel_version_string</span></code></a></td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-version"><code><span class="tok">parcel_version_string()</span></code></a></td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pbicgstab.html#api-pbicgstab"><code><span class="tok">pbicgstab</span></code> (class)</a></td>
+<td><a href="pbicgstab.html#pbicgstab">parcel::krylov::pbicgstab</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres"><code><span class="tok">pcagmres</span></code> (class)</a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcg.html#api-pcg"><code><span class="tok">pcg</span></code> (class)</a></td>
+<td><a href="pcg.html#pcg">parcel::krylov::pcg</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres"><code><span class="tok">pgmres</span></code> (class)</a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="power.html#api-power"><code><span class="tok">power</span></code> (class)</a></td>
+<td><a href="power.html#power">parcel::krylov::power</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-queue"><code><span class="tok">queue()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="comm.html#api-comm-get"><code><span class="tok">rank()</span></code></a></td>
+<td><a href="comm.html#comm">parcel::comm</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-ctor"><code><span class="tok">resize()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="c">
+<td><a href="c-api.html#api-c-run-parcel-sycl"><code><span class="tok">run_parcel_sycl_c()</span></code></a> (deprecated)</td>
+<td><a href="c-api.html#c-api">C API</a></td>
+</tr>
+<tr data-apilang="f">
+<td><a href="fortran-api.html#api-f-run-parcel-sycl"><code><span class="tok">run_parcel_sycl_f()</span></code></a> (deprecated)</td>
+<td><a href="fortran-api.html#fortran-api">Fortran API</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-blockjacobi"><code><span class="tok">set_blockjacobi()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="matrix.html#api-set-crsmat"><code><span class="tok">set_crsMat()</span></code></a></td>
+<td><a href="matrix.html#matrix">parcel::matrix</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-explicit-q"><code><span class="tok">set_explicit_q()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-jacobi"><code><span class="tok">set_jacobi()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-ks-max-restart"><code><span class="tok">set_ks_max_restart()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-ks-subspace"><code><span class="tok">set_ks_subspace()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-algo"><code><span class="tok">set_linsolve_algo()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-precon"><code><span class="tok">set_linsolve_blockjacobi()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-precon"><code><span class="tok">set_linsolve_jacobi()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-max-iteration"><code><span class="tok">set_linsolve_max_iteration()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-precon"><code><span class="tok">set_linsolve_precon_algo()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-restart"><code><span class="tok">set_linsolve_restart()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-scaling"><code><span class="tok">set_linsolve_scaling_matrix()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-scaling"><code><span class="tok">set_linsolve_scaling_vector()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-linsolve-tolerance"><code><span class="tok">set_linsolve_tolerance()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-max-iteration"><code><span class="tok">set_max_iteration()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-precon-algo"><code><span class="tok">set_precon_algo()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-precon-space-output"><code><span class="tok">set_precon_space_output()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="eigen-common.html#api-set-precon-spectrum"><code><span class="tok">set_precon_spectrum()</span></code></a></td>
+<td><a href="eigen-common.html#eigen-common">Member Functions Common to the Eigenvalue Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-ks-set-qr-algo"><code><span class="tok">set_qr_algo()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-qr-algo"><code><span class="tok">set_qr_algo()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-qr-algo"><code><span class="tok">set_qr_algo()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-set-restart"><code><span class="tok">set_restart()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-restart"><code><span class="tok">set_restart()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-scaling"><code><span class="tok">set_scaling_matrix()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-scaling"><code><span class="tok">set_scaling_vector()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-ks-set-shift"><code><span class="tok">set_shift()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-set-shift"><code><span class="tok">set_shift()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-shift-linsolve"><code><span class="tok">set_shift_linsolve_max_iteration()</span></code></a> (deprecated)</td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-shift-linsolve"><code><span class="tok">set_shift_linsolve_restart()</span></code></a> (deprecated)</td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-set-shift-linsolve"><code><span class="tok">set_shift_linsolve_tolerance()</span></code></a> (deprecated)</td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-set-tolerance"><code><span class="tok">set_tolerance()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-setvalue"><code><span class="tok">setValue()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-sethi"><code><span class="tok">setValue_hi()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-sethi"><code><span class="tok">setValue_lo()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="comm.html#api-comm-get"><code><span class="tok">size()</span></code></a></td>
+<td><a href="comm.html#comm">parcel::comm</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="vector.html#api-vector-queue"><code><span class="tok">size()</span></code></a></td>
+<td><a href="vector.html#vector">parcel::vector</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="inverse-power.html#api-inverse-power-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="inverse-power.html#inverse-power">parcel::krylov::inverse_power</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pbicgstab.html#api-pbicgstab-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="pbicgstab.html#pbicgstab">parcel::krylov::pbicgstab</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcagmres.html#api-pcagmres-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="pcagmres.html#pcagmres">parcel::krylov::pcagmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pcg.html#api-pcg-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="pcg.html#pcg">parcel::krylov::pcg</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="pgmres.html#api-pgmres-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="pgmres.html#pgmres">parcel::krylov::pgmres</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="power.html#api-power-solver"><code><span class="tok">solver()</span></code></a></td>
+<td><a href="power.html#power">parcel::krylov::power</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="solver-common.html#api-solver-template"><code><span class="tok">Template</span></code> Arguments of solver()</a> (Data Precision)</td>
+<td><a href="solver-common.html#solver-common">Items Common to All Solvers</a></td>
+</tr>
+<tr data-apilang="cpp">
+<td><a href="common-members.html#api-version"><code><span class="tok">version_string()</span></code></a></td>
+<td><a href="common-members.html#common-members">Common Member Functions</a></td>
+</tr>
+</tbody>
+</table>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="index.html" rel="previous">← PARCEL SYCL v1.2 API Reference</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"><a href="common.html" rel="next">Common Items →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = '';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

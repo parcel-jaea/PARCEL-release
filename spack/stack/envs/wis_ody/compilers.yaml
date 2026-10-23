@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+# Wisteria-Odyssey (A64FX の計算ノードのジョブで入れる): 本体の環境より先に入れるコンパイラ (install_stack.sh が環境 compilers として入れる)。
+#   LLVM 18 を OS の GCC 8.3.1 で作り, その clang で AdaptiveCpp と numpy / SciPy の C / C++ を作る (本体の環境)。
+#   GCC 12 などの新しい GCC は作らない: その libstdc++ (GLIBCXX_3.4.26 以降) を AdaptiveCpp が使うと, 富士通の FCC
+#   (OS の libstdc++ 6.0.25 = 3.4.25 まで) で C++ のプログラムをリンクできず, spack の GCC のライブラリは圧縮された
+#   デバッグ情報で OS の ld 2.30 も読めない (OS の libstdc++ にそろえる)
+spack:
+  specs:
+  - llvm@18.1.8 +clang +lld ~lldb ~lua ~polly ~flang ~mlir ~python ~gold targets:=aarch64 %gcc@8.3.1
+  packages:
+    gcc:
+      externals:
+      - spec: gcc@8.3.1 languages:='c,c++,fortran'
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+    tar:
+      buildable: false
+      externals:
+      - spec: tar@1.30
+        prefix: /usr

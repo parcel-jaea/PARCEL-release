@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Python API – PARCEL SYCL v1.2 API Reference</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API Reference</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/reference/python-api.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="function-index.html#function-index">Function Index</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> Common Items</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> Format of the Entries</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> Solvers</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> Symbols and Terms</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> Input Matrix</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> Settings</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> Constants</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> Results</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> Convergence Status</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> Settings and MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> Precision</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> Convergence by Solver</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (Q Not Formed)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> PARCEL SYCL Classes</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> Mapping to the Common Items</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCEL Data Types</a></li>
+<li class="otherlang" data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> Constructor</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> Constructor</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> Constructor / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> Items Common to All Solvers</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> Class Template Arguments (Arithmetic Precision)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> Template Arguments of solver() (Data Precision)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> Handling of Settings and Exceptions</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> Constants</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> Common Member Functions</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> Member Functions Common to the Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (class)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (class)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (class)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (class)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (without forming Q)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (class)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (class)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (class)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> Mapping to the Common Items</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> Constants</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (deprecated)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> Mapping to the Common Items</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> Constants</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (deprecated)</a></li>
+</ul></li>
+<li class="current" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> Mapping to the Common Items</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> Exceptions</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← Convergence by Solver</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="Language">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="false">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="true">Python</a>
+</div>
+<h1 data-number="20" id="python-api"><span class="header-section-number">20</span> Python API</h1>
+<p>From Python, <code>import</code> the package <code>parcel</code> (<code>python/</code> in the distribution package). The package has its own native layer (<code>libparcel_py.so</code>) that calls the library directly, and is independent of the C and Fortran APIs. The meaning and defaults of the settings, the results, and the convergence states are given in <a href="common.html#common">Common Items</a> and <a href="convergence.html#convergence">Convergence by Solver</a>; the workflow and examples in <a href="../user/usage.html#usage-python">“Python” in the “Usage” chapter of the User Guide</a>, and installation in <a href="../user/installation.html#install-python">“Python Package” in the “Installation” chapter of the User Guide</a>.</p>
+<ul>
+<li>The public names are <code>DistributedCSR</code>, <code>solve</code>, <code>eigs</code>, <code>SolveInfo</code>, <code>EigInfo</code>, <code>Comm</code>, <code>partition_rows</code>, <code>build_info</code>, <code>has_mpi</code>, <code>device_name</code>, <code>ParcelError</code> and <code>NotBuiltError</code>.</li>
+<li>One call creates the <a href="../user/glossary.html#g-sycl">SYCL</a> queue, registers the matrix and solves. Only double precision is available (<a href="common.html#common-precision">Precision</a>) for both data and computation, and the input/output arrays are float64.</li>
+<li>Settings arguments given as <code>None</code> (the default) take the library defaults (<a href="common.html#common-settings">common settings</a>). The “Default” column of the argument tables below gives those values.</li>
+<li>Errors are reported with Python exceptions (<a href="python-api.html#py-errors">Exceptions</a>). A solve does not raise an exception when it does not converge, so check <code>info.converged</code> in the result.</li>
+<li>In the version whose native layer is built with MPI, all <a href="../user/glossary.html#g-rank">ranks</a> make the same calls with the same arguments (collective operations). <a href="../user/glossary.html#g-mpi">MPI</a> is initialized at the first call (if mpi4py or another module has already initialized it, that is used, and the package calls <code>MPI_Finalize</code> at exit only when it initialized MPI itself). In the version without MPI, a single process holds everything.</li>
+<li>The native layer is loaded from the path in the environment variable <code>PARCEL_PY_LIB</code> if set, otherwise from <code>libparcel_py.so</code> in the package. If it is not found or its version (ABI) does not match the package, <code>ImportError</code> is raised. To suppress warnings of <a href="../user/glossary.html#g-adaptivecpp">AdaptiveCpp</a>, <code>ACPP_DEBUG_LEVEL</code> is set to 0 unless already set.</li>
+</ul>
+<h2 data-number="20.1" id="py-mapping"><span class="header-section-number">20.1</span> Mapping to the Common Items</h2>
+<p>The <a href="common.html#common-settings">common settings</a> correspond to the arguments of <code>solve()</code> and <code>eigs()</code>, and the <a href="common.html#common-results">results</a> to the attributes of <code>SolveInfo</code> and <code>EigInfo</code>, as follows. Constants are given as strings.</p>
+<div class="nowrap-c2 nowrap-code">
+<table>
+<thead>
+<tr>
+<th>Common setting</th>
+<th>Argument</th>
+<th>Expression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="common.html#set-tol">Convergence tolerance</a></td>
+<td><code><span class="tok">tol</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-maxiter">Maximum number of iterations</a></td>
+<td><code><span class="tok">maxiter</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon">Preconditioner type</a></td>
+<td><code><span class="tok">precond</span></code></td>
+<td><code><span class="tok">"none"</span></code>, <code><span class="tok">"point_jacobi"</span></code>, <code><span class="tok">"block_jacobi"</span></code>, <code><span class="tok">"jacobi"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-jacobi-iter">Number of Jacobi iterations</a></td>
+<td><code><span class="tok">precond_options["iterations"]</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-blocks">Number of block Jacobi blocks</a></td>
+<td><code><span class="tok">precond_options["blocks"]</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-scaling">Scaling</a></td>
+<td><code><span class="tok">precond_options["scale_matrix"]</span></code>, <code><span class="tok">["scale_vector"]</span></code></td>
+<td><code><span class="tok">True</span></code>, <code><span class="tok">False</span></code>, <code><span class="tok">None</span></code> (automatic)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-restart">Restart length</a> (pgmres)</td>
+<td><code><span class="tok">restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-qr">Orthogonalization method</a> (pgmres)</td>
+<td><code><span class="tok">orthogonalization</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-st">Basis generation size <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></a></td>
+<td><code><span class="tok">s</span></code>, <code><span class="tok">t</span></code></td>
+<td>Give both</td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-qr">QR factorization method</a> (pcagmres)</td>
+<td><code><span class="tok">qr</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code>, <code><span class="tok">"cholesky_qr"</span></code>, <code><span class="tok">"cholesky_qr_moment"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-q">Q mode</a></td>
+<td><code><span class="tok">q_mode</span></code></td>
+<td><code><span class="tok">"auto"</span></code>, <code><span class="tok">"explicit"</span></code>, <code><span class="tok">"implicit"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon-spectrum">Spectrum of the preconditioned matrix</a></td>
+<td><code><span class="tok">precond_spectrum</span></code></td>
+<td><code><span class="tok">True</span></code>, <code><span class="tok">False</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-algo">Type of the inner linear solver</a></td>
+<td><code><span class="tok">inner_method</span></code></td>
+<td><code><span class="tok">"pgmres"</span></code>, <code><span class="tok">"pcg"</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-tol">Tolerance of the inner linear solver</a></td>
+<td><code><span class="tok">inner_tol</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-maxiter">Maximum iterations of the inner linear solver</a></td>
+<td><code><span class="tok">inner_maxiter</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-restart">Restart length of the inner linear solver</a></td>
+<td><code><span class="tok">inner_restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-precon">Preconditioner of the inner linear solver</a></td>
+<td><code><span class="tok">inner_precond</span></code>, <code><span class="tok">inner_precond_options</span></code></td>
+<td>The scaling cannot be specified (always automatic)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-shift">Shift-invert</a></td>
+<td><code><span class="tok">sigma</span></code></td>
+<td>Enabled when given. The package assembles <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-subspace">Size of the Krylov subspace</a></td>
+<td><code><span class="tok">m</span></code>, <code><span class="tok">k_keep</span></code>, <code><span class="tok">nev</span></code></td>
+<td>Give all three</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-max-restart">Maximum number of restarts</a></td>
+<td><code><span class="tok">max_restart</span></code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-qr">Orthogonalization method</a> (ks_arnoldi)</td>
+<td><code><span class="tok">orthogonalization</span></code> (<code><span class="tok">eigs()</span></code>)</td>
+<td><code><span class="tok">"cgs"</span></code> (CGS2) or <code><span class="tok">"mgs"</span></code> (MGS2)</td>
+</tr>
+<tr>
+<td><a href="common.html#set-init-vector">Initial vector</a></td>
+<td><code><span class="tok">v0</span></code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</div>
+<table>
+<thead>
+<tr>
+<th>Common result</th>
+<th>Attribute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="common.html#res-reason">Convergence state</a></td>
+<td><code><span class="tok">converged</span></code>, <code><span class="tok">reason</span></code>, <code><span class="tok">reason_code</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-iter">Iteration count</a></td>
+<td><code><span class="tok">iterations</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-resid">Residual</a></td>
+<td><code><span class="tok">residual</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-true">True residual</a></td>
+<td><code><span class="tok">true_residual</span></code></td>
+</tr>
+<tr>
+<td><a href="common.html#res-nconv">Number of converged eigenpairs</a></td>
+<td><code><span class="tok">n_converged</span></code> (<code><span class="tok">EigInfo</span></code> only)</td>
+</tr>
+<tr>
+<td><a href="common.html#res-inner-fail">Number of inner solver failures</a></td>
+<td><code><span class="tok">inner_failures</span></code> (<code><span class="tok">EigInfo</span></code> only)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.2" id="api-py-distributedcsr"><span class="header-section-number">20.2</span> parcel.DistributedCSR</h2>
+<p><strong>Description</strong> Represents the rows owned by this rank of a sparse matrix partitioned into row blocks with <a href="../user/glossary.html#g-mpi">MPI</a> (<a href="common.html#common-matrix">Input Matrix in Common Items</a>).</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR(indptr, indices, data, row_start, n_global, comm<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">indptr</span></code></td>
+<td>1-D integer array</td>
+<td>0-based local row pointer of the owned rows (length <code><span class="tok">n_local</span> <span class="tok">+</span> <span class="tok">1</span></code>)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">indices</span></code></td>
+<td>1-D integer array</td>
+<td>0-based global column indices</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">data</span></code></td>
+<td>1-D real array</td>
+<td>Matrix elements (same length as <code><span class="tok">indices</span></code>)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">row_start</span></code></td>
+<td>Integer</td>
+<td>Global row index of the first owned row (0-based)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_global</span></code></td>
+<td>Integer</td>
+<td>Number of global rows</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">comm</span></code></td>
+<td><code><span class="tok">parcel.Comm</span></code>, mpi4py communicator, <code><span class="tok">None</span></code></td>
+<td>Communicator. <code><span class="tok">None</span></code> means MPI_COMM_WORLD</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes</strong> <code>indptr</code>, <code>indices</code>, <code>data</code> (copied into contiguous int64 / float64 arrays; the original arrays may be modified after the call), <code>row_start</code>, <code>n_global</code>, <code>comm</code> (<code>parcel.Comm</code>), <code>n_local</code> (number of owned rows), <code>nnz</code> (number of nonzeros in the owned rows), <code>shape</code> (<code>(n_global, n_global)</code>).</p>
+<p><strong>Requirements</strong> The layout is the same as <code>scipy.sparse.csr_matrix</code>. At construction, the following are checked: <code>indptr</code> is a 1-D array of length 2 or more, <code>indices</code> and <code>data</code> are 1-D arrays of the same length, <code>indptr[0] = 0</code> and <code>indptr[-1] = len(indices)</code>; otherwise <code>ValueError</code> is raised. When solving, the following are checked: each rank owns at least one row, <code>indptr</code> is non-decreasing, the column indices are in [0, <code>n_global</code>), and the row blocks of all ranks cover 0 to <code>n_global - 1</code> without gaps or overlaps (the order of the ranks does not matter); otherwise all ranks raise the same <code>ValueError</code>. If the number of rows exceeds the range of the integers of the native layer, <code>OverflowError</code> is raised.</p>
+<p><strong>See Also</strong> <a href="python-api.html#api-py-csr-from">from_scipy() / from_global()</a>, <a href="python-api.html#api-py-local-slice">local_slice()</a></p>
+<h2 data-number="20.3" id="api-py-csr-from"><span class="header-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</h2>
+<p><strong>Description</strong> Create a <code>DistributedCSR</code> from a SciPy sparse matrix (class methods).</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR.from_scipy(local_rows, row_start, n_global<span class="op">=</span><span class="va">None</span>, comm<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> parcel.DistributedCSR.from_global(global_matrix, comm<span class="op">=</span><span class="va">None</span>, row_start<span class="op">=</span><span class="va">None</span>, n_local<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">local_rows</span></code></td>
+<td>scipy.sparse matrix</td>
+<td>Matrix of the owned rows only (with global columns)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">row_start</span></code></td>
+<td>Integer</td>
+<td>Global row index of the first owned row. If omitted in <code><span class="tok">from_global()</span></code>, the decomposition of <code><span class="tok">partition_rows()</span></code> is used</td>
+<td class="nowrap"><code><span class="tok">None</span></code> for <code><span class="tok">from_global()</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_global</span></code></td>
+<td>Integer</td>
+<td>Number of global rows. If omitted, the number of columns of <code><span class="tok">local_rows</span></code></td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">global_matrix</span></code></td>
+<td>Square scipy.sparse matrix</td>
+<td>Whole matrix (all ranks hold the same one)</td>
+<td class="nowrap">—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_local</span></code></td>
+<td>Integer</td>
+<td>Number of owned rows (give it together with <code><span class="tok">row_start</span></code>)</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">comm</span></code></td>
+<td><code><span class="tok">parcel.Comm</span></code>, mpi4py communicator, <code><span class="tok">None</span></code></td>
+<td>Communicator</td>
+<td class="nowrap"><code><span class="tok">None</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Return Value</strong> <code>DistributedCSR</code>.</p>
+<p><strong>Notes</strong> <code>from_global()</code> takes the owned rows from the whole matrix, so it is suitable for small problems and tests. It raises <code>ValueError</code> if the matrix is not square.</p>
+<h2 data-number="20.4" id="api-py-local-slice"><span class="header-section-number">20.4</span> DistributedCSR.local_slice()</h2>
+<p><strong>Description</strong> Returns the slice that takes the part owned by this rank from a global vector.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> A.local_slice()          <span class="co"># slice(row_start, row_start + n_local)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b_global[A.local_slice()])</span></code></pre></div>
+<h2 data-number="20.5" id="api-py-solve"><span class="header-section-number">20.5</span> parcel.solve()</h2>
+<p><strong>Description</strong> Solves the linear system <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> and returns the solution and the convergence status (pcg, pbicgstab, pgmres, pcagmres).</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b, <span class="op">*</span>, method<span class="op">=</span><span class="st">&quot;pcg&quot;</span>, x0<span class="op">=</span><span class="va">None</span>, tol<span class="op">=</span><span class="va">None</span>, maxiter<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       precond<span class="op">=</span><span class="va">None</span>, precond_options<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       restart<span class="op">=</span><span class="va">None</span>, orthogonalization<span class="op">=</span><span class="va">None</span>,      <span class="co"># pgmres only</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                       s<span class="op">=</span><span class="va">None</span>, t<span class="op">=</span><span class="va">None</span>, qr<span class="op">=</span><span class="va">None</span>, q_mode<span class="op">=</span><span class="va">None</span>,      <span class="co"># pcagmres only</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                       verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<p><strong>Arguments</strong> The meanings of the settings are given in the sections of the “Common item” column.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+<th>Common item</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">A</span></code></td>
+<td><code><span class="tok">DistributedCSR</span></code></td>
+<td><a href="common.html#common-matrix">Input matrix</a></td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">b</span></code></td>
+<td>Owned part of the right-hand side (length <code><span class="tok">A.n_local</span></code>)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">method</span></code></td>
+<td><code><span class="tok">"pcg"</span></code>, <code><span class="tok">"pbicgstab"</span></code>, <code><span class="tok">"pgmres"</span></code>, <code><span class="tok">"pcagmres"</span></code></td>
+<td><a href="common.html#common-solvers">Solvers</a></td>
+<td><code><span class="tok">"pcg"</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">x0</span></code></td>
+<td>Owned part of the initial guess; 0 if <code><span class="tok">None</span></code></td>
+<td>—</td>
+<td><code><span class="tok">None</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">tol</span></code></td>
+<td>Finite positive number</td>
+<td><a href="common.html#set-tol">Convergence tolerance</a></td>
+<td>1.0e-8</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">maxiter</span></code></td>
+<td>Integer, 1 or greater</td>
+<td><a href="common.html#set-maxiter">Maximum number of iterations</a></td>
+<td>10000</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precond</span></code></td>
+<td><code><span class="tok">None</span></code>, <code><span class="tok">"none"</span></code>, <code><span class="tok">"point_jacobi"</span></code>, <code><span class="tok">"block_jacobi"</span></code>, <code><span class="tok">"jacobi"</span></code></td>
+<td><a href="common.html#set-precon">Preconditioner type</a></td>
+<td>No preconditioning</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">precond_options</span></code></td>
+<td>Dictionary: <code><span class="tok">"iterations"</span></code> (1 or greater), <code><span class="tok">"blocks"</span></code> (1 or greater), <code><span class="tok">"scale_matrix"</span></code>, <code><span class="tok">"scale_vector"</span></code> (<code><span class="tok">True</span></code>, <code><span class="tok">False</span></code>, <code><span class="tok">None</span></code>)</td>
+<td><a href="common.html#set-jacobi-iter">Jacobi iterations</a>, <a href="common.html#set-blocks">blocks</a>, <a href="common.html#set-scaling">scaling</a></td>
+<td>1 iteration; blocks and scaling automatic</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">restart</span></code></td>
+<td>Integer, 1 or greater (pgmres only)</td>
+<td><a href="common.html#set-gmres-restart">Restart length</a></td>
+<td>30</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">orthogonalization</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code> (pgmres only)</td>
+<td><a href="common.html#set-gmres-qr">Orthogonalization method</a></td>
+<td><code><span class="tok">"mgs"</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">s</span></code>, <code><span class="tok">t</span></code></td>
+<td>Integers, 1 or greater; give both (pcagmres only)</td>
+<td><a href="common.html#set-cagmres-st">Basis generation size</a></td>
+<td>8, 4</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">qr</span></code></td>
+<td><code><span class="tok">"cgs"</span></code>, <code><span class="tok">"mgs"</span></code>, <code><span class="tok">"cholesky_qr"</span></code>, <code><span class="tok">"cholesky_qr_moment"</span></code> (pcagmres only)</td>
+<td><a href="common.html#set-cagmres-qr">QR factorization method</a></td>
+<td><code><span class="tok">"mgs"</span></code> (<code><span class="tok">"cholesky_qr"</span></code> with <code><span class="tok">q_mode="implicit"</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">q_mode</span></code></td>
+<td><code><span class="tok">"auto"</span></code>, <code><span class="tok">"explicit"</span></code>, <code><span class="tok">"implicit"</span></code> (pcagmres only)</td>
+<td><a href="common.html#set-cagmres-q">Q mode</a></td>
+<td><code><span class="tok">"auto"</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">verbose</span></code></td>
+<td>With <code><span class="tok">True</span></code>, <a href="../user/glossary.html#g-rank">rank</a> 0 prints the progress of the iteration. With <code><span class="tok">False</span></code>, the standard output (file descriptor 1) is discarded while solving</td>
+<td><a href="common.html#common-stdout">Standard output</a></td>
+<td><code><span class="tok">False</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> <code>ValueError</code> if the shapes of <code>b</code> and <code>x0</code> are not <code>(A.n_local,)</code>. A string value not among the candidates above or a number out of range raises <code>ValueError</code>. Giving <code>restart</code>, <code>orthogonalization</code>, <code>s</code>, <code>t</code>, <code>qr</code> or <code>q_mode</code> to a solver they do not apply to raises <code>ValueError</code>. Give both <code>s</code> and <code>t</code>. Unknown keys of <code>precond_options</code> raise <code>ValueError</code>. Invalid combinations (e.g., <code>qr="cgs"</code> with <code>q_mode="implicit"</code>; <a href="common.html#common-cagmres-q">rules</a>) are detected by the library, and all ranks raise the same <code>ValueError</code>.</p>
+<p><strong>Return Value</strong> <code>(x, info)</code>. <code>x</code> is the owned part of the solution (float64 array), and <code>info</code> is a <a href="python-api.html#api-py-info">SolveInfo</a>. Non-convergence does not raise an exception, so check <code>info.converged</code>.</p>
+<p><strong>MPI</strong> Collective operation (version with MPI).</p>
+<p><strong>See Also</strong> <a href="convergence.html#convergence">Convergence by Solver</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> parcel.solve(A, b[A.local_slice()], method<span class="op">=</span><span class="st">&quot;pgmres&quot;</span>, restart<span class="op">=</span><span class="dv">60</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                       precond<span class="op">=</span><span class="st">&quot;jacobi&quot;</span>, tol<span class="op">=</span><span class="fl">1e-10</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> info.converged:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(info.reason, info.iterations, info.true_residual)</span></code></pre></div>
+<h2 data-number="20.6" id="api-py-eigs"><span class="header-section-number">20.6</span> parcel.eigs()</h2>
+<p><strong>Description</strong> Solves the eigenvalue problem <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>v</mi><mo>=</mo><mi>λ</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">Av = \lambda v</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> when <code>precond_spectrum=True</code>) and returns the eigenvalues, the eigenvectors and the convergence status (power, inverse_power, ks_arnoldi).</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>values, vectors, info <span class="op">=</span> parcel.eigs(A, <span class="op">*</span>, method<span class="op">=</span><span class="st">&quot;ks_arnoldi&quot;</span>, tol<span class="op">=</span><span class="va">None</span>, maxiter<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        precond<span class="op">=</span><span class="va">None</span>, precond_options<span class="op">=</span><span class="va">None</span>, precond_spectrum<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        m<span class="op">=</span><span class="va">None</span>, k_keep<span class="op">=</span><span class="va">None</span>, nev<span class="op">=</span><span class="va">None</span>, max_restart<span class="op">=</span><span class="va">None</span>, sigma<span class="op">=</span><span class="va">None</span>, v0<span class="op">=</span><span class="va">None</span>,   <span class="co"># ks_arnoldi only</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        orthogonalization<span class="op">=</span><span class="va">None</span>,                                                 <span class="co"># ks_arnoldi only</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        inner_method<span class="op">=</span><span class="va">None</span>, inner_tol<span class="op">=</span><span class="va">None</span>, inner_maxiter<span class="op">=</span><span class="va">None</span>, inner_restart<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        inner_precond<span class="op">=</span><span class="va">None</span>, inner_precond_options<span class="op">=</span><span class="va">None</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<p><strong>Arguments</strong> <code>A</code>, <code>tol</code>, <code>maxiter</code>, <code>precond</code>, <code>precond_options</code> and <code>verbose</code> are the same as in <a href="python-api.html#api-py-solve">solve()</a> (<code>maxiter</code> is the limit of the outer iterations of power / inverse_power; not used by ks_arnoldi).</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+<th>Common item</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">method</span></code></td>
+<td><code><span class="tok">"power"</span></code> (largest magnitude), <code><span class="tok">"inverse_power"</span></code> (smallest magnitude), <code><span class="tok">"ks_arnoldi"</span></code> (several from the largest-magnitude end)</td>
+<td><a href="common.html#common-solvers">Solvers</a></td>
+<td><code><span class="tok">"ks_arnoldi"</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">precond_spectrum</span></code></td>
+<td>With <code><span class="tok">True</span></code>, computes the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> is the preconditioner of <code><span class="tok">precond</span></code>)</td>
+<td><a href="common.html#set-precon-spectrum">Spectrum of the preconditioned matrix</a></td>
+<td><code><span class="tok">False</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">m</span></code>, <code><span class="tok">k_keep</span></code>, <code><span class="tok">nev</span></code></td>
+<td>Maximum subspace dimension, number kept at a restart, number of eigenvalues sought (give all three; ks_arnoldi only)</td>
+<td><a href="common.html#set-ks-subspace">Size of the Krylov subspace</a></td>
+<td>30, 10, 4</td>
+</tr>
+<tr>
+<td><code><span class="tok">max_restart</span></code></td>
+<td>Integer, 1 or greater (ks_arnoldi only)</td>
+<td><a href="common.html#set-ks-max-restart">Maximum number of restarts</a></td>
+<td>200</td>
+</tr>
+<tr>
+<td><code><span class="tok">orthogonalization</span></code></td>
+<td><code><span class="tok">"cgs"</span></code> (CGS2) or <code><span class="tok">"mgs"</span></code> (MGS2); <code><span class="tok">"cgs2"</span></code> and <code><span class="tok">"mgs2"</span></code> are also accepted (ks_arnoldi only)</td>
+<td><a href="common.html#set-ks-qr">Orthogonalization method</a></td>
+<td>Library default (CGS2; MGS2 depending on the build)</td>
+</tr>
+<tr>
+<td><code><span class="tok">sigma</span></code></td>
+<td>Shift of shift-invert. If given, the eigenvalues near <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> are sought (ks_arnoldi only)</td>
+<td><a href="common.html#set-shift">Shift-invert</a></td>
+<td><code><span class="tok">None</span></code> (disabled)</td>
+</tr>
+<tr>
+<td><code><span class="tok">v0</span></code></td>
+<td>Owned part of the initial vector (length <code><span class="tok">A.n_local</span></code>; ks_arnoldi only)</td>
+<td><a href="common.html#set-init-vector">Initial vector</a></td>
+<td><code><span class="tok">None</span></code> (built from the global row numbers)</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_method</span></code></td>
+<td><code><span class="tok">"pgmres"</span></code>, <code><span class="tok">"pcg"</span></code> (used by inverse_power)</td>
+<td><a href="common.html#set-inner-algo">Type of the inner linear solver</a></td>
+<td><code><span class="tok">"pgmres"</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_tol</span></code></td>
+<td>Finite positive number</td>
+<td><a href="common.html#set-inner-tol">Tolerance of the inner linear solver</a></td>
+<td>1.0e-10</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_maxiter</span></code></td>
+<td>Integer, 1 or greater</td>
+<td><a href="common.html#set-inner-maxiter">Maximum iterations of the inner linear solver</a></td>
+<td>inverse_power 5000, ks_arnoldi 2000</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_restart</span></code></td>
+<td>Integer, 1 or greater</td>
+<td><a href="common.html#set-inner-restart">Restart length of the inner linear solver</a></td>
+<td>30</td>
+</tr>
+<tr>
+<td><code><span class="tok">inner_precond</span></code>, <code><span class="tok">inner_precond_options</span></code></td>
+<td>Preconditioner of the inner linear solver (same values as <code><span class="tok">precond</span></code>) and its <code><span class="tok">"iterations"</span></code> and <code><span class="tok">"blocks"</span></code> (the scaling is automatic; specifying it raises <code><span class="tok">ValueError</span></code>)</td>
+<td><a href="common.html#set-inner-precon">Preconditioner of the inner linear solver</a></td>
+<td><code><span class="tok">"jacobi"</span></code> (1 iteration); blocks automatic</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requirements</strong> <code>m</code>, <code>k_keep</code>, <code>nev</code>, <code>max_restart</code>, <code>sigma</code>, <code>v0</code> and <code>orthogonalization</code> apply only to ks_arnoldi; giving them to other solvers raises <code>ValueError</code>. Values of <code>orthogonalization</code> other than the above also raise <code>ValueError</code>. Give all three of <code>m</code>, <code>k_keep</code> and <code>nev</code>; <code>ValueError</code> unless <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m \leq n_{global}</annotation></semantics></math>. The arguments of the inner linear solver are used by inverse_power and by ks_arnoldi with <code>sigma</code>. With <code>precond_spectrum=True</code>, pgmres is used regardless of <code>inner_method</code>. <code>ValueError</code> if the shape of <code>v0</code> is not <code>(A.n_local,)</code>.</p>
+<p><strong>Return Value</strong> <code>(values, vectors, info)</code>. <code>values</code> is a 1-D complex array (1 element for power and inverse_power, <code>k_keep</code> elements for ks_arnoldi). <code>vectors</code> is an array of shape (<code>A.n_local</code>, count), whose column j is the owned part of the j-th eigenvector. The eigenvalues of ks_arnoldi are in descending order of absolute value (in order of closeness to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> for shift-invert), and the eigenvectors of a complex conjugate pair are stored as the real and imaginary parts in two consecutive columns (<a href="common.html#common-eigen-output">Output of Eigenvalues and Eigenvectors</a>). <code>info</code> is an <a href="python-api.html#api-py-info">EigInfo</a>.</p>
+<p><strong>MPI</strong> Collective operation (version with MPI).</p>
+<p><strong>See Also</strong> <a href="common.html#common-eigen-notes">Notes on the Eigenvalue Solvers</a>, <a href="convergence.html#convergence">Convergence by Solver</a></p>
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_arnoldi: 4 eigenvalues of largest magnitude; shift-invert: 2 eigenvalues closest to 0</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>vals, vecs, info <span class="op">=</span> parcel.eigs(A, method<span class="op">=</span><span class="st">&quot;ks_arnoldi&quot;</span>, m<span class="op">=</span><span class="dv">40</span>, k_keep<span class="op">=</span><span class="dv">10</span>, nev<span class="op">=</span><span class="dv">4</span>, tol<span class="op">=</span><span class="fl">1e-10</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>vals, vecs, info <span class="op">=</span> parcel.eigs(A, method<span class="op">=</span><span class="st">&quot;ks_arnoldi&quot;</span>, m<span class="op">=</span><span class="dv">20</span>, k_keep<span class="op">=</span><span class="dv">6</span>, nev<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">0.0</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                               tol<span class="op">=</span><span class="fl">1e-10</span>, inner_tol<span class="op">=</span><span class="fl">1e-12</span>)</span></code></pre></div>
+<h2 data-number="20.7" id="api-py-info"><span class="header-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</h2>
+<p><strong>Description</strong> Results returned by <code>solve()</code> and <code>eigs()</code> (immutable data classes). The meanings are those of <a href="common.html#common-results">Results in Common Items</a>, and the values are the same on all ranks.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">converged</span></code></td>
+<td class="nowrap"><code><span class="tok">bool</span></code></td>
+<td><code><span class="tok">True</span></code> if converged</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">reason</span></code></td>
+<td class="nowrap"><code><span class="tok">str</span></code></td>
+<td>Name of the <a href="common.html#common-reason">convergence state</a>: <code><span class="tok">"converged"</span></code> (CONVERGED_RTOL), <code><span class="tok">"iterating"</span></code> (ITERATING), <code><span class="tok">"max_iterations"</span></code> (DIVERGED_ITS), <code><span class="tok">"nan_or_inf"</span></code> (DIVERGED_NANORINF), <code><span class="tok">"breakdown"</span></code> (DIVERGED_BREAKDOWN)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">reason_code</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td>Value of the convergence state constant (1, 0, -1, -2, -3)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">iterations</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td><a href="common.html#res-iter">Iteration count</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">residual</span></code></td>
+<td class="nowrap"><code><span class="tok">float</span></code></td>
+<td><a href="common.html#res-resid">Residual</a> (the relative value used by the solver for the convergence check)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">true_residual</span></code></td>
+<td class="nowrap"><code><span class="tok">float</span></code></td>
+<td><a href="common.html#res-true">True residual</a>. NaN for the eigenvalue solvers</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">n_converged</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td><code><span class="tok">EigInfo</span></code> only. <a href="common.html#res-nconv">Number of converged eigenpairs</a></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">inner_failures</span></code></td>
+<td class="nowrap"><code><span class="tok">int</span></code></td>
+<td><code><span class="tok">EigInfo</span></code> only. <a href="common.html#res-inner-fail">Number of inner solver failures</a></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.8" id="api-py-comm"><span class="header-section-number">20.8</span> parcel.Comm</h2>
+<p><strong>Description</strong> <a href="../user/glossary.html#g-mpi">MPI</a> communicator passed to PARCEL.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> parcel.Comm()             <span class="co"># MPI_COMM_WORLD (usable without mpi4py)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> parcel.Comm(mpi4py_comm)  <span class="co"># mpi4py communicator</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>c.rank, c.size</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> c.allreduce(value, op<span class="op">=</span><span class="st">&quot;sum&quot;</span>)      <span class="co"># &quot;sum&quot;, &quot;max&quot;, &quot;min&quot;</span></span></code></pre></div>
+<p><strong>Arguments</strong> <code>mpi4py_comm</code> is an mpi4py communicator (<code>MPI.Comm</code>) or <code>None</code>. Passing an mpi4py communicator in the version without MPI raises <code>TypeError</code>. Passing something that is not an mpi4py communicator also raises <code>TypeError</code>.</p>
+<p><strong>Return Value</strong> <code>rank</code> and <code>size</code> are the number of this rank and the number of ranks (0 and 1 in the version without MPI). <code>allreduce()</code> returns the sum, maximum or minimum over all ranks (<code>float</code>) (collective operation; an invalid <code>op</code> raises <code>ValueError</code>).</p>
+<p><strong>Notes</strong> The <code>comm</code> argument of the matrix accepts either a <code>parcel.Comm</code> or an mpi4py communicator.</p>
+<h2 data-number="20.9" id="api-py-partition-rows"><span class="header-section-number">20.9</span> parcel.partition_rows()</h2>
+<p><strong>Description</strong> Assigns <code>n_global</code> rows evenly to the ranks as contiguous row blocks.</p>
+<p><strong>Synopsis</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>row_start, n_local <span class="op">=</span> parcel.partition_rows(n_global, comm<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p><strong>Return Value</strong> <code>(row_start, n_local)</code> of this rank. The remainder is given one row each to the first ranks.</p>
+<p><strong>Requirements</strong> <code>n_global</code> is at least the number of ranks (otherwise <code>ValueError</code>).</p>
+<h2 data-number="20.10" id="api-py-build-info"><span class="header-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</h2>
+<p><strong>Description</strong> Return information about the native layer.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Return value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">build_info()</span></code></td>
+<td>String with build information (widths of the integer types, precision, with or without MPI, ABI version; when installed with pip, also the target and the kernel optimization flags)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">has_mpi()</span></code></td>
+<td><code><span class="tok">True</span></code> if the native layer was built with MPI, <code><span class="tok">False</span></code> without MPI (single-process version)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">device_name()</span></code></td>
+<td>Name of the <a href="../user/glossary.html#g-device">device</a> PARCEL uses on this rank (chosen by the default selector)</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.11" id="api-py-version"><span class="header-section-number">20.11</span> parcel.__version__ / parcel.library_version()</h2>
+<p><strong>Description</strong> Return the version.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">__version__</span></code></td>
+<td>Version string of the package (<code><span class="tok">"1.2.0"</span></code>; the same number as the library)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">library_version()</span></code></td>
+<td>Version string of <code><span class="tok">Include/parcel_version.hpp</span></code> when the native layer was built. The same as <code><span class="tok">__version__</span></code></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="20.12" id="py-errors"><span class="header-section-number">20.12</span> Exceptions</h2>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>When raised</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">ValueError</span></code></td>
+<td>Invalid arguments or settings (outside the accepted values, invalid combinations), or the matrix check failed</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">OverflowError</span></code></td>
+<td>The number of rows etc. exceeds the range of the integer type of the native layer</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">TypeError</span></code></td>
+<td>The matrix is not a <code><span class="tok">DistributedCSR</span></code>, or the communicator has a wrong type</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">ImportError</span></code></td>
+<td>The native layer is not found, or its version (ABI) does not match</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">parcel.NotBuiltError</span></code></td>
+<td>The requested solver was excluded from the build (<a href="../user/installation.html#install-macros">“Selecting the Solvers to Build” in the User Guide</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">parcel.ParcelError</span></code></td>
+<td>Other failures (derived from <code><span class="tok">RuntimeError</span></code>; the base class of <code><span class="tok">NotBuiltError</span></code>; the attribute <code><span class="tok">code</span></code> holds the error code)</td>
+</tr>
+</tbody>
+</table>
+<p>In the version without MPI, these exceptions can be caught in the calling process, and failures inside the library such as running out of <a href="../user/glossary.html#g-device">device</a> memory also raise <code>parcel.ParcelError</code>. In the version with MPI, errors detected by the library (invalid combinations of settings, the matrix check) raise the same exception on all ranks. Python-side checks such as array lengths and value ranges are made on each rank, so if the arguments differ between ranks and only some ranks raise, the remaining ranks wait forever in a collective operation. Other errors (such as running out of device memory) can occur on only some ranks, so a message is printed and all ranks are terminated with MPI_Abort.</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← Convergence by Solver</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API Reference</a></span>
+<span class="next"></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'py';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

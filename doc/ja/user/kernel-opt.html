@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>最適化 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/kernel-opt.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li class="current"><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="accuracy.html" rel="previous" accesskey="p">← 数値精度と再現性</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="performance.html" rel="next" accesskey="n">性能 →</a></span>
+</nav>
+<h1 data-number="13" id="kernel-opt"><span class="header-section-number">13</span> 最適化</h1>
+<p>　PARCEL は, 計算 (アルゴリズムと反復回数) を変えずに速さを上げる 2 種類の最適化を持つ. 1 つは演算カーネルのループの形を環境に合わせて変える最適化 (<a href="kernel-opt.html#kopt-blocking">ブロック化</a>, <a href="kernel-opt.html#kopt-ladder">梯子分割</a>, <a href="kernel-opt.html#kopt-gemv">gemv の分解</a>, <a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>), もう 1 つはメモリを使って速くする最適化オプション (<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>) である. どちらもビルド時のマクロまたは実行時の環境変数で選ぶ.</p>
+<p>　以下の各節の効果は, 配布パッケージのコード (検証用サンプル) で, 最適化の有無だけを変えた実行ファイルを同じジョブの中で交互に実行し, 反復回数を固定して 1 反復あたりの時間を比べたものである. 問題は性能試験と同じ 3 次元 Poisson 方程式 (<a href="glossary.html#g-nx">NX</a>=512) で, 装置数は 4 (CPU は 4 ソケット, <a href="glossary.html#g-odyssey">Odyssey</a> は 4 ノード, GPU は 4 台. <a href="glossary.html#g-rank">ランク</a>とスレッドの配置は<a href="performance.html#perf-conditions">性能の章の測定条件</a>と同じ) である. ソルバは Jacobi <a href="glossary.html#g-precon">前処理</a>の<code>pcg</code> (100 反復) と<code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 60, 60 反復. <a href="glossary.html#g-s86">s86 CPU</a> のブロック化と <a href="glossary.html#g-ps-b">PS-B</a> の梯子分割は 120 反復) を主に用いた. 1 反復あたりの時間は, 初期化を除く反復計算部分 (主ループ) の時間 ÷ 反復回数 (<code>ks_arnoldi</code>はリスタート回数) であり, 2〜5 巡の平均である. 本文と表の区間の時間 (内積, SpMV, 前処理, Gram-Schmidt など) も主ループの中の 1 反復あたりの時間である. 各表の性能比は最適化なしの時間 ÷ 最適化ありの時間であり, 1 を超えると最適化で速くなる. 主な効果の欄は, 差の大きい区間の時間を「最適化なし → 最適化あり」で示す.</p>
+<p>　演算カーネル (内積, <a href="glossary.html#g-axpy">axpy</a>, <a href="glossary.html#g-spmv">SpMV</a>, 前処理, <a href="glossary.html#g-gemv">gemv</a> など) の既定の形は, 1 行を 1 <a href="glossary.html#g-workitem">work item</a> が受け持つ平坦なループで, GPU に向く. PARCEL は, ループの構造を CPU・<a href="glossary.html#g-a64fx">A64FX</a> などの環境に合わせて変える最適化を持ち, ビルド時のマクロで選ぶ. マクロの一覧は<a href="installation.html#install-kernel-opt">インストールの「最適化」</a>に, 環境ごとのコンパイルコマンドは<a href="installation.html#install-recommended-flags">推奨オプション</a>に示す. 環境ごとの既定を<a href="kernel-opt.html#kopt-defaults">次節</a>に, 各最適化の仕組みと効果を以下の各節に示す.</p>
+<h2 data-number="13.1" id="kopt-defaults"><span class="header-section-number">13.1</span> 環境ごとの既定</h2>
+<p>　推奨のビルド (<a href="installation.html#install-recommended-flags">推奨オプション</a>. <a href="glossary.html#g-spack">spack</a> のレシピ<code>parcel-sycl</code>の<code>kernel=auto</code>も同じ) で有効になる最適化を環境ごとに示す. 「—」はその環境では使わないものである.</p>
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ブロック化</th>
+<th>梯子分割 (SpMV / 前処理)</th>
+<th>gemv の分解</th>
+<th>A64FX 向け</th>
+<th>V100 のレジスタ数</th>
+<th>省メモリ G / H</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-ps-a">PS-A</a>, <a href="glossary.html#g-mac">Mac</a>, <a href="glossary.html#g-linux-ws">Linux Workstation (CPU)</a></td>
+<td class="nowrap">縮約だけ</td>
+<td class="nowrap">なし / なし</td>
+<td class="nowrap">なし</td>
+<td>—</td>
+<td class="nowrap">—</td>
+<td class="nowrap">有効 / 有効</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap">全カーネル</td>
+<td class="nowrap">あり / なし</td>
+<td class="nowrap">あり</td>
+<td>A・C・D・E・F (B は実行時)</td>
+<td class="nowrap">—</td>
+<td class="nowrap">有効 / 無効</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap">なし</td>
+<td class="nowrap">なし / なし</td>
+<td class="nowrap">なし</td>
+<td>—</td>
+<td class="nowrap">指定する</td>
+<td class="nowrap">有効 / 有効</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>), <a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>), <a href="glossary.html#g-linux-ws">Linux Workstation</a> (<a href="glossary.html#g-rtx-a6000">RTX A6000</a>)</td>
+<td class="nowrap">なし</td>
+<td class="nowrap">なし / なし</td>
+<td class="nowrap">なし</td>
+<td>—</td>
+<td class="nowrap">—</td>
+<td class="nowrap">有効 / 有効</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap">なし</td>
+<td class="nowrap">あり / あり</td>
+<td class="nowrap">なし</td>
+<td>—</td>
+<td class="nowrap">—</td>
+<td class="nowrap">有効 / 有効</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>ブロック化の「縮約だけ」は<code>_BLOCKING_LOOP_DOT_=1</code>, 「全カーネル」は<code>_BLOCKING_LOOP_=1</code>である (<a href="kernel-opt.html#kopt-blocking">ブロック化</a>). 「A64FX 向け」は <a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化 (A〜F)</a>, 「省メモリ G / H」は<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>の設定 G・H である (A64FX 向けの最適化 A〜F とは別のものである).</li>
+<li><a href="glossary.html#g-linux-ws">Linux Workstation</a> のブロック化は, CPU (Xeon Gold 6226R) が縮約だけ, GPU (<a href="glossary.html#g-rtx-a6000">RTX A6000</a>) がなしである. どちらも表に無い環境の既定 (次の項目) と同じである.</li>
+<li>表に無い環境では, CPU は <a href="glossary.html#g-s86">s86 CPU</a> と, NVIDIA の GPU は <a href="glossary.html#g-miyabi-g">Miyabi-G</a> と, AMD の GPU は <a href="glossary.html#g-ps-b">PS-B</a> と同じである (<a href="glossary.html#g-spack">spack</a> の<code>kernel=auto</code>).</li>
+<li>前処理の梯子分割, gemv の分解, A64FX 向けの最適化の C・D・F, 省メモリ設定 H の既定は, ブロック化と梯子分割のマクロから決まる (<code>PARCEL_PRECON_LADDER</code>の既定は<code>PARCEL_SPMV_LADDER</code>の値, <code>PARCEL_GEMV_AS_AXPY</code>・<code>PARCEL_CG_FUSED</code>・<code>PARCEL_JACOBI_ROW2</code>の既定は<code>_BLOCKING_LOOP_</code>の値, <code>PARCEL_JACOBI_ONTHEFLY</code>の既定は<code>_BLOCKING_LOOP_</code>が 1 なら 0). E (<code>PARCEL_JACOBI_NODIV_UNIT</code>) は既定 1 で, <code>_BLOCKING_LOOP_</code>のビルドでだけ働く. 個別に変える場合は<a href="installation.html#install-kernel-opt">インストールの「最適化」</a>のマクロを指定する.</li>
+<li>A64FX 向けの最適化の A (<code>-ffp-contract=fast</code>) はコマンドラインで, B (<code>OMP_WAIT_POLICY=ACTIVE</code>と<code>KMP_BLOCKTIME=infinite</code>) は実行時の環境変数で指定する (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>).</li>
+<li>V100 のレジスタ数は<code>-Xcuda-ptxas -maxrregcount=255</code>である (<a href="kernel-opt.html#kopt-v100">V100 のレジスタ数の指定</a>).</li>
+<li>省メモリ設定 G は実行時に<code>PARCEL_PSTEP</code>で, H はビルド時に<code>PARCEL_JACOBI_ONTHEFLY</code>で変えられる (<a href="kernel-opt.html#perf-memory-options">「メモリと速さの選択」</a>). 「無効」は Jacobi 前処理の値を保持する (メモリを使って速くする) ことを表す.</li>
+</ul>
+<h2 data-number="13.2" id="kopt-blocking"><span class="header-section-number">13.2</span> ブロック化</h2>
+<p>　<code>_BLOCKING_LOOP_=1</code> は, <a href="glossary.html#g-spmv">SpMV</a> 以外の全カーネル (内積, <a href="glossary.html#g-axpy">axpy</a>, 前処理など) を, 1 スレッドが連続した行をまとめて受け持つブロック化版に替える. 縮約はスレッドごとの部分和を最後に足し合わせるだけなので, <a href="glossary.html#g-workitem">ワークグループ</a>内のバリアが要らない. <code>_BLOCKING_LOOP_DOT_=1</code> は縮約 (dot, dddot, max) だけをブロック化版に替える.</p>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 720 204" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="平坦なループとブロック化したループ">
+<defs><marker id="ko-blocking-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="170" y="18" font-size="13" text-anchor="middle" fill="#222">平坦 (既定): 1 行 = 1 work item</text>
+<rect x="20.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="38.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="57.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="76.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="95.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="113.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="132.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="151.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="170.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="188.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="207.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="226.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="245.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="263.75" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<rect x="282.5" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<rect x="301.25" y="32" width="18.75" height="26" fill="#fde2c8" stroke="#5b7fa6"/>
+<text x="170" y="80" font-size="11" text-anchor="middle" fill="#555">N 個の work item (GPU のスレッドに対応)</text>
+<text x="170" y="100" font-size="11" text-anchor="middle" fill="#555">縮約はワークグループ内のバリアによるツリー削減</text>
+<line x1="355" y1="8" x2="355" y2="196" stroke="#bbb"/>
+<text x="540" y="18" font-size="13" text-anchor="middle" fill="#222">ブロック化: 1 ブロック = 1 work item = 1 スレッド</text>
+<rect x="380" y="32" width="80" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="420" y="50" font-size="11" text-anchor="middle" fill="#222">block 0</text>
+<line x1="420" y1="60" x2="420" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="420" cy="96" r="12" fill="#fff" stroke="#5b7fa6"/>
+<text x="420" y="100" font-size="11" text-anchor="middle" fill="#222">s₀</text>
+<line x1="420" y1="109" x2="525.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<rect x="460" y="32" width="80" height="26" fill="#fde2c8" stroke="#b9772e"/>
+<text x="500" y="50" font-size="11" text-anchor="middle" fill="#222">block 1</text>
+<line x1="500" y1="60" x2="500" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="500" cy="96" r="12" fill="#fff" stroke="#b9772e"/>
+<text x="500" y="100" font-size="11" text-anchor="middle" fill="#222">s₁</text>
+<line x1="500" y1="109" x2="535.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<rect x="540" y="32" width="80" height="26" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="580" y="50" font-size="11" text-anchor="middle" fill="#222">block 2</text>
+<line x1="580" y1="60" x2="580" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="580" cy="96" r="12" fill="#fff" stroke="#5c9a52"/>
+<text x="580" y="100" font-size="11" text-anchor="middle" fill="#222">s₂</text>
+<line x1="580" y1="109" x2="545.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<rect x="620" y="32" width="80" height="26" fill="#efe0f5" stroke="#8e5ea8"/>
+<text x="660" y="50" font-size="11" text-anchor="middle" fill="#222">block 3</text>
+<line x1="660" y1="60" x2="660" y2="82" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="660" cy="96" r="12" fill="#fff" stroke="#8e5ea8"/>
+<text x="660" y="100" font-size="11" text-anchor="middle" fill="#222">s₃</text>
+<line x1="660" y1="109" x2="555.0" y2="134" stroke="#444" marker-end="url(#ko-blocking-arrow)"/>
+<circle cx="540" cy="148" r="12" fill="#fff" stroke="#444"/>
+<text x="540" y="153" font-size="13" text-anchor="middle" fill="#222">Σ</text>
+<text x="540" y="176" font-size="11" text-anchor="middle" fill="#555">部分和を足して結果を得る (バリア不要)</text>
+<text x="540" y="194" font-size="11" text-anchor="middle" fill="#555">分割数 nblock = ランクあたりのスレッド数 (図は 4)</text>
+</svg>
+<figcaption>図: 平坦なループとブロック化したループ.ブロック化では 1 スレッドが連続した行をまとめて受け持ち,縮約は部分和で行う.</figcaption>
+</figure>
+<p>　効果は縮約に集中する. 平坦版の縮約はワークグループ内のバリアによるツリー削減であり, CPU ではバリアの固定費が大きいためである. <a href="glossary.html#g-a64fx">A64FX</a> 以外の CPU で推奨する縮約だけのブロック化 (<code>_BLOCKING_LOOP_DOT_=1</code>) の効果を示す.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">ブロック化なし [ms]</th>
+<th style="text-align: right;">ブロック化あり [ms]</th>
+<th style="text-align: right;">性能比</th>
+<th>主な効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">172.4</td>
+<td style="text-align: right;" class="nowrap">130.5</td>
+<td style="text-align: right;" class="nowrap">1.32</td>
+<td>内積 56.6 ms → 15.0 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">975.0</td>
+<td style="text-align: right;" class="nowrap">422.3</td>
+<td style="text-align: right;" class="nowrap">2.31</td>
+<td>Gram-Schmidt 850.3 ms → 313.1 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">40.3</td>
+<td style="text-align: right;" class="nowrap">28.4</td>
+<td style="text-align: right;" class="nowrap">1.42</td>
+<td>内積 15.0 ms → 4.0 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">220.7</td>
+<td style="text-align: right;" class="nowrap">73.4</td>
+<td style="text-align: right;" class="nowrap">3.01</td>
+<td>Gram-Schmidt 193.0 ms → 49.5 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">24.0</td>
+<td style="text-align: right;" class="nowrap">22.7</td>
+<td style="text-align: right;" class="nowrap">1.06</td>
+<td>内積 4.7 ms → 4.1 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">65.5</td>
+<td style="text-align: right;" class="nowrap">49.0</td>
+<td style="text-align: right;" class="nowrap">1.34</td>
+<td>Gram-Schmidt 46.8 ms → 30.6 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>　<a href="glossary.html#g-a64fx">A64FX</a> で推奨する全カーネルのブロック化 (<code>_BLOCKING_LOOP_=1</code>) の効果を示す.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">ブロック化なし [ms]</th>
+<th style="text-align: right;">ブロック化あり [ms]</th>
+<th style="text-align: right;">性能比</th>
+<th>主な効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">1603.0</td>
+<td style="text-align: right;" class="nowrap">40.0</td>
+<td style="text-align: right;" class="nowrap">40.1</td>
+<td>内積 1546.2 ms → 7.7 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">16437.4</td>
+<td style="text-align: right;" class="nowrap">82.0</td>
+<td style="text-align: right;" class="nowrap">200</td>
+<td>Gram-Schmidt 15848.4 ms → 48.8 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><a href="glossary.html#g-a64fx">A64FX</a> 以外の CPU では, 縮約だけのブロック化で十分である. <a href="glossary.html#g-s86">s86 CPU</a> で全カーネルのブロック化 (<code>_BLOCKING_LOOP_=1</code>) は 1 反復が<code>pcg</code> 134.5 ms (縮約だけの 1.03 倍), <code>pgmres</code> 421.8 ms (1.00 倍) で, 縮約だけの場合と変わらない.</li>
+<li><a href="glossary.html#g-a64fx">A64FX</a> (富士通コンパイラによる<code>omp.library-only</code>) では, ブロック化しないと内積が極端に遅く, 実用にならない. 全カーネルのブロック化を必ず指定する. <a href="glossary.html#g-odyssey">Odyssey</a> のブロック化ありは推奨のビルド (<a href="kernel-opt.html#kopt-a64fx">A64FX 向けの最適化</a>の A〜F を含む) である.</li>
+<li>macOS (Apple M4) でも縮約のブロック化は必須である. 1 台で MPI なしの 1 プロセス 4 スレッド, NX=128 で測ると, ブロック化しない場合は縮約だけのブロック化の<code>pcg</code>で 33.5 倍 (325.1 ms → 9.70 ms. 内積 315.7 ms → 1.13 ms), <code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">m = 60</annotation></semantics></math>, 120 反復) で 112 倍 (3311 ms → 29.6 ms. Gram-Schmidt 3193 ms → 21.2 ms) 遅い. 全カーネルのブロック化の 1 反復は縮約だけの<code>pcg</code> 0.96 倍, <code>pgmres</code> 1.00 倍, <code>ks_arnoldi</code> 1.04 倍 (10 スレッドでは 0.97〜0.99 倍) で差が小さく, Jacobi 前処理の値を保持する分メモリが増える (NX=128 の<code>pcg</code>で PARCEL が確保するメモリが 352 MiB → 464 MiB) ので, 縮約だけを用いる.</li>
+<li>GPU には付けない (平坦な形が GPU に向く).</li>
+</ul>
+<p>　分割数は実行時に決まる. 環境変数 <code>PARCEL_NBLOCK</code> があればその値, 無ければ <code>omp_get_max_threads()</code> (1 <a href="glossary.html#g-rank">ランク</a>あたりのスレッド数) を用いる.</p>
+<p>　ブロック化した縮約では部分和の数が実行構成 (<a href="glossary.html#g-rank">ランク</a>数×スレッド数) で変わり, 縮約の順序も変わる. 倍精度では結果に影響しないが, 低精度の構成を環境間で比較する場合はこのフラグと実行構成を揃える.</p>
+<h2 data-number="13.3" id="kopt-ladder"><span class="header-section-number">13.3</span> 梯子分割</h2>
+<p>　<a href="glossary.html#g-crs">CRS</a> の <a href="glossary.html#g-spmv">SpMV</a> の内側ループは行ごとの非零数で回数が決まるので, コンパイラは回数を知らず, 展開や先読みができない. <code>PARCEL_SPMV_LADDER=1</code> は内側ループを 4 要素・2 要素・1 要素の固定長の段に分け, どの非零数でも全量が固定長の本体に入るようにする (非零数 7 なら 4+2+1). 非零数は行ごとに違ってよく, 追加のメモリも要らない. <code>PARCEL_PRECON_LADDER</code> は Jacobi 前処理 (<code>PRECON_JACOBI</code>) の反復ループに同じ分割を行う.</p>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 720 148" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="SpMV の内側ループの梯子分割">
+<defs><marker id="ko-ladder-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="20" y="18" font-size="12" text-anchor="start" fill="#222">既定: 1 要素ずつ 7 回 (回数は実行時まで分からない)</text>
+<rect x="20" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="40" y="46" font-size="11" text-anchor="middle" fill="#222">1</text>
+<rect x="60" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="80" y="46" font-size="11" text-anchor="middle" fill="#222">2</text>
+<rect x="100" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="120" y="46" font-size="11" text-anchor="middle" fill="#222">3</text>
+<rect x="140" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="160" y="46" font-size="11" text-anchor="middle" fill="#222">4</text>
+<rect x="180" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="200" y="46" font-size="11" text-anchor="middle" fill="#222">5</text>
+<rect x="220" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="240" y="46" font-size="11" text-anchor="middle" fill="#222">6</text>
+<rect x="260" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="280" y="46" font-size="11" text-anchor="middle" fill="#222">7</text>
+<text x="20" y="84" font-size="12" text-anchor="start" fill="#222">梯子分割: 4 → 2 → 1</text>
+<rect x="20" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="40" y="112" font-size="11" text-anchor="middle" fill="#222">1</text>
+<rect x="60" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="80" y="112" font-size="11" text-anchor="middle" fill="#222">2</text>
+<rect x="100" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="120" y="112" font-size="11" text-anchor="middle" fill="#222">3</text>
+<rect x="140" y="94" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="160" y="112" font-size="11" text-anchor="middle" fill="#222">4</text>
+<rect x="20" y="92" width="160" height="30" fill="none" stroke="#333" stroke-width="2"/>
+<text x="100" y="138" font-size="10" text-anchor="middle" fill="#555">4 要素の本体</text>
+<rect x="180" y="94" width="40" height="26" fill="#fde2c8" stroke="#b9772e"/>
+<text x="200" y="112" font-size="11" text-anchor="middle" fill="#222">5</text>
+<rect x="220" y="94" width="40" height="26" fill="#fde2c8" stroke="#b9772e"/>
+<text x="240" y="112" font-size="11" text-anchor="middle" fill="#222">6</text>
+<rect x="180" y="92" width="80" height="30" fill="none" stroke="#333" stroke-width="2"/>
+<text x="220" y="138" font-size="10" text-anchor="middle" fill="#555">2 要素</text>
+<rect x="260" y="94" width="40" height="26" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="280" y="112" font-size="11" text-anchor="middle" fill="#222">7</text>
+<rect x="260" y="92" width="40" height="30" fill="none" stroke="#333" stroke-width="2"/>
+<text x="280" y="138" font-size="10" text-anchor="middle" fill="#555">1 要素</text>
+<text x="330" y="40" font-size="11" text-anchor="start" fill="#555">行あたり非零数 7 の例.</text>
+<text x="330" y="62" font-size="11" text-anchor="start" fill="#555">各段は長さが固定のループなので,</text>
+<text x="330" y="84" font-size="11" text-anchor="start" fill="#555">コンパイラが展開・先読みできる.</text>
+<text x="330" y="106" font-size="11" text-anchor="start" fill="#555">非零数は行ごとに違ってよい.</text>
+</svg>
+<figcaption>図: SpMV の内側ループの梯子分割.1 行の非零を 4 要素・2 要素・1 要素の固定長の段に分けて処理する.</figcaption>
+</figure>
+<p>　効果は環境によって異なり, 遅くなる環境もある. 梯子分割を推奨する <a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>) と <a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>) で, 梯子分割の有無を比べた 1 反復あたりの時間を示す.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">梯子分割なし [ms]</th>
+<th style="text-align: right;">梯子分割あり [ms]</th>
+<th style="text-align: right;">性能比</th>
+<th>主な効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">11.62</td>
+<td style="text-align: right;" class="nowrap">6.95</td>
+<td style="text-align: right;" class="nowrap">1.67</td>
+<td>SpMV 4.9 ms → 2.6 ms<br />前処理 4.7 ms → 2.4 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">24.81</td>
+<td style="text-align: right;" class="nowrap">19.88</td>
+<td style="text-align: right;" class="nowrap">1.25</td>
+<td>SpMV 5.1 ms → 2.9 ms<br />前処理 4.9 ms → 2.4 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">49.35</td>
+<td style="text-align: right;" class="nowrap">40.01</td>
+<td style="text-align: right;" class="nowrap">1.23</td>
+<td>SpMV 23.6 ms → 14.3 ms<br />前処理 15.2 ms → 15.3 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">91.41</td>
+<td style="text-align: right;" class="nowrap">82.01</td>
+<td style="text-align: right;" class="nowrap">1.11</td>
+<td>SpMV 24.2 ms → 14.8 ms<br />前処理 15.3 ms → 15.4 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><a href="glossary.html#g-ps-b">PS-B</a> は SpMV と前処理の両方の梯子分割 (<code>-DPARCEL_SPMV_LADDER=1 -DPARCEL_PRECON_LADDER=1</code>) の有無を, <a href="glossary.html#g-odyssey">Odyssey</a> は前処理を梯子分割しないまま SpMV の梯子分割の有無を比べた. <a href="glossary.html#g-ps-b">PS-B</a> の<code>pgmres</code>は 120 反復 (2 周期) で測った.</li>
+<li><a href="glossary.html#g-mi300a">MI300A</a> では SpMV と前処理がともに約 2 倍速くなり, 効果が最も大きい. AMD の GPU には付ける.</li>
+<li><a href="glossary.html#g-a64fx">A64FX</a> では SpMV の梯子分割が効き, 前処理の梯子分割は遅くなるので, <code>PARCEL_PRECON_LADDER=0</code> を明示する. 推奨のビルドに前処理の梯子分割 (<code>-DPARCEL_PRECON_LADDER=1</code>) を加えると, 1 反復は<code>pcg</code>で 39.99 ms → 43.76 ms (0.91 倍), <code>pgmres</code>で 82.43 ms → 85.65 ms (0.96 倍) に遅くなる (前処理の区間 15.2 ms → 18.9 ms. 同じ条件で別の回に測った値).</li>
+<li>NVIDIA の GPU には付けない. 同じ条件で比べると, <a href="glossary.html#g-v100">V100</a> では梯子分割で<code>pcg</code>の 1 反復が遅くなり (25.1 ms → 29.6 ms), <a href="glossary.html#g-gh200">GH200</a> と <a href="glossary.html#g-a100">A100</a> では差が無い (4.70 ms → 4.68 ms, 13.15 ms → 13.13 ms).</li>
+</ul>
+<h2 data-number="13.4" id="kopt-gemv"><span class="header-section-number">13.4</span> gemv の分解</h2>
+<p>　<a href="glossary.html#g-gemv">gemv</a> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>y</mi><mo>+</mo><mi>V</mi><mi>c</mi><mo>=</mo><mi>y</mi><mo>+</mo><msub><mo>∑</mo><mi>j</mi></msub><msub><mi>c</mi><mi>j</mi></msub><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y \leftarrow y + Vc = y + \sum_{j} c_j v_j</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math> は M 列の行列, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mi>j</mi></msub><annotation encoding="application/x-tex">v_j</annotation></semantics></math> はその第 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> 列) は M 本の列を同時に読み, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> の読み書きを 1 回にまとめる. <code>PARCEL_GEMV_AS_AXPY=1</code> はこれを M 回の <a href="glossary.html#g-axpy">axpy</a> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>y</mi><mo>+</mo><msub><mi>c</mi><mi>j</mi></msub><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y \leftarrow y + c_j v_j</annotation></semantics></math>) に分解する.</p>
+<figure class="diagram" style="margin:1em 0;">
+<svg viewBox="0 0 720 174" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="gemv と axpy への分解">
+<defs><marker id="ko-gemv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<text x="170" y="18" font-size="12" text-anchor="middle" fill="#222">gemv (既定): y ← y + Σ c<tspan baseline-shift="sub" font-size="8">j</tspan> v<tspan baseline-shift="sub" font-size="8">j</tspan> を 1 回で</text>
+<rect x="40" y="34" width="22" height="90" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="51" y="140" font-size="11" text-anchor="middle" fill="#222">v₀</text>
+<rect x="74" y="34" width="22" height="90" fill="#fde2c8" stroke="#b9772e"/>
+<text x="85" y="140" font-size="11" text-anchor="middle" fill="#222">v₁</text>
+<rect x="108" y="34" width="22" height="90" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="119" y="140" font-size="11" text-anchor="middle" fill="#222">v₂</text>
+<rect x="142" y="34" width="22" height="90" fill="#efe0f5" stroke="#8e5ea8"/>
+<text x="153" y="140" font-size="11" text-anchor="middle" fill="#222">v₃</text>
+<line x1="166" y1="79" x2="238" y2="79" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="240" y="34" width="22" height="90" fill="#f3f5f7" stroke="#444"/>
+<text x="251" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="170" y="164" font-size="11" text-anchor="middle" fill="#555">M 本の列を同時に読み, y の読み書きは 1 回</text>
+<line x1="355" y1="8" x2="355" y2="172" stroke="#bbb"/>
+<text x="540" y="18" font-size="12" text-anchor="middle" fill="#222">axpy に分解: y ← y + c<tspan baseline-shift="sub" font-size="8">j</tspan> v<tspan baseline-shift="sub" font-size="8">j</tspan> を M 回</text>
+<text x="410" y="32" font-size="10" text-anchor="middle" fill="#555">1回目</text>
+<rect x="378" y="40" width="16" height="84" fill="#dbe9f6" stroke="#5b7fa6"/>
+<text x="386" y="140" font-size="11" text-anchor="middle" fill="#222">v₀</text>
+<line x1="396" y1="82" x2="422" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="424" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="432" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="495" y="32" font-size="10" text-anchor="middle" fill="#555">2回目</text>
+<rect x="463" y="40" width="16" height="84" fill="#fde2c8" stroke="#b9772e"/>
+<text x="471" y="140" font-size="11" text-anchor="middle" fill="#222">v₁</text>
+<line x1="481" y1="82" x2="507" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="509" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="517" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="580" y="32" font-size="10" text-anchor="middle" fill="#555">3回目</text>
+<rect x="548" y="40" width="16" height="84" fill="#dcefd9" stroke="#5c9a52"/>
+<text x="556" y="140" font-size="11" text-anchor="middle" fill="#222">v₂</text>
+<line x1="566" y1="82" x2="592" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="594" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="602" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="665" y="32" font-size="10" text-anchor="middle" fill="#555">4回目</text>
+<rect x="633" y="40" width="16" height="84" fill="#efe0f5" stroke="#8e5ea8"/>
+<text x="641" y="140" font-size="11" text-anchor="middle" fill="#222">v₃</text>
+<line x1="651" y1="82" x2="677" y2="82" stroke="#444" marker-end="url(#ko-gemv-arrow)"/>
+<rect x="679" y="40" width="16" height="84" fill="#f3f5f7" stroke="#444"/>
+<text x="687" y="140" font-size="11" text-anchor="middle" fill="#222">y</text>
+<text x="540" y="164" font-size="11" text-anchor="middle" fill="#555">列を 1 本ずつ読み, y を M 回読み書きする</text>
+</svg>
+<figcaption>図: gemv と axpy への分解 (M = 4).分解すると読むデータは増えるが,同時に流す列が 1 本になる.</figcaption>
+</figure>
+<p>　分解すると <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> を M 回読み書きするのでデータの移動は増えるが, 同時に流す列が 1 本になる. <a href="glossary.html#g-a64fx">A64FX</a> では M 本を同時に流す gemv が遅くなりうる (列の間隔が 2 の冪だと M 本の列が同じキャッシュセットに落ちる) ので分解する. x86 の CPU と GPU では分解しない.</p>
+<p>　CPU 向けのビルド (<code>_BLOCKING_LOOP_</code>または<code>_BLOCKING_LOOP_DOT_</code>) では, 分解しない gemv も行のブロックごとに 1 列ずつ読む行ブロック版 (<code>PARCEL_CPU_ROWBLOCK</code>. CPU の既定 1) になり, 基底の列の間隔にも詰め物 (<code>PARCEL_BASIS_PAD</code>. CPU の既定 8 要素) が入る. このため M 本の列のキャッシュの衝突は分解しなくても起きにくく, 分解の効果は<code>ks_arnoldi</code>の gemv の区間で約 1.1〜1.2 倍にとどまる (<a href="glossary.html#g-odyssey">Odyssey</a> の 1 ノードで NX=128 は 1.11 倍, NX=256 は 1.20 倍).</p>
+<p>　<a href="glossary.html#g-odyssey">Odyssey</a> で, 分解しない場合 (<code>-DPARCEL_GEMV_AS_AXPY=0</code>) と分解した場合 (既定) を比べた. gemv を多く使うのは<code>ks_arnoldi</code>と<code>pcagmres</code>である (<code>ks_arnoldi</code>は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">m = 40</annotation></semantics></math> で 10 リスタート, <code>pcagmres</code>は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math>, Jacobi 前処理で 64 反復).</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">分解なし [ms]</th>
+<th style="text-align: right;">分解あり [ms]</th>
+<th style="text-align: right;">性能比</th>
+<th>主な効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">ks_arnoldi</span></code> (1 リスタートあたり)</td>
+<td style="text-align: right;" class="nowrap">2760.9</td>
+<td style="text-align: right;" class="nowrap">2645.7</td>
+<td style="text-align: right;" class="nowrap">1.04</td>
+<td class="nowrap">gemv 888.1 ms → 738.9 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">pcagmres</span></code> (1 反復あたり)</td>
+<td style="text-align: right;" class="nowrap">65.9</td>
+<td style="text-align: right;" class="nowrap">65.6</td>
+<td style="text-align: right;" class="nowrap">1.00</td>
+<td class="nowrap">gemv 0.55 ms → 0.45 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><code>ks_arnoldi</code>のブロック直交化 (既定の CGS2) は, 部分空間の基底に対する射影を gemv で行う. gemv の区間が 1 リスタートの約 3 割 (2645.7 ms のうち 738.9 ms) を占め, 分解で gemv の区間が 1.20 倍速くなるので, 1 リスタートが 1.04 倍速くなる.</li>
+<li><code>pcagmres</code>でも分解で gemv の区間は 1.22 倍速くなるが, gemv が 1 反復に占める割合は 1% 未満 (65.6 ms のうち 0.45 ms) なので, 1 反復は変わらない.</li>
+<li><code>pcg</code>と<code>pgmres</code>では gemv の区間が 1 反復の 1% 未満で, 差は 1% 以内である (<code>pcg</code>・<code>pgmres</code>とも 1.00 倍).</li>
+</ul>
+<p>　既定値は <code>_BLOCKING_LOOP_</code> の値なので, <a href="glossary.html#g-a64fx">A64FX</a> 向けのビルドでは指定しなくても 1 になる. gemv は累算してから係数を 1 回掛けるが, 分解版は項ごとに係数を掛けて足すので, 丸めの順序が変わる.</p>
+<h2 data-number="13.5" id="kopt-a64fx"><span class="header-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</h2>
+<p>　<a href="glossary.html#g-a64fx">A64FX</a> 向けのビルド (<code>_BLOCKING_LOOP_=1</code>) には, 次の 6 つの最適化がある. B〜F は計算 (各要素の式と足す順) を変えないので, 結果は使わない場合とビット単位で同じである (<a href="glossary.html#g-odyssey">Odyssey</a> で, C・D は 200 反復, E・F は収束まで (306 反復) の残差の推移が一致することを確かめた). A は積和を FMA 命令にまとめるので, 丸めが変わる. x86 の CPU と GPU のビルドでは C〜F のコードは使われず, 生成されるコードは変わらない.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>内容</th>
+<th>指定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">A</td>
+<td>積和 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>×</mo><mi>b</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">a \times b + c</annotation></semantics></math>) を FMA 命令にまとめる. 富士通コンパイラの clang モードは既定では積和をまとめない</td>
+<td>ビルド時に<code><span class="tok">-ffp-contract=fast</span></code> (<a href="installation.html#install-odyssey">推奨オプション</a>)</td>
+</tr>
+<tr>
+<td class="nowrap">B</td>
+<td><a href="glossary.html#g-openmp">OpenMP</a> のスレッドを, カーネルの間の待ち合わせでも休ませずに回し続ける. カーネルの起動と待ちの固定費が減る</td>
+<td>実行時に<code><span class="tok">OMP_WAIT_POLICY=ACTIVE</span></code>と<code><span class="tok">KMP_BLOCKTIME=infinite</span></code> (推奨. 既定ではない)</td>
+</tr>
+<tr>
+<td class="nowrap">C</td>
+<td>係数を値で渡す <a href="glossary.html#g-axpy">axpy</a> (<code><span class="tok">axpy_value</span></code> / <code><span class="tok">axpby_value</span></code>) と <a href="glossary.html#g-gemv">gemv</a> の axpy 分解版 (<a href="kernel-opt.html#kopt-gemv">gemv の分解</a>) の書き直し: スレッド数分の連続した範囲に分け, ポインタと係数をローカル変数 (restrict 付き) に写し, 富士通コンパイラが元の式 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mi>y</mi><mo>+</mo><mi>α</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\beta y + \alpha x</annotation></semantics></math> に選ぶ融合 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>β</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>α</mi><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{fma}(\beta, y, \alpha x)</annotation></semantics></math> を<code><span class="tok">std::fma</span></code>で明示する (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\beta = 1</annotation></semantics></math> の経路は掛け算を省く). 明示しないと, 周りのコードによって別の形 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>,</mo><mi>x</mi><mo>,</mo><mi>β</mi><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{fma}(\alpha, x, \beta y)</annotation></semantics></math> が選ばれ, 丸めが変わることがある</td>
+<td>既定 (<code><span class="tok">PARCEL_A64FX_AXPY_C</span></code>. <code><span class="tok">-DPARCEL_A64FX_AXPY_C=0</span></code>で切れる)</td>
+</tr>
+<tr>
+<td class="nowrap">D</td>
+<td><code><span class="tok">pcg</span></code> (pstep = 1, 既定) の 1 反復のカーネルの融合: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> の更新 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>←</mo><mi>x</mi><mo>+</mo><mi>α</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">x \leftarrow x + \alpha p</annotation></semantics></math> と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>←</mo><mi>s</mi><mo>+</mo><mi>β</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">p \leftarrow s + \beta p</annotation></semantics></math>) を 1 本に, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> の更新と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><mi>r</mi><mo>,</mo><mi>r</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r, r \rangle</annotation></semantics></math> の内積を 1 本にする. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> と <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> の読み書きが 1 回ずつになり, カーネル 1 本分の起動と待ちの固定費も減る</td>
+<td>既定 (<code><span class="tok">PARCEL_CG_FUSED</span></code>. <code><span class="tok">-DPARCEL_CG_FUSED=0</span></code>で切れる)</td>
+</tr>
+<tr>
+<td class="nowrap">E</td>
+<td>Jacobi 前処理の右辺の準備 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>b</mi></mrow><annotation encoding="application/x-tex">D_A^{-1} b</annotation></semantics></math> を作るカーネル) で, ベクトルのスケーリングが無い (割る値が 1. 倍精度・単精度の既定) ときは割り算をしない版を選ぶ. <a href="glossary.html#g-a64fx">A64FX</a> の SVE の割り算はパイプライン化されず, 前処理の区間の約 3 割を占めていた</td>
+<td>既定 (<code><span class="tok">PARCEL_JACOBI_NODIV_UNIT</span></code>. <code><span class="tok">-DPARCEL_JACOBI_NODIV_UNIT=0</span></code>で切れる)</td>
+</tr>
+<tr>
+<td class="nowrap">F</td>
+<td>前処理行列が単精度 (<code><span class="tok">precon_dataF</span></code>など) のとき, Jacobi 前処理の反復で 2 行を交互に処理し, 2 本の積和の依存の待ちを重ねる (各行の足す順は同じ). 倍精度の前処理行列では使わない (コンパイラが既に行を重ねており, 遅くなる)</td>
+<td>既定 (<code><span class="tok">PARCEL_JACOBI_ROW2</span></code>. <code><span class="tok">-DPARCEL_JACOBI_ROW2=0</span></code>で切れる)</td>
+</tr>
+</tbody>
+</table>
+<p>　A〜F の効果を <a href="glossary.html#g-odyssey">Odyssey</a> の 4 ノード (16 ランク × 12 スレッド. 1 ランクあたり 8.4 M 行) で測った (Jacobi 前処理の<code>pcg</code> 100 反復と<code>pgmres</code> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">m = 60</annotation></semantics></math>) 60 反復の 1 反復あたり [ms], 3 巡の中央値. 括弧内は性能比 (最適化なしの時間 ÷ その版の時間)). 最適化なしは A〜F をすべて使わないビルド (<code>-ffp-contract=fast</code>を付けず, <code>-DPARCEL_A64FX_AXPY_C=0 -DPARCEL_CG_FUSED=0 -DPARCEL_JACOBI_NODIV_UNIT=0 -DPARCEL_JACOBI_ROW2=0</code>) を B を付けずに実行したもの, A+B+C+D は E・F だけを外したビルドを, A+B+C+D+E+F は推奨のビルドを, B を付けて実行したものである. いずれも Jacobi 前処理の値を保持する既定のビルドである.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>精度</th>
+<th>ソルバ</th>
+<th style="text-align: right;">最適化なし [ms]</th>
+<th style="text-align: right;">A+B+C+D [ms] (性能比)</th>
+<th style="text-align: right;">A+B+C+D+E+F [ms] (性能比)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>倍精度</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">46.64</td>
+<td style="text-align: right;">44.68 (1.04)</td>
+<td style="text-align: right;">39.97 (1.17)</td>
+</tr>
+<tr>
+<td>倍精度</td>
+<td><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;">90.32</td>
+<td style="text-align: right;">86.85 (1.04)</td>
+<td style="text-align: right;">82.03 (1.10)</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_dataF</span></code></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">50.41</td>
+<td style="text-align: right;">48.10 (1.05)</td>
+<td style="text-align: right;">41.06 (1.23)</td>
+</tr>
+<tr>
+<td><code><span class="tok">precon_dataF</span></code></td>
+<td><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;">93.69</td>
+<td style="text-align: right;">90.08 (1.04)</td>
+<td style="text-align: right;">83.21 (1.13)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>A+B+C+D で短くなるのは主に <a href="glossary.html#g-spmv">SpMV</a> (15.87 ms → 14.28 ms. A の FMA) と前処理 (20.96 ms → 19.83 ms) である (<code>pcg</code>, 倍精度). <code>pcg</code>では D が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>と<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>の更新を 1 本にして gemv の区間 (1.27 ms) と axpy の区間の一部 (3.02 ms → 2.11 ms) を無くすが, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> の更新と内積を融合したカーネルで内積の区間が 4.96 ms → 7.82 ms に増える. D の損得は 1 ランクあたりの行数で決まり, この構成 (8.4 M 行) では D だけを外した方が約 3% 速い. 約 2 M 行以下では D を使う方が 1〜10% 速い. <code>pgmres</code>の Gram-Schmidt (約 49 ms) はどの版でも変わらない.</li>
+<li>E・F が速くするのは前処理の区間である. 前処理の区間は, 倍精度 (E だけが働く) で 19.83 ms → 15.09 ms, <code>precon_dataF</code> (E と F) で 23.56 ms → 16.49 ms になる. E・F の有無で残差の推移は一致する.</li>
+<li>前処理の区間は, 右辺の準備 (E が効く) と反復 1 回分の掃引 (F が効く) とハロー交換からなる.</li>
+<li><code>precon_dataF</code>の前処理の区間は倍精度 (いずれも<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持) の 1.09 倍である (E・F がない場合は 1.19 倍). <a href="glossary.html#g-a64fx">A64FX</a> の前処理はメモリ帯域ではなく命令の実行で決まっており, 単精度の前処理行列は型変換の命令の分だけ命令が多い.</li>
+</ul>
+<p>　注意:</p>
+<ul>
+<li>B ではスレッドが待ちの間もコアを使い続ける. 推奨の配置 (1 <a href="glossary.html#g-cmg">CMG</a> に 1 ランク, 12 スレッド) では問題ないが, コアを取り合う配置 (1 コアに複数のスレッド, 同じノードにほかのプロセス) では逆効果になる.</li>
+<li>E は割る値 (ベクトルのスケーリングの最大値) が 1 のときだけ割り算を外す (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi>/</mi><mn>1</mn><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">x/1 = x</annotation></semantics></math> なので結果は同じ). スケーリングが有効な構成 (半精度の前処理など) では従来どおり割る. F は Jacobi 前処理の値を保持する版だけで働き, その場で計算する版 (<code>PARCEL_JACOBI_ONTHEFLY=1</code>) と梯子分割 (<code>PARCEL_PRECON_LADDER=1</code>) では使わない. <code>PARCEL_JACOBI_ROW2=1</code>は<code>_BLOCKING_LOOP_=1</code>かつ<code>PARCEL_PRECON_LADDER=0</code>でだけ指定でき, それ以外では<code>#error</code>で止まる.</li>
+<li>D の <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> の更新と内積の融合は, CPU の MGS で使っているカーネル (<code>axpy_dot_value</code>) と同じである. <code>PARCEL_CG_FUSED</code>は<code>_BLOCKING_LOOP_</code>と<code>PARCEL_GS_FUSED</code>のビルドでだけ 1 にでき, それ以外で 1 を指定するとコンパイルが<code>#error</code>で止まる. 係数を値で渡せない型の組み合わせ (<a href="glossary.html#g-dd">double-double</a> を含むもの) と<code>RESIDUAL_REPLACE</code>では融合しない.</li>
+</ul>
+<h2 data-number="13.6" id="kopt-v100"><span class="header-section-number">13.6</span> V100 のレジスタ数の指定</h2>
+<p>　<a href="glossary.html#g-v100">V100</a> (<code>cuda:sm_70</code>) では, ビルドに<code>-Xcuda-ptxas -maxrregcount=255</code>を付ける. ptxas (CUDA のアセンブラ) が 1 スレッドに割り当てるレジスタ数の上限を広げる指定であり, 既定の割り当てでは Jacobi 前処理などのカーネルで行列とベクトルの読み出しが分かれて直列になり, 遅くなる. spill は出ず, 計算結果は変わらない. <a href="glossary.html#g-gh200">GH200</a> と <a href="glossary.html#g-a100">A100</a> には付けない.</p>
+<p>　<a href="glossary.html#g-s86">s86 GPU</a> で, 推奨のビルド (梯子分割なし) に対して指定の有無を比べた 1 反復あたりの時間を示す.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">指定なし [ms]</th>
+<th style="text-align: right;">指定あり [ms]</th>
+<th style="text-align: right;">性能比</th>
+<th>主な効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;" class="nowrap">45.53</td>
+<td style="text-align: right;" class="nowrap">25.17</td>
+<td style="text-align: right;" class="nowrap">1.81</td>
+<td>SpMV 18.0 ms → 8.7 ms<br />前処理 20.8 ms → 9.9 ms</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td style="text-align: right;" class="nowrap">94.63</td>
+<td style="text-align: right;" class="nowrap">74.29</td>
+<td style="text-align: right;" class="nowrap">1.27</td>
+<td>SpMV 18.7 ms → 9.3 ms<br />前処理 21.2 ms → 10.1 ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>SpMV と Jacobi 前処理のカーネルがともに約 2 倍速くなる. <code>pgmres</code>は Gram-Schmidt の区間 (約 53 ms) が指定の有無で変わらないので, 1 反復の性能比は<code>pcg</code>より小さい.</li>
+</ul>
+<h2 data-number="13.7" id="perf-memory-options"><span class="header-section-number">13.7</span> メモリと速さの選択</h2>
+<p>　v1.2 の既定は, メモリを少なくする 2 つの設定を有効にしている (<a href="glossary.html#g-a64fx">A64FX</a> 向けのビルドでは G だけ. 下を参照).</p>
+<ul>
+<li>G: <code>pcg</code>は探索方向の履歴を持たず, 解<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>を毎反復更新する (<code>PARCEL_PSTEP</code>の既定 1).</li>
+<li>H: Jacobi 前処理 (<code>PRECON_JACOBI</code>) は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math>の値を持たず, 適用のたびに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の値と<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><annotation encoding="application/x-tex">D_A^{-1}</annotation></semantics></math>から計算する (<a href="preconditioners.html#preconditioners">Jacobi 前処理</a>).</li>
+</ul>
+<p>　メモリに余裕がある場合は, 次の最適化オプションでメモリを使って速くできる. どちらもアルゴリズムは同じで, 反復回数は変わらない.</p>
+<div class="minw-c2 minw-c3">
+<table>
+<thead>
+<tr>
+<th>最適化オプション</th>
+<th>指定</th>
+<th>増えるメモリ (1 ランク)</th>
+<th>速くなる処理</th>
+<th>結果への影響</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">H なし</td>
+<td>ビルド時に<code><span class="tok">-DPARCEL_JACOBI_ONTHEFLY=0</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零の数 × 前処理行列の精度の大きさ (7 点差分・倍精度でベクトル約 7 本分)</td>
+<td>Jacobi 前処理の適用. GPU で効く (CPU ではほぼ変わらない)</td>
+<td><code><span class="tok">-ffp-contract=off</span></code>ならビット単位で同じ (積和の融合を許すビルドでは丸めが変わりうる)</td>
+</tr>
+<tr>
+<td class="nowrap">G なし</td>
+<td>実行時に<code><span class="tok">PARCEL_PSTEP=4</span></code> (またはビルド時に<code><span class="tok">-DPARCEL_PCG_NO_XHIST=0</span></code>)</td>
+<td><code><span class="tok">pcg</span></code>の探索方向の履歴: 袖付きベクトル 3 本</td>
+<td><code><span class="tok">pcg</span></code>の解の更新 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>の読み書きが 1/4)</td>
+<td>解の足し合わせ方が変わり, 丸めの桁で結果が変わる (反復回数は同じ)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>G は<code>pcg</code>だけに効く (固有値ソルバの内部線形ソルバを<code>pcg</code>にした場合を含む). H は Jacobi 前処理を使うすべてのソルバに効く (固有値ソルバの内部線形ソルバの既定の前処理を含む).</li>
+<li>H の対象外の組み合わせ (行列スケーリングが有効, 半精度の前処理 (既定でスケーリングが有効), 係数行列・前処理行列・前処理の演算精度のいずれかが double-double) では, 既定でも<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持する. ソルバの演算精度だけを double-double にした構成 (<code>calcDD</code>) は対象である.</li>
+<li><a href="glossary.html#g-a64fx">A64FX</a> 向けのビルド (<code>_BLOCKING_LOOP_</code>または<code>_BLOCKING_LOOP_SPMV_</code>が 1. <a href="installation.html#install-recommended-flags">推奨オプション</a>) では, H は既定で無効 (<code>PARCEL_JACOBI_ONTHEFLY</code>の既定 0) である. <a href="glossary.html#g-a64fx">A64FX</a> ではその場の計算が隠れず, <a href="glossary.html#g-odyssey">Odyssey</a> の 4 ノード (NX=512, <code>pcg</code> + Jacobi 前処理) で H なしは前処理の区間が 0.77 倍, 1 反復が 0.90 倍になるので, メモリ (1 ランクあたり<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零の数 × 前処理行列の精度の大きさ. 倍精度で非零 1 個あたり 8 バイト) を使って速さを取る. H を有効にするには<code>-DPARCEL_JACOBI_ONTHEFLY=1</code>を明示する.</li>
+</ul>
+<p>　各環境の推奨のビルドで, 省メモリ設定 G・H の有無を変えた<code>pcg</code>の 1 反復あたりの時間を示す (測定の条件は<a href="kernel-opt.html#kernel-opt">章の冒頭</a>と同じ). 列の「G+H」は G と H の両方が有効, 「G」は G だけが有効 (H なし), 「H」は H だけが有効 (G なし), 「off」は両方とも無効である. 性能比は off の時間 ÷ G+H の時間であり, 1 未満なら両方とも無効にした方が速い.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">G+H [ms]</th>
+<th style="text-align: right;">G [ms]</th>
+<th style="text-align: right;">H [ms]</th>
+<th style="text-align: right;">off [ms]</th>
+<th style="text-align: right;">性能比 (off/G+H)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">130.5</td>
+<td style="text-align: right;">129.3</td>
+<td style="text-align: right;">128.6</td>
+<td style="text-align: right;">126.3</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">28.38</td>
+<td style="text-align: right;">27.94</td>
+<td style="text-align: right;">27.93</td>
+<td style="text-align: right;">26.41</td>
+<td style="text-align: right;">0.93</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">22.69</td>
+<td style="text-align: right;">22.31</td>
+<td style="text-align: right;">22.16</td>
+<td style="text-align: right;">21.93</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">44.32</td>
+<td style="text-align: right;">40.01</td>
+<td style="text-align: right;">44.07</td>
+<td style="text-align: right;">39.59</td>
+<td style="text-align: right;">0.89</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">25.17</td>
+<td style="text-align: right;">24.69</td>
+<td style="text-align: right;">24.65</td>
+<td style="text-align: right;">24.04</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">4.72</td>
+<td style="text-align: right;">4.60</td>
+<td style="text-align: right;">4.55</td>
+<td style="text-align: right;">4.55</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">12.91</td>
+<td style="text-align: right;">12.61</td>
+<td style="text-align: right;">12.47</td>
+<td style="text-align: right;">12.36</td>
+<td style="text-align: right;">0.96</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">6.67</td>
+<td style="text-align: right;">6.48</td>
+<td style="text-align: right;">6.59</td>
+<td style="text-align: right;">6.35</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>既定は, <a href="glossary.html#g-odyssey">Odyssey</a> 以外では G+H の列, <a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a> 向けのビルド) では G の列 (H 無効) である. <a href="glossary.html#g-a64fx">A64FX</a> では H を有効にすると前処理の区間が遅くなる (15.3 ms → 19.9 ms).</li>
+<li>G を外す (<code>PARCEL_PSTEP=4</code>) と<code>pcg</code>の解の更新 (gemv の区間) が約半分になる (<a href="glossary.html#g-s86">s86 CPU</a> で 7.7 ms → 3.7 ms, <a href="glossary.html#g-v100">V100</a> で 1.10 ms → 0.55 ms).</li>
+<li>H を外すと Jacobi 前処理の区間が速くなる (<a href="glossary.html#g-s86">s86 CPU</a> で 52.6 ms → 50.2 ms, <a href="glossary.html#g-v100">V100</a> で 9.85 ms → 9.39 ms). 両方を外す (off) と, 1 反復は G+H の 0.89〜0.97 倍になる.</li>
+</ul>
+<p>　同じ測定で読んだ 1 装置あたりのメモリを, 時間の表と同じ並びで示す. メモリ比は off のメモリ ÷ G+H のメモリであり, 1 より大きければ両方とも無効にした方が多くのメモリを使う.</p>
+<div class="perf-table">
+<table>
+<thead>
+<tr>
+<th>環境</th>
+<th>ソルバ</th>
+<th style="text-align: right;">G+H [GiB]</th>
+<th style="text-align: right;">G [GiB]</th>
+<th style="text-align: right;">H [GiB]</th>
+<th style="text-align: right;">off [GiB]</th>
+<th style="text-align: right;">メモリ比 (off/G+H)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="glossary.html#g-s86">s86 CPU</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">9.08</td>
+<td style="text-align: right;">9.61</td>
+<td style="text-align: right;">9.08</td>
+<td style="text-align: right;">10.40</td>
+<td style="text-align: right;">1.15</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">8.11</td>
+<td style="text-align: right;">8.64</td>
+<td style="text-align: right;">8.10</td>
+<td style="text-align: right;">9.43</td>
+<td style="text-align: right;">1.16</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-a">PS-A</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">10.31</td>
+<td style="text-align: right;">11.10</td>
+<td style="text-align: right;">10.26</td>
+<td style="text-align: right;">11.91</td>
+<td style="text-align: right;">1.15</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-odyssey">Odyssey</a></td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.68</td>
+<td style="text-align: right;">7.42</td>
+<td style="text-align: right;">6.47</td>
+<td style="text-align: right;">8.22</td>
+<td style="text-align: right;">1.45</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.88</td>
+<td style="text-align: right;">7.62</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">8.39</td>
+<td style="text-align: right;">1.43</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.57</td>
+<td style="text-align: right;">7.32</td>
+<td style="text-align: right;">6.33</td>
+<td style="text-align: right;">8.08</td>
+<td style="text-align: right;">1.45</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.99</td>
+<td style="text-align: right;">7.74</td>
+<td style="text-align: right;">6.75</td>
+<td style="text-align: right;">8.50</td>
+<td style="text-align: right;">1.42</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
+<td><code><span class="tok">pcg</span></code></td>
+<td style="text-align: right;">5.57</td>
+<td style="text-align: right;">7.32</td>
+<td style="text-align: right;">6.33</td>
+<td style="text-align: right;">8.08</td>
+<td style="text-align: right;">1.45</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>既定は, <a href="glossary.html#g-odyssey">Odyssey</a> 以外では G+H の列, <a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a> 向けのビルド) では G の列 (H 無効) である.</li>
+<li>測り方は環境によって異なる. CPU (<a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-miyabi-c">Miyabi-C</a>, <a href="glossary.html#g-ps-a">PS-A</a>) はホストメモリ (全ランクのピーク常駐メモリの合計を 4 ソケットで割った値), <a href="glossary.html#g-s86">s86 GPU</a> と <a href="glossary.html#g-aquarius">Aquarius</a> はデバイスメモリ (<code>nvidia-smi</code>で読んだ 1 台のピーク), <a href="glossary.html#g-miyabi-g">Miyabi-G</a> と <a href="glossary.html#g-ps-b">PS-B</a> は PARCEL が確保したデバイスメモリのピーク (1 台の最大) である. <a href="glossary.html#g-odyssey">Odyssey</a> はホストの常駐メモリをこの方法で正しく測れないので, PARCEL が確保したメモリのピーク (全ランクの合計を 4 ノードで割った値) を示す. PARCEL が確保したメモリは, <a href="glossary.html#g-aquarius">Aquarius</a> の G+H で 5.56 GiB と, <code>nvidia-smi</code>の値 (5.99 GiB) より約 0.4 GiB 小さい.</li>
+<li>増えるメモリは, H を外すと 1 ランクあたり<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零の数 × 前処理行列の精度の大きさ, G を外すと袖付きベクトル 3 本分であり, 1 ランクの局所の行数に比例する (装置数を 2 倍にすると半分になる). CPU で G を外してもホストメモリが変わらないのは, ピークが行列の生成時に決まるためである.</li>
+<li>時間がほとんど変わらないので, 通常は既定 (メモリを少なくする設定) のまま使う. GPU のメモリに余裕があり, わずかでも速くしたい場合に指定する.</li>
+<li>前処理行列の精度を下げる混合精度 (<code>precon_dataF</code>など) では, H ありのままだと適用のたびに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の倍精度の値を読むので, 前処理のデータを単精度にした効果が出にくい. 混合精度で速くしたい場合は H なしと組み合わせる (NVIDIA の GPU も同じ. 増えるメモリは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の非零 1 個あたり前処理行列の精度の大きさ, 単精度なら 4 バイト. 効果は<a href="performance.html#perf-mixed">「混合精度」</a>. <a href="glossary.html#g-a64fx">A64FX</a> では既定で H なしだが, 混合精度にしても速くならない). 配布パッケージの性能試験の混合精度 (<code>tests/perf/gen_perf_prec.py</code>) はこの組み合わせで測る (<a href="performance.html#perf-howto">「自分の環境で測る」</a>).</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="accuracy.html" rel="previous">← 数値精度と再現性</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="performance.html" rel="next">性能 →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

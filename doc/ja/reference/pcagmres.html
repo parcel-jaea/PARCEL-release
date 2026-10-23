@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>parcel::krylov::pcagmres – PARCEL SYCL v1.2 API リファレンス</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API リファレンス</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/reference/pcagmres.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="function-index.html#function-index">関数索引</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> 共通事項</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> 各項目の書式</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> ソルバ</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> 記号と用語</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> 入力の行列</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> 設定</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> 定数</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> 結果</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> 収束状態</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> 設定の扱いと MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> 精度</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> ソルバごとの収束判定</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> SYCL版PARCELクラス</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> 共通事項との対応</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCELデータ型</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> コンストラクタ</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> コンストラクタ</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> コンストラクタ / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> ソルバ共通の事項</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> クラステンプレート引数 (演算精度)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> solver() のテンプレート引数 (データ精度)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> 設定の扱いと例外</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> 定数</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> 共通メンバ関数</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> 固有値ソルバ共通のメンバ関数</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (クラス)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (クラス)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (クラス)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li class="current" data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (クラス)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (クラス)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (クラス)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (クラス)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C言語の API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> 共通事項との対応</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> 定数</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran の API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> 共通事項との対応</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> 定数</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python の API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> 共通事項との対応</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> 例外</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="pgmres.html" rel="previous" accesskey="p">← parcel::krylov::pgmres</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="power.html" rel="next" accesskey="n">parcel::krylov::power →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="言語">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C言語</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="14" id="pcagmres"><span class="header-section-number">14</span> parcel::krylov::pcagmres</h1>
+<p>　通信削減型一般化最小残差法 (CA-GMRES) のクラスである. 正規直交基底 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を陽に作るかどうかを <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a> で選ぶ. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らない場合 (<code>CAGMRES_Q_IMPLICIT</code>) の扱いは本章の後半の<a href="pcagmres.html#api-pcagmres-implicit">「Q を作らない場合」</a>に示す.</p>
+<h2 data-number="14.1" id="api-pcagmres"><span class="header-section-number">14.1</span> pcagmres (クラス)</h2>
+<p><strong>概要</strong>　前処理付き通信削減型一般化最小残差法. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> 本の基底をまとめて作り, QR 分解で直交化する.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> Tspmv <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tprecon <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Taxpy <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tdot    <span class="op">=</span> parcel_double <span class="op">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> pcagmres <span class="op">:</span> <span class="kw">public</span> krylov_param<span class="op">;</span></span></code></pre></div>
+<p><strong>注意</strong>　<a href="../user/glossary.html#g-fp16">FP16</a> のデータ精度・計算精度では, Cholesky QR 系 (<code>CAGMRES_Q_IMPLICIT</code> と <code>QR_CAGMRES_CHOLESKYQR</code>) を使わない (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> によらず NaN または未収束になる. 検査はしない). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る方式は既定の <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s, t)</annotation></semantics></math> で使える (<a href="../user/accuracy.html#accuracy-lowprec">利用者ガイドの「低精度での既知の限界」</a>). <code>-DPARCEL_ENABLE_PCAGMRES=0</code> でビルドから外せる (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> の作り方によらずクラス全体が外れる).</p>
+<p><strong>関連項目</strong>　<a href="convergence.html#conv-pcagmres">収束判定と破綻の扱い</a>, <a href="pcagmres.html#api-pcagmres-set-restart">set_restart()</a>, <a href="pcagmres.html#api-pcagmres-set-qr-algo">set_qr_algo()</a>, <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a>, <a href="../user/linear-solvers.html#alg-pcagmres">線形ソルバの章</a></p>
+<h2 data-number="14.2" id="api-pcagmres-solver"><span class="header-section-number">14.2</span> solver()</h2>
+<p><strong>概要</strong>　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> を解く.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span> <span class="kw">class</span> Tmat<span class="op">,</span> <span class="kw">class</span> Tvecx<span class="op">,</span> <span class="kw">class</span> Tvecb<span class="op">,</span> <span class="kw">class</span> Tvec <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Tprecon_mat <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> Tprecon_vec <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Tbasis <span class="op">=</span> parcel_double<span class="op">,</span> <span class="kw">class</span> TcalcQR <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> THessenberg <span class="op">=</span> parcel_double<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>          <span class="kw">class</span> Todd_basis <span class="op">=</span> Tbasis<span class="op">,</span> <span class="kw">class</span> Teven_basis <span class="op">=</span> Tbasis <span class="op">&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> solver<span class="op">(</span>parcel<span class="op">::</span>matrix<span class="op">&lt;</span>Tmat<span class="op">&gt;</span> <span class="op">&amp;</span>Mat<span class="op">,</span> parcel<span class="op">::</span>vector<span class="op">&lt;</span>Tvecx<span class="op">&gt;</span> <span class="op">&amp;</span>x0<span class="op">,</span> parcel<span class="op">::</span>vector<span class="op">&lt;</span>Tvecb<span class="op">&gt;</span> <span class="op">&amp;</span>b0<span class="op">);</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">Tbasis</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">PARCELデータ型</td>
+<td>基底ベクトルのデータ精度. <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> では前処理の入出力 (基底から作る作業ベクトル) のデータ精度であり, <code><span class="tok">Todd_basis</span></code>・<code><span class="tok">Teven_basis</span></code> の既定値</td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">TcalcQR</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">PARCELデータ型</td>
+<td>QR分解の計算精度 (<code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> では Gram 行列の計算精度)</td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">THessenberg</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">PARCELデータ型</td>
+<td>Hessenberg 行列の精度 (<code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> では Gram 行列の格納にも使う)</td>
+<td class="nowrap"><code><span class="tok">parcel_double</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">Todd_basis</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">PARCELデータ型</td>
+<td>奇数番目の基底ベクトルの格納精度. <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> のときだけ使う</td>
+<td class="nowrap"><code><span class="tok">Tbasis</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">Teven_basis</span></code></td>
+<td class="nowrap">入力 (テンプレート)</td>
+<td class="nowrap">PARCELデータ型</td>
+<td>偶数番目の基底ベクトルの格納精度. <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> のときだけ使う</td>
+<td class="nowrap"><code><span class="tok">Tbasis</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">Mat</span></code>, <code><span class="tok">x0</span></code>, <code><span class="tok">b0</span></code></td>
+<td class="nowrap"></td>
+<td class="nowrap"></td>
+<td><code><span class="tok">pcg</span></code> の <a href="pcg.html#api-pcg-solver">solver()</a> と同じ</td>
+<td class="nowrap">なし</td>
+</tr>
+</tbody>
+</table>
+<p>　<code>Tmat</code> から <code>Tprecon_vec</code> までは<a href="solver-common.html#api-solver-template">「solver() のテンプレート引数」</a>と同じである.</p>
+<p><strong>前提条件</strong>　<a href="solver-common.html#api-settings-mpi">共通の前提条件</a> (<a href="../user/glossary.html#g-inorder">in-order</a> キュー, 登録済みの行列, ベクトルのキューと長さ) を満たすこと. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> の作り方と QR 分解の組合せが <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a> の規則を満たすこと (入口で検査し, 違反は全<a href="../user/glossary.html#g-rank">ランク</a>が <code>std::invalid_argument</code>). <code>get_max_iteration()</code> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">\geq s \times t</annotation></semantics></math> であること (検査しない). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">b = 0</annotation></semantics></math> では <code>pcg</code> と同じく <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math> で戻る.</p>
+<p><strong>戻り値</strong>　なし.</p>
+<p><strong>MPI</strong>　集団操作. 全ランクが同じ設定で呼ぶ.</p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>krylov<span class="op">::</span>pcagmres<span class="op">&lt;&gt;</span> ca<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>solver<span class="op">(</span>A<span class="op">,</span> x<span class="op">,</span> b<span class="op">);</span>   <span class="co">// 推論できない精度はすべて parcel_double</span></span></code></pre></div>
+<h2 data-number="14.3" id="api-pcagmres-set-restart"><span class="header-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</h2>
+<p><strong>概要</strong>　1 回の基底生成で作るベクトル数 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> と, リスタートまでの基底生成回数 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> を設定・取得する. リスタート周期は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s \times t</annotation></semantics></math> である.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_restart<span class="op">(</span>PARCEL_INT cagmres_s<span class="op">,</span> PARCEL_INT <span class="dt">cagmres_t</span><span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_restart_s<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>PARCEL_INT <span class="dt">get_restart_t</span><span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_s</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math></td>
+<td class="nowrap">8</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">cagmres_t</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></td>
+<td class="nowrap">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　いずれも 1 以上. 0 以下は <code>std::invalid_argument</code>.</p>
+<p><strong>MPI</strong>　局所操作. 全<a href="../user/glossary.html#g-rank">ランク</a>で同じ値を与える.</p>
+<p><strong>注意</strong>　<code>CAGMRES_Q_IMPLICIT</code> では Cholesky QR 法の直交性の誤差が基底の条件数の 2 乗に比例するので, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> を大きくすると収束が悪化しうる.</p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>set_restart<span class="op">(</span><span class="dv">8</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span></code></pre></div>
+<h2 data-number="14.4" id="api-pcagmres-set-qr-algo"><span class="header-section-number">14.4</span> set_qr_algo() / get_qr_algo()</h2>
+<p><strong>概要</strong>　基底の QR 分解法を設定・取得する.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_qr_algo<span class="op">(</span>PARCEL_INT qrdecomposition_algo<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_qr_algo<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">qrdecomposition_algo</span></code></td>
+<td class="nowrap">入力</td>
+<td class="nowrap"><code><span class="tok">PARCEL_INT</span></code></td>
+<td><code><span class="tok">parcel::qr::QR_CGS</span></code> (0), <code><span class="tok">QR_MGS</span></code> (1), <code><span class="tok">QR_CHOLESKYQR</span></code> (2), <code><span class="tok">QR_CAGMRES_CHOLESKYQR</span></code> (202, <a href="../user/glossary.html#g-moment">モーメント法</a>. <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> 専用)</td>
+<td><code><span class="tok">QR_MGS</span></code> (<code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> で呼ばない場合は <code><span class="tok">QR_CHOLESKYQR</span></code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　上の 4 値のいずれか. それ以外の値は <code>std::invalid_argument</code>. <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a> との組合せは <code>solver()</code> の入口で検査する.</p>
+<p><strong>戻り値</strong>　<code>get_qr_algo()</code> は <code>solver()</code> が実際に使う値 (<code>CAGMRES_Q_IMPLICIT</code> でこの関数を呼んでいなければ <code>QR_CHOLESKYQR</code>).</p>
+<p><strong>MPI</strong>　局所操作. 全<a href="../user/glossary.html#g-rank">ランク</a>で同じ値を与える.</p>
+<p><strong>関連項目</strong>　<a href="../user/qr.html">QR分解の章</a>, <a href="pcagmres.html#api-pcagmres-implicit">Q を作らない場合</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>set_qr_algo<span class="op">(</span>parcel<span class="op">::</span>qr<span class="op">::</span>QR_MGS<span class="op">);</span></span></code></pre></div>
+<h2 data-number="14.5" id="api-pcagmres-set-explicit-q"><span class="header-section-number">14.5</span> set_explicit_q() / get_explicit_q()</h2>
+<p><strong>概要</strong>　正規直交基底 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を陽に作るかどうかを設定・取得する.</p>
+<p><strong>書式</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> PARCEL_INT parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_AUTO     <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> PARCEL_INT parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_EXPLICIT <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> PARCEL_INT parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_IMPLICIT <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>       set_explicit_q<span class="op">(</span>PARCEL_INT mode<span class="op">);</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>PARCEL_INT get_explicit_q<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>引数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>入出力</th>
+<th>型</th>
+<th>説明</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">mode</span></code></td>
+<td>入力</td>
+<td><code><span class="tok">PARCEL_INT</span></code></td>
+<td>下表の定数のいずれか</td>
+<td><code><span class="tok">CAGMRES_Q_AUTO</span></code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>定数 (<code><span class="tok">parcel::krylov::</span></code>)</th>
+<th style="text-align: right;">値</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_AUTO</span></code></td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td><code><span class="tok">QR_CHOLESKYQR</span></code> かつ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math> のときだけ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らず, それ以外は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_EXPLICIT</span></code></td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>常に <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る (<code><span class="tok">QR_CHOLESKYQR</span></code> で <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math> でも作る)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">CAGMRES_Q_IMPLICIT</span></code></td>
+<td style="text-align: right;" class="nowrap">2</td>
+<td>どの <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> でも <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らない. QR 分解は Cholesky QR 法 (<code><span class="tok">QR_CHOLESKYQR</span></code> または <code><span class="tok">QR_CAGMRES_CHOLESKYQR</span></code>) に限る (<a href="pcagmres.html#api-pcagmres-implicit">Q を作らない場合</a>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>前提条件</strong>　上の 3 値のいずれか. それ以外の値は <code>std::invalid_argument</code>. <a href="pcagmres.html#api-pcagmres-set-qr-algo">set_qr_algo()</a> との組合せは, 設定関数を呼ぶ順序によらないよう <code>solver()</code> の入口で検査し, 次の場合に <code>std::invalid_argument</code> を投げる (全<a href="../user/glossary.html#g-rank">ランク</a>で同じ判定).</p>
+<ul>
+<li><code>CAGMRES_Q_IMPLICIT</code> で <code>QR_CGS</code> または <code>QR_MGS</code> を明示した (<code>set_qr_algo()</code> を呼んでいなければ <code>QR_CHOLESKYQR</code> を使う).</li>
+<li><code>QR_CAGMRES_CHOLESKYQR</code> を <code>CAGMRES_Q_AUTO</code> または <code>CAGMRES_Q_EXPLICIT</code> と組み合わせた.</li>
+<li><code>QR_CAGMRES_CHOLESKYQR</code> で, 前処理なし (<code>PRECON_NONE</code>) でない, または <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> が 2 以上の偶数でない.</li>
+</ul>
+<p>　<code>QR_CAGMRES_CHOLESKYQR</code> は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> が対称の場合に限る. これは検査せず, 非対称な <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> では誤った <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> を用いて誤った結果を返す.</p>
+<p><strong>戻り値</strong>　<code>get_explicit_q()</code> は設定値.</p>
+<p><strong>MPI</strong>　局所操作. 全ランクで同じ値を与える.</p>
+<p><strong>注意</strong>　<code>CAGMRES_Q_AUTO</code> と <code>CAGMRES_Q_EXPLICIT</code> は, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math> の <code>QR_CHOLESKYQR</code> 以外では同じ計算を行う. <code>CAGMRES_Q_IMPLICIT</code> は計算の順序が異なるので, 同じ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> と QR 分解でも結果は丸め誤差の範囲で異なる.</p>
+<p><strong>関連項目</strong>　<a href="pcagmres.html#api-pcagmres-implicit">Q を作らない場合</a>, <a href="../user/qr.html">QR分解の章</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ca<span class="op">.</span>set_explicit_q<span class="op">(</span>parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_IMPLICIT<span class="op">);</span>   <span class="co">// QR 分解は指定しなければ QR_CHOLESKYQR</span></span></code></pre></div>
+<h2 data-number="14.6" id="api-pcagmres-implicit"><span class="header-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</h2>
+<p><strong>概要</strong>　<code>set_explicit_q(CAGMRES_Q_IMPLICIT)</code> を指定すると, 同じ CA-GMRES(s,t) を正規直交基底 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を陽に作らずに解く. 基底 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math> の Gram 行列の Cholesky 分解から <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math> だけを求め, 解の更新に <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>R</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V(R^{-1}y)</annotation></semantics></math> を用いる. 基底は奇数番目と偶数番目で格納精度を変えられる (<code>solver()</code> の型引数 <code>Todd_basis</code>・<code>Teven_basis</code>).</p>
+<p><strong>前提条件</strong>　QR 分解は Cholesky QR 法 (<code>QR_CHOLESKYQR</code> または <code>QR_CAGMRES_CHOLESKYQR</code> (<a href="../user/glossary.html#g-moment">モーメント法</a>)) に限る. 組合せの規則は <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a> に示す.</p>
+<p><strong>注意</strong>　収束判定, 収束状態, <a href="../user/glossary.html#g-lucky">幸運な破綻</a>の扱いは <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る場合と同じである. 終了時の真の相対残差を計算し, <code>get_true_residual()</code> で返す.</p>
+<p><strong>関連項目</strong>　<a href="convergence.html#conv-pcagmres-implicit">収束判定と破綻の扱い</a>, <a href="../user/linear-solvers.html#alg-pcagmres-implicit">線形ソルバの章の Q を作らない CA-GMRES の節</a>, <a href="../user/qr.html#qr-cagmres-choleskyqr">QR分解の章のモーメント法</a>, <a href="pcagmres.html#api-pcagmres-set-explicit-q">set_explicit_q()</a></p>
+<p><strong>例</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>parcel<span class="op">::</span>krylov<span class="op">::</span>pcagmres<span class="op">&lt;&gt;</span> cq<span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>set_explicit_q<span class="op">(</span>parcel<span class="op">::</span>krylov<span class="op">::</span>CAGMRES_Q_IMPLICIT<span class="op">);</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>set_restart<span class="op">(</span><span class="dv">8</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>set_qr_algo<span class="op">(</span>parcel<span class="op">::</span>qr<span class="op">::</span>QR_CAGMRES_CHOLESKYQR<span class="op">);</span>   <span class="co">// A が対称で前処理なしの場合のみ.省けば QR_CHOLESKYQR</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>cq<span class="op">.</span>solver<span class="op">(</span>A<span class="op">,</span> x<span class="op">,</span> b<span class="op">);</span></span></code></pre></div>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="pgmres.html" rel="previous">← parcel::krylov::pgmres</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="power.html" rel="next">parcel::krylov::power →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'cpp';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

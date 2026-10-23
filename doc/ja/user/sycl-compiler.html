@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SYCL対応コンパイラのインストール方法 – PARCEL SYCL v1.2 利用者ガイド</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">利用者ガイド</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/user/sycl-compiler.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> クイックスタート</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> プログラムの概要</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> SYCL 対応コンパイラの導入</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C言語</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> 次に読む節</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> 基本構成</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> データ構造</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPU・MPI ランク・データの対応</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> 精度構成</a></li>
+</ul></li>
+<li class="current"><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> SYCL対応コンパイラのインストール方法</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> LAPACKE の入れ方</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> インストール</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> パッケージの構成</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> ビルド後の確認</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> コンパイルオプション</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> マクロ</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> 推奨オプション</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> MPI の有無の既定</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> MPI なしのビルド</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python のパッケージ</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> spack によるインストール</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> 使用方法</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C言語</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> 自分の行列を渡す</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> 自分の行列を渡す</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> ソルバの選び方</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> 線形ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> 固有値ソルバ</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> 前処理</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> GPU とジョブでの実行</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> GPU で動かす</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> ジョブで流す</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> 線形ソルバ</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> 前処理付共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> 前処理付安定化双共役勾配法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> 前処理付一般化最小残差法[1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> 前処理付通信削減型一般化最小残差法 [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> 直交化の精度と基底の精度</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> 固有値ソルバ</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> 逆べき乗法 [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur 法 [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> 前処理</a>
+<ul>
+<li><a href="preconditioners.html#スケーリング"><span class="toc-section-number">10.1</span> スケーリング</a></li>
+<li><a href="preconditioners.html#ポイント-jacobi-前処理-1"><span class="toc-section-number">10.2</span> ポイント Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#jacobi-前処理-1"><span class="toc-section-number">10.3</span> Jacobi 前処理 [1]</a></li>
+<li><a href="preconditioners.html#ブロック-jacobi-前処理-1"><span class="toc-section-number">10.4</span> ブロック Jacobi 前処理 [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR分解</a>
+<ul>
+<li><a href="qr.html#古典-gram-schmidt-法1"><span class="toc-section-number">11.1</span> 古典 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#修正-gram-schmidt-法1"><span class="toc-section-number">11.2</span> 修正 Gram-Schmidt 法[1]</a></li>
+<li><a href="qr.html#再直交化付き古典-gram-schmidt-法-cgs26"><span class="toc-section-number">11.3</span> 再直交化付き古典 Gram-Schmidt 法 (CGS2)[6]</a></li>
+<li><a href="qr.html#cholesky-qr-法7"><span class="toc-section-number">11.4</span> Cholesky QR 法[7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> モーメント法による Cholesky QR 法 (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> 数値精度と再現性</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> 収束状態の確かめ方</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> 漸化式の残差と真の残差</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> 並列数と実行環境による違い</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> 低精度での既知の限界</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> -ffast-math を使わない</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> 最適化</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> 環境ごとの既定</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> ブロック化</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> 梯子分割</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> gemv の分解</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> A64FX 向けの最適化 (A〜F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> V100 のレジスタ数の指定</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> メモリと速さの選択</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> 性能</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> 測定条件</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> 収束までの時間</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> 混合精度 (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> PETSc / SLEPc・v1.0 との比較</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> 自分の環境で測る</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> 版と互換性</a>
+<ul>
+<li><a href="versions.html#互換性の方針"><span class="toc-section-number">15.1</span> 互換性の方針</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> 版の確かめ方</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> 引用と問い合わせ</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> 配布物の確認</a></li>
+<li><a href="versions.html#v1.0-から-v1.2-への変更"><span class="toc-section-number">15.5</span> v1.0 から v1.2 への変更</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> 用語集</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> 計算環境</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> プロセッサ・GPU</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> 装置の構成要素と資源の単位</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> ソフトウェア</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL の用語</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> 計算の用語</a></li>
+</ul></li>
+<li><a href="references.html#references">参考文献</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="concepts.html" rel="previous" accesskey="p">← 基本構成</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="installation.html" rel="next" accesskey="n">インストール →</a></span>
+</nav>
+<h1 data-number="3" id="sycl-compiler"><span class="header-section-number">3</span> SYCL対応コンパイラのインストール方法</h1>
+<p>　<a href="glossary.html#g-sycl">SYCL</a>版PARCELはヘッダーファイルのみで構成されており, 利用にはSYCL対応コンパイラが必要である. v1.2 の試験では, すべての環境で <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> (旧名 hipSYCL / Open SYCL) を用いた. AdaptiveCpp は LLVM (clang) をフロントエンドとし, 1 つのソースから CPU (<a href="glossary.html#g-openmp">OpenMP</a>) ・NVIDIA GPU (<a href="glossary.html#g-cuda">CUDA</a>) ・AMD GPU (HIP) 向けのコードを生成できる.</p>
+<ul>
+<li>AdaptiveCpp: <a href="https://github.com/AdaptiveCpp/AdaptiveCpp" class="uri">https://github.com/AdaptiveCpp/AdaptiveCpp</a></li>
+<li>インストール手順 (公式): <a href="https://github.com/AdaptiveCpp/AdaptiveCpp/blob/develop/doc/installing.md" class="uri">https://github.com/AdaptiveCpp/AdaptiveCpp/blob/develop/doc/installing.md</a></li>
+<li><a href="glossary.html#g-spack">spack</a>: <a href="https://spack.readthedocs.io/" class="uri">https://spack.readthedocs.io/</a></li>
+</ul>
+<p>　ソースコードからビルドすることもできるが, 本版の試験環境ではいずれも spack で導入した. spack 上のパッケージ名は <code>hipsycl</code> である. spack 環境 (<code>spack env</code>) を使うかどうかと環境名, spack のインストール先は利用者が決める. 以下の例ではこれらを<code>&lt;spack 環境名&gt;</code>・<code>&lt;spack のインストール先&gt;</code>と書く (試験で用いた名前は各環境の表に示す). spack 環境を使わない場合は<code>spack env activate</code>の行を省き, <code>spack install</code>の<code>--add</code>を外す. コンパイラドライバは <code>acpp</code> で, 生成するコードの種類は <code>--acpp-targets=</code> で指定する.</p>
+<p>　本章の手順は既存の spack に AdaptiveCpp を入れる方法である. このほか, 配布パッケージの <code>spack/stack/install_stack.sh</code> を使えば, spack の取得から LLVM・AdaptiveCpp・OpenBLAS・Python, PARCEL 本体と C言語・Fortran・Python の API までを, 既存の spack と切り離した新しい spack 環境にまとめて入れられる (MPI・<a href="glossary.html#g-cuda">CUDA</a> / ROCm・コンパイラは各環境の既存品を使う. <a href="installation.html#install-spack">インストールの章の「spack によるインストール」</a>). macOS では spack を使わず, Homebrew で AdaptiveCpp を入れる (<a href="sycl-compiler.html#env-mac">「macOS (Homebrew)」</a>). 試験環境以外の Linux の計算機での手順は<a href="sycl-compiler.html#env-linux">「一般的な Linux」</a>に, <a href="glossary.html#g-lapack">LAPACKE</a> の入れ方は<a href="sycl-compiler.html#env-lapacke">「LAPACKE の入れ方」</a>に示す.</p>
+<p>　試験時の環境の構成例を, 次節以降の環境ごとの節の冒頭の表に示す (環境と装置の名前は<a href="glossary.html#glossary-env">用語集</a>を参照. 装置欄は計算ノードの構成である). モジュールの版などはサイトの更新で変わりうる. 8 環境の AdaptiveCpp はいずれも同じコミット <code>7677cf6e</code> (24.10.0+git.7677cf6e.20241220) である.</p>
+<p>　ログインノードと計算ノードでCPUアーキテクチャが異なる場合 (<a href="glossary.html#g-odyssey">Odyssey</a> など) には, AdaptiveCpp も PARCEL も計算ノード上でビルドする. 両者のアーキテクチャが一致する環境ではログインノードでビルドしてよい. ただし <code>-march=native</code> を付ける場合は, ログインノードと計算ノードの CPU 世代が一致していることを確認する.</p>
+<p>　<code>--acpp-targets=omp</code> で OpenMP <a href="glossary.html#g-backend">バックエンド</a>を使う場合, リンクされる <code>libomp</code> の版によって実行時のスレッド固定の挙動が異なる. LLVM 18.1.8 の <code>libomp</code> (<a href="glossary.html#g-s86">s86 CPU</a>, <a href="glossary.html#g-ps-a">PS-A</a>) では <code>OMP_PROC_BIND</code> を設定すると全ワーカースレッドが 1 コアに集約され, 大幅に遅くなる. 対処として, 実行時に<code>OMP_PROC_BIND</code>を設定しないか<code>false</code>にする (<code>spread</code>など他の値でも同じ症状になる). <a href="glossary.html#g-rank">ランク</a>ごとのコアの割り当ては<code>mpirun</code>のバインド (<code>--bind-to core</code>など) で行えば, スレッドはその範囲に収まる.</p>
+<h2 data-number="3.1" id="env-s86"><span class="header-section-number">3.1</span> s86 (SGI8600)</h2>
+<p><strong><a href="glossary.html#g-s86">s86 CPU</a></strong></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-xeon">Xeon</a> Gold 6242R ×2</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 8.10 (x86_64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>GCC 9.5.0 (<code><span class="tok">gnu/9.5.0</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Open MPI 4.1.6 + UCX 1.16.0 (<code><span class="tok">openmpi/cur</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-cuda">CUDA</a> / ROCm</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">+cuda</span></code>. GPU と共用)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (<a href="glossary.html#g-spack">spack</a>, GCC 9.5.0 でビルド)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (spack 環境)</td>
+<td>spack, <code><span class="tok">sycl</span></code> (<code><span class="tok">~/spack</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.15 (OS)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">omp</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><strong><a href="glossary.html#g-s86">s86 GPU</a></strong></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-xeon">Xeon</a> Gold 6248R ×2 + V100-SXM2-32GB ×4</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 8.10 (x86_64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>GCC 9.5.0</td>
+</tr>
+<tr>
+<td class="nowrap">MPI</td>
+<td>Open MPI 4.1.6 + UCX 1.16.0 (<code><span class="tok">openmpi/cur</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">CUDA / ROCm</td>
+<td>CUDA 12.6 (<code><span class="tok">/home/app/cuda/12.6</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">AdaptiveCpp</td>
+<td>24.10.0 (<code><span class="tok">+cuda</span></code>. CPU と共用)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (spack)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (spack 環境)</td>
+<td>spack, <code><span class="tok">sycl</span></code> (CPU と共用)</td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.15 (OS)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">cuda:sm_70</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-s86">s86</a> の CPU ノードは Intel <a href="glossary.html#g-xeon">Xeon</a> Gold 6242R (20 コア ×2), GPU ノードは Intel <a href="glossary.html#g-xeon">Xeon</a> Gold 6248R (24 コア ×2) + NVIDIA V100-SXM2-32GB ×4 である. <a href="glossary.html#g-spack">spack</a> で LLVM 18 と <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> を導入する. CPU 用と GPU 用を別々に導入する必要はなく, <a href="glossary.html#g-cuda">CUDA</a> <a href="glossary.html#g-backend">バックエンド</a>付き (<code>+cuda</code>) の AdaptiveCpp 1 つを spack 環境 (試験では <code>sycl</code>) に置き, <code>--acpp-targets=omp</code> と <code>--acpp-targets=cuda:sm_70</code> の両方に使う.</p>
+<p><strong>インストール (最初に 1 回. CPU・GPU 共通)</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gnu/9.5.0</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi/cur</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> llvm@18</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl +cuda % llvm@18</span></code></pre></div>
+<p>　この hipsycl の既定の CUDA パスは spack の <code>cuda@12.9.0</code> を指しているが, <a href="glossary.html#g-v100">V100</a> 用のビルドではサイトの CUDA 12.6 を <code>ACPP_CUDA_PATH</code> で指定して上書きする.</p>
+<p><strong>使用時の設定 (CPU)</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gnu/9.5.0</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi/cur</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load hipsycl</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm<span class="kw">`</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span></code></pre></div>
+<p><strong>使用時の設定 (GPU)</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gnu/9.5.0</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi/cur</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load cuda/12.6</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load hipsycl</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm<span class="kw">`</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">cuda_root</span><span class="op">=</span>/home/app/cuda/12.6</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACPP_CUDA_PATH</span><span class="op">=</span><span class="va">$cuda_root</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">$cuda_root</span>/lib64:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span></code></pre></div>
+<h2 data-number="3.2" id="env-odyssey"><span class="header-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-a64fx">A64FX</a> (48 コア)</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 8 (計算ノード)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>富士通 FCC tcsds-1.2.43 (<code><span class="tok">fj/1.2.43</span></code>, clang モード)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>富士通 MPI 1.2.43 (<code><span class="tok">fjmpi/1.2.43</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-cuda">CUDA</a> / ROCm</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">~cuda</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (<a href="glossary.html#g-spack">spack</a>, GCC 8.3.1 でビルド)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (spack 環境)</td>
+<td>spack, <code><span class="tok">odyssey</span></code> (計算ノードでビルド)</td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>富士通 LAPACK (<code><span class="tok">-lfjlapack</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">omp.library-only</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-odyssey">Odyssey</a> の計算ノードは <a href="glossary.html#g-a64fx">A64FX</a> (48 コア, 4 <a href="glossary.html#g-cmg">CMG</a>) で, ログインノードとアーキテクチャが異なる. このため <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> のインストールも PARCEL のビルドも計算ノード上で行う (バッチジョブまたは対話ジョブで <a href="glossary.html#g-spack">spack</a> を実行する).</p>
+<p>　<a href="glossary.html#g-odyssey">Odyssey</a> では <code>--acpp-targets=omp.library-only</code> を用いる. このモードでは AdaptiveCpp は <a href="glossary.html#g-sycl">SYCL</a> のランタイムライブラリとしてのみ働き, カーネルを含むコード全体をホスト側の C++ コンパイラがコンパイルする. ホストコンパイラには富士通コンパイラ (FCC, clang モード) を <code>ACPP_CPU_CXX</code> で指定する. これにより富士通コンパイラの <a href="glossary.html#g-a64fx">A64FX</a> 向けの最適化と富士通の <a href="glossary.html#g-openmp">OpenMP</a> ランタイムが使われる. ただし AdaptiveCpp は<code>ACPP_OMP_CXX_FLAGS</code>の後ろに<code>-O3</code>を付けるので, <code>-Kfast</code>は効かない. 積和の FMA へのまとめは<a href="installation.html#install-odyssey">推奨オプション</a>のとおりコマンドラインの<code>-ffp-contract=fast</code>で指定する. LLVM は 18.1.8 を spack で導入し, spack 環境 (試験では <code>odyssey</code>) に置いた. <a href="glossary.html#g-mpi">MPI</a> は富士通 MPI (<code>mpiFCC</code>), LAPACK は富士通 LAPACK (<code>-lfjlapack</code>) を用いる.</p>
+<p><strong>インストール (最初に 1 回. 計算ノードで行う)</strong></p>
+<p>　<a href="glossary.html#g-a64fx">A64FX</a> 向けの LLVM と <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は計算ノードでビルドする. 試験で用いた <a href="glossary.html#g-spack">spack</a> 環境の定義は<code>llvm@18</code>と<code>hipsycl %clang@18</code>の 2 つであり, OS 付属の GCC 8.3.1 で LLVM 18.1.8 をビルドし, その clang で AdaptiveCpp 24.10.0 (CUDA なし. <code>~cuda</code>は既定) をビルドした. 次のバッチジョブで同じものを作れる (spack は 1.1.0.dev0 を用いた).</p>
+<p>　計算ノードでのビルドでは, 並列数, メモリの上限, 処理時間に注意する.</p>
+<ul>
+<li>並列数: <code>spack install</code>の<code>-j</code>で同時に動かすコンパイルの数を決める. 既定 (論理 CPU 数. A64FX では 48) や<code>-j32</code>では LLVM のビルドでメモリが足りなくなる. 試験では<code>-j12</code>とした.</li>
+<li>メモリの上限: <a href="glossary.html#g-a64fx">A64FX</a> の 1 ノードのメモリは HBM2 の 32 GiB で, 利用者のジョブが使えるのはそのうち約 28 GiB である. LLVM のコンパイルとリンクは 1 本あたりのメモリが大きい. <code>-j32</code>ではピークが約 29 GiB に達し, メモリ不足でジョブが止まった. 止まった場合は<code>-j</code>を下げて同じコマンドを流し直せば, 入ったものは使い回される.</li>
+<li>処理時間: A64FX の 1 コアは x86 の 1 コアより遅く, LLVM 18.1.8 のビルドに<code>-j12</code>で約 3 時間 (ビルド 1 時間 30 分, インストール 1 時間 25 分) かかった. LLVM を含む依存パッケージの全体には約 4 時間 30 分かかった. 経過時間の上限 (<code>elapse</code>) を十分に取り, 長時間の資源グループを使う. 試験では<code>elapse=24:00:00</code>とした. 上限で止まった場合も, 同じジョブを流し直せば続きから入る.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;rscgrp=&lt;リソースグループ&gt;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;node=1&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -L &quot;elapse=24:00:00&quot;           # LLVM のビルドに約 3 時間 (-j12). 長時間の資源グループを使う</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -g &lt;グループ&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PJM -j</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load odyssey</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="va">JOBS</span><span class="op">=</span>12                               <span class="co"># 同時コンパイル数. 32 以上では LLVM のビルドでメモリ (約 28 GiB) が足りない</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (任意) spack の利用者設定とキャッシュをホーム以外に置く場合</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CONFIG_PATH</span><span class="op">=&lt;</span>spack の利用者設定の置き場所<span class="op">&gt;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CACHE_PATH</span><span class="op">=&lt;</span>spack のキャッシュの置き場所<span class="op">&gt;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># OS の GCC 8.3.1 などを登録する</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">-j</span> <span class="va">${JOBS}</span> <span class="at">--add</span> llvm@18</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">-j</span> <span class="va">${JOBS}</span> <span class="at">--add</span> hipsycl %clang@18</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<p>　<a href="glossary.html#g-odyssey">Odyssey</a> では, 次の設定もビルドと同じく計算ノード (ジョブの中) で行う.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load odyssey</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (任意) spack の利用者設定とキャッシュをホーム以外に置く場合</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CONFIG_PATH</span><span class="op">=&lt;</span>spack の利用者設定の置き場所<span class="op">&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CACHE_PATH</span><span class="op">=&lt;</span>spack のキャッシュの置き場所<span class="op">&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm@18<span class="kw">`</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">fj_root</span><span class="op">=</span>/opt/FJSVxtclanga/tcsds-1.2.43</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">$fj_root</span>/lib64/:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACPP_CPU_CXX</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$fj_root</span><span class="st">/bin/FCC&quot;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACPP_OMP_CXX_FLAGS</span><span class="op">=</span><span class="st">&quot;-O3 -Kopenmp -Kfast -std=c++17 -Nclang&quot;</span></span></code></pre></div>
+<h2 data-number="3.3" id="env-aquarius"><span class="header-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-xeon">Xeon</a> Platinum 8360Y ×2 + A100-SXM4-40GB ×8</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 8.10 (ログインノード)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>GCC 8.3.1 (<code><span class="tok">gcc/8.3.1</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Open MPI 4.1.1 (<code><span class="tok">ompi/4.1.1</span></code>, <a href="glossary.html#g-cuda">CUDA</a> 非対応版)</td>
+</tr>
+<tr>
+<td class="nowrap">CUDA / ROCm</td>
+<td>CUDA 12.2 (<code><span class="tok">cuda/12.2</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">+cuda</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (<a href="glossary.html#g-spack">spack</a>). 13.0.1 も併存</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (spack 環境)</td>
+<td>spack, <code><span class="tok">aquarius</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.15 (OS)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">cuda:sm_80</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　spack 環境に <code>llvm@13.0.1</code> と <code>llvm@18.1.8</code> が併存するので, <code>spack location -i llvm@18</code> のように版を明示する. CUDA 対応の Open MPI は別に <code>ompi-cuda/4.1.5-12.2</code> がある.</p>
+<p>　<a href="glossary.html#g-aquarius">Aquarius</a> の計算ノードは Intel <a href="glossary.html#g-xeon">Xeon</a> Platinum 8360Y (36 コア ×2) + NVIDIA A100-SXM4-40GB ×8 である. <a href="glossary.html#g-spack">spack</a> 環境 (試験では <code>aquarius</code>) に <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> (<a href="glossary.html#g-cuda">CUDA</a> <a href="glossary.html#g-backend">バックエンド</a>付き) と LLVM 18.1.8 を導入し, CUDA は 12.2 を用いた. ホストコンパイラは OS 付属の GCC 8.3.1 である. OpenMPI はサイトの <code>ompi</code> モジュール (試験時の既定は CUDA 非対応版の 4.1.1) を使い, spack 側の hwloc を <code>LD_LIBRARY_PATH</code> に加える.</p>
+<p><strong>インストール (最初に 1 回)</strong></p>
+<p>　試験で用いた <a href="glossary.html#g-spack">spack</a> 環境の定義は<code>llvm@18 %gcc</code>と<code>hipsycl+cuda %clang@18</code>の 2 つであり, OS 付属の GCC 8.3.1 で LLVM 18.1.8 をビルドし, その clang で <a href="glossary.html#g-cuda">CUDA</a> <a href="glossary.html#g-backend">バックエンド</a>付きの AdaptiveCpp 24.10.0 をビルドした. CUDA は<code>cuda</code>モジュールのサイトの CUDA 12.2 を spack の外部パッケージとして使い, OS の cmake・perl・python などのツールも外部パッケージとして登録した. 次の手順で同じものを作れる (spack は 1.1.0.dev0 を用いた).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load aquarius</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load cuda</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (任意) spack の利用者設定とキャッシュをホーム以外に置く場合</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CONFIG_PATH</span><span class="op">=&lt;</span>spack の利用者設定の置き場所<span class="op">&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CACHE_PATH</span><span class="op">=&lt;</span>spack のキャッシュの置き場所<span class="op">&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># OS の GCC 8.3.1 などを登録する</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find                  <span class="co"># OS のツール群と cuda モジュールの CUDA 12.2 を外部パッケージとして登録する</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> llvm@18 %gcc</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl+cuda %clang@18</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load aquarius</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load cuda</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load ompi</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (任意) spack の利用者設定とキャッシュをホーム以外に置く場合</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CONFIG_PATH</span><span class="op">=&lt;</span>spack の利用者設定の置き場所<span class="op">&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_USER_CACHE_PATH</span><span class="op">=&lt;</span>spack のキャッシュの置き場所<span class="op">&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">cuda_root</span><span class="op">=</span>/work/opt/local/x86_64/cores/cuda/12.2</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm@18<span class="kw">`</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">hwloc_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hwloc<span class="kw">`</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACPP_CUDA_PATH</span><span class="op">=</span><span class="va">$cuda_root</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$hwloc_root</span>/lib:<span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">$cuda_root</span>/lib64:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span></code></pre></div>
+<p>　<code>LD_LIBRARY_PATH</code>の先頭に spack の hwloc (<code>$hwloc_root/lib</code>) を置くのは, ライブラリの版の食い違いを避けるためである. サイトの Open MPI 4.1.1 は古い hwloc を使うので, それが先に読み込まれると, 新しい hwloc に合わせてビルドされた LLVM の <a href="glossary.html#g-openmp">OpenMP</a> ランタイム (<code>libomp.so</code>) が読み込みに失敗し, AdaptiveCpp の CPU の<a href="glossary.html#g-backend">バックエンド</a>が使えなくなる (GPU 向けのビルドでも MPI ありの実行が止まる). spack の hwloc を先に探させると, 両者とも新しい hwloc を使う. <a href="glossary.html#g-spack">spack</a> のレシピ <code>parcel-sycl</code> も, <code>spack load</code>のときに同じ設定を行う (<a href="installation.html#install-spack">インストールの「spack によるインストール」</a>).</p>
+<p>　<a href="glossary.html#g-aquarius">Aquarius</a> の OpenMPI 4.1 では, 同時に始まったジョブの <code>mpirun</code> が <code>/tmp</code> のセッションディレクトリを奪い合って起動に失敗することがある. 実行ジョブでは, <code>mpirun</code> の前にセッションディレクトリをジョブごとに分ける.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="va">PARCEL_SESS</span><span class="op">=</span>/tmp/parcel_<span class="va">${PJM_JOBID</span><span class="op">:-</span><span class="va">$$}</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${PARCEL_SESS}</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_MCA_orte_tmpdir_base</span><span class="op">=</span><span class="va">${PARCEL_SESS}</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_MCA_btl_vader_backing_directory</span><span class="op">=</span><span class="va">${PARCEL_SESS}</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">trap</span> <span class="st">&#39;rm -rf ${PARCEL_SESS}&#39;</span> EXIT</span></code></pre></div>
+<h2 data-number="3.4" id="env-miyabi-c"><span class="header-section-number">3.4</span> Miyabi-C (Xeon Max)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-xeon">Xeon</a> CPU Max 9480 ×2</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 9.8 (x86_64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>GCC 11.4.1 (<code><span class="tok">gcc/11.4.1</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Open MPI 4.1.6 (<code><span class="tok">ompi/4.1.6</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-cuda">CUDA</a> / ROCm</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">~cuda</span></code>. oneAPI 2023.2.0 でビルド)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>17.0.6 (OS 付属 <code><span class="tok">/usr/bin/clang++</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (<a href="glossary.html#g-spack">spack</a> 環境)</td>
+<td>spack, <code><span class="tok">miyc</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.21 (OS)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">omp</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-miyabi-c">Miyabi-C</a> の計算ノードは Intel <a href="glossary.html#g-xeon">Xeon</a> CPU Max 9480 (56 コア ×2, <a href="glossary.html#g-hbm">HBM</a>2e) である. サイトの <code>gcc</code> / <code>ompi</code> モジュールの上に, <a href="glossary.html#g-spack">spack</a> 環境 (試験では <code>miyc</code>) として <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> を導入した. AdaptiveCpp 本体は oneAPI 2023.2.0 でビルドし, カーネルのコンパイルには OS (RHEL9) 付属の clang 17.0.6 (<code>/usr/bin/clang++</code>. spack には external として登録) を使う. spack の LLVM は使わず, <a href="glossary.html#g-openmp">OpenMP</a> ランタイムも OS 付属の <code>libomp</code> 17.0.6 が使われるので, LLVM を <code>LD_LIBRARY_PATH</code> に加える必要はない.</p>
+<p><strong>インストール (最初に 1 回)</strong></p>
+<p>　試験で用いた <a href="glossary.html#g-spack">spack</a> 環境の定義は<code>hipsycl %oneapi</code>の 1 つであり, サイトの Intel oneAPI 2023.2.0 で AdaptiveCpp 24.10.0 (CUDA なし) をビルドした. oneAPI のコンパイラ, OS の clang 17.0.6 (<code>/usr/bin/clang</code>, <code>/usr/bin/clang++</code>) と Open MPI は, spack 環境の定義 (<code>spack.yaml</code>) に外部パッケージとして次のように書く. 次の手順で同じものを作れる (spack は 1.1.0.dev0 を用いた). ログインノードで実行してよい.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">packages</span><span class="kw">:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">intel-oneapi-compilers</span><span class="kw">:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> intel-oneapi-compilers@2023.2.0</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /work/opt/local/x86_64/cores/intel/2023.2.0</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">llvm</span><span class="kw">:</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> llvm@17.0.6+clang~flang+lld~lldb</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /usr</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">openmpi</span><span class="kw">:</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> openmpi@4.1.6~cuda fabrics=ucx schedulers=slurm</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /work/opt/local/x86_64/apps/gcc/11.4.1/ompi/4.1.6</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">buildable</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">hipsycl</span><span class="kw">:</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">require</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;%oneapi&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gcc</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load ompi</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ. 上の packages を spack.yaml に書き加える</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># OS の GCC 11.4.1 などを登録する</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl %oneapi</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gcc</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load ompi</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load hipsycl</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span></code></pre></div>
+<h2 data-number="3.5" id="env-miyabi-g"><span class="header-section-number">3.5</span> Miyabi-G (GH200)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-gh200">GH200</a> (<a href="glossary.html#g-grace">Grace</a> 72 コア + <a href="glossary.html#g-h100">H100</a> 96GB)</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 9.8 (aarch64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>GCC 11.4.1 (<code><span class="tok">gcc/11.4.1</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Open MPI 4.1.6 <a href="glossary.html#g-cuda">CUDA</a> 対応版 (<code><span class="tok">ompi-cuda/4.1.6-12.6</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">CUDA / ROCm</td>
+<td>CUDA 12.6 (<code><span class="tok">cuda/12.6</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">+cuda</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (<a href="glossary.html#g-spack">spack</a>, GCC 11.4.1 でビルド)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (spack 環境)</td>
+<td>spack, <code><span class="tok">miyg</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.21 (OS)</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">cuda:sm_90</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-miyabi-g">Miyabi-G</a> の計算ノードは NVIDIA <a href="glossary.html#g-gh200">GH200</a> (<a href="glossary.html#g-grace">Grace</a> 72 コア + <a href="glossary.html#g-h100">H100</a> 96GB) を 1 ノードに 1 基持つ. CPU は Arm (Neoverse V2) である. サイトの <code>gcc</code> / <code>cuda</code> / <code>ompi-cuda</code> モジュール (試験時の既定は <code>cuda/12.6</code>, <code>ompi-cuda/4.1.6-12.6</code>) の上に, <a href="glossary.html#g-spack">spack</a> 環境 (試験では <code>miyg</code>) として <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> (<a href="glossary.html#g-cuda">CUDA</a> <a href="glossary.html#g-backend">バックエンド</a>付き) と LLVM 18.1.8 を導入した. AdaptiveCpp が使う CUDA は <code>ACPP_CUDA_PATH</code> で 12.6 を明示している.</p>
+<p><strong>インストール (最初に 1 回)</strong></p>
+<p>　試験で用いた <a href="glossary.html#g-spack">spack</a> 環境の定義は<code>llvm@18</code>と<code>hipsycl+cuda %clang@18</code>の 2 つであり, サイトの GCC 11.4.1 で LLVM 18.1.8 をビルドし, その clang で <a href="glossary.html#g-cuda">CUDA</a> <a href="glossary.html#g-backend">バックエンド</a>付きの AdaptiveCpp 24.10.0 をビルドした. CUDA と CUDA 対応の Open MPI はサイトのものを外部パッケージとして使う (<code>spack.yaml</code> に次のように書く). 次の手順で同じものを作れる (spack は 1.1.0.dev0 を用いた). ログインノード (<a href="glossary.html#g-grace">Grace</a>, aarch64) で実行してよく, LLVM のビルドに数時間かかる.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">packages</span><span class="kw">:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cuda</span><span class="kw">:</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> cuda@12.6.85</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /work/opt/local/aarch64/cores/cuda/12.6</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">openmpi</span><span class="kw">:</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> openmpi@4.1.6+cuda fabrics=ucx schedulers=slurm</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /work/opt/local/aarch64/apps/gcc/11.4.1/openmpi-cuda/4.1.6-12.6</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">buildable</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gcc</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load cuda</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load ompi-cuda</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ. 上の packages を spack.yaml に書き加える</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># サイトの GCC 11.4.1 などを登録する</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find                  <span class="co"># OS のツール群を外部パッケージとして登録する</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> llvm@18</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl+cuda %clang@18</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gcc</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load cuda</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load ompi-cuda</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load hipsycl</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm<span class="kw">`</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">cuda_root</span><span class="op">=</span>/work/opt/local/aarch64/cores/cuda/12.6</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACPP_CUDA_PATH</span><span class="op">=</span><span class="va">$cuda_root</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">$cuda_root</span>/lib64:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span></code></pre></div>
+<h2 data-number="3.6" id="env-ps-a"><span class="header-section-number">3.6</span> PS-A (Plasma Simulator サブシステム A)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-xeon">Xeon</a> 6980P ×2</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 9.6 (x86_64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>Intel oneAPI DPC++/C++ 2026.1.0 (<code><span class="tok">intel/2026.1</span></code>). OS の GCC 11.5.0</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Intel MPI 2021.18.1 (<code><span class="tok">intel</span></code> / <code><span class="tok">intelmpi</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-cuda">CUDA</a> / ROCm</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">~cuda~rocm</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (<a href="glossary.html#g-spack">spack</a>, GCC 11.5.0 でビルド)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (<a href="glossary.html#g-spack">spack</a> 環境)</td>
+<td>spack, <code><span class="tok">sysa</span></code> (<code><span class="tok">~/spack</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.26 (OS の <a href="glossary.html#g-openmp">OpenMP</a> 版 <code><span class="tok">libopenblaso</span></code>) + nvhpc 25.3 の <code><span class="tok">lapacke.h</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">omp</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-ps-a">PS-A</a> の計算ノードは Intel <a href="glossary.html#g-xeon">Xeon</a> 6980P (128 コア ×2) である. <a href="glossary.html#g-mpi">MPI</a> は Intel MPI を用いる. サイトの <code>intel</code> / <code>intelmpi</code> モジュールの上に, <a href="glossary.html#g-spack">spack</a> 環境 (試験では <code>sysa</code>) として <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> と LLVM 18 系を導入した.</p>
+<p><strong>インストール (最初に 1 回)</strong></p>
+<p>　試験で用いた <a href="glossary.html#g-spack">spack</a> 環境には LLVM 18.1.8 と AdaptiveCpp 24.10.0 (CUDA・ROCm なし) を入れ, いずれも OS 付属の GCC 11.5.0 でビルドした. 次の手順で同じものを作れる (spack は 1.1.0.dev0 を用いた).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load intel</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load intelmpi</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># OS の GCC 11.5.0 と oneAPI のコンパイラなどを登録する</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find                  <span class="co"># OS のツール群を外部パッケージとして登録する</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> llvm@18 %gcc</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl %gcc</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load intel</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load intelmpi</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load hipsycl</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm<span class="kw">`</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">I_MPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OPENBLAS_NUM_THREADS</span><span class="op">=</span>1</span></code></pre></div>
+<h2 data-number="3.7" id="env-ps-b"><span class="header-section-number">3.7</span> PS-B (Plasma Simulator サブシステム B)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td><a href="glossary.html#g-mi300a">MI300A</a> ×4</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>RHEL 9.6 (x86_64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>GCC 11.5.0 (OS)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Open MPI 5.0.7 (<code><span class="tok">openmpi/5.0.7/rocm6.3.3</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-cuda">CUDA</a> / ROCm</td>
+<td>ROCm 6.3.3 (<code><span class="tok">rocm/6.3.3</span></code>, <code><span class="tok">/opt/rocm-6.3.3</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>24.10.0 (<code><span class="tok">+rocm</span></code>, <code><span class="tok">amdgpu_target=gfx942</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>18.1.8 (<a href="glossary.html#g-spack">spack</a>, GCC 11.5.0 でビルド. <a href="glossary.html#g-ps-a">PS-A</a> と共用)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法 (spack 環境)</td>
+<td>spack, <code><span class="tok">sysb</span></code> (<code><span class="tok">~/spack</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS 0.3.26 (OS の <a href="glossary.html#g-openmp">OpenMP</a> 版 <code><span class="tok">libopenblaso</span></code>) + nvhpc 25.3 の <code><span class="tok">lapacke.h</span></code></td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">hip:gfx942</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="glossary.html#g-ps-b">PS-B</a> の計算ノードは AMD Instinct <a href="glossary.html#g-mi300a">MI300A</a> (<a href="glossary.html#g-apu">APU</a>, 24 コア + GPU) を 1 ノードに 4 基持つ. <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は HIP <a href="glossary.html#g-backend">バックエンド</a>で使い, ターゲットは <code>hip:gfx942</code> である. <a href="glossary.html#g-cuda">ROCm</a> 6.3.3 対応の OpenMPI モジュールの上に, <a href="glossary.html#g-spack">spack</a> 環境 (試験では <code>sysb</code>) として AdaptiveCpp を導入した.</p>
+<p><strong>インストール (最初に 1 回)</strong></p>
+<p>　試験で用いた <a href="glossary.html#g-spack">spack</a> 環境には, <a href="glossary.html#g-ps-a">PS-A</a> と共有する LLVM 18.1.8 と, HIP <a href="glossary.html#g-backend">バックエンド</a>付きの AdaptiveCpp 24.10.0 (<code>+rocm amdgpu_target=gfx942</code>) を入れた. いずれも OS 付属の GCC 11.5.0 でビルドし, ROCm 6.3.3 (<code>/opt/rocm-6.3.3</code>) の hip・hsa-rocr-dev・comgr・llvm-amdgpu を外部パッケージとして使う. ログインノードには複数の版の ROCm があるので, 版を明示する. 次の手順で同じものを作れる (spack は 1.1.0.dev0 を用いた). LLVM は <a href="glossary.html#g-ps-a">PS-A</a> と同じものを使う.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi/5.0.7/rocm6.3.3    <span class="co"># rocm/6.3.3 も読み込まれる</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># OS の GCC 11.5.0 などを登録する</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find                  <span class="co"># OS のツール群を外部パッケージとして登録する</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find hip hsa-rocr-dev comgr llvm-amdgpu   <span class="co"># ROCm 6.3.3 を外部パッケージとして登録する</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> llvm@18.1.8+clang~cuda+lld+lldb~python</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl@24.10.0~cuda+rocm amdgpu_target=gfx942 ^hip@6.3.3 ^llvm@18.1.8 ^llvm-amdgpu@6.3.3</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /etc/profile.d/modules.sh</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load openmpi/5.0.7/rocm6.3.3</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span>/share/spack/setup-env.sh</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> load hipsycl</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm<span class="kw">`</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib/:<span class="va">$llvm_root</span>/lib/:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KMP_STACKSIZE</span><span class="op">=</span>1G</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OPENBLAS_NUM_THREADS</span><span class="op">=</span>1</span></code></pre></div>
+<h2 data-number="3.8" id="env-mac"><span class="header-section-number">3.8</span> macOS (Homebrew)</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">装置 (CPU / GPU)</td>
+<td>Apple M4 (10 コア: 高性能 4, 高効率 6), メモリ 32 GB</td>
+</tr>
+<tr>
+<td class="nowrap">OS</td>
+<td>macOS 15 (arm64)</td>
+</tr>
+<tr>
+<td class="nowrap">ホストコンパイラ</td>
+<td>Apple clang 17 (Xcode Command Line Tools)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-mpi">MPI</a></td>
+<td>Open MPI 5.0 (Homebrew <code><span class="tok">open-mpi</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-cuda">CUDA</a> / ROCm</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a></td>
+<td>25.10 (Homebrew <code><span class="tok">adaptivecpp</span></code>. LLVM を組み込まない構成)</td>
+</tr>
+<tr>
+<td class="nowrap">LLVM (clang)</td>
+<td>— (ホストの Apple clang を使う)</td>
+</tr>
+<tr>
+<td class="nowrap">導入方法</td>
+<td>Homebrew (ビルド済みのバイナリ)</td>
+</tr>
+<tr>
+<td class="nowrap">BLAS / LAPACK</td>
+<td>OpenBLAS (Homebrew <code><span class="tok">openblas</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">Fortran</td>
+<td>gfortran (Homebrew <code><span class="tok">gcc</span></code>)</td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td>Homebrew の Python 3.14 と NumPy・SciPy</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">--acpp-targets</span></code></td>
+<td><code><span class="tok">omp.library-only</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>　macOS では <a href="glossary.html#g-spack">spack</a> を使わず, Homebrew で必要なものをすべてビルド済みのバイナリとして入れる. Homebrew の <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> は LLVM を組み込まない構成で, カーネルを含むコード全体をホストの C++ コンパイラ (Apple clang) がコンパイルする. このため <a href="glossary.html#g-odyssey">Odyssey</a> と同じく <code>--acpp-targets=omp.library-only</code> を用い (<code>omp</code>と書いても同じコンパイルになる), 他の CPU と同じく縮約をブロック化 (<code>-D_BLOCKING_LOOP_DOT_=1</code>. <a href="kernel-opt.html#kopt-blocking">「最適化」の章の「ブロック化」</a>) する. 1 行を 1 <a href="glossary.html#g-workitem">work item</a> が受け持つ既定の形のままでは, 内積などが極端に遅くなる. GPU (Apple の GPU) は使えない.</p>
+<p><strong>インストール (最初に 1 回)</strong></p>
+<p>　Xcode Command Line Tools (<code>xcode-select --install</code>) と Homebrew を入れておく. Homebrew の既定の入れ先 (<code>/opt/homebrew</code>) を使うと, 次のパッケージはビルド済みのバイナリで数分で入る. 別の場所に入れた Homebrew では, AdaptiveCpp・GCC・Open MPI・Python がソースからのビルドになり, 長い時間がかかる.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install adaptivecpp open-mpi openblas gcc numpy scipy</span></code></pre></div>
+<p><strong>使用時の設定</strong></p>
+<p>　Homebrew の<code>bin</code>を<code>PATH</code>に置き, MPI のラッパが<code>acpp</code>を呼ぶようにする. 配布パッケージの <code>python/envs/mac_brew.sh</code> を読み込むと, この設定に加えて, OpenBLAS の場所, Fortran の実行時ライブラリの場所, Python のパッケージと <code>examples/build_examples.sh</code> が使うビルドの設定 (<code>omp.library-only</code>, <code>-D_BLOCKING_LOOP_DOT_=1</code>) が環境変数に設定される. 既定は <a href="glossary.html#g-mpi">MPI</a> なしで, <code>PARCEL_MPI=1</code> を与えてから読み込むと MPI ありの設定になる.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">/opt/homebrew/bin/brew</span> shellenv<span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Python と examples のビルドの設定もまとめて与える場合は, 代わりに次を読み込む</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   (Homebrew の場所が /opt/homebrew でなければ PARCEL_BREW に与える. MPI ありは PARCEL_MPI=1)</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># export PARCEL_MPI=0</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># . python/envs/mac_brew.sh</span></span></code></pre></div>
+<p>　macOS の Open MPI 5 はプロセスをコアに固定できない (<code>--bind-to core</code>は「binding not supported」で止まる) ので, <code>mpirun -n 4 --bind-to none</code>のように起動する. GNU coreutils の<code>timeout</code>コマンドは無い. 動作は上の表の 1 環境 (CPU) で, C++・C言語・Fortran・Python のサンプル (<a href="quickstart.html#quickstart">クイックスタート</a>) と回帰試験 (MPI あり・なし) で確かめた. 回帰試験をこの環境で流す設定の例は配布パッケージの<code>tests/site_config.py</code>の<code>mac</code>である.</p>
+<h2 data-number="3.9" id="env-linux"><span class="header-section-number">3.9</span> 一般的な Linux (RHEL 系・Ubuntu 系)</h2>
+<p>　本書の試験環境以外の Linux の計算機に <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a> を入れる手順を示す. 方法は次の 2 通りである.</p>
+<ul>
+<li>PARCEL ごと入れる: 配布パッケージの雛形 <code>spack/stack/envs/generic/</code> を書き換えて <code>install_stack.sh</code> で入れる (<a href="installation.html#install-spack-generic">インストールの「試験環境以外の計算機」</a>).</li>
+<li>AdaptiveCpp だけを入れる: 以下の手順で <a href="glossary.html#g-spack">spack</a> を取得し, LLVM と AdaptiveCpp を入れる. PARCEL はヘッダだけなので, その後は<a href="installation.html#installation">「インストール」の章</a>のとおりにコンパイルする.</li>
+</ul>
+<p>　以下の手順は, 試験環境の手順 (各環境の「インストール (最初に 1 回)」) を一般化したものである. Ubuntu 24.04 と Rocky Linux 9.8 (RHEL 9 互換) で, この節の手順と雛形<code>generic</code>による方法の両方を試した (いずれも <a href="sycl-compiler.html#env-linux-wsl">WSL2</a>, x86_64, NVIDIA <a href="glossary.html#g-rtx-a6000">RTX A6000</a>. CPU と GPU, MPI なしとあり). パッケージ名はこの 2 つで確かめたものであり, OS の版によって異なりうる.</p>
+<h3 data-number="3.9.1" id="env-linux-prereq"><span class="header-section-number">3.9.1</span> 前もって用意するもの</h3>
+<table>
+<thead>
+<tr>
+<th>もの</th>
+<th>RHEL 系の例</th>
+<th>Ubuntu 系の例</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C・C++・Fortran のコンパイラ</td>
+<td><code><span class="tok">dnf</span> <span class="tok">install</span> <span class="tok">gcc</span> <span class="tok">gcc-c++</span> <span class="tok">gcc-gfortran</span></code></td>
+<td><code><span class="tok">apt</span> <span class="tok">install</span> <span class="tok">build-essential</span> <span class="tok">gfortran</span></code></td>
+<td>LLVM 18 をビルドする. 試験では GCC 8.3.1〜13.3.0 を用いた</td>
+</tr>
+<tr>
+<td>spack が使うツール</td>
+<td><code><span class="tok">dnf</span> <span class="tok">install</span> <span class="tok">git</span> <span class="tok">python3</span> <span class="tok">make</span> <span class="tok">patch</span> <span class="tok">bzip2</span> <span class="tok">xz</span> <span class="tok">unzip</span> <span class="tok">libcurl-devel</span> <span class="tok">zlib-devel</span> <span class="tok">perl</span></code></td>
+<td><code><span class="tok">apt</span> <span class="tok">install</span> <span class="tok">git</span> <span class="tok">python3</span> <span class="tok">make</span> <span class="tok">patch</span> <span class="tok">bzip2</span> <span class="tok">xz-utils</span> <span class="tok">unzip</span> <span class="tok">libcurl4-openssl-dev</span></code></td>
+<td><code><span class="tok">spack</span> <span class="tok">external</span> <span class="tok">find</span></code>は OS の curl, zlib, perl などを登録し, spack はそれらを使って cmake などを作る. そのため curl と zlib の開発用ファイルと, モジュールを含む perl (RHEL 系の最小構成ではインタプリタだけのことがある) が要る</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-mpi">MPI</a> (MPI ありで使う場合)</td>
+<td>計算機の MPI (Open MPI など). OS のパッケージなら<code><span class="tok">dnf</span> <span class="tok">install</span> <span class="tok">openmpi-devel</span></code>で入れ, <code><span class="tok">module</span> <span class="tok">load</span> <span class="tok">mpi/openmpi-x86_64</span></code>で読む</td>
+<td>計算機の MPI. OS のパッケージなら<code><span class="tok">apt</span> <span class="tok">install</span> <span class="tok">openmpi-bin</span> <span class="tok">libopenmpi-dev</span></code></td>
+<td>計算機のネットワークと結び付くので, 計算機に入っているものを使う</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-cuda">CUDA</a> (NVIDIA の GPU を使う場合)</td>
+<td>計算機の CUDA. OS に入れるなら NVIDIA の<code><span class="tok">dnf</span></code>リポジトリ (RHEL 9 系は<code><span class="tok">rhel9</span></code>) の<code><span class="tok">cuda-toolkit-12-6</span></code>など (<a href="sycl-compiler.html#env-linux-wsl">WSL2</a> も同じリポジトリ)</td>
+<td>計算機の CUDA. OS に入れるなら NVIDIA の<code><span class="tok">apt</span></code>リポジトリの<code><span class="tok">cuda-toolkit-12-6</span></code>など (<a href="sycl-compiler.html#env-linux-wsl">WSL2</a> は WSL 用のリポジトリ)</td>
+<td>ドライバが対応する版以下 (<a href="running.html#run-gpu">「GPU で動かす」</a>)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-lapack">LAPACKE</a></td>
+<td><a href="sycl-compiler.html#env-lapacke">「LAPACKE の入れ方」</a></td>
+<td>同左</td>
+<td>spack の OpenBLAS を使ってもよい</td>
+</tr>
+</tbody>
+</table>
+<p>　RHEL 9 系では, OpenBLAS の開発用パッケージ (<code>openblas-devel</code>) が標準では無効のリポジトリ CRB にある. 次のように有効にしてから入れる (CRB は Rocky Linux・AlmaLinux での名前. RHEL 本体では CodeReady Linux Builder のリポジトリにあたり, <code>dnf config-manager</code>ではなく<code>subscription-manager</code>で有効にする. リポジトリ名は Red Hat の文書の例による). EPEL は要らない. NVIDIA の CUDA のリポジトリの登録にも<code>dnf config-manager</code>を使う.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dnf</span> install dnf-plugins-core                      <span class="co"># dnf config-manager を使えるようにする</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dnf</span> config-manager <span class="at">--set-enabled</span> crb              <span class="co"># CRB を有効にする (Rocky Linux・AlmaLinux)</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># subscription-manager repos --enable codeready-builder-for-rhel-9-$(arch)-rpms   # RHEL 本体の場合 (上の行の代わり)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="ex">dnf</span> config-manager <span class="at">--add-repo</span> https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo   <span class="co"># CUDA を OS に入れる場合</span></span></code></pre></div>
+<p>　組織のプロキシの下では, <code>http_proxy</code>・<code>https_proxy</code> (と<code>no_proxy</code>) を設定する (spack, git, curl, apt が使う. dnf は<code>/etc/dnf/dnf.conf</code>に<code>proxy=&lt;URL&gt;</code>と書く). TLS を検査するプロキシでは, プロキシの証明書 (組織の CA) を OS に登録する. Ubuntu 系では CA の証明書 (PEM 形式) を<code>/usr/local/share/ca-certificates/&lt;名前&gt;.crt</code>に置いて<code>update-ca-certificates</code>を, RHEL 系では<code>/etc/pki/ca-trust/source/anchors/</code>に置いて<code>update-ca-trust</code>を実行する.</p>
+<h3 data-number="3.9.2" id="env-linux-spack"><span class="header-section-number">3.9.2</span> spack の取得と登録</h3>
+<p>　spack は 1.x を対象とする (<code>install_stack.sh</code>で用いる版はその先頭に固定してある. この節の手順は, 取得した時点の開発版 1.3.0.dev0 で確かめた). spack の取得, 環境の作成, コンパイラと OS のツールの登録を行う.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="at">-c</span> feature.manyFiles=true https://github.com/spack/spack.git <span class="op">&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env create <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span>      <span class="co"># 初回のみ</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> compiler find                  <span class="co"># PATH にある GCC などを登録する</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> external find                  <span class="co"># cmake, perl, python などの OS のツールを外部パッケージとして登録する</span></span></code></pre></div>
+<p>　<code>spack external find</code> で登録した OS のツールは spack がビルドせずに使うので, インストールの時間が短くなる.</p>
+<h3 data-number="3.9.3" id="env-linux-external"><span class="header-section-number">3.9.3</span> MPI と CUDA を登録する</h3>
+<p>　MPI と CUDA は計算機に入っているものを使い, spack では作らない. <code>spack external find openmpi cuda</code> で見つかることもあるが, モジュールで入れている計算機では見つからないことがあるので, spack 環境の定義 (<code>spack.yaml</code>. <code>spack config edit</code> で開く) に直接書く. 版と場所は自分の計算機に合わせる.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spack</span><span class="kw">:</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">packages</span><span class="kw">:</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mpi</span><span class="kw">:</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">require</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">openmpi</span><span class="kw">]</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">openmpi</span><span class="kw">:</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">buildable</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> openmpi@4.1.6~cuda</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /path/to/openmpi/4.1.6</span><span class="co">     # bin/mpicc がある場所の 1 つ上</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cuda</span><span class="kw">:</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">buildable</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">externals</span><span class="kw">:</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">spec</span><span class="kw">:</span><span class="at"> cuda@12.6.20</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> /path/to/cuda/12.6</span></span></code></pre></div>
+<ul>
+<li><code>buildable: false</code> は, spack がそのパッケージを自分で作らず, 登録したものだけを使う指定である.</li>
+<li>MPI は環境の中で 1 つにそろえる. 外部登録の MPI が複数あると, 意図しない構成 (<a href="glossary.html#g-cuda">CUDA</a> 版など) が選ばれることがある.</li>
+<li>CUDA は, 計算ノードのドライバが対応する版以下を登録する (<a href="running.html#run-gpu">「GPU で動かす」</a>).</li>
+<li>OS のパッケージで入れた場合の例 (Ubuntu 24.04): Open MPI 4.1.6 は<code>prefix: /usr</code>, NVIDIA のリポジトリの CUDA 12.6 は<code>spec: cuda@12.6.85</code>と<code>prefix: /usr/local/cuda-12.6</code>. 版は<code>mpirun --version</code>, <code>nvcc --version</code>で調べる.</li>
+<li>OS のパッケージで入れた場合の例 (Rocky Linux 9): Open MPI 4.1.1 (<code>openmpi-devel</code>) は<code>spec: openmpi@4.1.1~cuda</code>, CUDA は Ubuntu と同じ. RHEL 系の OS の Open MPI は, <code>bin/</code>と<code>lib/</code>が<code>/usr/lib64/openmpi</code>に, ヘッダが<code>/usr/include/openmpi-x86_64</code>にある. spack は<code>prefix</code>の下の<code>include/</code>でヘッダを探すので, <code>prefix: /usr/lib64/openmpi</code>と書くと MPI に依存するパッケージ (MPI ありの PARCEL) のインストールが<code>Query of package 'openmpi' for 'headers' failed</code>で止まる. 次のように 1 つのディレクトリに並べ, それを<code>prefix</code>に書く.</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="va">O</span><span class="op">=</span><span class="va">$HOME</span>/openmpi-rhel                              <span class="co"># 置き場所は任意. OS のファイルは変えない</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$O</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/lib64/openmpi/bin <span class="va">$O</span>/bin</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/lib64/openmpi/lib <span class="va">$O</span>/lib</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/lib64/openmpi/share <span class="va">$O</span>/share</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /usr/include/openmpi-x86_64 <span class="va">$O</span>/include</span></code></pre></div>
+<h3 data-number="3.9.4" id="env-linux-install"><span class="header-section-number">3.9.4</span> LLVM と AdaptiveCpp のインストール</h3>
+<p>　OS の GCC で LLVM 18 をビルドし, その clang で AdaptiveCpp (spack のパッケージ名 <code>hipsycl</code>) をビルドする. GPU を使う場合は <a href="glossary.html#g-backend">バックエンド</a>をバリアントで指定する.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> llvm@18 %gcc</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> install <span class="at">--add</span> hipsycl %clang@18                              <span class="co"># CPU だけ</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># spack install --add hipsycl+cuda %clang@18                       # NVIDIA の GPU も使う場合 (上の代わり)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># spack install --add hipsycl+rocm amdgpu_target=gfx942 %clang@18  # AMD の GPU (MI300A の例) も使う場合</span></span></code></pre></div>
+<p>　LLVM のビルドは長い時間と多くのメモリを使う. 同時に動かすコンパイルの数は<code>spack install -j &lt;数&gt;</code>で決める. メモリが足りずに止まった場合は数を下げて同じコマンドを流し直す (入ったものは使い回す. <a href="glossary.html#g-odyssey">Odyssey</a> での例は<a href="sycl-compiler.html#env-odyssey">「Odyssey」の節</a>).</p>
+<h3 data-number="3.9.5" id="env-linux-use"><span class="header-section-number">3.9.5</span> 使用時の設定</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SPACK_ROOT</span><span class="op">=&lt;</span>spack のインストール先<span class="op">&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> <span class="va">$SPACK_ROOT</span>/share/spack/setup-env.sh</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="ex">spack</span> env activate <span class="op">&lt;</span>spack 環境名<span class="op">&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">sycl_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> hipsycl<span class="kw">`</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">llvm_root</span><span class="op">=</span><span class="kw">`</span><span class="ex">spack</span> location <span class="at">-i</span> llvm@18<span class="kw">`</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$sycl_root</span>/lib:<span class="va">$llvm_root</span>/lib:<span class="va">${LD_LIBRARY_PATH}</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACPP_CUDA_PATH</span><span class="op">=&lt;</span>CUDA の場所<span class="op">&gt;</span>       <span class="co"># NVIDIA の GPU を使う場合</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMPI_CXX</span><span class="op">=</span>acpp <span class="va">MPICXX_CXX</span><span class="op">=</span>acpp        <span class="co"># MPI のラッパ (Open MPI) に acpp を呼ばせる</span></span></code></pre></div>
+<ul>
+<li><code>LD_LIBRARY_PATH</code>に LLVM の<code>lib/</code>を加えるのは, CPU 向けの実行ファイルが LLVM の <a href="glossary.html#g-openmp">OpenMP</a> ランタイム (<code>libomp.so</code>) を使うためである. 代わりにリンク時に<code>-Wl,-rpath,$llvm_root/lib</code>を付けてもよい (<a href="glossary.html#g-rpath">RPATH</a>).</li>
+<li>RHEL 系の OS の Open MPI は環境モジュールで読む (<code>module load mpi/openmpi-x86_64</code>. 読むまでは<code>mpicxx</code>・<code>mpirun</code>が<code>PATH</code>に無い).</li>
+<li><a href="glossary.html#g-mpi-wrapper">MPI のコンパイララッパ</a>に<code>acpp</code>を呼ばせる変数は MPI によって異なる. Open MPI は<code>OMPI_CXX</code>, MPICH 系は<code>MPICH_CXX</code>, Intel MPI は<code>I_MPI_CXX</code>である (<a href="glossary.html#g-ps-a">PS-A</a> の例は<a href="sycl-compiler.html#env-ps-a">「PS-A」の節</a>).</li>
+<li>LAPACKE の場所を調べ, コンパイルのフラグに与える (<a href="sycl-compiler.html#env-lapacke">「LAPACKE の入れ方」</a>).</li>
+</ul>
+<p>　入ったことは, <a href="quickstart.html#quickstart">クイックスタート</a>の C++ のプログラムをビルドして実行して確かめる. GPU では, 使われた<a href="glossary.html#g-device">デバイス</a>の名前も確かめる (<a href="running.html#run-gpu">「GPU で動かす」</a>).</p>
+<h3 data-number="3.9.6" id="env-linux-wsl"><span class="header-section-number">3.9.6</span> Windows の WSL2</h3>
+<p>　Windows の WSL2 の Linux (Ubuntu, Rocky Linux) でも, この節の手順と<code>install_stack.sh</code>で, CPU と NVIDIA の GPU を使える (Ubuntu 24.04 と Rocky Linux 9 で, <a href="glossary.html#g-rtx-a6000">RTX A6000</a> 2 台を使って確かめた). Linux の計算機と違う点を示す.</p>
+<ul>
+<li>仮想ディスクの大きさ: OS, CUDA, <code>install_stack.sh</code>の入れ先で 20〜30 GB を使った. <code>wsl --install</code>は既定でシステムドライブに置くので, 空きが少なければ<code>wsl --install --location &lt;場所&gt;</code>か, 配布元の WSL 用のイメージ (Ubuntu のルートファイルシステム, Rocky Linux の<code>Rocky-9-WSL-Base-&lt;版&gt;.x86_64.wsl</code>など) を取得して<code>wsl --import &lt;名前&gt; &lt;場所&gt; &lt;ファイル&gt;</code>で別のドライブに置く.</li>
+<li>メモリと CPU: WSL2 が使う上限は Windows 側の<code>%UserProfile%\.wslconfig</code> (<code>[wsl2]</code>の<code>memory=</code>, <code>processors=</code>) で決まる. LLVM のビルドの並列数はこの<code>memory</code>に合わせる (<code>memory=24GB</code>で<code>-j 16</code>で入った).</li>
+<li>GPU: ドライバは Windows 側に入れ, WSL2 の中には入れない. CUDA は NVIDIA の WSL 用の<code>apt</code>リポジトリ (<code>wsl-ubuntu</code>) からツールキットだけを入れる (<code>apt install cuda-toolkit-12-6</code>. 入れ先は<code>/usr/local/cuda-12.6</code>). RHEL 系 (Rocky Linux 9) には WSL 用のリポジトリが無いので, 通常の<code>rhel9</code>のリポジトリの<code>cuda-toolkit-12-6</code>を入れる (ドライバのパッケージは入らず, <code>libcuda.so</code>は WSL のものが使われる. 入れ先は同じ). <code>nvidia-smi</code>とドライバのライブラリは<code>/usr/lib/wsl/lib</code>にある. 通常のシェルでは<code>PATH</code>に入っているが, systemd のサービスなどでは入っていない.</li>
+<li>複数の GPU: <code>gpu_bind.sh</code> (<a href="concepts.html#gpu-rank-bind">「1 ランクと 1 デバイスの対応」</a>) で各ランクに別の GPU を割り当てられる. 挟まないと全ランクが同じ GPU を使う.</li>
+<li>長いビルド: WSL2 は, そのディストリビューションを使うシェルがすべて終わるとしばらくして止まり, 中で動いているビルドも止まる. 端末を開いたまま流すか, Windows 側で<code>wsl -d &lt;名前&gt; -- sleep infinity</code>のようなプロセスを残しておく.</li>
+</ul>
+<h2 data-number="3.10" id="env-lapacke"><span class="header-section-number">3.10</span> LAPACKE の入れ方</h2>
+<p>　PARCEL の固有値ソルバ <code>ks_arnoldi</code> は LAPACKE (<a href="glossary.html#g-lapack">LAPACK の C 言語の呼び出し口</a>) を使う. 既定では全ソルバがビルドに入るので, 線形ソルバだけを使う場合もヘッダ <code>lapacke.h</code> とライブラリが要る (<code>-DPARCEL_ENABLE_KS_ARNOLDI=0</code> で外せば不要. <a href="installation.html#install-macros">「ビルドするソルバの取捨」</a>). 入れ方の例を示す. パッケージ名は OS の版や追加のリポジトリ (RHEL 系の CRB など) によって異なりうる. RHEL 系の行は Rocky Linux 9, Ubuntu 系の行は Ubuntu 24.04 で確かめた.</p>
+<table>
+<thead>
+<tr>
+<th>OS など</th>
+<th>入れ方の例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">RHEL 系</td>
+<td><code><span class="tok">dnf</span> <span class="tok">install</span> <span class="tok">openblas-devel</span></code> (CRB を有効にしてから. <a href="sycl-compiler.html#env-linux-prereq">「前もって用意するもの」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap">Ubuntu 系</td>
+<td><code><span class="tok">apt</span> <span class="tok">install</span> <span class="tok">libopenblas-dev</span> <span class="tok">liblapacke-dev</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">macOS</td>
+<td><code><span class="tok">brew</span> <span class="tok">install</span> <span class="tok">openblas</span></code> (<a href="sycl-compiler.html#env-mac">「macOS (Homebrew)」</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-spack">spack</a></td>
+<td><code><span class="tok">spack</span> <span class="tok">install</span> <span class="tok">openblas</span></code> (OpenBLAS は LAPACKE を含む)</td>
+</tr>
+<tr>
+<td class="nowrap">富士通の環境 (<a href="glossary.html#g-odyssey">Odyssey</a>)</td>
+<td>入れる必要はない. 実装は富士通 LAPACK (<code><span class="tok">-lfjlapack</span></code>. 富士通の言語環境に含まれる) を使い, ヘッダは OS の OpenBLAS の<code><span class="tok">lapacke.h</span></code>を借りる (下を参照)</td>
+</tr>
+</tbody>
+</table>
+<p>　入れたヘッダとライブラリの場所は次のように調べる.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> / <span class="at">-name</span> lapacke.h <span class="dv">2</span><span class="op">&gt;</span>/dev/null               <span class="co"># ヘッダを探す</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">rpm</span> <span class="at">-ql</span> openblas-devel <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&#39;lapacke.h|\.so$&#39;</span>   <span class="co"># RHEL 系: パッケージが入れたファイル</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dpkg</span> <span class="at">-L</span> liblapacke-dev <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&#39;lapacke.h|\.so$&#39;</span>   <span class="co"># Ubuntu 系: パッケージが入れたファイル</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&#39;liblapacke|libopenblas&#39;</span>        <span class="co"># Ubuntu 系: OpenBLAS の .so は別のパッケージにあるので, 読める場所から探す</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="va">$(</span><span class="ex">spack</span> location <span class="at">-i</span> openblas<span class="va">)</span>/include <span class="va">$(</span><span class="ex">spack</span> location <span class="at">-i</span> openblas<span class="va">)</span>/lib   <span class="co"># spack</span></span></code></pre></div>
+<ul>
+<li>ヘッダが<code>/usr/include/openblas/lapacke.h</code>にあれば<code>-I/usr/include/openblas</code>を付ける. <code>/usr/include/lapacke.h</code>のように標準の場所にあれば<code>-I</code>は要らない.</li>
+<li>ライブラリは, OpenBLAS が LAPACKE を含む場合 (<a href="glossary.html#g-spack">spack</a> の OpenBLAS など) は<code>-lopenblas</code>だけでよい. LAPACKE が別のライブラリ (<code>liblapacke.so</code>) の場合は<code>-llapacke -lopenblas</code>のように両方を付ける. 標準の場所に無いライブラリは<code>-L&lt;場所&gt;</code>と<code>-Wl,-rpath,&lt;場所&gt;</code>も付ける.</li>
+<li>Rocky Linux 9 (RHEL 9 系) では, <code>openblas-devel</code>でヘッダは<code>/usr/include/openblas/lapacke.h</code>, OpenBLAS (<code>libopenblas.so</code>) が LAPACKE を含むので, <code>-I/usr/include/openblas -lopenblas</code> (クイックスタートの指定のまま) でよい. <code>lapack-devel</code>は要らない (入れると別に<code>/usr/include/lapacke/lapacke.h</code>と<code>liblapacke.so</code>が入る).</li>
+<li>Ubuntu 24.04 では, <code>libopenblas-dev</code>と<code>liblapacke-dev</code>でヘッダは<code>/usr/include/lapacke.h</code> (<code>-I</code>は不要), OpenBLAS は LAPACKE を含まないので<code>-llapacke -lopenblas</code>とする. <code>-lopenblas</code>だけでは, <code>ks_arnoldi</code>を使うプログラムのリンクで<code>LAPACKE_dgeev</code>などが見つからない (使わないプログラムはリンクできてしまうので気付きにくい).</li>
+<li><code>install_stack.sh</code>で入れた環境 (<code>setup.sh</code>を読んだシェル) では, spack の OpenBLAS (<code>spack location -i openblas</code>の<code>include/</code>と<code>lib/</code>) を使う. <code>setup.sh</code>は spack の環境のビューの<code>lib/</code>を<code>LD_LIBRARY_PATH</code>に加えるので, OS の LAPACKE とリンクすると, OS の BLAS が spack の<code>libopenblas.so.0</code>を読み, 実行時に<code>symbol lookup error: ... undefined symbol: sgemv_thread_n</code>などで止まる.</li>
+<li>富士通の環境 (<a href="glossary.html#g-odyssey">Odyssey</a>) では, ヘッダに OS の OpenBLAS の<code>lapacke.h</code> (<code>-I/usr/include/openblas</code>) を, 実装に富士通 LAPACK (<code>-lfjlapack</code>) を指定する. 富士通 LAPACK は富士通の言語環境の<code>lib64/</code>にあるので, その場所を<code>-L</code>と<code>-Wl,-rpath</code>で与える (例: <code>-L$fj_root/lib64 -Wl,-rpath,$fj_root/lib64 -lfjlapack</code>. <code>fj_root</code>は<a href="sycl-compiler.html#env-odyssey">「Odyssey」の「使用時の設定」</a>で定義する). ビルドの全体は<a href="installation.html#install-odyssey">インストールの「推奨オプション」の「Odyssey」</a>にある.</li>
+<li>Python のパッケージでは, 同じ値をビルドの設定<code>LAPACKE_INCLUDE_DIR</code> (ヘッダのディレクトリ) と<code>LAPACK_LIBS</code> (リンクのフラグ) で与える (<a href="installation.html#install-python-cmake">「ビルドの設定」</a>).</li>
+<li><a href="glossary.html#g-spack">spack</a> のレシピ <code>parcel-sycl</code> を使う場合は, レシピが OpenBLAS の場所を自動で与える.</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="concepts.html" rel="previous">← 基本構成</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 利用者ガイド</a></span>
+<span class="next"><a href="installation.html" rel="next">インストール →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

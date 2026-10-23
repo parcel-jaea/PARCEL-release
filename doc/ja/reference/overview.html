@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SYCL版PARCELクラス – PARCEL SYCL v1.2 API リファレンス</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API リファレンス</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/reference/overview.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="function-index.html#function-index">関数索引</a></li>
+<li><a href="common.html#common"><span class="toc-section-number">1</span> 共通事項</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> 各項目の書式</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> ソルバ</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> 記号と用語</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> 入力の行列</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> 設定</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> 定数</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> 結果</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> 収束状態</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> 設定の扱いと MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> 精度</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> ソルバごとの収束判定</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li class="current" data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> SYCL版PARCELクラス</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> 共通事項との対応</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCELデータ型</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> コンストラクタ</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> コンストラクタ</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> コンストラクタ / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> ソルバ共通の事項</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> クラステンプレート引数 (演算精度)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> solver() のテンプレート引数 (データ精度)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> 設定の扱いと例外</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> 定数</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> 共通メンバ関数</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> 固有値ソルバ共通のメンバ関数</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (クラス)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (クラス)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (クラス)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (クラス)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (クラス)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (クラス)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (クラス)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C言語の API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> 共通事項との対応</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> 定数</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran の API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> 共通事項との対応</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> 定数</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</a></li>
+</ul></li>
+<li class="otherlang" data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python の API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> 共通事項との対応</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> 例外</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous" accesskey="p">← ソルバごとの収束判定</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="data-types.html" rel="next" accesskey="n">PARCELデータ型 →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="言語">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C言語</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="3" id="overview"><span class="header-section-number">3</span> SYCL版PARCELクラス</h1>
+<p>　C++ の API を示す. 本章から <a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a> までが C++ の章である. 言語によらない事項 (設定の意味と既定値, 定数の意味, 結果, 収束状態, <a href="../user/glossary.html#g-mpi">MPI</a> での扱い) は<a href="common.html#common">共通事項</a>と<a href="convergence.html#convergence">ソルバごとの収束判定</a>に示し, C++ の章には C++ での名前, 書式, 例外, 精度の指定を示す. 各項目の欄は<a href="common.html#common-format">各項目の書式</a>のとおりであり, 書式の欄は C++ の宣言 (テンプレート引数の既定値を含む) である.</p>
+<p>　クラスは名前空間 <code>parcel</code> に属し, ソルバは <code>parcel::krylov</code> に属する (データ型の別名はグローバル名前空間にある. <a href="data-types.html#data-types">PARCELデータ型</a>). ヘッダーファイル <code>Include/parcel_sycl.hpp</code> をインクルードすれば全クラスが利用できる. 本書に載せていない公開メンバ (<code>parcel::comm::setQueue()</code>, <code>barrier()</code>, <code>parcel::matrix::queue()</code>, <code>comm()</code>, 既定コンストラクタ, <code>precon_param</code> の <code>*_is_set()</code> など) は内部用である.</p>
+<p>　設定関数と <code>solver()</code> の入口で主な値を検査し, 違反すると <code>std::invalid_argument</code> を投げる. 前提条件の欄には投げる例外の型を書く. 検査する値と例外の一覧は<a href="solver-common.html#api-settings-mpi">「設定の扱いと例外」</a>に示す.</p>
+<h2 data-number="3.1" id="cpp-mapping"><span class="header-section-number">3.1</span> 共通事項との対応</h2>
+<p>　<a href="common.html#common-settings">共通事項の設定</a>と C++ の設定関数の対応を示す. 既定値と意味は共通事項と同じである.</p>
+<div class="nowrap-c2 nowrap-code">
+<table>
+<thead>
+<tr>
+<th>共通事項の設定</th>
+<th>C++ の関数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="common.html#set-tol">収束判定値</a></td>
+<td><a href="common-members.html#api-set-tolerance">set_tolerance()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-maxiter">最大反復回数</a></td>
+<td><a href="common-members.html#api-set-max-iteration">set_max_iteration()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon">前処理の種類</a></td>
+<td><a href="common-members.html#api-set-precon-algo">set_precon_algo()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-jacobi-iter">Jacobi 前処理の反復回数</a></td>
+<td><a href="common-members.html#api-set-jacobi">set_jacobi()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-blocks">ブロック Jacobi 前処理のブロック数</a></td>
+<td><a href="common-members.html#api-set-blockjacobi">set_blockjacobi()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-scaling">スケーリング</a></td>
+<td><a href="common-members.html#api-set-scaling">set_scaling_matrix(), set_scaling_vector()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-restart">リスタート周期</a> (pgmres)</td>
+<td><a href="pgmres.html#api-pgmres-set-restart">pgmres::set_restart()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-gmres-qr">直交化の方式</a> (pgmres)</td>
+<td><a href="pgmres.html#api-pgmres-set-qr-algo">pgmres::set_qr_algo()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-st">基底生成の大きさ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></a></td>
+<td><a href="pcagmres.html#api-pcagmres-set-restart">pcagmres::set_restart()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-qr">QR 分解の方式</a> (pcagmres)</td>
+<td><a href="pcagmres.html#api-pcagmres-set-qr-algo">pcagmres::set_qr_algo()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方</a></td>
+<td><a href="pcagmres.html#api-pcagmres-set-explicit-q">pcagmres::set_explicit_q()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a></td>
+<td><a href="eigen-common.html#api-set-precon-spectrum">set_precon_spectrum()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-algo">内部線形ソルバの種類</a></td>
+<td><a href="eigen-common.html#api-set-linsolve-algo">set_linsolve_algo()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-tol">内部線形ソルバの収束判定値</a></td>
+<td><a href="eigen-common.html#api-set-linsolve-tolerance">set_linsolve_tolerance()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-maxiter">内部線形ソルバの最大反復回数</a></td>
+<td><a href="eigen-common.html#api-set-linsolve-max-iteration">set_linsolve_max_iteration()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-restart">内部線形ソルバのリスタート周期</a></td>
+<td><a href="eigen-common.html#api-set-linsolve-restart">set_linsolve_restart()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-inner-precon">内部線形ソルバの前処理</a></td>
+<td><a href="eigen-common.html#api-set-linsolve-precon">set_linsolve_precon_algo(), set_linsolve_jacobi(), set_linsolve_blockjacobi()</a>, <a href="eigen-common.html#api-set-linsolve-scaling">set_linsolve_scaling_matrix(), set_linsolve_scaling_vector()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-shift">shift-invert</a></td>
+<td><a href="ks-arnoldi.html#api-ks-set-shift">ks_arnoldi::set_shift() / disable_shift()</a>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>は <a href="ks-arnoldi.html#api-ks-arnoldi-solver">ks_arnoldi::solver()</a> の第 4 引数</td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-subspace">Krylov 部分空間の大きさ</a></td>
+<td><a href="ks-arnoldi.html#api-set-ks-subspace">set_ks_subspace()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-max-restart">最大リスタート回数</a></td>
+<td><a href="ks-arnoldi.html#api-set-ks-max-restart">set_ks_max_restart()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-ks-qr">直交化の方式</a> (ks_arnoldi)</td>
+<td><a href="ks-arnoldi.html#api-ks-set-qr-algo">ks_arnoldi::set_qr_algo()</a></td>
+</tr>
+<tr>
+<td><a href="common.html#set-init-vector">初期ベクトル</a></td>
+<td><a href="ks-arnoldi.html#api-ks-arnoldi-solver">ks_arnoldi::solver()</a> の固有ベクトルの引数の入力値</td>
+</tr>
+</tbody>
+</table>
+</div>
+<table>
+<thead>
+<tr>
+<th>共通事項の結果</th>
+<th>C++ の関数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><a href="common.html#res-reason">収束状態</a></td>
+<td><a href="common-members.html#api-get-converged-reason">get_converged_reason()</a>, <a href="common-members.html#api-is-converged">is_converged()</a>, <a href="common-members.html#api-converged-reason-name">converged_reason_name()</a></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-iter">反復回数</a></td>
+<td><a href="common-members.html#api-get-iterations">get_iterations()</a></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-resid">残差</a></td>
+<td><a href="common-members.html#api-get-residual">get_residual()</a></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-true">真の残差</a></td>
+<td><a href="common-members.html#api-get-true-residual">get_true_residual()</a></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-nconv">収束した固有対の数</a></td>
+<td><a href="ks-arnoldi.html#api-get-ks-nconv">get_ks_nconv()</a></td>
+</tr>
+<tr>
+<td class="nowrap"><a href="common.html#res-inner-fail">内部線形ソルバの失敗回数</a></td>
+<td><a href="eigen-common.html#api-get-linsolve-failures">get_linsolve_failures()</a></td>
+</tr>
+</tbody>
+</table>
+<p>　<a href="common.html#common-constants">共通事項の定数</a>の C++ での名前は<a href="solver-common.html#constants">定数</a>に示す. 共通事項に無い C++ だけの機能は, 精度の指定 (<a href="data-types.html#data-types">PARCELデータ型</a>, <a href="solver-common.html#api-class-template">テンプレート引数</a>) と, pgmres の<a href="pgmres.html#api-pgmres-set-precon-space-output">前処理空間の解を返すモード</a>である.</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="convergence.html" rel="previous">← ソルバごとの収束判定</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="data-types.html" rel="next">PARCELデータ型 →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = 'cpp';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

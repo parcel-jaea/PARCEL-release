@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Choosing a Solver – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/choosing-solver.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li class="current"><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="usage.html" rel="previous" accesskey="p">← Usage</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="running.html" rel="next" accesskey="n">Running on GPUs and in Jobs →</a></span>
+</nav>
+<h1 data-number="6" id="choosing-solver"><span class="header-section-number">6</span> Choosing a Solver</h1>
+<p>This chapter gives guidelines for choosing a solver and a <a href="glossary.html#g-precon">preconditioner</a> from the properties of the problem. The algorithm of each solver is described in the <a href="linear-solvers.html#linear-solvers">“Linear Solvers”</a>, <a href="eigen-solvers.html#eigen-solvers">“Eigenvalue Solvers”</a> and <a href="preconditioners.html#preconditioners">“Preconditioners”</a> chapters. The solvers available from C and Fortran are shown in the <a href="usage.html#usage">“Usage” chapter</a>.</p>
+<p><br />
+</p>
+<h2 data-number="6.1" id="choosing-linear"><span class="header-section-number">6.1</span> Linear Solvers</h2>
+<p>First, distinguish by whether the coefficient matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is <a href="glossary.html#g-spd">symmetric positive definite</a>.</p>
+<div class="nowrap-c2 nowrap-code">
+<table>
+<thead>
+<tr>
+<th>Matrix</th>
+<th>First choice</th>
+<th>Next choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symmetric positive definite (the <a href="glossary.html#g-precon">preconditioner</a> matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> also symmetric positive definite)</td>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td><code><span class="tok">pgmres</span></code> (e.g., when the preconditioner is not symmetric)</td>
+</tr>
+<tr>
+<td>Nonsymmetric, or symmetric but not positive definite</td>
+<td class="nowrap"><code><span class="tok">pgmres</span></code> or <code><span class="tok">pbicgstab</span></code></td>
+<td><code><span class="tok">pcagmres</span></code> when there are many <a href="glossary.html#g-rank">ranks</a> and <a href="glossary.html#g-collective">collective communication</a> is the bottleneck</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The characteristics of each solver are shown below.</p>
+<div class="minw-c2 minw-c3">
+<table>
+<thead>
+<tr>
+<th>Solver</th>
+<th>Main operations per iteration</th>
+<th>Vectors held</th>
+<th>Characteristics and notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><code><span class="tok">pcg</span></code></td>
+<td>1 <a href="glossary.html#g-spmv">SpMV</a>, 1 preconditioning</td>
+<td>Few (fixed)</td>
+<td>Assumes that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> are symmetric positive definite. The lightest. Convergence is checked with the recurrence residual</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">pbicgstab</span></code></td>
+<td>2 SpMVs, 2 preconditionings</td>
+<td>Few (fixed)</td>
+<td>For nonsymmetric matrices. The residual does not necessarily decrease monotonically. May break down, e.g., when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msup><mi>r</mi><mo>*</mo></msup><mo>,</mo><mi>q</mi><mo stretchy="false" form="postfix">⟩</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\langle r^{\ast},q \rangle = 0</annotation></semantics></math> (<code><span class="tok">DIVERGED_BREAKDOWN</span></code>). With <a href="glossary.html#g-fp16">FP16</a> as the dot-product precision <code><span class="tok">Tdot</span></code>, it tends to break down at tolerances close to the precision limit. Convergence is checked with the recurrence residual</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">pgmres</span></code></td>
+<td>1 SpMV, 1 preconditioning, orthogonalization</td>
+<td>Proportional to the <a href="glossary.html#g-restart">restart</a> length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m + 1</annotation></semantics></math> basis vectors)</td>
+<td>Minimizes the residual norm within one restart. The default is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">m = 30</annotation></semantics></math> (31 basis vectors). For difficult problems increase it with <code><span class="tok">set_restart()</span></code>, and decrease it when memory is short. Convergence is checked only with the true residual at the beginning of each restart, so the number of iterations is a multiple of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> except when the iteration limit is reached. With the default modified Gram-Schmidt method (<code><span class="tok">QR_MGS</span></code>), orthogonalization performs a collective communication of a dot product for each basis vector; <code><span class="tok">QR_CGS</span></code> combines them into one</td>
+</tr>
+<tr>
+<td class="nowrap"><code><span class="tok">pcagmres</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> SpMVs and preconditionings combined, then orthogonalization</td>
+<td>Proportional to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">st</annotation></semantics></math></td>
+<td>Mathematically equivalent to GMRES(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">st</annotation></semantics></math>), with fewer collective communications. The default is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math> (equivalent to GMRES(32)); change it with <code><span class="tok">set_restart(s,</span> <span class="tok">t)</span></code>. With a large <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, the monomial basis becomes ill-conditioned and convergence becomes worse than GMRES. Do not use the Cholesky QR variants with FP16 data or computation precision. With <code><span class="tok">set_explicit_q(CAGMRES_Q_IMPLICIT)</span></code>, the orthonormal basis is not formed explicitly, and orthogonalization uses only the Cholesky factorization of the Gram matrix of the basis (1 to 2 collective communications per basis block). The orthogonality error is then proportional to the square of the condition number of the basis, so with a large <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> it may deteriorate earlier than with <code><span class="tok">QR_MGS</span></code>. <code><span class="tok">QR_CAGMRES_CHOLESKYQR</span></code> is limited to symmetric <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>, no preconditioning and an even <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> (the symmetry of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is not checked)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The guidelines are as follows.</p>
+<ul>
+<li>If the matrix is symmetric positive definite, use <code>pcg</code>. A matrix that is symmetric but not positive definite does not satisfy the assumption of <code>pcg</code>, so use a solver for nonsymmetric matrices.</li>
+<li>For nonsymmetric matrices, try <code>pgmres</code> when there is enough memory and stable convergence is wanted, and <code>pbicgstab</code> when each iteration should be light. If <code>pbicgstab</code> stops with <code>DIVERGED_BREAKDOWN</code>, switch to <code>pgmres</code>.</li>
+<li>The communication-avoiding solver (<code>pcagmres</code>) is for reducing the number of collective communications when waiting in <code>MPI_Allreduce</code> dominates with many ranks. It is less robust to rounding errors than <code>pgmres</code>; if the number of iterations increases much compared with <code>pgmres</code> at the default <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, or it does not converge, make <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> smaller. Increase <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> only after confirming that it converges in the same number of iterations as <code>pgmres</code>.</li>
+<li>Check whether the solver converged with <code>is_converged()</code> and <code>get_converged_reason()</code>. For <code>pcg</code> and <code>pbicgstab</code>, check the accuracy of the solution with <code>get_true_residual()</code> (the true residual; <a href="accuracy.html#accuracy-residual">“Numerical Accuracy and Reproducibility”</a>).</li>
+<li>By default, <code>pcg</code> keeps only one search direction. If there is enough memory, setting <code>PARCEL_PSTEP=4</code> at run time batches the solution updates and makes it slightly (1-3%) faster (<a href="kernel-opt.html#perf-memory-options">“Choosing Between Memory and Speed”</a>).</li>
+</ul>
+<p><br />
+</p>
+<h2 data-number="6.2" id="choosing-eigen"><span class="header-section-number">6.2</span> Eigenvalue Solvers</h2>
+<p>All three eigenvalue solvers handle the standard eigenvalue problem <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>λ</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">Ax = \lambda x</annotation></semantics></math>; generalized eigenvalue problems are not supported. Choose by the eigenvalues you want.</p>
+<table>
+<thead>
+<tr>
+<th>What you want</th>
+<th>Solver and settings</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One eigenvalue of largest magnitude</td>
+<td><code><span class="tok">power</span></code></td>
+<td>The convergence rate is determined by the ratio of the largest and the second largest eigenvalues in magnitude. Slow when the ratio is close to 1</td>
+</tr>
+<tr>
+<td>One eigenvalue of smallest magnitude</td>
+<td><code><span class="tok">inverse_power</span></code></td>
+<td>Solves the inner linear system in each iteration. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is symmetric and positive (or negative) definite, the inner solver can be made <code><span class="tok">pcg</span></code> with <code><span class="tok">set_linsolve_algo(parcel:<wbr />:<wbr />krylov:<wbr />:<wbr />LINSOLVE_PCG)</span></code></td>
+</tr>
+<tr>
+<td>Eigenvalues close to a shift <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> (interior eigenvalues)</td>
+<td><a href="glossary.html#g-shift-invert">shift-invert</a> of <code><span class="tok">ks_arnoldi</span></code> (<code><span class="tok">set_shift(σ)</span></code> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math> as the fourth argument)</td>
+<td>Most of the computation time is spent in the inner <code><span class="tok">pgmres</span></code>. Moving <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> closer to an eigenvalue reduces the number of <a href="glossary.html#g-restart">restarts</a>, but worsens the condition number of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math> and makes the inner <code><span class="tok">pgmres</span></code> heavier</td>
+</tr>
+<tr>
+<td>Several eigenvalues, complex conjugate pairs</td>
+<td><code><span class="tok">ks_arnoldi</span></code></td>
+<td>Specify the size of the subspace and the number of eigenvalues to check with <code><span class="tok">set_ks_subspace(m,</span> <span class="tok">k_keep,</span> <span class="tok">nev)</span></code>. Convergence is not guaranteed for the outputs beyond <code><span class="tok">nev</span></code></td>
+</tr>
+<tr>
+<td>The smallest-magnitude eigenvalues are a complex conjugate pair, or several smallest-magnitude eigenvalues of a nonsymmetric matrix</td>
+<td>shift-invert of <code><span class="tok">ks_arnoldi</span></code> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\sigma = 0</annotation></semantics></math></td>
+<td><code><span class="tok">inverse_power</span></code> uses a real Rayleigh quotient and does not converge to a complex conjugate pair</td>
+</tr>
+<tr>
+<td>Condition number of the <a href="glossary.html#g-precon">preconditioned</a> matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math></td>
+<td><code><span class="tok">set_precon_spectrum(true)</span></code> with <code><span class="tok">power</span></code> and <code><span class="tok">inverse_power</span></code></td>
+<td>Take the ratio of the eigenvalues at both ends. The eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> tend to cluster around 1, and <code><span class="tok">power</span></code> converges slowly</td>
+</tr>
+</tbody>
+</table>
+<p><code>power</code> and <code>inverse_power</code> do not converge when the eigenvalue at the wanted end is a complex conjugate pair, or when there are several eigenvalues of equal magnitude (for example <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>±</mi><mi>λ</mi></mrow><annotation encoding="application/x-tex">\pm\lambda</annotation></semantics></math>). Use <code>ks_arnoldi</code> for such matrices.</p>
+<p>The inner linear solver of <code>inverse_power</code> and of shift-invert is configured separately from the outer iteration, with <code>set_linsolve_tolerance()</code>, <code>set_linsolve_max_iteration()</code>, <code>set_linsolve_precon_algo()</code> and so on. The default inner preconditioner is the Jacobi preconditioner (1 iteration). If the inner solver takes many iterations, change or strengthen the preconditioner with <code>set_linsolve_precon_algo()</code> and <code>set_linsolve_jacobi()</code>. How to check the inner convergence is shown in <a href="accuracy.html#accuracy-reason">“Checking the Convergence Status”</a>.</p>
+<h3 data-number="6.2.1" id="choosing-precon-spectrum"><span class="header-section-number">6.2.1</span> Meaning of set_precon_spectrum()</h3>
+<p>In the eigenvalue solvers, preconditioning changes “which matrix’s eigenvalues are computed”.</p>
+<ul>
+<li><code>set_precon_spectrum(false)</code> (default): returns the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>. Preconditioner settings such as <code>set_precon_algo()</code> are not used in the outer eigenvalue iteration. To speed up the inner linear solver of <code>inverse_power</code> and shift-invert, specify it separately with <code>set_linsolve_precon_algo()</code> and related functions (the returned eigenvalues are still those of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>).</li>
+<li><code>set_precon_spectrum(true)</code>: returns the eigenvalues of the preconditioned matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> is built from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> according to <code>set_precon_algo()</code> and related settings. Used to evaluate a preconditioner (the spectrum and condition number of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>).</li>
+</ul>
+<p>If you want the eigenvalues of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>, specifying only <code>set_precon_algo()</code> does not speed up the outer iteration. How each solver uses the preconditioner is shown in the tables of the <a href="eigen-solvers.html#alg-power">Power Method</a>, <a href="eigen-solvers.html#alg-inverse-power">Inverse Power Method</a> and <a href="eigen-solvers.html#alg-ks">Krylov-Schur Method</a> sections.</p>
+<p><br />
+</p>
+<h2 data-number="6.3" id="choosing-precon"><span class="header-section-number">6.3</span> Preconditioners</h2>
+<table>
+<thead>
+<tr>
+<th><a href="glossary.html#g-precon">Preconditioner</a></th>
+<th>Cost of one application</th>
+<th>Communication</th>
+<th>Effect of the preconditioner and <a href="glossary.html#g-mpi">MPI</a> partitioning</th>
+<th>Suitable for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">None (0)</td>
+<td>None</td>
+<td>None</td>
+<td>—</td>
+<td>The reference for comparing the effect of preconditioners. Default of <code><span class="tok">set_precon_algo()</span></code> (the default of the inner linear solver of the eigenvalue solvers is the Jacobi preconditioner)</td>
+</tr>
+<tr>
+<td class="nowrap">Point Jacobi (1)</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> multiplications</td>
+<td>None</td>
+<td>Independent of the partitioning</td>
+<td>The cheapest. Small effect</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="glossary.html#g-jacobi">Block Jacobi</a> (2)</td>
+<td>Forward and backward substitution within the blocks</td>
+<td>None</td>
+<td>Depends on the number of <a href="glossary.html#g-rank">ranks</a> and the number of blocks <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">nb</annotation></semantics></math></td>
+<td>CPUs (the default number of blocks is the number of threads per rank)</td>
+</tr>
+<tr>
+<td class="nowrap">Jacobi (4)</td>
+<td><code><span class="tok">ITER</span></code> <a href="glossary.html#g-spmv">SpMVs</a> (<code><span class="tok">set_jacobi()</span></code>)</td>
+<td><a href="glossary.html#g-halo">Halo</a> exchange in every Jacobi iteration</td>
+<td>Independent of the partitioning</td>
+<td>GPUs. Each row can be computed independently</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>On GPUs, the Jacobi preconditioner is the first choice. The block Jacobi preconditioner needs blocks of only a few rows to obtain enough parallelism on a GPU (the default is 2 rows per block), and in most cases the Jacobi preconditioner is faster.</li>
+<li>By default, the Jacobi preconditioner does not keep the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> to save memory and computes them at each application. If there is enough GPU memory, building with <code>-DPARCEL_JACOBI_ONTHEFLY=0</code> makes the preconditioner faster (one iteration of <code>pcg</code> with NX=512 on 4 devices is 14% shorter on <a href="glossary.html#g-v100">V100</a> and 23% shorter on <a href="glossary.html#g-mi300a">MI300A</a>; <a href="kernel-opt.html#perf-memory-options">“Choosing Between Memory and Speed”</a>).</li>
+<li>The effect of the block Jacobi preconditioner depends on the number of ranks and the number of blocks, so changing the number of ranks also changes the number of iterations. To compare results with different numbers of ranks, use the Jacobi or point Jacobi preconditioner.</li>
+<li><code>pcg</code> assumes that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> is <a href="glossary.html#g-spd">symmetric positive definite</a>. With matrix scaling enabled, the block Jacobi preconditioner becomes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><msup><mi>S</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>L</mi><mi>U</mi></mrow><annotation encoding="application/x-tex">K = S^{-1}LU</annotation></semantics></math>, so for a matrix whose rows have different maximum absolute values, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> may not be symmetric (<a href="preconditioners.html#preconditioners">block Jacobi preconditioner in the Preconditioners chapter</a>). The verification sample can check <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="false" form="postfix">⟩</mo><mo>=</mo><mo stretchy="false" form="prefix">⟨</mo><mi>u</mi><mo>,</mo><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>v</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle K^{-1}u,v \rangle = \langle u,K^{-1}v \rangle</annotation></semantics></math> with <code>PARCEL_PRECON_SYMCHECK=1</code>.</li>
+<li>The restrictions when combining with low precision (such as an <a href="glossary.html#g-fp16">FP16</a> preconditioner combined with the point Jacobi preconditioner) are shown in <a href="accuracy.html#accuracy-lowprec">“Numerical Accuracy and Reproducibility”</a>.</li>
+</ul>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="usage.html" rel="previous">← Usage</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="running.html" rel="next">Running on GPUs and in Jobs →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

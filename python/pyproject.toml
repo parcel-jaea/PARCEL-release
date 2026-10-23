@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+# Copyright (c) 日本原子力研究開発機構 システム計算科学センター
+[build-system]
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "parcel-sycl"
+# 本体 (Include/parcel_version.hpp) と同じ版。parcel/__init__.py の __version__ も同じにする (tests/check_version.py で照合)
+version = "1.2.0"
+description = "Python interface to PARCEL (SYCL version): Krylov subspace solvers for distributed sparse matrices"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "LGPL-3.0-only" }
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+scipy = ["scipy"]
+mpi4py = ["mpi4py"]
+
+[tool.scikit-build]
+cmake.version = ">=3.18"
+# Python のパッケージ (parcel/) はそのまま入れ, CMake はネイティブ層だけを parcel/ に入れる
+wheel.packages = ["parcel"]
+# 環境に依存するバイナリなので, ビルド時の設定をパッケージ名に含めない (各環境でビルドする)
+build-dir = "build/{wheel_tag}"
+sdist.exclude = ["build", "results", "parcel/libparcel_py.so"]

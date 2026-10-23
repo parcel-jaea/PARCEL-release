@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>共通事項 – PARCEL SYCL v1.2 API リファレンス</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-reference">
+<header class="topbar">
+<a class="home" href="../../index.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">API リファレンス</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">利用者ガイド</a>
+<a class="toplink" href="../reference/index.html">API リファレンス</a>
+<a class="toplink search" href="../search.html">検索</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">ダウンロード</a>
+<a class="toplink lang" href="../../en/reference/common.html" hreflang="en">English</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="目次">
+<p class="sidebar-title"><a href="index.html">目次</a></p>
+<ul>
+<li><a href="function-index.html#function-index">関数索引</a></li>
+<li class="current"><a href="common.html#common"><span class="toc-section-number">1</span> 共通事項</a>
+<ul>
+<li><a href="common.html#common-format"><span class="toc-section-number">1.1</span> 各項目の書式</a></li>
+<li><a href="common.html#common-solvers"><span class="toc-section-number">1.2</span> ソルバ</a></li>
+<li><a href="common.html#common-symbols"><span class="toc-section-number">1.3</span> 記号と用語</a></li>
+<li><a href="common.html#common-matrix"><span class="toc-section-number">1.4</span> 入力の行列</a></li>
+<li><a href="common.html#common-settings"><span class="toc-section-number">1.5</span> 設定</a></li>
+<li><a href="common.html#common-constants"><span class="toc-section-number">1.6</span> 定数</a></li>
+<li><a href="common.html#common-results"><span class="toc-section-number">1.7</span> 結果</a></li>
+<li><a href="common.html#common-reason"><span class="toc-section-number">1.8</span> 収束状態</a></li>
+<li><a href="common.html#common-mpi"><span class="toc-section-number">1.9</span> 設定の扱いと MPI</a></li>
+<li><a href="common.html#common-precision"><span class="toc-section-number">1.10</span> 精度</a></li>
+</ul></li>
+<li><a href="convergence.html#convergence"><span class="toc-section-number">2</span> ソルバごとの収束判定</a>
+<ul>
+<li><a href="convergence.html#conv-pcg"><span class="toc-section-number">2.1</span> pcg</a></li>
+<li><a href="convergence.html#conv-pbicgstab"><span class="toc-section-number">2.2</span> pbicgstab</a></li>
+<li><a href="convergence.html#conv-pgmres"><span class="toc-section-number">2.3</span> pgmres</a></li>
+<li><a href="convergence.html#conv-pcagmres"><span class="toc-section-number">2.4</span> pcagmres</a></li>
+<li><a href="convergence.html#conv-pcagmres-implicit"><span class="toc-section-number">2.5</span> pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合)</a></li>
+<li><a href="convergence.html#conv-power"><span class="toc-section-number">2.6</span> power</a></li>
+<li><a href="convergence.html#conv-inverse-power"><span class="toc-section-number">2.7</span> inverse_power</a></li>
+<li><a href="convergence.html#conv-ks-arnoldi"><span class="toc-section-number">2.8</span> ks_arnoldi</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="overview.html#overview"><span class="toc-section-number">3</span> SYCL版PARCELクラス</a>
+<ul>
+<li><a href="overview.html#cpp-mapping"><span class="toc-section-number">3.1</span> 共通事項との対応</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="data-types.html#data-types"><span class="toc-section-number">4</span> PARCELデータ型</a></li>
+<li data-apilang="cpp"><a href="comm.html#comm"><span class="toc-section-number">5</span> parcel::comm</a>
+<ul>
+<li><a href="comm.html#api-comm-ctor"><span class="toc-section-number">5.1</span> コンストラクタ</a></li>
+<li><a href="comm.html#api-comm-get"><span class="toc-section-number">5.2</span> mpi_rank() / mpi_size() / mpi_comm() / rank() / size()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="matrix.html#matrix"><span class="toc-section-number">6</span> parcel::matrix</a>
+<ul>
+<li><a href="matrix.html#api-matrix-ctor"><span class="toc-section-number">6.1</span> コンストラクタ</a></li>
+<li><a href="matrix.html#api-set-crsmat"><span class="toc-section-number">6.2</span> set_crsMat()</a></li>
+<li><a href="matrix.html#api-matrix-n-local"><span class="toc-section-number">6.3</span> n_local()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="vector.html#vector"><span class="toc-section-number">7</span> parcel::vector</a>
+<ul>
+<li><a href="vector.html#api-vector-ctor"><span class="toc-section-number">7.1</span> コンストラクタ / resize()</a></li>
+<li><a href="vector.html#api-vector-queue"><span class="toc-section-number">7.2</span> queue() / size()</a></li>
+<li><a href="vector.html#api-vector-setvalue"><span class="toc-section-number">7.3</span> setValue()</a></li>
+<li><a href="vector.html#api-vector-sethi"><span class="toc-section-number">7.4</span> setValue_hi() / setValue_lo()</a></li>
+<li><a href="vector.html#api-vector-getvalue"><span class="toc-section-number">7.5</span> getValue()</a></li>
+<li><a href="vector.html#api-vector-gethi"><span class="toc-section-number">7.6</span> getValue_hi() / getValue_lo()</a></li>
+<li><a href="vector.html#api-vector-data"><span class="toc-section-number">7.7</span> data() / data_hi() / data_lo()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="solver-common.html#solver-common"><span class="toc-section-number">8</span> ソルバ共通の事項</a>
+<ul>
+<li><a href="solver-common.html#api-class-template"><span class="toc-section-number">8.1</span> クラステンプレート引数 (演算精度)</a></li>
+<li><a href="solver-common.html#api-solver-template"><span class="toc-section-number">8.2</span> solver() のテンプレート引数 (データ精度)</a></li>
+<li><a href="solver-common.html#api-settings-mpi"><span class="toc-section-number">8.3</span> 設定の扱いと例外</a></li>
+<li><a href="solver-common.html#constants"><span class="toc-section-number">8.4</span> 定数</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="common-members.html#common-members"><span class="toc-section-number">9</span> 共通メンバ関数</a>
+<ul>
+<li><a href="common-members.html#api-set-tolerance"><span class="toc-section-number">9.1</span> set_tolerance() / get_tolerance()</a></li>
+<li><a href="common-members.html#api-set-max-iteration"><span class="toc-section-number">9.2</span> set_max_iteration() / get_max_iteration()</a></li>
+<li><a href="common-members.html#api-set-precon-algo"><span class="toc-section-number">9.3</span> set_precon_algo() / get_precon_algo()</a></li>
+<li><a href="common-members.html#api-set-jacobi"><span class="toc-section-number">9.4</span> set_jacobi() / get_jacobi()</a></li>
+<li><a href="common-members.html#api-set-blockjacobi"><span class="toc-section-number">9.5</span> set_blockjacobi() / get_blockjacobi()</a></li>
+<li><a href="common-members.html#api-set-scaling"><span class="toc-section-number">9.6</span> set_scaling_matrix() / set_scaling_vector() / get_scaling_matrix() / get_scaling_vector()</a></li>
+<li><a href="common-members.html#api-get-converged-reason"><span class="toc-section-number">9.7</span> get_converged_reason()</a></li>
+<li><a href="common-members.html#api-is-converged"><span class="toc-section-number">9.8</span> is_converged()</a></li>
+<li><a href="common-members.html#api-get-iterations"><span class="toc-section-number">9.9</span> get_iterations()</a></li>
+<li><a href="common-members.html#api-get-residual"><span class="toc-section-number">9.10</span> get_residual()</a></li>
+<li><a href="common-members.html#api-get-true-residual"><span class="toc-section-number">9.11</span> get_true_residual()</a></li>
+<li><a href="common-members.html#api-converged-reason-name"><span class="toc-section-number">9.12</span> converged_reason_name()</a></li>
+<li><a href="common-members.html#api-version"><span class="toc-section-number">9.13</span> version_string() / get_version() / PARCEL_VERSION_*</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="eigen-common.html#eigen-common"><span class="toc-section-number">10</span> 固有値ソルバ共通のメンバ関数</a>
+<ul>
+<li><a href="eigen-common.html#api-set-precon-spectrum"><span class="toc-section-number">10.1</span> set_precon_spectrum() / get_precon_spectrum()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-algo"><span class="toc-section-number">10.2</span> set_linsolve_algo() / get_linsolve_algo()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-tolerance"><span class="toc-section-number">10.3</span> set_linsolve_tolerance() / get_linsolve_tolerance()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-max-iteration"><span class="toc-section-number">10.4</span> set_linsolve_max_iteration() / get_linsolve_max_iteration()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-restart"><span class="toc-section-number">10.5</span> set_linsolve_restart() / get_linsolve_restart()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-precon"><span class="toc-section-number">10.6</span> set_linsolve_precon_algo() / set_linsolve_blockjacobi() / set_linsolve_jacobi() / get_linsolve_precon_param()</a></li>
+<li><a href="eigen-common.html#api-set-linsolve-scaling"><span class="toc-section-number">10.7</span> set_linsolve_scaling_matrix() / set_linsolve_scaling_vector()</a></li>
+<li><a href="eigen-common.html#api-get-linsolve-failures"><span class="toc-section-number">10.8</span> get_linsolve_failures()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcg.html#pcg"><span class="toc-section-number">11</span> parcel::krylov::pcg</a>
+<ul>
+<li><a href="pcg.html#api-pcg"><span class="toc-section-number">11.1</span> pcg (クラス)</a></li>
+<li><a href="pcg.html#api-pcg-solver"><span class="toc-section-number">11.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pbicgstab.html#pbicgstab"><span class="toc-section-number">12</span> parcel::krylov::pbicgstab</a>
+<ul>
+<li><a href="pbicgstab.html#api-pbicgstab"><span class="toc-section-number">12.1</span> pbicgstab (クラス)</a></li>
+<li><a href="pbicgstab.html#api-pbicgstab-solver"><span class="toc-section-number">12.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pgmres.html#pgmres"><span class="toc-section-number">13</span> parcel::krylov::pgmres</a>
+<ul>
+<li><a href="pgmres.html#api-pgmres"><span class="toc-section-number">13.1</span> pgmres (クラス)</a></li>
+<li><a href="pgmres.html#api-pgmres-solver"><span class="toc-section-number">13.2</span> solver()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-restart"><span class="toc-section-number">13.3</span> set_restart() / get_restart()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-qr-algo"><span class="toc-section-number">13.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-precon-space-output"><span class="toc-section-number">13.5</span> set_precon_space_output() / get_precon_space_output()</a></li>
+<li><a href="pgmres.html#api-pgmres-set-shift"><span class="toc-section-number">13.6</span> set_shift() / get_shift()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="pcagmres.html#pcagmres"><span class="toc-section-number">14</span> parcel::krylov::pcagmres</a>
+<ul>
+<li><a href="pcagmres.html#api-pcagmres"><span class="toc-section-number">14.1</span> pcagmres (クラス)</a></li>
+<li><a href="pcagmres.html#api-pcagmres-solver"><span class="toc-section-number">14.2</span> solver()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-restart"><span class="toc-section-number">14.3</span> set_restart() / get_restart_s() / get_restart_t()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-qr-algo"><span class="toc-section-number">14.4</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-set-explicit-q"><span class="toc-section-number">14.5</span> set_explicit_q() / get_explicit_q()</a></li>
+<li><a href="pcagmres.html#api-pcagmres-implicit"><span class="toc-section-number">14.6</span> CAGMRES_Q_IMPLICIT (Q を作らない場合)</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="power.html#power"><span class="toc-section-number">15</span> parcel::krylov::power</a>
+<ul>
+<li><a href="power.html#api-power"><span class="toc-section-number">15.1</span> power (クラス)</a></li>
+<li><a href="power.html#api-power-solver"><span class="toc-section-number">15.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="inverse-power.html#inverse-power"><span class="toc-section-number">16</span> parcel::krylov::inverse_power</a>
+<ul>
+<li><a href="inverse-power.html#api-inverse-power"><span class="toc-section-number">16.1</span> inverse_power (クラス)</a></li>
+<li><a href="inverse-power.html#api-inverse-power-solver"><span class="toc-section-number">16.2</span> solver()</a></li>
+</ul></li>
+<li data-apilang="cpp"><a href="ks-arnoldi.html#ks-arnoldi"><span class="toc-section-number">17</span> parcel::krylov::ks_arnoldi</a>
+<ul>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi"><span class="toc-section-number">17.1</span> ks_arnoldi (クラス)</a></li>
+<li><a href="ks-arnoldi.html#api-ks-arnoldi-solver"><span class="toc-section-number">17.2</span> solver()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-subspace"><span class="toc-section-number">17.3</span> set_ks_subspace() / get_ks_m() / get_ks_k_keep() / get_ks_nev()</a></li>
+<li><a href="ks-arnoldi.html#api-set-ks-max-restart"><span class="toc-section-number">17.4</span> set_ks_max_restart() / get_ks_max_restart()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-qr-algo"><span class="toc-section-number">17.5</span> set_qr_algo() / get_qr_algo()</a></li>
+<li><a href="ks-arnoldi.html#api-ks-set-shift"><span class="toc-section-number">17.6</span> set_shift() / disable_shift()</a></li>
+<li><a href="ks-arnoldi.html#api-get-ks-nconv"><span class="toc-section-number">17.7</span> get_ks_nconv()</a></li>
+<li><a href="ks-arnoldi.html#api-set-shift-linsolve"><span class="toc-section-number">17.8</span> set_shift_linsolve_tolerance() / set_shift_linsolve_max_iteration() / set_shift_linsolve_restart() (非推奨)</a></li>
+</ul></li>
+<li data-apilang="c"><a href="c-api.html#c-api"><span class="toc-section-number">18</span> C言語の API</a>
+<ul>
+<li><a href="c-api.html#c-mapping"><span class="toc-section-number">18.1</span> 共通事項との対応</a></li>
+<li><a href="c-api.html#c-constants"><span class="toc-section-number">18.2</span> 定数</a></li>
+<li><a href="c-api.html#api-c-parcel-options"><span class="toc-section-number">18.3</span> parcel_options</a></li>
+<li><a href="c-api.html#api-c-parcel-result"><span class="toc-section-number">18.4</span> parcel_result</a></li>
+<li><a href="c-api.html#api-c-options-init"><span class="toc-section-number">18.5</span> parcel_options_init()</a></li>
+<li><a href="c-api.html#api-c-solver-from-name"><span class="toc-section-number">18.6</span> parcel_solver_from_name()</a></li>
+<li><a href="c-api.html#api-c-eigen-count"><span class="toc-section-number">18.7</span> parcel_eigen_count()</a></li>
+<li><a href="c-api.html#api-c-solve-linear"><span class="toc-section-number">18.8</span> parcel_solve_linear()</a></li>
+<li><a href="c-api.html#api-c-solve-eigen"><span class="toc-section-number">18.9</span> parcel_solve_eigen()</a></li>
+<li><a href="c-api.html#api-c-sizes"><span class="toc-section-number">18.10</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="c-api.html#api-c-version"><span class="toc-section-number">18.11</span> parcel_get_version() / parcel_version_string()</a></li>
+<li><a href="c-api.html#api-c-run-parcel-sycl"><span class="toc-section-number">18.12</span> run_parcel_sycl_c() (非推奨)</a></li>
+</ul></li>
+<li data-apilang="f"><a href="fortran-api.html#fortran-api"><span class="toc-section-number">19</span> Fortran の API</a>
+<ul>
+<li><a href="fortran-api.html#f-mapping"><span class="toc-section-number">19.1</span> 共通事項との対応</a></li>
+<li><a href="fortran-api.html#f-constants"><span class="toc-section-number">19.2</span> 定数</a></li>
+<li><a href="fortran-api.html#api-f-types"><span class="toc-section-number">19.3</span> parcel_options / parcel_result</a></li>
+<li><a href="fortran-api.html#api-f-options-init"><span class="toc-section-number">19.4</span> parcel_options_init</a></li>
+<li><a href="fortran-api.html#api-f-solve-linear"><span class="toc-section-number">19.5</span> parcel_solve_linear</a></li>
+<li><a href="fortran-api.html#api-f-solve-eigen"><span class="toc-section-number">19.6</span> parcel_solve_eigen</a></li>
+<li><a href="fortran-api.html#api-f-eigen-count"><span class="toc-section-number">19.7</span> parcel_eigen_count</a></li>
+<li><a href="fortran-api.html#api-f-check"><span class="toc-section-number">19.8</span> parcel_options_check() / parcel_result_check()</a></li>
+<li><a href="fortran-api.html#api-f-sizes"><span class="toc-section-number">19.9</span> parcel_options_size() / parcel_result_size()</a></li>
+<li><a href="fortran-api.html#api-f-version"><span class="toc-section-number">19.10</span> parcel_get_version / parcel_version_string</a></li>
+<li><a href="fortran-api.html#api-f-run-parcel-sycl"><span class="toc-section-number">19.11</span> run_parcel_sycl_f() (非推奨)</a></li>
+</ul></li>
+<li data-apilang="py"><a href="python-api.html#python-api"><span class="toc-section-number">20</span> Python の API</a>
+<ul>
+<li><a href="python-api.html#py-mapping"><span class="toc-section-number">20.1</span> 共通事項との対応</a></li>
+<li><a href="python-api.html#api-py-distributedcsr"><span class="toc-section-number">20.2</span> parcel.DistributedCSR</a></li>
+<li><a href="python-api.html#api-py-csr-from"><span class="toc-section-number">20.3</span> DistributedCSR.from_scipy() / DistributedCSR.from_global()</a></li>
+<li><a href="python-api.html#api-py-local-slice"><span class="toc-section-number">20.4</span> DistributedCSR.local_slice()</a></li>
+<li><a href="python-api.html#api-py-solve"><span class="toc-section-number">20.5</span> parcel.solve()</a></li>
+<li><a href="python-api.html#api-py-eigs"><span class="toc-section-number">20.6</span> parcel.eigs()</a></li>
+<li><a href="python-api.html#api-py-info"><span class="toc-section-number">20.7</span> parcel.SolveInfo / parcel.EigInfo</a></li>
+<li><a href="python-api.html#api-py-comm"><span class="toc-section-number">20.8</span> parcel.Comm</a></li>
+<li><a href="python-api.html#api-py-partition-rows"><span class="toc-section-number">20.9</span> parcel.partition_rows()</a></li>
+<li><a href="python-api.html#api-py-build-info"><span class="toc-section-number">20.10</span> parcel.build_info() / parcel.has_mpi() / parcel.device_name()</a></li>
+<li><a href="python-api.html#api-py-version"><span class="toc-section-number">20.11</span> parcel.__version__ / parcel.library_version()</a></li>
+<li><a href="python-api.html#py-errors"><span class="toc-section-number">20.12</span> 例外</a></li>
+</ul></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="function-index.html" rel="previous" accesskey="p">← 関数索引</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="convergence.html" rel="next" accesskey="n">ソルバごとの収束判定 →</a></span>
+</nav>
+<div class="apilang" role="tablist" aria-label="言語">
+<a role="tab" href="overview.html" data-apilang="cpp" aria-selected="true">C++</a>
+<a role="tab" href="c-api.html" data-apilang="c" aria-selected="false">C言語</a>
+<a role="tab" href="fortran-api.html" data-apilang="f" aria-selected="false">Fortran</a>
+<a role="tab" href="python-api.html" data-apilang="py" aria-selected="false">Python</a>
+</div>
+<h1 data-number="1" id="common"><span class="header-section-number">1</span> 共通事項</h1>
+<p>　本書は PARCEL の API を言語ごとの章に分けて示す. 言語によらない事項 (ソルバ, 入力の行列, 設定の意味と既定値, 定数, 結果の意味, 収束状態, <a href="../user/glossary.html#g-mpi">MPI</a> での扱い) は本章と次章<a href="convergence.html#convergence">「ソルバごとの収束判定」</a>にまとめ, 各言語の章にはその言語での名前と書き方, エラーの知らせ方, 例を示す. 利用者は本章・次章と, 使う言語の章を読めばよい. 言語はページの上のタブで切り替える.</p>
+<table>
+<thead>
+<tr>
+<th>言語</th>
+<th>章</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td><a href="overview.html#overview">SYCL版PARCELクラス</a> から <a href="ks-arnoldi.html#ks-arnoldi">parcel::krylov::ks_arnoldi</a> まで</td>
+</tr>
+<tr>
+<td class="nowrap">C言語</td>
+<td><a href="c-api.html#c-api">C言語の API</a></td>
+</tr>
+<tr>
+<td class="nowrap">Fortran</td>
+<td><a href="fortran-api.html#fortran-api">Fortran の API</a></td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td><a href="python-api.html#python-api">Python の API</a></td>
+</tr>
+</tbody>
+</table>
+<p>　各言語の章の冒頭に, 本章の設定・定数・結果とその言語での名前の対応表を置く.</p>
+<h2 data-number="1.1" id="common-format"><span class="header-section-number">1.1</span> 各項目の書式</h2>
+<p>　各言語の章の関数・型の項目は, 次の欄からなる. 該当しない欄は省く.</p>
+<table>
+<thead>
+<tr>
+<th>欄</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">概要</td>
+<td>関数の働き</td>
+</tr>
+<tr>
+<td class="nowrap">書式</td>
+<td>その言語での宣言</td>
+</tr>
+<tr>
+<td class="nowrap">引数</td>
+<td>名前, 入出力 (入力 / 出力 / 入出力), 型, 説明, 既定値. 既定値は指定しなかったときにライブラリが使う値である</td>
+</tr>
+<tr>
+<td class="nowrap">前提条件</td>
+<td>引数の有効範囲と, 外れたときの動作. ライブラリが検査しない場合は「検査しない」と書く</td>
+</tr>
+<tr>
+<td class="nowrap">戻り値</td>
+<td>戻り値の意味</td>
+</tr>
+<tr>
+<td class="nowrap"><a href="../user/glossary.html#g-mpi">MPI</a></td>
+<td>集団操作かどうか, 全<a href="../user/glossary.html#g-rank">ランク</a>で同じ値を与える必要があるか</td>
+</tr>
+<tr>
+<td class="nowrap">注意</td>
+<td>使い方の注意</td>
+</tr>
+<tr>
+<td class="nowrap">関連項目</td>
+<td>関係する関数と章</td>
+</tr>
+<tr>
+<td class="nowrap">例</td>
+<td>呼び出し例</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="1.2" id="common-solvers"><span class="header-section-number">1.2</span> ソルバ</h2>
+<p>　PARCEL は次の 7 つのソルバを持つ. ソルバの名前は全言語で共通である. アルゴリズムは利用者ガイドの<a href="../user/linear-solvers.html">線形ソルバの章</a>と<a href="../user/eigen-solvers.html">固有値ソルバの章</a>に, 選び方は<a href="../user/choosing-solver.html">ソルバの選び方</a>に示す.</p>
+<table>
+<thead>
+<tr>
+<th>ソルバ</th>
+<th>方法</th>
+<th>解く問題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">pcg</td>
+<td>前処理付き共役勾配法</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>と前処理行列<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>が対称正定値</td>
+</tr>
+<tr>
+<td class="nowrap">pbicgstab</td>
+<td>前処理付き安定化双共役勾配法</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> (非対称行列)</td>
+</tr>
+<tr>
+<td class="nowrap">pgmres</td>
+<td>前処理付き一般化最小残差法 (右前処理, リスタート付き)</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> (非対称行列)</td>
+</tr>
+<tr>
+<td class="nowrap">pcagmres</td>
+<td>前処理付き通信削減型一般化最小残差法 (CA-GMRES). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>本の基底をまとめて作り, QR 分解で直交化する</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Ax = b</annotation></semantics></math> (非対称行列)</td>
+</tr>
+<tr>
+<td class="nowrap">power</td>
+<td>べき乗法</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の絶対値最大の固有対 1 組</td>
+</tr>
+<tr>
+<td class="nowrap">inverse_power</td>
+<td>逆べき乗法. 各反復で内部の線形ソルバが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>y</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">Ay = x</annotation></semantics></math>を解く</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の絶対値最小の固有対 1 組</td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>Arnoldi 過程と Krylov-Schur リスタート. 非対称行列, 複素共役対の固有値にも対応する</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の絶対値の大きい側の複数の固有対. <a href="../user/glossary.html#g-shift-invert">shift-invert</a> ではシフト<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>に近い固有対</td>
+</tr>
+</tbody>
+</table>
+<p>　固有値ソルバは標準固有値問題<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>x</mi><mo>=</mo><mi>λ</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">Ax = \lambda x</annotation></semantics></math>を扱う. <a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a>を選ぶと, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の代わりに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>の固有値を求める. ソルバはビルドから外せる (<a href="../user/installation.html#install-macros">利用者ガイドの「ビルドするソルバの取捨」</a>). 外したソルバを呼んだ場合の扱いは各言語の章に示す.</p>
+<h2 data-number="1.3" id="common-symbols"><span class="header-section-number">1.3</span> 記号と用語</h2>
+<p>　本書では次の記号と用語を用いる.</p>
+<table>
+<thead>
+<tr>
+<th>記号・用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math></td>
+<td>各<a href="../user/glossary.html#g-rank">ランク</a>の担当行数</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{global}</annotation></semantics></math></td>
+<td>全ランクの<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math>の和 (行列の行数)</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math></td>
+<td><a href="common.html#set-tol">収束判定値</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math></td>
+<td><a href="common.html#set-maxiter">最大反復回数</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math></td>
+<td>pgmres の<a href="common.html#set-gmres-restart">リスタート周期</a>, ks_arnoldi の <a href="common.html#set-ks-subspace">Krylov 部分空間の最大次元</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></td>
+<td>pcagmres の 1 回の基底生成で作るベクトル数と, リスタートまでの基底生成回数 (<a href="common.html#set-cagmres-st">設定</a>)</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math></td>
+<td>ks_arnoldi がリスタート後に残す (最後に返す) 固有対の数と, 収束判定の対象とする固有対の数 (<a href="common.html#set-ks-subspace">設定</a>)</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>R</mi></msub><annotation encoding="application/x-tex">N_{R}</annotation></semantics></math></td>
+<td>ks_arnoldi の<a href="common.html#set-ks-max-restart">最大リスタート回数</a></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math></td>
+<td>前処理行列 (<a href="common.html#set-precon">前処理の設定</a>で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>から作る) と, 固有値ソルバの内部線形ソルバの前処理行列</td>
+</tr>
+<tr>
+<td>shift-invert</td>
+<td>シフト<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>の近くの固有値を求める方法. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(A - \sigma I)^{-1}</annotation></semantics></math>の絶対値の大きい固有値<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>を求め, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mi>σ</mi><mo>+</mo><mn>1</mn><mi>/</mi><mi>θ</mi></mrow><annotation encoding="application/x-tex">\lambda = \sigma + 1/\theta</annotation></semantics></math>に戻す</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><annotation encoding="application/x-tex">\mathrm{Op}</annotation></semantics></math></td>
+<td>ks_arnoldi が Arnoldi 過程を適用する演算子. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math> (前処理後の行列のスペクトルを求める場合), shift-invert では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(A - \sigma I)^{-1}</annotation></semantics></math>または<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)^{-1}</annotation></semantics></math></td>
+</tr>
+<tr>
+<td>Ritz 対<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, x)</annotation></semantics></math></td>
+<td>Krylov 部分空間の中で求めた<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><annotation encoding="application/x-tex">\mathrm{Op}</annotation></semantics></math>の近似固有値<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>と近似固有ベクトル<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math></td>
+</tr>
+<tr>
+<td>真の残差</td>
+<td>解<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>から計算し直した相対残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax\| / \|b\|</annotation></semantics></math>. これに対し, 反復の漸化式で更新した残差を漸化式の残差と呼ぶ</td>
+</tr>
+<tr>
+<td><a href="../user/glossary.html#g-lucky">幸運な破綻</a></td>
+<td>Krylov 部分空間が不変部分空間になり, 次の基底ベクトルを作れなくなること. 解 (固有対) はその部分空間に含まれるので, それ自体は失敗ではない</td>
+</tr>
+<tr>
+<td>rank 0</td>
+<td>コミュニケータでの番号が 0 のランク. 途中経過と結果を標準出力に書く</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="1.4" id="common-matrix"><span class="header-section-number">1.4</span> 入力の行列</h2>
+<p>　係数行列は <a href="../user/glossary.html#g-crs">CRS</a> 形式で与える. <a href="../user/glossary.html#g-mpi">MPI</a> で並列に解く場合は, 各<a href="../user/glossary.html#g-rank">ランク</a>が連続した行のブロック (大域行番号<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">nstart</annotation></semantics></math>から<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><annotation encoding="application/x-tex">n_{local}</annotation></semantics></math>行) を受け持ち, その行の部分だけを渡す. 形式の説明は利用者ガイドの<a href="../user/concepts.html#data-structure">データ構造の節</a>に示す.</p>
+<ul>
+<li>行ポインタは長さ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_{local} + 1</annotation></semantics></math>で, 担当行の先頭からの位置を表す. 単調非減少で, 最後と最初の差が担当行の非零要素数に等しい.</li>
+<li>列番号は行列全体での大域の番号である.</li>
+<li>番号付けは 0 始まりである. C言語・Fortran の API では 1 始まりも選べる.</li>
+<li>行数・非零要素数・行ポインタ・列番号の整数は 64 ビットで渡す (C++ では整数型をビルドで 32 ビットにもできる).</li>
+</ul>
+<p>　次の条件はライブラリが検査し, 満たさなければ全ランクが同じエラーになる (エラーの知らせ方は各言語の章).</p>
+<ul>
+<li>各ランクの担当行数は 1 以上である (行を持たないランクは扱えない). ランクごとに異なってよい.</li>
+<li>全ランクの行ブロックを合わせたものが<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math>を重複・欠落なく覆う. ランク番号の順に並んでいる必要はない.</li>
+<li>行ポインタが上の条件を満たし, 列番号が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[0, n_{global})</annotation></semantics></math> (1 始まりでは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1, n_{global}]</annotation></semantics></math>) に収まる.</li>
+<li>1 つのランクの非零要素数と, 担当行数と<a href="../user/glossary.html#g-halo">袖</a>の要素数の和が, ライブラリ内部の局所の添字の範囲 (既定の 32 ビットでは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} - 1</annotation></semantics></math>以下) に収まる. 超える場合はランク数を増やす (C++ ではビルドで局所の添字を 64 ビットにもできる).</li>
+</ul>
+<p>　次の条件は検査しないので, 満たさないと誤った結果を黙って返しうる.</p>
+<ul>
+<li>対称な行列でも, 上三角と下三角の両方の要素を格納する (片側だけを格納する形式は無い).</li>
+<li>各行に対角要素を格納する (値が 0 でも格納する). Jacobi 系の前処理が対角要素を使う.</li>
+<li>各行の列番号は昇順に並べ, 同じ列番号を 1 行に 2 回以上入れない.</li>
+</ul>
+<p>　<a href="../user/installation.html#install-nompi">MPI なしのビルド</a>では 1 プロセスが行列の全体を持つ (担当行は全行).</p>
+<h2 data-number="1.5" id="common-settings"><span class="header-section-number">1.5</span> 設定</h2>
+<p>　ソルバの動作は次の設定で決まる. 指定しなかった設定は表の既定値になる. 各言語での名前は各言語の章の対応表に示す. 取りうる値を外れた値は受け付けない (エラーになる). 設定は全<a href="../user/glossary.html#g-rank">ランク</a>で同じ値を与える.</p>
+<div class="minw-c3">
+<table>
+<thead>
+<tr>
+<th>設定</th>
+<th>使うソルバ</th>
+<th>意味</th>
+<th>取りうる値</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span id="set-tol">収束判定値</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math></td>
+<td>全ソルバ</td>
+<td>線形ソルバでは相対残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>r</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|r\|/\|b\|</annotation></semantics></math>, power・inverse_power では固有値の相対変化, ks_arnoldi では Ritz 対<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, x)</annotation></semantics></math>の相対残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mrow><mi mathvariant="normal">O</mi><mi mathvariant="normal">p</mi></mrow><mspace width="0.167em"></mspace><mi>x</mi><mo>−</mo><mi>θ</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="postfix">∥</mo><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\|\mathrm{Op}\,x-\theta x\|/(|\theta|\|x\|)</annotation></semantics></math>に対する判定値 (shift-invert でも<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>に戻す前の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>で判定する)</td>
+<td>有限の正の数</td>
+<td>1.0e-8</td>
+</tr>
+<tr>
+<td><span id="set-maxiter">最大反復回数</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math></td>
+<td>線形ソルバ, power, inverse_power</td>
+<td>反復回数の上限. pgmres・pcagmres では内側反復の総数, power・inverse_power では外側反復の回数. ks_arnoldi は使わない (<a href="common.html#set-ks-max-restart">最大リスタート回数</a>を使う)</td>
+<td>1 以上. pgmres・pcagmres でも<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">st</annotation></semantics></math>) の倍数でなくてよい</td>
+<td>10000</td>
+</tr>
+<tr>
+<td><span id="set-precon">前処理の種類</span></td>
+<td>全ソルバ</td>
+<td>前処理行列<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>の種類 (<a href="common.html#common-const-precon">定数</a>). 線形ソルバでは反復の前処理, 固有値ソルバでは<a href="common.html#set-precon-spectrum">前処理後の行列のスペクトル</a>を求める場合の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math></td>
+<td>なし, ポイント Jacobi, ブロック Jacobi, Jacobi</td>
+<td>なし</td>
+</tr>
+<tr>
+<td><span id="set-jacobi-iter">Jacobi 前処理の反復回数</span></td>
+<td>前処理が Jacobi のとき</td>
+<td>Jacobi 反復の回数</td>
+<td>1 以上</td>
+<td>1</td>
+</tr>
+<tr>
+<td><span id="set-blocks">ブロック Jacobi 前処理のブロック数</span></td>
+<td>前処理がブロック Jacobi のとき</td>
+<td><a href="../user/glossary.html#g-rank">ランク</a>あたりのブロック数. 適用の並列度に等しい. 細かくするほど前処理は弱くなる</td>
+<td>1 以上で担当行数以下 (担当行数以下であることは検査しない)</td>
+<td>自動. CPU では環境変数<code><span class="tok">PARCEL_NBLOCK</span></code>, それが無ければ OpenMP のスレッド数, どちらも得られなければビルド時の値. GPU では 1 ブロック 2 行</td>
+</tr>
+<tr>
+<td><span id="set-scaling">前処理行列・前処理ベクトルのスケーリング</span></td>
+<td>前処理がブロック Jacobi・Jacobi のとき</td>
+<td>行列・残差を最大値で割って半精度の表現範囲に収める処理の有無 (行列とベクトルで別に指定する)</td>
+<td>有, 無, 自動</td>
+<td>自動 (ブロック Jacobi では有. それ以外は前処理の演算精度または前処理行列の精度が半精度のときだけ有)</td>
+</tr>
+<tr>
+<td><span id="set-gmres-restart">リスタート周期</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math></td>
+<td>pgmres</td>
+<td>基底ベクトル<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m + 1</annotation></semantics></math>本ぶんの領域を確保する</td>
+<td>1 以上</td>
+<td>30</td>
+</tr>
+<tr>
+<td><span id="set-gmres-qr">直交化の方式</span></td>
+<td>pgmres</td>
+<td>Arnoldi 過程の直交化 (<a href="common.html#common-const-qr">定数</a>)</td>
+<td>古典 Gram-Schmidt, 修正 Gram-Schmidt</td>
+<td>修正 Gram-Schmidt</td>
+</tr>
+<tr>
+<td><span id="set-cagmres-st">基底生成の大きさ</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math></td>
+<td>pcagmres</td>
+<td>1 回の基底生成で作るベクトル数<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>と, リスタートまでの基底生成回数<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>. リスタート周期は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s \times t</annotation></semantics></math></td>
+<td>いずれも 1 以上</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><span id="set-cagmres-qr">QR 分解の方式</span></td>
+<td>pcagmres</td>
+<td>基底の QR 分解 (<a href="common.html#common-const-qr">定数</a>, <a href="common.html#common-cagmres-q">組合せの規則</a>)</td>
+<td>古典 Gram-Schmidt, 修正 Gram-Schmidt, Cholesky QR, モーメント法による Cholesky QR</td>
+<td>修正 Gram-Schmidt (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない場合は Cholesky QR)</td>
+</tr>
+<tr>
+<td><span id="set-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方</span></td>
+<td>pcagmres</td>
+<td>正規直交基底<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を陽に作るかどうか (<a href="common.html#common-const-q">定数</a>, <a href="common.html#common-cagmres-q">組合せの規則</a>)</td>
+<td>AUTO, EXPLICIT, IMPLICIT</td>
+<td>AUTO</td>
+</tr>
+<tr>
+<td><span id="set-precon-spectrum">前処理後の行列のスペクトル</span></td>
+<td>固有値ソルバ</td>
+<td>偽のとき<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の固有値を求め, 外側の固有値反復は前処理を使わない. 真のとき<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">AK^{-1}</annotation></semantics></math>の固有値を求める (<a href="common.html#common-eigen-notes">補足</a>)</td>
+<td>真, 偽</td>
+<td>偽</td>
+</tr>
+<tr>
+<td><span id="set-inner-algo">内部線形ソルバの種類</span></td>
+<td>inverse_power</td>
+<td>内部の線形ソルバ (<a href="common.html#common-const-inner">定数</a>). pcg は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>が対称 (正定値または負定値) の場合に限る (検査しない). 前処理後の行列のスペクトルを求める場合は種類によらず pgmres を使う</td>
+<td>pgmres, pcg</td>
+<td>pgmres</td>
+</tr>
+<tr>
+<td><span id="set-inner-tol">内部線形ソルバの収束判定値</span></td>
+<td>inverse_power, ks_arnoldi の shift-invert</td>
+<td>内部線形ソルバの相対残差の判定値</td>
+<td>有限の正の数</td>
+<td>1.0e-10</td>
+</tr>
+<tr>
+<td><span id="set-inner-maxiter">内部線形ソルバの最大反復回数</span></td>
+<td>同上</td>
+<td>内部線形ソルバの反復回数の上限 (pgmres では内側反復の総数. リスタート周期の倍数でなくてよい)</td>
+<td>1 以上</td>
+<td>inverse_power 5000, ks_arnoldi 2000</td>
+</tr>
+<tr>
+<td><span id="set-inner-restart">内部線形ソルバのリスタート周期</span></td>
+<td>同上</td>
+<td>内部 pgmres のリスタート周期. 内部が pcg のときは使わない</td>
+<td>1 以上</td>
+<td>30</td>
+</tr>
+<tr>
+<td><span id="set-inner-precon">内部線形ソルバの前処理</span></td>
+<td>同上</td>
+<td>内部線形ソルバの前処理<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math>の種類, Jacobi 前処理の反復回数, ブロック Jacobi 前処理のブロック数, スケーリング (<a href="common.html#common-eigen-notes">補足</a>)</td>
+<td>前処理の種類, 反復回数, ブロック数, スケーリングと同じ</td>
+<td>Jacobi (反復 1 回), ブロック数・スケーリングは自動</td>
+</tr>
+<tr>
+<td><span id="set-shift">shift-invert</span></td>
+<td>ks_arnoldi</td>
+<td>有効にすると<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>に近い固有値を求める. 値はシフト<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></td>
+<td>任意の実数. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>が固有値に一致しないこと (検査しない)</td>
+<td>無効</td>
+</tr>
+<tr>
+<td><span id="set-ks-subspace">Krylov 部分空間の大きさ</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math></td>
+<td>ks_arnoldi</td>
+<td>部分空間の最大次元<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, リスタート後に残す (最後に返す) 固有対の数<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>, 収束判定の対象とする固有対の数<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mi>e</mi><mi>v</mi><mo>≤</mo><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>&lt;</mo><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">1 \leq nev \leq k_{keep} &lt; m \leq n_{global}</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">m = 30</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">k_{keep} = 10</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">nev = 4</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><span id="set-ks-max-restart">最大リスタート回数</span> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mi>R</mi></msub><annotation encoding="application/x-tex">N_{R}</annotation></semantics></math></td>
+<td>ks_arnoldi</td>
+<td>リスタートの回数の上限</td>
+<td>1 以上</td>
+<td>200</td>
+</tr>
+<tr>
+<td><span id="set-ks-qr">直交化の方式 (ks_arnoldi)</span></td>
+<td>ks_arnoldi</td>
+<td>Arnoldi 過程の直交化 (<a href="common.html#common-const-qr">定数</a>). どちらも 2 回適用する (古典 Gram-Schmidt 法 2 回 = CGS2, 修正 Gram-Schmidt 法 2 回 = MGS2). 固有値の精度は同等で, 速さだけが違う</td>
+<td>古典 Gram-Schmidt, 修正 Gram-Schmidt</td>
+<td>古典 Gram-Schmidt (CGS2). ライブラリのビルド時の指定で修正 Gram-Schmidt にできる</td>
+</tr>
+<tr>
+<td><span id="set-init-vector">初期ベクトル</span></td>
+<td>ks_arnoldi</td>
+<td>Arnoldi 過程の初期ベクトル. power・inverse_power は常に既定のベクトルを使う</td>
+<td>任意のベクトル. ノルムが 0 または非有限なら既定のベクトルに置き換える (rank 0 がその旨を表示する)</td>
+<td>大域行番号から作るベクトル (行分割によらない)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>　設定によっては, 言語によって指定できないものや, 表と異なる表し方をするもの (例えば「既定値を使う」を 0 で表す) がある. それらは各言語の章の対応表に示す.</p>
+<h3 data-number="1.5.1" id="common-precon-notes"><span class="header-section-number">1.5.1</span> 前処理の補足</h3>
+<ul>
+<li>GPU ではブロック Jacobi 前処理は遅く, Jacobi 前処理を推奨する. 前処理の種類は利用者ガイドの<a href="../user/preconditioners.html">前処理の章</a>に示す.</li>
+<li>Jacobi 前処理は係数行列<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の行ポインタ・列番号を複製せずに共有し, 既定では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math>の値も持たずに適用のたびに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の値から計算する (A64FX 向けのビルドの既定は値を保持する). 前処理は求解の中で作られ求解の中だけで使われるので, 求解の実行中に<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>を破棄・変更しない. ビルド時に<code>-DPARCEL_JACOBI_ONTHEFLY=0</code>を与えると<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>の値を保持し, メモリを使って GPU で前処理が速くなる (<a href="../user/kernel-opt.html#perf-memory-options">利用者ガイドの「メモリと速さの選択」</a>). 行列スケーリングが有効な場合と, 係数行列・前処理行列・前処理の演算精度のいずれかが <a href="../user/glossary.html#g-dd">double-double</a> の構成では, 既定でも値を保持する.</li>
+<li>ブロック数とスケーリングを自動にした場合の実際の値は, 環境変数<code>PARCEL_PRECON_VERBOSE</code>を設定すると表示される.</li>
+<li>スケーリングはポイント Jacobi 前処理と前処理なしでは使われない.</li>
+</ul>
+<h3 data-number="1.5.2" id="common-eigen-notes"><span class="header-section-number">1.5.2</span> 固有値ソルバの補足</h3>
+<ul>
+<li>前処理後の行列のスペクトルを求めない場合 (既定), 前処理の設定は外側の固有値反復に使われない. 前処理の設定だけを与えても<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>の固有値は速く求まらない. inverse_power と shift-invert で内部線形ソルバを速くしたい場合は, 内部線形ソルバの前処理を設定する.</li>
+<li>前処理後の行列のスペクトルを求める場合, 内部線形ソルバ (inverse_power, ks_arnoldi の shift-invert) は右前処理の pgmres が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(AK^{-1} - \sigma I)z = v</annotation></semantics></math>を解いて<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>を返す形になり, 前処理は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>そのものである (内部線形ソルバの前処理の設定は使わない).</li>
+<li>内部線形ソルバの設定は, inverse_power と ks_arnoldi の shift-invert で使われ, power とシフトなしの ks_arnoldi では使われない. 内部 pgmres の直交化は修正 Gram-Schmidt 法に固定である.</li>
+<li>内部線形ソルバが収束しなくても外側の反復は続く. 収束しなかった回数は<a href="common.html#res-inner-fail">結果</a>で得る. 外側の収束状態には反映しない.</li>
+<li>ks_arnoldi の shift-invert で前処理後の行列のスペクトルを求めない場合, 内部 pgmres は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi><mo stretchy="false" form="postfix">)</mo><mi>z</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">(A - \sigma I)z = v</annotation></semantics></math>を解き, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi>i</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">K_{in}</annotation></semantics></math>を<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>から作る. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>−</mo><mi>σ</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">A - \sigma I</annotation></semantics></math>の与え方は各言語の章に示す.</li>
+<li>内部線形ソルバの誤差はそのまま固有値の推定の誤差になるため, 外側の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math>より内部線形ソルバを厳しく収束させる必要がある.</li>
+</ul>
+<h3 data-number="1.5.3" id="common-cagmres-q"><span class="header-section-number">1.5.3</span> pcagmres の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方と QR 分解</h3>
+<p>　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方 (<a href="common.html#common-const-q">定数</a>) は次のとおりである.</p>
+<table>
+<thead>
+<tr>
+<th>作り方</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">AUTO</td>
+<td>QR 分解が Cholesky QR かつ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>のときだけ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らず, それ以外は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る</td>
+</tr>
+<tr>
+<td class="nowrap">EXPLICIT</td>
+<td>常に<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る (Cholesky QR で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>でも作る)</td>
+</tr>
+<tr>
+<td class="nowrap">IMPLICIT</td>
+<td>どの<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>でも<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作らない. 基底<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math>の Gram 行列の Cholesky 分解から<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>だけを求め, 解の更新に<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>R</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V(R^{-1}y)</annotation></semantics></math>を用いる. QR 分解は Cholesky QR またはモーメント法による Cholesky QR に限る</td>
+</tr>
+</tbody>
+</table>
+<p>　<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方と QR 分解の組合せは, 設定を与える順序によらないよう求解の入口で検査し, 次の場合は受け付けない (全ランクで同じ判定).</p>
+<ul>
+<li>IMPLICIT で, 古典・修正 Gram-Schmidt を明示した (QR 分解を指定していなければ Cholesky QR を使う).</li>
+<li>モーメント法による Cholesky QR を AUTO または EXPLICIT と組み合わせた.</li>
+<li>モーメント法による Cholesky QR で, 前処理がなしでない, または<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>が 2 以上の偶数でない.</li>
+</ul>
+<p>　モーメント法による Cholesky QR (<a href="../user/glossary.html#g-moment">モーメント法</a>) は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>が対称の場合に限る. これは検査せず, 非対称な<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>では誤った<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>を用いて誤った結果を返す. AUTO と EXPLICIT は, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math>の Cholesky QR 以外では同じ計算を行う. IMPLICIT は計算の順序が異なるので, 同じ<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>と QR 分解でも結果は丸め誤差の範囲で異なる. IMPLICIT では Cholesky QR 法の直交性の誤差が基底の条件数の 2 乗に比例するので, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>を大きくすると収束が悪化しうる. <a href="../user/glossary.html#g-fp16">FP16</a> のデータ精度・計算精度では, Cholesky QR 系 (IMPLICIT とモーメント法) を使わない (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>によらず NaN または未収束になる. 検査はしない). 方法は利用者ガイドの<a href="../user/linear-solvers.html#alg-pcagmres">線形ソルバの章</a>と <a href="../user/qr.html">QR分解の章</a>に示す.</p>
+<h2 data-number="1.6" id="common-constants"><span class="header-section-number">1.6</span> 定数</h2>
+<p>　設定に与える値は次の定数で表す. 値は全言語で同じであり, 各言語での名前は各言語の章に示す.</p>
+<p>　<span id="common-const-precon"></span>前処理の種類:</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th style="text-align: right;">値</th>
+<th>前処理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NONE</td>
+<td style="text-align: right;">0</td>
+<td>前処理なし</td>
+</tr>
+<tr>
+<td>POINTJACOBI</td>
+<td style="text-align: right;">1</td>
+<td>ポイント Jacobi 前処理</td>
+</tr>
+<tr>
+<td>BLOCKJACOBI</td>
+<td style="text-align: right;">2</td>
+<td>ブロック Jacobi 前処理</td>
+</tr>
+<tr>
+<td>JACOBI</td>
+<td style="text-align: right;">4</td>
+<td>Jacobi 前処理</td>
+</tr>
+</tbody>
+</table>
+<p>　<span id="common-const-qr"></span>直交化・QR 分解の方式:</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th style="text-align: right;">値</th>
+<th>方式</th>
+<th>使えるソルバ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">CGS</td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td>古典 Gram-Schmidt 法</td>
+<td>pgmres, pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る場合), ks_arnoldi (2 回適用する)</td>
+</tr>
+<tr>
+<td class="nowrap">MGS</td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>修正 Gram-Schmidt 法</td>
+<td>pgmres, pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る場合), ks_arnoldi (2 回適用する)</td>
+</tr>
+<tr>
+<td class="nowrap">CHOLESKYQR</td>
+<td style="text-align: right;" class="nowrap">2</td>
+<td>Cholesky QR 法</td>
+<td>pcagmres</td>
+</tr>
+<tr>
+<td class="nowrap">CAGMRES_CHOLESKYQR</td>
+<td style="text-align: right;" class="nowrap">202</td>
+<td><a href="../user/glossary.html#g-moment">モーメント法</a>による Cholesky QR 法 (対称行列・前処理なし専用)</td>
+<td>pcagmres (IMPLICIT のときだけ)</td>
+</tr>
+</tbody>
+</table>
+<p>　<span id="common-const-inner"></span>内部線形ソルバの種類:</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th style="text-align: right;">値</th>
+<th>ソルバ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PGMRES</td>
+<td style="text-align: right;">0</td>
+<td>右前処理 pgmres</td>
+</tr>
+<tr>
+<td>PCG</td>
+<td style="text-align: right;">1</td>
+<td>pcg</td>
+</tr>
+</tbody>
+</table>
+<p>　<span id="common-const-q"></span>pcagmres の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方:</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th style="text-align: right;">値</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AUTO</td>
+<td style="text-align: right;">0</td>
+<td><a href="common.html#common-cagmres-q">上記</a></td>
+</tr>
+<tr>
+<td>EXPLICIT</td>
+<td style="text-align: right;">1</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>IMPLICIT</td>
+<td style="text-align: right;">2</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<p>　収束状態の定数は<a href="common.html#common-reason">次節</a>に示す.</p>
+<h2 data-number="1.7" id="common-results"><span class="header-section-number">1.7</span> 結果</h2>
+<p>　求解は解 (固有値ソルバでは固有値と固有ベクトル) のほか, 次の値を返す. 値は全<a href="../user/glossary.html#g-rank">ランク</a>で同じである. 意味の詳細はソルバごとに異なり, <a href="common.html#common-reason">収束状態</a>の節と<a href="convergence.html#convergence">次章</a>に示す.</p>
+<table>
+<thead>
+<tr>
+<th>結果</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap"><span id="res-reason">収束状態</span></td>
+<td><a href="common.html#common-reason">収束状態の定数</a>のいずれか. 正は収束, 負は失敗, 0 は求解を実行していない</td>
+</tr>
+<tr>
+<td class="nowrap"><span id="res-iter">反復回数</span></td>
+<td>数え方はソルバごとに異なる (<a href="common.html#common-iter-resid">下表</a>)</td>
+</tr>
+<tr>
+<td class="nowrap"><span id="res-resid">残差</span></td>
+<td>収束判定値と比べた相対値 (<a href="common.html#common-iter-resid">下表</a>). 計算していなければ NaN</td>
+</tr>
+<tr>
+<td class="nowrap"><span id="res-true">真の残差</span></td>
+<td>線形ソルバの終了時に計算した<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>x</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax\|/\|b\|</annotation></semantics></math>. 追加の計算をせずに返す. 固有値ソルバでは NaN. pcg・pbicgstab の残差は漸化式の残差なので, 丸め誤差により真の残差と離れることがある. 解の精度を確かめる場合はこちらを見る</td>
+</tr>
+<tr>
+<td class="nowrap"><span id="res-nconv">収束した固有対の数</span></td>
+<td>ks_arnoldi の最後の収束判定で, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>個のうち判定値を満たした固有対の数 (NaN は数えない. 不変部分空間などで真の残差を確かめた場合はその数). 収束時は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>. 他のソルバでは 0</td>
+</tr>
+<tr>
+<td class="nowrap"><span id="res-inner-fail">内部線形ソルバの失敗回数</span></td>
+<td>inverse_power と ks_arnoldi の shift-invert で, 内部線形ソルバが収束判定値を満たさずに終わった回数. power とシフトなしの ks_arnoldi では 0. 外側の収束状態には反映しない. 0 でない場合は内部線形ソルバの最大反復回数や前処理を見直す</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.7.1" id="common-eigen-output"><span class="header-section-number">1.7.1</span> 固有値と固有ベクトルの出力</h3>
+<ul>
+<li>power と inverse_power は固有値 1 個と固有ベクトル 1 本を返す. 固有値は実数である.</li>
+<li>ks_arnoldi は固有対を<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\theta|</annotation></semantics></math>の降順 (shift-invert では<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>に近い順) に<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>組返す. 収束を保証するのは先頭の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>組である.</li>
+<li>固有値は実部と虚部の組で表す. 固有値が複素共役対の場合, 対応する固有ベクトルは実部と虚部の 2 本として連続して格納する.</li>
+<li>有効次元が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mrow><mi>k</mi><mi>e</mi><mi>e</mi><mi>p</mi></mrow></msub><annotation encoding="application/x-tex">k_{keep}</annotation></semantics></math>に満たないまま終えた場合, 足りない固有対は 0 で返す (rank 0 がその旨を表示する). shift-invert の逆変換で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>θ</mi><msup><mo stretchy="false" form="prefix">|</mo><mn>2</mn></msup><mo>≤</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>300</mn></mrow></msup></mrow><annotation encoding="application/x-tex">|\theta|^{2} \leq 10^{-300}</annotation></semantics></math>となる固有値は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mi>∞</mi></mrow><annotation encoding="application/x-tex">+\infty</annotation></semantics></math>を返す.</li>
+<li>各言語での配列の並びは各言語の章に示す.</li>
+</ul>
+<h2 data-number="1.8" id="common-reason"><span class="header-section-number">1.8</span> 収束状態</h2>
+<p>　求解が返す収束状態は次の定数である (PETSc の<code>KSPConvergedReason</code>に倣い, 正は収束, 負は失敗).</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th style="text-align: right;">値</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">CONVERGED_RTOL</td>
+<td style="text-align: right;" class="nowrap">1</td>
+<td>収束判定値を満たした</td>
+</tr>
+<tr>
+<td class="nowrap">ITERATING</td>
+<td style="text-align: right;" class="nowrap">0</td>
+<td>未実行 (求解を実行する前, または引数の誤りで解かなかった)</td>
+</tr>
+<tr>
+<td class="nowrap">DIVERGED_ITS</td>
+<td style="text-align: right;" class="nowrap">-1</td>
+<td>最大反復回数 (ks_arnoldi は最大リスタート回数) に達した</td>
+</tr>
+<tr>
+<td class="nowrap">DIVERGED_NANORINF</td>
+<td style="text-align: right;" class="nowrap">-2</td>
+<td>判定に用いる残差または固有値の推定値に NaN / Inf が現れた</td>
+</tr>
+<tr>
+<td class="nowrap">DIVERGED_BREAKDOWN</td>
+<td style="text-align: right;" class="nowrap">-3</td>
+<td>アルゴリズムの破綻 (下表)</td>
+</tr>
+</tbody>
+</table>
+<p>　各状態が起こる場合をソルバごとに示す. 詳細は<a href="convergence.html#convergence">次章</a>に示す.</p>
+<table>
+<thead>
+<tr>
+<th>ソルバ</th>
+<th>CONVERGED_RTOL</th>
+<th>DIVERGED_NANORINF</th>
+<th>DIVERGED_BREAKDOWN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">pcg</td>
+<td>漸化式の相対残差 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math> (反復せずに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math>, 反復回数 0). 初期残差の相対残差 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math> (反復せずに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>は初期値のまま, 反復回数 0)</td>
+<td>漸化式の相対残差が非有限になった時点で打ち切り</td>
+<td>起こらない (ゼロ割りは検出せず, 結果が非有限なら NANORINF)</td>
+</tr>
+<tr>
+<td class="nowrap">pbicgstab</td>
+<td>pcg と同じ. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mi>A</mi><mover><mi>e</mi><mo accent="true">̂</mo></mover><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = A\hat{e} = 0</annotation></semantics></math>で打ち切り, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>e</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">\|e\|/\|b\| &lt; tol</annotation></semantics></math>の場合 (<a href="../user/glossary.html#g-lucky">幸運な破綻</a>)</td>
+<td>pcg と同じ</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msup><mi>r</mi><mo>*</mo></msup><mo>,</mo><mi>q</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r^{\ast},q \rangle</annotation></semantics></math>が 0 または非有限, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\omega = 0</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\rho = 0</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = 0</annotation></semantics></math>で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>e</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>≥</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">\|e\|/\|b\| \geq tol</annotation></semantics></math></td>
+</tr>
+<tr>
+<td class="nowrap">pgmres</td>
+<td>リスタート先頭の真の相対残差 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math>, または反復上限で終えたときの終了時の真の相対残差 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math></td>
+<td>真の相対残差, または Arnoldi 過程の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>が非有限になった時点で打ち切り</td>
+<td>幸運な破綻で, 更新に使える列が無い (1 列目で<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>が特異)</td>
+</tr>
+<tr>
+<td class="nowrap">pcagmres</td>
+<td>pgmres と同じ</td>
+<td>真の相対残差が非有限になった時点で打ち切り</td>
+<td>幸運な破綻 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>の階数落ち, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>i</mi></mrow></msub><mo>≈</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h_{i+1,i} \approx 0</annotation></semantics></math>) の後, 更新に使える列が無い</td>
+</tr>
+<tr>
+<td class="nowrap">power, inverse_power</td>
+<td>固有値の相対変化 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt; tol</annotation></semantics></math></td>
+<td>固有値の推定値, 相対変化, または判定に用いる内積が非有限になった時点で打ち切り (inverse_power は内部線形ソルバが NANORINF で終わった場合も)</td>
+<td>power は<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">AK^{-1}x = 0</annotation></semantics></math>, inverse_power は内部線形ソルバの解が 0</td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>判定対象<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>個の Ritz 残差推定 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">\leq tol</annotation></semantics></math> (不変部分空間または乱数方向を含む場合は真の残差でも確認)</td>
+<td>Arnoldi 過程の値, Ritz 値, 残差推定が非有限になった時点で打ち切り</td>
+<td>不変部分空間で真の残差を確かめられない, 有効次元が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>未満, LAPACK の失敗</td>
+</tr>
+</tbody>
+</table>
+<p>　DIVERGED_ITS は, 上のいずれにも当たらずに最大反復回数 (ks_arnoldi は最大リスタート回数) に達した場合である. アルゴリズムの説明は利用者ガイドの<a href="../user/linear-solvers.html">線形ソルバの章</a>と<a href="../user/eigen-solvers.html">固有値ソルバの章</a>に示す.</p>
+<h3 data-number="1.8.1" id="common-iter-resid"><span class="header-section-number">1.8.1</span> 反復回数と残差の意味</h3>
+<p>　<a href="common.html#res-iter">反復回数</a>, <a href="common.html#res-resid">残差</a>, <a href="common.html#res-true">真の残差</a>の意味はソルバごとに次のとおりである.</p>
+<table>
+<thead>
+<tr>
+<th>ソルバ</th>
+<th>反復回数</th>
+<th>残差</th>
+<th>真の残差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">pcg, pbicgstab</td>
+<td>反復回数</td>
+<td>漸化式の相対残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>r</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|r\|/\|b\|</annotation></semantics></math> (pbicgstab の<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = 0</annotation></semantics></math>での打ち切りでは<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>e</mi><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|e\|/\|b\|</annotation></semantics></math>)</td>
+<td>終了時に計算した真の相対残差</td>
+</tr>
+<tr>
+<td class="nowrap">pgmres</td>
+<td>内側反復の総数 (リスタート回数 ×<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>. 反復上限に達した場合は最大反復回数)</td>
+<td>リスタートの先頭で計算する真の相対残差. 反復上限で終わった場合は最後の更新後の値 (= 真の残差)</td>
+<td>同左</td>
+</tr>
+<tr>
+<td class="nowrap">pcagmres</td>
+<td>基底ベクトルの総数 (周回数 ×<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s \times t</annotation></semantics></math>. 反復上限に達した場合は最大反復回数)</td>
+<td>pgmres と同じ</td>
+<td>同左</td>
+</tr>
+<tr>
+<td class="nowrap">power, inverse_power</td>
+<td>外側反復の回数</td>
+<td>固有値の相対変化<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msup><mi>λ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo>−</mo><msup><mi>λ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="prefix">|</mo><mi>/</mi><mo stretchy="false" form="prefix">|</mo><msup><mi>λ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|\lambda^{(i)} - \lambda^{(i-1)}|/|\lambda^{(i)}|</annotation></semantics></math>. 非有限で打ち切った場合は NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<td class="nowrap">ks_arnoldi</td>
+<td>実行したリスタートの回数</td>
+<td>判定対象<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>e</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">nev</annotation></semantics></math>個の Ritz 残差推定の最大値 (真の残差で確かめた場合はその最大値)</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.8.2" id="common-linear"><span class="header-section-number">1.8.2</span> 線形ソルバに共通の扱い</h3>
+<p>　線形ソルバ (pcg, pbicgstab, pgmres, pcagmres) では, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math>の場合は反復せずに<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math>を返し, 収束状態は CONVERGED_RTOL (反復回数 0, 残差・真の残差は 0) とする. rank 0 は<code>||b|| = 0 : x = 0</code>の行を書く.</p>
+<p>　初期値<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">x^{(0)}</annotation></semantics></math>による初期残差の相対残差<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo>−</mo><mi>A</mi><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="false" form="postfix">∥</mo><mi>/</mi><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo></mrow><annotation encoding="application/x-tex">\|b - Ax^{(0)}\| / \|b\|</annotation></semantics></math>が<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>o</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">tol</annotation></semantics></math>未満の場合 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">x^{(0)}</annotation></semantics></math>がすでに解である場合を含む) は, どの線形ソルバも反復せずに CONVERGED_RTOL (反復回数 0) を返し, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>は初期値のまま変えない. 残差と真の残差はこの初期残差の相対残差である.</p>
+<h3 data-number="1.8.3" id="common-stdout"><span class="header-section-number">1.8.3</span> 標準出力</h3>
+<p>　rank 0 は求解の最後に次の形式の 1 行を標準出力に書く (非有限値は<code>n/a</code>). inverse_power は<code>, linsolve_failures = ...</code>を, ks_arnoldi は<code>, ks_nconv = 収束数/nev</code> (shift-invert では<code>linsolve_failures</code>も) を加える.</p>
+<p>　例: <code>converged_reason = 1 (CONVERGED_RTOL) , its = 27 , residual = 4.200000e-10 , true_residual = 4.211375e-10</code></p>
+<p>　このほか rank 0 は, 反復の途中経過と計算時間の内訳を書く. 線形ソルバは終了時の真の相対残差を<code>finish : residual true norm</code>の行に書く. pcagmres は反復の前の判定で戻る場合はこの行を書かない. 標準出力の書式は API に含めない. プログラムから結果を得る場合は各言語の結果の取得方法を用いる.</p>
+<h2 data-number="1.9" id="common-mpi"><span class="header-section-number">1.9</span> 設定の扱いと MPI</h2>
+<ul>
+<li>設定は求解のときに使われる. 設定は全<a href="../user/glossary.html#g-rank">ランク</a>で同じ値を与える. 取りうる値を外れた値は受け付けず, 全ランクが同じ判定でエラーになる.</li>
+<li>求解は集団操作である (<code>MPI_Barrier</code>, 内積の<code>MPI_Allreduce</code>, <a href="../user/glossary.html#g-spmv">SpMV</a> の<a href="../user/glossary.html#g-halo">袖</a>通信). 行列を渡したコミュニケータの全ランクが, 同じソルバと同じ設定で呼ぶ.</li>
+<li>求解の入口では, <a href="common.html#common-matrix">入力の行列</a>の条件, ks_arnoldi の部分空間の大きさ (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≤</mo><msub><mi>n</mi><mrow><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">m \leq n_{global}</annotation></semantics></math>を含む), pcagmres の <a href="common.html#common-cagmres-q"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>の作り方と QR 分解の組合せ</a> を検査する. いずれも集団通信の前に, 全ランクが同じ判定でエラーになる.</li>
+<li>求解は収束しなくてもエラーにならない. 結果を使う前に<a href="common.html#res-reason">収束状態</a>を確かめる. 収束状態は求解の入口でリセットされ, 出口で設定される.</li>
+<li><a href="../user/glossary.html#g-device">デバイス</a>メモリの確保に失敗した場合と, 行列の大きさがライブラリ内部の整数の範囲を超える場合はエラーになる. これらは一部のランクだけで起きうるので, 扱いは言語ごとに異なる (各言語の章).</li>
+<li>密行列の LAPACK 計算 (ks_arnoldi) は rank 0 が行い, 結果を全ランクに配る. 判定に用いる値はいずれも全ランクで集約した値なので, 全ランクが同じ分岐を取る.</li>
+</ul>
+<h2 data-number="1.10" id="common-precision"><span class="header-section-number">1.10</span> 精度</h2>
+<p>　PARCEL は, データを保持する精度 (データ精度) と演算の精度 (計算精度) を, 演算 (<a href="../user/glossary.html#g-spmv">SpMV</a>, 前処理, ベクトル演算, 内積) とデータ (行列, ベクトル, 前処理行列など) ごとに選べる. 型は半精度 (<a href="../user/glossary.html#g-fp16">FP16</a>), 単精度, 倍精度, <code>long double</code>, <a href="../user/glossary.html#g-dd">double-double</a> (4倍精度相当) である. 精度の選び方は言語によって異なる.</p>
+<table>
+<thead>
+<tr>
+<th>言語</th>
+<th>精度の指定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>演算ごと・データごとにテンプレート引数で選ぶ (<a href="data-types.html#data-types">PARCELデータ型</a>)</td>
+</tr>
+<tr>
+<td class="nowrap">C言語・Fortran</td>
+<td>ラッパのコンパイル時のマクロで決まり, 実行時には変えられない (既定はすべて倍精度). 入出力の配列は倍精度</td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td>倍精度だけ</td>
+</tr>
+</tbody>
+</table>
+<p>　半精度を使う構成では, 精度で届く相対残差に下限があり, それより小さい収束判定値では停滞するか NaN で破綻する. 制約の詳細は利用者ガイドの<a href="../user/usage.html#usage-cpp-precision">使用方法の章の「精度の指定」</a>と<a href="../user/accuracy.html">「数値精度と再現性」</a>に示す.</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="function-index.html" rel="previous">← 関数索引</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 API リファレンス</a></span>
+<span class="next"><a href="convergence.html" rel="next">ソルバごとの収束判定 →</a></span>
+</nav>
+</main>
+</div>
+<script>
+(function () {
+  var K = 'parcel_api_lang', page = '';
+  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
+  if (page) { put(page); return; }
+  function show(l) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
+      var a = e.getAttribute('data-apilang');
+      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
+    });
+    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
+    if (!t) return;
+    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
+    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
+      a.setAttribute('href', first);
+      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
+    });
+  }
+  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
+    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
+  });
+  var cur = get();
+  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
+  show(cur);
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Versions and Compatibility – PARCEL SYCL v1.2 User Guide</title>
+  <link rel="stylesheet" href="../../assets/parcel.css" />
+  <link rel="stylesheet" href="../../assets/layout.css" />
+</head>
+<body class="doc-user">
+<header class="topbar">
+<a class="home" href="../../index_en.html">PARCEL SYCL v1.2</a>
+<span class="sep">/</span>
+<a class="doctitle" href="index.html">User Guide</a>
+<span class="spacer"></span>
+<a class="toplink" href="../user/index.html">User Guide</a>
+<a class="toplink" href="../reference/index.html">API Reference</a>
+<a class="toplink search" href="../search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="../../ja/user/versions.html" hreflang="ja">日本語</a>
+</header>
+<div class="layout">
+<nav class="sidebar" aria-label="Contents">
+<p class="sidebar-title"><a href="index.html">Contents</a></p>
+<ul>
+<li><a href="quickstart.html#quickstart"><span class="toc-section-number">1</span> Quick Start</a>
+<ul>
+<li><a href="quickstart.html#qs-overview"><span class="toc-section-number">1.1</span> Overview of the Program</a></li>
+<li><a href="quickstart.html#qs-compiler"><span class="toc-section-number">1.2</span> Installing a SYCL Compiler</a></li>
+<li><a href="quickstart.html#qs-cpp"><span class="toc-section-number">1.3</span> C++</a></li>
+<li><a href="quickstart.html#qs-c"><span class="toc-section-number">1.4</span> C</a></li>
+<li><a href="quickstart.html#qs-fortran"><span class="toc-section-number">1.5</span> Fortran</a></li>
+<li><a href="quickstart.html#qs-python"><span class="toc-section-number">1.6</span> Python</a></li>
+<li><a href="quickstart.html#qs-next"><span class="toc-section-number">1.7</span> Where to Go Next</a></li>
+</ul></li>
+<li><a href="concepts.html#concepts"><span class="toc-section-number">2</span> Basic Structure</a>
+<ul>
+<li><a href="concepts.html#data-structure"><span class="toc-section-number">2.1</span> Data Structures</a></li>
+<li><a href="concepts.html#gpu-rank-data"><span class="toc-section-number">2.2</span> GPUs, MPI Ranks and Data</a></li>
+<li><a href="concepts.html#precision-configs"><span class="toc-section-number">2.3</span> Precision Configurations</a></li>
+</ul></li>
+<li><a href="sycl-compiler.html#sycl-compiler"><span class="toc-section-number">3</span> Installing a SYCL Compiler</a>
+<ul>
+<li><a href="sycl-compiler.html#env-s86"><span class="toc-section-number">3.1</span> s86 (SGI8600)</a></li>
+<li><a href="sycl-compiler.html#env-odyssey"><span class="toc-section-number">3.2</span> Odyssey (Wisteria-Odyssey, A64FX)</a></li>
+<li><a href="sycl-compiler.html#env-aquarius"><span class="toc-section-number">3.3</span> Aquarius (Wisteria-Aquarius, A100)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-c"><span class="toc-section-number">3.4</span> Miyabi-C (Xeon Max)</a></li>
+<li><a href="sycl-compiler.html#env-miyabi-g"><span class="toc-section-number">3.5</span> Miyabi-G (GH200)</a></li>
+<li><a href="sycl-compiler.html#env-ps-a"><span class="toc-section-number">3.6</span> PS-A (Plasma Simulator Subsystem A)</a></li>
+<li><a href="sycl-compiler.html#env-ps-b"><span class="toc-section-number">3.7</span> PS-B (Plasma Simulator Subsystem B)</a></li>
+<li><a href="sycl-compiler.html#env-mac"><span class="toc-section-number">3.8</span> macOS (Homebrew)</a></li>
+<li><a href="sycl-compiler.html#env-linux"><span class="toc-section-number">3.9</span> Generic Linux (RHEL Family, Ubuntu Family)</a></li>
+<li><a href="sycl-compiler.html#env-lapacke"><span class="toc-section-number">3.10</span> Installing LAPACKE</a></li>
+</ul></li>
+<li><a href="installation.html#installation"><span class="toc-section-number">4</span> Installation</a>
+<ul>
+<li><a href="installation.html#install-layout"><span class="toc-section-number">4.1</span> Package Layout</a></li>
+<li><a href="installation.html#install-quick-checks"><span class="toc-section-number">4.2</span> Checking After the Build</a></li>
+<li><a href="installation.html#install-options"><span class="toc-section-number">4.3</span> Compile Options</a></li>
+<li><a href="installation.html#install-macros"><span class="toc-section-number">4.4</span> Macros</a></li>
+<li><a href="installation.html#install-recommended-flags"><span class="toc-section-number">4.5</span> Recommended Options</a></li>
+<li><a href="installation.html#install-mpi-default"><span class="toc-section-number">4.6</span> Default of MPI</a></li>
+<li><a href="installation.html#install-nompi"><span class="toc-section-number">4.7</span> Build without MPI</a></li>
+<li><a href="installation.html#install-python"><span class="toc-section-number">4.8</span> Python Package</a></li>
+<li><a href="installation.html#install-spack"><span class="toc-section-number">4.9</span> Installing with spack</a></li>
+</ul></li>
+<li><a href="usage.html#usage"><span class="toc-section-number">5</span> Usage</a>
+<ul class="usage-langs">
+<li><a href="usage.html#usage-cpp"><span class="toc-section-number">5.1</span> C++</a>
+<ul>
+<li><a href="usage.html#usage-cpp-own"><span class="toc-section-number">5.1.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-c"><span class="toc-section-number">5.2</span> C</a>
+<ul>
+<li><a href="usage.html#usage-c-own"><span class="toc-section-number">5.2.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-fortran"><span class="toc-section-number">5.3</span> Fortran</a>
+<ul>
+<li><a href="usage.html#usage-fortran-own"><span class="toc-section-number">5.3.10</span> Passing Your Own Matrix</a></li>
+</ul></li>
+<li><a href="usage.html#usage-python"><span class="toc-section-number">5.4</span> Python</a>
+<ul>
+<li><a href="usage.html#usage-python-own"><span class="toc-section-number">5.4.11</span> Passing Your Own Matrix</a></li>
+</ul></li>
+</ul></li>
+<li><a href="choosing-solver.html#choosing-solver"><span class="toc-section-number">6</span> Choosing a Solver</a>
+<ul>
+<li><a href="choosing-solver.html#choosing-linear"><span class="toc-section-number">6.1</span> Linear Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-eigen"><span class="toc-section-number">6.2</span> Eigenvalue Solvers</a></li>
+<li><a href="choosing-solver.html#choosing-precon"><span class="toc-section-number">6.3</span> Preconditioners</a></li>
+</ul></li>
+<li><a href="running.html#running"><span class="toc-section-number">7</span> Running on GPUs and in Jobs</a>
+<ul>
+<li><a href="running.html#run-gpu"><span class="toc-section-number">7.1</span> Running on GPUs</a></li>
+<li><a href="running.html#run-jobs"><span class="toc-section-number">7.2</span> Running in Jobs</a></li>
+</ul></li>
+<li><a href="linear-solvers.html#linear-solvers"><span class="toc-section-number">8</span> Linear Solvers</a>
+<ul>
+<li><a href="linear-solvers.html#alg-pcg"><span class="toc-section-number">8.1</span> Preconditioned Conjugate Gradient Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pbicgstab"><span class="toc-section-number">8.2</span> Preconditioned Biconjugate Gradient Stabilized Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pgmres"><span class="toc-section-number">8.3</span> Preconditioned Generalized Minimal Residual Method [1]</a></li>
+<li><a href="linear-solvers.html#alg-pcagmres"><span class="toc-section-number">8.4</span> Preconditioned Communication-Avoiding Generalized Minimal Residual Method [2,3]</a></li>
+<li><a href="linear-solvers.html#precision-orthogonality"><span class="toc-section-number">8.5</span> Precision of Orthogonalization and of the Basis</a></li>
+</ul></li>
+<li><a href="eigen-solvers.html#eigen-solvers"><span class="toc-section-number">9</span> Eigenvalue Solvers</a>
+<ul>
+<li><a href="eigen-solvers.html#alg-power"><span class="toc-section-number">9.1</span> Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-inverse-power"><span class="toc-section-number">9.2</span> Inverse Power Method [4]</a></li>
+<li><a href="eigen-solvers.html#alg-ks"><span class="toc-section-number">9.3</span> Krylov-Schur Method [5]</a></li>
+</ul></li>
+<li><a href="preconditioners.html#preconditioners"><span class="toc-section-number">10</span> Preconditioners</a>
+<ul>
+<li><a href="preconditioners.html#scaling"><span class="toc-section-number">10.1</span> Scaling</a></li>
+<li><a href="preconditioners.html#point-jacobi-preconditioner-1"><span class="toc-section-number">10.2</span> Point Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#jacobi-preconditioner-1"><span class="toc-section-number">10.3</span> Jacobi Preconditioner [1]</a></li>
+<li><a href="preconditioners.html#block-jacobi-preconditioner-1"><span class="toc-section-number">10.4</span> Block Jacobi Preconditioner [1]</a></li>
+</ul></li>
+<li><a href="qr.html#qr"><span class="toc-section-number">11</span> QR Factorization</a>
+<ul>
+<li><a href="qr.html#classical-gram-schmidt-method-1"><span class="toc-section-number">11.1</span> Classical Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#modified-gram-schmidt-method-1"><span class="toc-section-number">11.2</span> Modified Gram-Schmidt Method [1]</a></li>
+<li><a href="qr.html#classical-gram-schmidt-method-with-reorthogonalization-cgs2-6"><span class="toc-section-number">11.3</span> Classical Gram-Schmidt Method with Reorthogonalization (CGS2) [6]</a></li>
+<li><a href="qr.html#cholesky-qr-method-7"><span class="toc-section-number">11.4</span> Cholesky QR Method [7]</a></li>
+<li><a href="qr.html#qr-cagmres-choleskyqr"><span class="toc-section-number">11.5</span> Cholesky QR Method by the Moment Method (QR_CAGMRES_CHOLESKYQR)</a></li>
+</ul></li>
+<li><a href="accuracy.html#accuracy"><span class="toc-section-number">12</span> Numerical Accuracy and Reproducibility</a>
+<ul>
+<li><a href="accuracy.html#accuracy-reason"><span class="toc-section-number">12.1</span> Checking the Convergence Status</a></li>
+<li><a href="accuracy.html#accuracy-residual"><span class="toc-section-number">12.2</span> Recurrence Residual and True Residual</a></li>
+<li><a href="accuracy.html#accuracy-reproducibility"><span class="toc-section-number">12.3</span> Differences by Degree of Parallelism and Execution Environment</a></li>
+<li><a href="accuracy.html#accuracy-lowprec"><span class="toc-section-number">12.4</span> Known Limits at Low Precision</a></li>
+<li><a href="accuracy.html#accuracy-dd"><span class="toc-section-number">12.5</span> double-double</a></li>
+<li><a href="accuracy.html#accuracy-fast-math"><span class="toc-section-number">12.6</span> Do Not Use -ffast-math</a></li>
+</ul></li>
+<li><a href="kernel-opt.html#kernel-opt"><span class="toc-section-number">13</span> Optimization</a>
+<ul>
+<li><a href="kernel-opt.html#kopt-defaults"><span class="toc-section-number">13.1</span> Defaults per Environment</a></li>
+<li><a href="kernel-opt.html#kopt-blocking"><span class="toc-section-number">13.2</span> Blocking</a></li>
+<li><a href="kernel-opt.html#kopt-ladder"><span class="toc-section-number">13.3</span> Ladder Splitting</a></li>
+<li><a href="kernel-opt.html#kopt-gemv"><span class="toc-section-number">13.4</span> Decomposing gemv</a></li>
+<li><a href="kernel-opt.html#kopt-a64fx"><span class="toc-section-number">13.5</span> Optimizations for A64FX (A to F)</a></li>
+<li><a href="kernel-opt.html#kopt-v100"><span class="toc-section-number">13.6</span> Register Limit on V100</a></li>
+<li><a href="kernel-opt.html#perf-memory-options"><span class="toc-section-number">13.7</span> Choosing Between Memory and Speed</a></li>
+</ul></li>
+<li><a href="performance.html#performance"><span class="toc-section-number">14</span> Performance</a>
+<ul>
+<li><a href="performance.html#perf-conditions"><span class="toc-section-number">14.1</span> Measurement Conditions</a></li>
+<li><a href="performance.html#perf-conv512"><span class="toc-section-number">14.2</span> Time to Convergence</a></li>
+<li><a href="performance.html#perf-mixed"><span class="toc-section-number">14.3</span> Mixed Precision (precon_dataF)</a></li>
+<li><a href="performance.html#perf-compare"><span class="toc-section-number">14.4</span> Comparison with PETSc / SLEPc and v1.0</a></li>
+<li><a href="performance.html#perf-howto"><span class="toc-section-number">14.5</span> Measuring Your Own Environment</a></li>
+</ul></li>
+<li class="current"><a href="versions.html#versions"><span class="toc-section-number">15</span> Versions and Compatibility</a>
+<ul>
+<li><a href="versions.html#compatibility-policy"><span class="toc-section-number">15.1</span> Compatibility Policy</a></li>
+<li><a href="versions.html#versions-api"><span class="toc-section-number">15.2</span> Checking the Version</a></li>
+<li><a href="versions.html#versions-cite"><span class="toc-section-number">15.3</span> Citation and Support</a></li>
+<li><a href="versions.html#versions-tarball"><span class="toc-section-number">15.4</span> Verifying the Distribution</a></li>
+<li><a href="versions.html#changes-from-v1.0-to-v1.2"><span class="toc-section-number">15.5</span> Changes from v1.0 to v1.2</a></li>
+</ul></li>
+<li><a href="glossary.html#glossary"><span class="toc-section-number">16</span> Glossary</a>
+<ul>
+<li><a href="glossary.html#glossary-env"><span class="toc-section-number">16.1</span> Systems</a></li>
+<li><a href="glossary.html#glossary-devices"><span class="toc-section-number">16.2</span> Processors and GPUs</a></li>
+<li><a href="glossary.html#glossary-units"><span class="toc-section-number">16.3</span> Components and Resource Units</a></li>
+<li><a href="glossary.html#glossary-software"><span class="toc-section-number">16.4</span> Software</a></li>
+<li><a href="glossary.html#glossary-parcel"><span class="toc-section-number">16.5</span> PARCEL Terms</a></li>
+<li><a href="glossary.html#glossary-numerics"><span class="toc-section-number">16.6</span> Computational Terms</a></li>
+</ul></li>
+<li><a href="references.html#references">References</a></li>
+</ul>
+</nav>
+<main>
+<nav class="pagenav" aria-label="page navigation">
+<span class="prev"><a href="performance.html" rel="previous" accesskey="p">← Performance</a></span>
+<span class="up"><a href="index.html" rel="up" accesskey="u">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="glossary.html" rel="next" accesskey="n">Glossary →</a></span>
+</nav>
+<h1 data-number="15" id="versions"><span class="header-section-number">15</span> Versions and Compatibility</h1>
+<p>This chapter summarizes the changes from the public release v1.0 to v1.2 that affect user programs. Deprecated functions are noted at each function in the <a href="../reference/index.html">API Reference</a>. For the detailed history of changes, see <code>CHANGELOG.md</code> in the repository.</p>
+<h2 data-number="15.1" id="compatibility-policy"><span class="header-section-number">15.1</span> Compatibility Policy</h2>
+<ul>
+<li>When the name, arguments, or default behavior of the public API (the classes, functions, macros, and C/Fortran functions described in the <a href="../reference/index.html">API Reference</a> and “<a href="usage.html#usage">Usage</a>” of this manual) is changed, the change is recorded in this chapter.</li>
+<li>A renamed function keeps its old name as an alias at least until the next version, and the old name is marked as deprecated in the <a href="../reference/index.html">API Reference</a>.</li>
+<li>The format of the standard output, such as the output of execution times and progress messages, is not part of the API. To obtain results from a program, use the functions that retrieve the convergence status (<a href="../reference/common-members.html">“Common Member Functions” in the API Reference</a>).</li>
+</ul>
+<h2 data-number="15.2" id="versions-api"><span class="header-section-number">15.2</span> Checking the Version</h2>
+<p>The version is defined in one place, <code>Include/parcel_version.hpp</code> (this version is 1.2.0, released on 2026-10-23). Each language obtains it as follows (<a href="../reference/common-members.html#api-version">C++</a>, <a href="../reference/c-api.html#api-c-version">C</a>, <a href="../reference/fortran-api.html#api-f-version">Fortran</a> and <a href="../reference/python-api.html#api-py-version">Python</a> in the API Reference).</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>How to obtain the version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="nowrap">C++</td>
+<td>Macros <code><span class="tok">PARCEL_VERSION_MAJOR</span></code> / <code><span class="tok">PARCEL_VERSION_MINOR</span></code> / <code><span class="tok">PARCEL_VERSION_PATCH</span></code>, <code><span class="tok">PARCEL_VERSION_STRING</span></code>, <code><span class="tok">PARCEL_VERSION_NUMBER</span></code>, <code><span class="tok">PARCEL_VERSION_GE(a,</span> <span class="tok">b,</span> <span class="tok">c)</span></code>. Functions <code><span class="tok">parcel::version_string()</span></code> and <code><span class="tok">parcel::get_version()</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">C</td>
+<td><code><span class="tok">parcel_get_version()</span></code>, <code><span class="tok">parcel_version_string()</span></code> (the values when the wrapper was built)</td>
+</tr>
+<tr>
+<td class="nowrap">Fortran</td>
+<td><code><span class="tok">parcel_get_version()</span></code>, <code><span class="tok">parcel_version_string()</span></code></td>
+</tr>
+<tr>
+<td class="nowrap">Python</td>
+<td><code><span class="tok">parcel.__version__</span></code> (version of the package) and <code><span class="tok">parcel.library_version()</span></code> (the value when the native layer was built). Both have the same value</td>
+</tr>
+</tbody>
+</table>
+<p>The Python package has the same version number as the library. The regression tests check that the version of the program run agrees with the version the generator reads from the header.</p>
+<h2 data-number="15.3" id="versions-cite"><span class="header-section-number">15.3</span> Citation and Support</h2>
+<p>Citation information is in <code>CITATION.cff</code> (Citation File Format 1.2.0) of the distribution package. When citing PARCEL, cite <a href="references.html#references">reference [3]</a> (Idomura et al., ScalA 17, 2017). Questions and bug reports are accepted on GitHub Issues (<a href="https://github.com/parcel-jaea/PARCEL-release/issues" class="uri">https://github.com/parcel-jaea/PARCEL-release/issues</a>). How to get support and what to include in a report (version, how it was installed and the build commands, the computer, versions of the SYCL implementation and MPI, steps to reproduce) are in <code>SUPPORT.md</code>. The public repository is <a href="https://github.com/parcel-jaea/PARCEL-release" class="uri">https://github.com/parcel-jaea/PARCEL-release</a> (the distribution tarball is on its Release).</p>
+<h2 data-number="15.4" id="versions-tarball"><span class="header-section-number">15.4</span> Verifying the Distribution</h2>
+<p>The distribution tarball <code>parcel_sycl-1.2.0.tar.gz</code> is placed on the GitHub Release (<a href="https://github.com/parcel-jaea/PARCEL-release/releases" class="uri">https://github.com/parcel-jaea/PARCEL-release/releases</a>, tag <code>v1.2.0</code>) with a sha256 file <code>parcel_sycl-1.2.0.tar.gz.sha256</code>. Check a received tarball with <code>sha256sum -c parcel_sycl-1.2.0.tar.gz.sha256</code> (<code>shasum -a 256 -c</code> on macOS). The tarball is created with <code>tools/make_tarball.py</code>, and the same contents always give the same tarball (the same sha256). Whether the sha256 written in the spack recipes agrees with the tarball of the current package is checked with <code>python3 tools/make_tarball.py --check</code>. Because the recipes are also in the tarball, the recipes inside the tarball are stored without the sha256.</p>
+<p>Past versions are also on GitHub Releases: SYCL version v1.0 on the Release of the same repository (tag <code>v1.0.0</code>), and PARCEL 1.0–1.2 before the SYCL version (Fortran, CUDA) on the Releases of <a href="https://github.com/parcel-jaea/PARCEL-legacy" class="uri">https://github.com/parcel-jaea/PARCEL-legacy</a>.</p>
+<h2 data-number="15.5" id="changes-from-v1.0-to-v1.2"><span class="header-section-number">15.5</span> Changes from v1.0 to v1.2</h2>
+<h3 data-number="15.5.1" id="changed-behavior"><span class="header-section-number">15.5.1</span> Changed Behavior</h3>
+<p>Features that existed in v1.0 and whose behavior changed in v1.2. v1.0 has no functions that return the convergence status, so the v1.0 column describes how the iteration ended.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>v1.0</th>
+<th>v1.2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class template arguments of <code><span class="tok">pbicgstab</span></code></td>
+<td>Five arguments including an unused leading <code><span class="tok">Tdata</span></code>. Passing the same four arguments as for the other solvers shifted them by one, so <a href="glossary.html#g-spmv">SpMV</a> was computed in the precision of the <a href="glossary.html#g-precon">preconditioner</a> and the inner products always in double</td>
+<td><code><span class="tok">&lt;Tspmv,</span> <span class="tok">Tprecon,</span> <span class="tok">Taxpy,</span> <span class="tok">Tdot&gt;</span></code>, the same as the other solvers</td>
+</tr>
+<tr>
+<td>Number of blocks of the <a href="glossary.html#g-jacobi">block Jacobi</a> preconditioner</td>
+<td>Default 1</td>
+<td>Determined automatically from the parallelism of the <a href="glossary.html#g-device">device</a> unless <code><span class="tok">set_blockjacobi()</span></code> is called</td>
+</tr>
+<tr>
+<td>Matrix and vector scaling of the preconditioner</td>
+<td>Disabled by default</td>
+<td>Determined automatically from the type and precision of the preconditioner unless <code><span class="tok">set_scaling_matrix()</span></code> / <code><span class="tok">set_scaling_vector()</span></code> is called (always enabled for block Jacobi; enabled for Jacobi only in half precision)</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-sycl">SYCL</a> queue</td>
+<td>The default (out-of-order) queue was also accepted (the bundled sample and wrapper used the default queue with <a href="glossary.html#g-adaptivecpp">AdaptiveCpp</a>)</td>
+<td><code><span class="tok">set_crsMat()</span></code> and <code><span class="tok">solver()</span></code> of all solvers throw <code><span class="tok">std::invalid_argument</span></code> unless the queue is <a href="glossary.html#g-inorder">in-order</a></td>
+</tr>
+<tr>
+<td>Arguments of the setter functions</td>
+<td>Out-of-range values were accepted with undefined results (e.g. <code><span class="tok">set_precon_algo(3)</span></code> silently meant no preconditioning, <code><span class="tok">set_tolerance(0)</span></code> iterated up to the maximum)</td>
+<td>Out-of-range values throw <code><span class="tok">std::invalid_argument</span></code> (<a href="../reference/solver-common.html#api-settings-mpi">“Handling of Settings and Exceptions” in the API Reference</a>)</td>
+</tr>
+<tr>
+<td>Linear solvers with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="postfix">∥</mo><mi>b</mi><mo stretchy="false" form="postfix">∥</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\|b\| = 0</annotation></semantics></math></td>
+<td>The <a href="glossary.html#g-relres">relative residual</a> became NaN, and the solver iterated up to the maximum number of iterations</td>
+<td>Returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x = 0</annotation></semantics></math> without iterating, with <code><span class="tok">CONVERGED_RTOL</span></code> (0 iterations)</td>
+</tr>
+<tr>
+<td>Linear solvers with a non-finite residual</td>
+<td>Iterated up to the maximum number of iterations</td>
+<td>Stops immediately with <code><span class="tok">DIVERGED_NANORINF</span></code></td>
+</tr>
+<tr>
+<td>Breakdown of <code><span class="tok">pbicgstab</span></code></td>
+<td>Not detected; iterated up to the maximum number of iterations with NaN / Inf</td>
+<td>Detects zeros of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟨</mo><msup><mi>r</mi><mo>*</mo></msup><mo>,</mo><mi>q</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\langle r^{\ast},q \rangle</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math> and others, and returns <code><span class="tok">DIVERGED_BREAKDOWN</span></code>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v = 0</annotation></semantics></math> is checked as a <a href="glossary.html#g-lucky">lucky breakdown</a></td>
+</tr>
+<tr>
+<td>Lucky breakdown of <code><span class="tok">pgmres</span></code> / <code><span class="tok">pcagmres</span></code></td>
+<td>NaN from division by zero, or a solution update containing garbage</td>
+<td>The solution is updated with the valid columns only and checked at the next <a href="glossary.html#g-restart">restart</a>; <code><span class="tok">DIVERGED_BREAKDOWN</span></code> if no update is possible</td>
+</tr>
+<tr>
+<td><code><span class="tok">-ffast-math</span></code> / <code><span class="tok">-ffinite-math-only</span></code></td>
+<td>Could be built</td>
+<td>The build is stopped with <code><span class="tok">#error</span></code></td>
+</tr>
+<tr>
+<td>Error-free transformation of double-double products (TwoProd)</td>
+<td>Dekker splitting. With <a href="glossary.html#g-cuda">CUDA</a>, products and sums are fused into FMA, so dd products may degrade to double precision</td>
+<td>Uses <code><span class="tok">fma</span></code>. dd results may change in the last digit</td>
+</tr>
+<tr>
+<td><a href="glossary.html#g-fp16">FP16</a> inner products of <code><span class="tok">pbicgstab</span></code></td>
+<td>Because of the shifted template arguments, the inner products were always computed in double (even in FP16 configurations)</td>
+<td>The inner products are computed in FP16, and the solver may end with <code><span class="tok">DIVERGED_BREAKDOWN</span></code> near the attainable residual of the precision</td>
+</tr>
+<tr>
+<td>Default of <code><span class="tok">set_tolerance()</span></code> (all solvers)</td>
+<td>1.0e-4</td>
+<td>1.0e-8</td>
+</tr>
+<tr>
+<td>Default of <code><span class="tok">set_max_iteration()</span></code></td>
+<td>100</td>
+<td>10000</td>
+</tr>
+<tr>
+<td>Default of <code><span class="tok">set_restart()</span></code> of <code><span class="tok">pgmres</span></code></td>
+<td>4</td>
+<td>30 (<code><span class="tok">pgmres</span></code> holds <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m+1</annotation></semantics></math> work vectors, so the default memory usage grows)</td>
+</tr>
+<tr>
+<td>Default of <code><span class="tok">set_restart(s,</span> <span class="tok">t)</span></code> of <code><span class="tok">pcagmres</span></code></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">s = 1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s = 8</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">t = 4</annotation></semantics></math></td>
+</tr>
+<tr>
+<td>Default of <code><span class="tok">set_qr_algo()</span></code> of <code><span class="tok">pcagmres</span></code></td>
+<td><code><span class="tok">QR_CGS</span></code></td>
+<td><code><span class="tok">QR_MGS</span></code> (<code><span class="tok">QR_CHOLESKYQR</span></code> with <code><span class="tok">CAGMRES_Q_IMPLICIT</span></code> if not specified). The default of <code><span class="tok">cagmres_qr_algo</span></code> in C / Fortran is also <code><span class="tok">PARCEL_QR_MGS</span></code></td>
+</tr>
+<tr>
+<td><code><span class="tok">pgmres</span></code> / <code><span class="tok">pcagmres</span></code> with an iteration limit that is not a multiple of the restart length (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">st</annotation></semantics></math>)</td>
+<td>The number of cycles was rounded down and the remaining iterations were not performed (no iteration if the limit was smaller than the cycle)</td>
+<td>The last restart is shortened, and the solver iterates exactly up to the limit; the iteration count is the limit if it is reached</td>
+</tr>
+<tr>
+<td><code><span class="tok">pcg</span></code> / <code><span class="tok">pbicgstab</span></code> with a relative initial residual below the tolerance</td>
+<td>At least one iteration (if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">x^{(0)}</annotation></semantics></math> is the exact solution and the initial residual is 0, division by zero gives NaN)</td>
+<td>Returns <code><span class="tok">CONVERGED_RTOL</span></code> without iterating (0 iterations, <code><span class="tok">x</span></code> unchanged)</td>
+</tr>
+<tr>
+<td>Default of <code><span class="tok">PARCEL_INT</span></code> (integers such as row and column indices)</td>
+<td><code><span class="tok">int32_t</span></code> (<code><span class="tok">int64_t</span></code> with <code><span class="tok">-DPARCEL_INT</span></code>)</td>
+<td>The global index <code><span class="tok">PARCEL_INT</span></code> is <code><span class="tok">int64_t</span></code>. The indices within a <a href="glossary.html#g-rank">rank</a> (the column indices and row pointers of the <a href="glossary.html#g-crs">CRS</a> on the <a href="glossary.html#g-device">device</a>, etc.) are held in the new <code><span class="tok">PARCEL_LINT</span></code>, <code><span class="tok">int32_t</span></code> by default, so the device memory and the SpMV traffic are the same as in v1.0. The arrays passed to <code><span class="tok">set_crsMat()</span></code> become <code><span class="tok">PARCEL_INT</span></code> (8 bytes) (<a href="concepts.html#precision-int">“Integer Type” in “Basic Structure”</a>). <code><span class="tok">-DPARCEL_INT</span></code> is accepted for compatibility</td>
+</tr>
+<tr>
+<td>Input of <code><span class="tok">set_crsMat()</span></code></td>
+<td>Not checked (gaps or overlaps of the partition or errors in <code><span class="tok">rowptr</span></code> gave wrong results or out-of-range accesses)</td>
+<td>Checks the partition, the numbers of local rows, <code><span class="tok">rowptr</span></code> and the column indices, and throws <code><span class="tok">std::invalid_argument</span></code> on all <a href="glossary.html#g-rank">ranks</a> if they are inconsistent (<a href="usage.html#usage-cpp-matrix">“Setting the Matrix” in “Usage”</a>)</td>
+</tr>
+<tr>
+<td>Failure of device memory allocation</td>
+<td>Not checked (the program crashed with a segmentation fault or similar)</td>
+<td>Throws <code><span class="tok">util_sycl::device_bad_alloc</span></code> (derived from <code><span class="tok">std::bad_alloc</span></code>)</td>
+</tr>
+<tr>
+<td>Lifetime of the Jacobi preconditioner (<code><span class="tok">PRECON_JACOBI</span></code>) and the matrix <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></td>
+<td>The preconditioner held copies of the row pointers and column indices of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></td>
+<td>They are shared with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> without copying, and by default the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> are also read at every application. No effect as long as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> is not destroyed or modified while <code><span class="tok">solver()</span></code> is running. If a preconditioner matrix <code><span class="tok">parcel::precon_matrix</span></code> is constructed and used directly, do not destroy or modify <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> before finishing with it</td>
+</tr>
+<tr>
+<td>Values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><msubsup><mi>D</mi><mi>A</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mi>R</mi></mrow><annotation encoding="application/x-tex">B = D_A^{-1}R</annotation></semantics></math> of the Jacobi preconditioner</td>
+<td>Stored</td>
+<td>Not stored; computed from the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> at every application (less memory by one element of the preconditioner matrix precision per nonzero of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>; slower preconditioner on GPUs; identical results with <code><span class="tok">-ffp-contract=off</span></code>)</td>
+</tr>
+<tr>
+<td>Solution update <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> of <code><span class="tok">pcg</span></code></td>
+<td>4 search directions accumulated and added every 4 iterations</td>
+<td>Updated at every iteration with a single search direction (memory of 3 vectors less, slightly slower; results differ in the last digits; same number of iterations)</td>
+</tr>
+<tr>
+<td>Integer arguments of the legacy C / Fortran API <code><span class="tok">run_parcel_sycl_c()</span></code> / <code><span class="tok">run_parcel_sycl_f()</span></code></td>
+<td>32-bit <code><span class="tok">int</span></code> (C) / <code><span class="tok">integer(kind=4)</span></code> (Fortran)</td>
+<td>64-bit <code><span class="tok">parcel_int</span></code> (C) / <code><span class="tok">integer(c_int64_t)</span></code> (Fortran). The arrays of the caller must also be 64-bit</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="15.5.2" id="added-features"><span class="header-section-number">15.5.2</span> Added Features</h3>
+<ul>
+<li>Eigenvalue solvers <code>parcel::krylov::power</code>, <code>parcel::krylov::inverse_power</code> and <code>parcel::krylov::ks_arnoldi</code> (v1.0 has linear solvers only)</li>
+<li>Settings common to the eigenvalue solvers (<code>set_precon_spectrum</code>, <code>set_linsolve_*</code>)</li>
+<li>Output of the internal variables and a shift for right-preconditioned <code>pgmres</code> (<code>set_precon_space_output</code>, <code>set_shift</code>), and a fourth argument of <code>solver()</code> for passing an externally constructed preconditioner matrix</li>
+<li>Retrieval of the convergence status (<code>get_converged_reason()</code>, <code>get_iterations()</code>, <code>get_residual()</code>, and others)</li>
+<li>Selection of how <code>pcagmres</code> forms the orthonormal basis <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> (<code>set_explicit_q()</code> / <code>get_explicit_q()</code>, constants <code>parcel::krylov::CAGMRES_Q_AUTO</code> / <code>CAGMRES_Q_EXPLICIT</code> / <code>CAGMRES_Q_IMPLICIT</code>; <a href="linear-solvers.html#alg-pcagmres-q">Linear Solvers chapter</a>). With <code>CAGMRES_Q_IMPLICIT</code>, <code>parcel::qr::QR_CAGMRES_CHOLESKYQR</code> (the <a href="glossary.html#g-moment">moment method</a>) can also be used. <code>Todd_basis</code> and <code>Teven_basis</code> (default <code>Tbasis</code>) are added at the end of the template arguments of <code>solver()</code>. From C / Fortran, <code>cagmres_q_mode</code> of <code>parcel_options</code> and <code>PARCEL_CAGMRES_Q_*</code></li>
+<li>Default <code>parcel_double</code> for the precision template arguments (<code>parcel::matrix&lt;&gt;</code>, <code>parcel::vector&lt;&gt;</code>, and the data precisions of <code>solver()</code> of each solver that cannot be deduced from the arguments). One can write <code>parcel::krylov::pcg&lt;&gt; s; s.solver(A, x, b);</code></li>
+<li><code>parcel::matrix::n_local()</code> (number of local rows)</li>
+<li><a href="glossary.html#g-mpi">MPI</a> support of <code>set_crsMat(comm, nstart, nend, n, nnz, rowptr, crsCol, hi, lo)</code>, which takes the high and low parts of <a href="glossary.html#g-dd">double-double</a> in separate arrays (in v1.0 it did not register the communicator and could not be used with <code>PARCEL_MPI=1</code>)</li>
+<li>Macros <code>PARCEL_ENABLE_ALL_SOLVERS</code> and <code>PARCEL_ENABLE_&lt;solver&gt;</code> for selecting the solvers to build (<a href="installation.html#install-macros">“Macros” in the Installation chapter</a>)</li>
+<li>Macros for build-time checks and numerical operations <code>PARCEL_REQUIRE_IN_ORDER</code>, <code>PARCEL_NO_CRS_CHECK</code>, <code>PARCEL_ALLOW_FAST_MATH</code>, <code>PARCEL_DD_NO_FMA</code></li>
+<li>Macros <code>PARCEL_JACOBI_ONTHEFLY</code> and <code>PARCEL_PCG_NO_XHIST</code> and the environment variable <code>PARCEL_PSTEP</code> for choosing between memory and speed (<a href="installation.html#install-kernel-opt">“Optimization” in the Installation chapter</a>)</li>
+<li>The type <code>PARCEL_LINT</code> of the indices within a <a href="glossary.html#g-rank">rank</a> (32-bit by default), the integer-type macros <code>PARCEL_INT32</code> and <code>PARCEL_LOCAL_INT64</code>, and <code>PARCEL_INT_BITS</code> and <code>PARCEL_LINT_BITS</code>, which give the selected widths (<a href="installation.html#install-int-type">“Integer Type” in the Installation chapter</a>)</li>
+<li>Macro <code>PARCEL_KS_ORTHO_DEFAULT</code> and spack variant <code>ks_ortho</code> for selecting the default orthogonalization of <code>ks_arnoldi</code> at build time (<a href="installation.html#install-ks-ortho">“Default Orthogonalization of ks_arnoldi” in the Installation chapter</a>)</li>
+<li><code>set_qr_algo()</code> / <code>get_qr_algo()</code> of <code>ks_arnoldi</code> for selecting its orthogonalization (the same constants as <code>pgmres</code>; <code>ks_qr_algo</code> of <code>parcel_options</code> in C and Fortran, <code>orthogonalization</code> of <code>eigs()</code> in Python)</li>
+<li>Run-time environment variables <code>PARCEL_TIMER_SYNC</code> (synchronization for timing) and <code>PARCEL_MEM_REPORT</code> (recording of the peak device memory allocated by PARCEL; <code>util_sycl::device_mem_peak_bytes()</code>) (table of environment variables in <a href="usage.html#usage-verify-options">Usage</a>)</li>
+<li><a href="glossary.html#g-workitem">Work-group</a> synchronization <code>util_sycl::group_barrier()</code> (for its use, see “Compiling and Running” of C++ in <a href="usage.html#usage">Usage</a>)</li>
+<li>Build without MPI (<code>-DPARCEL_MPI=0</code>; <code>PARCEL_MPI</code> was fixed to 1 in v1.0; see <a href="installation.html#install-nompi">“Build without MPI”</a>), with the constructor <code>comm(sycl::queue*)</code> of <code>parcel::comm</code> for it</li>
+<li>The verification sample <code>tests/verify/parcel_krylov_sample_verify.cpp</code> (compares with reference solutions; the solver, preconditioner and problem are selected at run time) and the generators of the regression and performance tests (<code>tests/</code>)</li>
+<li>The Python package <code>parcel</code> (<code>python/</code>; all solvers can be called; double precision only; <a href="usage.html#usage-python">Python in “Usage”</a>)</li>
+<li><a href="glossary.html#g-spack">spack</a> recipes <code>parcel-sycl</code> / <code>py-parcel-sycl</code> and the script that installs everything from fetching spack to PARCEL (<code>spack/</code>; <a href="installation.html#install-spack">“Installing with spack” in “Installation”</a>)</li>
+<li>Tests of the C, Fortran and Python APIs in the regression tests, a mechanism to select with or without <a href="glossary.html#g-mpi">MPI</a> and the languages, and running on machines without a scheduler (<code>tests/regression/</code>)</li>
+<li>API for calling all solvers from C / Fortran (<code>capi/parcel_sycl_c.h</code>, <code>capi/parcel_sycl_mod.f90</code>). The integer types <code>parcel_int</code> (C) / <code>parcel_int_kind</code> (Fortran) are 64-bit. The C / Fortran API of v1.0 is only the legacy <code>run_parcel_sycl_c()</code> / <code>run_parcel_sycl_f()</code>, which solve with pcg</li>
+</ul>
+<h3 data-number="15.5.3" id="removed-features"><span class="header-section-number">15.5.3</span> Removed Features</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Replacement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code><span class="tok">parcel:<wbr />:<wbr />krylov:<wbr />:<wbr />cholQR_pcagmres</span></code> (in v1.0, instantiating its <code><span class="tok">solver()</span></code> did not compile, so it could not be used)</td>
+<td><code><span class="tok">parcel::krylov::pcagmres</span></code> with <code><span class="tok">set_explicit_q(parcel:<wbr />:<wbr />krylov:<wbr />:<wbr />CAGMRES_Q_IMPLICIT)</span></code> (the QR factorization is <code><span class="tok">QR_CHOLESKYQR</span></code> unless specified)</td>
+</tr>
+<tr>
+<td>The sample <code><span class="tok">parcel_krylov_sample.cpp</span></code> and its settings <code><span class="tok">parcel_default.hpp</span></code> (top-level directory)</td>
+<td>The verification sample <code><span class="tok">tests/<wbr />verify/<wbr />parcel_krylov_sample_verify.cpp</span></code> (the solver is selected at run time with <code><span class="tok">PARCEL_SOLVER</span></code>) and the samples in <code><span class="tok">examples/</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The file layout also changed: the C / Fortran API (<code>wrapper_parcel_sycl.cpp</code>, <code>parcel_sycl_c.h</code>, <code>parcel_sycl_mod.f90</code>) is in <code>capi/</code>, and the samples (<code>sample_c.c</code>, <code>sample_f.f90</code>, <code>problem.f90</code>) are in <code>examples/</code> (<a href="installation.html#install-layout">“Package Layout”</a>).</p>
+<p><br />
+</p>
+<nav class="pagenav bottom" aria-label="page navigation">
+<span class="prev"><a href="performance.html" rel="previous">← Performance</a></span>
+<span class="up"><a href="index.html" rel="up">↑ PARCEL SYCL v1.2 User Guide</a></span>
+<span class="next"><a href="glossary.html" rel="next">Glossary →</a></span>
+</nav>
+</main>
+</div>
+</body>
+</html>

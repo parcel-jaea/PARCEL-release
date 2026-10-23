@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>PARCEL SYCL v1.2 Manual</title>
+  <link rel="stylesheet" href="assets/parcel.css" />
+  <link rel="stylesheet" href="assets/layout.css" />
+</head>
+<body class="toppage">
+<header class="topbar">
+<a class="home" href="index_en.html">PARCEL SYCL v1.2</a>
+<span class="spacer"></span>
+<a class="toplink search" href="en/search.html">Search</a>
+<a class="toplink" href="https://github.com/parcel-jaea/PARCEL-release/releases/latest">Download</a>
+<a class="toplink lang" href="index.html">日本語</a>
+</header>
+<main>
+<p class="toplogo"><img src="assets/PARCEL_TOP.png" alt="PARCEL: Parallel Computing Elements" /></p>
+<h1>PARCEL SYCL v1.2 Manual</h1>
+<p>The manual consists of two documents. The link at the top of each page switches between the Japanese and English versions.</p>
+<table class="doclist">
+<thead><tr><th>Document</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td><a href="en/user/index.html"><strong>User Guide</strong></a></td><td>For users of the library: quick start, basic structure, SYCL compiler and installation (including spack and Homebrew on macOS), usage from C++, C, Fortran and Python, algorithms (linear solvers, eigenvalue solvers, preconditioners, QR factorization), choosing a solver, performance, versions and compatibility.</td></tr>
+<tr><td><a href="en/reference/index.html"><strong>API Reference</strong></a></td><td>Specifications of the public classes and functions: language-independent common items (solvers, input matrix, meaning and defaults of the settings, constants, results, convergence states, convergence by solver) and the C++ API (data types, comm, matrix, vector, member functions of each solver), C, Fortran and Python APIs, in a uniform format per function. The common items and the chapters of one language are enough to read. Switch the language with the tabs at the top of each page. Includes a function index.</td></tr>
+<tr><td><a href="en/search.html"><strong>Search</strong></a></td><td>Keyword search over the documents (User Guide, API Reference).</td></tr>
+</tbody>
+</table>
+
+<section class="top-section">
+<h2>Download</h2>
+<p>The latest version (v1.2, released on 2026-10-23) is in <a href="https://github.com/parcel-jaea/PARCEL-release">PARCEL-release</a>.</p>
+<p>Past versions: SYCL version v1.0 is in <a href="https://github.com/parcel-jaea/PARCEL-release">PARCEL-release</a>, and PARCEL 1.0–1.2 before the SYCL version (Fortran, CUDA) are in <a href="https://github.com/parcel-jaea/PARCEL-legacy">PARCEL-legacy</a>.</p>
+</section>
+
+<section class="top-section">
+<h2>License</h2>
+<p>Open source under the GNU Lesser General Public License (LGPL-3.0).</p>
+</section>
+
+<section class="top-section">
+<h2>Purpose and Overview</h2>
+<p>Today's computing environments use many kinds of hardware: GPUs, FPGAs and AI accelerators in addition to CPUs. These devices require different programming models (CUDA, OpenCL, etc.), which makes portability and maintenance of programs difficult. SYCL, an open standard defined by the Khronos Group, addresses this problem: it is based on C++ and enables single-source parallel programming on heterogeneous platforms including CPUs and GPUs.</p>
+<p>The PARallel Computing ELements (PARCEL) library provides parallel Krylov subspace solvers suited to parallel computers whose computing performance is high but whose inter-node communication performance is relatively low. PARCEL had been developed separately for CPUs and NVIDIA GPUs; reimplementing it in SYCL improves performance portability and maintainability. v1.2 has been confirmed on Intel / Arm CPUs (including A64FX and Apple M4) and NVIDIA / AMD GPUs, and support for Intel GPUs, FPGAs and others is planned.</p>
+<p>Because the performance and characteristics differ from hardware to hardware, choosing appropriate precisions (half, single, double, double-double) is important. SYCL PARCEL supports mixed-precision computation that flexibly combines different precisions depending on the algorithm and data, achieving fast and numerically stable solvers that keep the accuracy while reducing the cost of memory access.</p>
+</section>
+
+<section class="top-section">
+<h2>Changes in v1.2</h2>
+<ul>
+<li>Eigenvalue solvers: power method (<code>power</code>), inverse power method (<code>inverse_power</code>) and the Krylov-Schur method (<code>ks_arnoldi</code>; nonsymmetric matrices and shift-invert).</li>
+<li>An API that calls all seven solvers from C and Fortran, and the Python package <code>parcel</code>.</li>
+<li>A single-process build without MPI (<code>-DPARCEL_MPI=0</code>).</li>
+<li>spack recipes and a script that installs everything from fetching spack to PARCEL. On macOS, PARCEL can be installed with Homebrew.</li>
+<li>Kernel optimizations for each environment (blocked reductions on CPUs, fully blocked kernels, gemv decomposition and ladder splitting of SpMV on A64FX, ladder splitting on AMD GPUs) and memory-saving defaults.</li>
+<li>Verification of 13 precision configurations (combinations of half, single, double and double-double) for all solvers, regression tests (C++, C, Fortran, Python, with and without MPI) and performance tests.</li>
+</ul>
+</section>
+
+<section class="top-section">
+<h2>Solvers</h2>
+<table class="solvertable">
+<thead><tr><th>Kind</th><th>Solver</th><th>Problem</th></tr></thead>
+<tbody>
+<tr><td rowspan="4"><a href="en/user/linear-solvers.html">Linear solvers</a></td><td><code>pcg</code>: preconditioned conjugate gradient method</td><td>Linear systems with symmetric positive definite matrices; the lightest</td></tr>
+<tr><td><code>pbicgstab</code>: preconditioned stabilized biconjugate gradient method</td><td>Linear systems with nonsymmetric matrices, when each iteration should be light</td></tr>
+<tr><td><code>pgmres</code>: preconditioned generalized minimal residual method</td><td>Linear systems with nonsymmetric matrices, or symmetric but not positive definite ones, when stable convergence is wanted</td></tr>
+<tr><td><code>pcagmres</code>: preconditioned communication-avoiding generalized minimal residual method</td><td>The same problems as <code>pgmres</code>, when many ranks make collective communication the bottleneck</td></tr>
+<tr><td rowspan="3"><a href="en/user/eigen-solvers.html">Eigenvalue solvers</a></td><td><code>power</code>: power method</td><td>One eigenvalue of largest magnitude</td></tr>
+<tr><td><code>inverse_power</code>: inverse power method</td><td>One eigenvalue of smallest magnitude</td></tr>
+<tr><td><code>ks_arnoldi</code>: Krylov-Schur method</td><td>Several eigenvalues, complex conjugate pairs (nonsymmetric matrices), eigenvalues near a shift by shift-invert</td></tr>
+<tr><td rowspan="3"><a href="en/user/preconditioners.html">Preconditioners</a></td><td>Point Jacobi preconditioner</td><td>The cheapest; small effect</td></tr>
+<tr><td>Block Jacobi preconditioner</td><td>For CPUs; its effect depends on the numbers of ranks and blocks</td></tr>
+<tr><td>Jacobi preconditioner</td><td>For GPUs; its effect does not depend on the partitioning</td></tr>
+</tbody>
+</table>
+<p>APIs for calling these solvers are provided for C++, C, Fortran and Python: C++ as a header-only library, C and Fortran as an API library, and Python as the package <code>parcel</code> (<a href="en/reference/index.html">API Reference</a>).</p>
+</section>
+
+<section class="top-section">
+<h2>Tested Environments</h2>
+<table class="envtable">
+<thead><tr><th>Machine</th><th>CPU / GPU</th><th>OS</th><th>SYCL environment</th><th>Backend environment</th></tr></thead>
+<tbody>
+<tr><td><a href="en/user/sycl-compiler.html#env-s86">SGI8600 CPU</a></td><td>Intel Xeon Gold 6242R (20 cores)&nbsp;×2</td><td>RHEL 8.10</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-s86">SGI8600 GPU</a></td><td>Intel Xeon Gold 6248R (24 cores)&nbsp;×2<br/>NVIDIA V100-SXM2-32GB&nbsp;×4</td><td>RHEL 8.10</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>CUDA 12.6<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-miyabi-c">Miyabi-C</a></td><td>Intel Xeon CPU Max 9480 (56 cores)&nbsp;×2</td><td>RHEL 9.8</td><td>AdaptiveCpp 24.10.0 (clang 17.0.6, built with Intel oneAPI 2023.2.0)</td><td>OpenMP<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-miyabi-g">Miyabi-G</a></td><td>NVIDIA GH200 (Grace 72 cores + H100 96GB)</td><td>RHEL 9.8 (aarch64)</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>CUDA 12.6<br/>Open MPI 4.1.6 (CUDA-aware)</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-odyssey">Odyssey</a></td><td>FUJITSU A64FX (48 cores)</td><td>RHEL 8</td><td>AdaptiveCpp 24.10.0 (<code>omp.library-only</code>, Fujitsu compiler FCC 1.2.43)</td><td>OpenMP (Fujitsu)<br/>Fujitsu MPI 1.2.43</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-aquarius">Aquarius</a></td><td>Intel Xeon Platinum 8360Y (36 cores)&nbsp;×2<br/>NVIDIA A100-SXM4-40GB&nbsp;×8</td><td>RHEL 8.10</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>CUDA 12.2<br/>Open MPI 4.1.1</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-ps-a">Plasma Simulator A</a></td><td>Intel Xeon 6980P (128 cores)&nbsp;×2</td><td>RHEL 9.6</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP<br/>Intel MPI 2021.18.1</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-ps-b">Plasma Simulator B</a></td><td>AMD MI300A (CPU 24 cores + GPU)&nbsp;×4</td><td>RHEL 9.6</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>HIP (ROCm 6.3.3)<br/>Open MPI 5.0.7</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-mac">Mac</a></td><td>Apple M4 (10 cores: 4 performance, 6 efficiency)</td><td>macOS 15</td><td>AdaptiveCpp 25.10 (<code>omp.library-only</code>, Apple clang 17)</td><td>OpenMP<br/>Open MPI 5.0</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-linux-wsl">Linux Workstation (WSL2)</a></td><td>Intel Xeon Gold 6226R (16 cores)&nbsp;×2<br/>NVIDIA RTX A6000&nbsp;×2</td><td>Ubuntu 24.04</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP, CUDA 12.6<br/>Open MPI 4.1.6</td></tr>
+<tr><td><a href="en/user/sycl-compiler.html#env-linux-wsl">Linux Workstation (WSL2)</a></td><td>Intel Xeon Gold 6226R (16 cores)&nbsp;×2<br/>NVIDIA RTX A6000&nbsp;×2</td><td>Rocky Linux 9.8</td><td>AdaptiveCpp 24.10.0 (LLVM 18.1.8)</td><td>OpenMP, CUDA 12.6<br/>Open MPI 4.1.1</td></tr>
+</tbody>
+</table>
+<p>Each machine name links to its section in the User Guide (compilers, library versions, installation). On other general Linux systems, everything from LLVM to PARCEL can be installed with spack (scripts in the distribution package).</p>
+</section>
+
+<section class="top-section">
+<h2>Performance</h2>
+<p>Time and memory per device of v1.2, v1.0 and PETSc 3.22 (conjugate gradient method with the Jacobi preconditioner, 3D Poisson equation, 512×512×512 grid, double precision, 16 devices). The conditions and the results for other solvers are in the <a href="en/user/performance.html">"Performance" chapter of the User Guide</a>.</p>
+<figure class="topchart"><svg viewBox="0 0 860 522" width="100%" style="max-width:860px;font-family:sans-serif;" role="img" aria-label="Time [s]">
+<text x="0" y="16" font-size="13" fill="#222">Time [s]</text>
+<text x="0" y="40" font-size="15" font-weight="bold" fill="#08519c">v1.2 is up to 1.56× faster than v1.0 and up to 1.76× faster than PETSc</text>
+<line x1="334.0" y1="54" x2="334.0" y2="482" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="85" font-size="12" fill="#222">SGI8600 CPU (Xeon Gold 6242R)</text>
+<rect x="214" y="60" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="70" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">24.2 s</text>
+<rect x="214" y="74" width="150.3" height="12" fill="#4292c6"/>
+<text x="368.3" y="84" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">30.3 s</text>
+<text x="712" y="85" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.25× faster</text>
+<rect x="214" y="88" width="211.2" height="12" fill="#9ecae1"/>
+<text x="429.2" y="98" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">42.6 s</text>
+<text x="712" y="99" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.76× faster</text>
+<text x="0" y="139" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="214" y="114" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="124" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.64 s</text>
+<rect x="214" y="128" width="186.6" height="12" fill="#4292c6"/>
+<text x="404.6" y="138" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">15.0 s</text>
+<text x="712" y="139" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.55× faster</text>
+<rect x="214" y="142" width="143.4" height="12" fill="#9ecae1"/>
+<text x="361.4" y="152" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">11.5 s</text>
+<text x="712" y="153" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.19× faster</text>
+<text x="0" y="193" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="214" y="168" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="178" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.82 s</text>
+<rect x="214" y="182" width="128.8" height="12" fill="#4292c6"/>
+<text x="346.8" y="192" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.32 s</text>
+<text x="712" y="193" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.07× faster</text>
+<rect x="214" y="196" width="136.8" height="12" fill="#9ecae1"/>
+<text x="354.8" y="206" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.77 s</text>
+<text x="712" y="207" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.14× faster</text>
+<text x="0" y="247" font-size="12" fill="#222">Plasma Simulator A (Xeon 6980P)</text>
+<rect x="214" y="222" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="232" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.73 s</text>
+<rect x="214" y="236" width="138.5" height="12" fill="#4292c6"/>
+<text x="356.5" y="246" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.62 s</text>
+<text x="712" y="247" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.15× faster</text>
+<rect x="214" y="250" width="120.5" height="12" fill="#9ecae1"/>
+<text x="338.5" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5.76 s</text>
+<text x="712" y="261" font-size="11"  fill="#888">vs PETSc: same</text>
+<text x="0" y="301" font-size="12" fill="#222">SGI8600 GPU (V100)</text>
+<rect x="214" y="276" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="286" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.18 s</text>
+<rect x="214" y="290" width="158.2" height="12" fill="#4292c6"/>
+<text x="376.2" y="300" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.47 s</text>
+<text x="712" y="301" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.32× faster</text>
+<rect x="214" y="304" width="128.1" height="12" fill="#9ecae1"/>
+<text x="346.1" y="314" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">7.67 s</text>
+<text x="712" y="315" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.07× faster</text>
+<text x="0" y="355" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="214" y="330" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="340" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.34 s</text>
+<rect x="214" y="344" width="131.3" height="12" fill="#4292c6"/>
+<text x="349.3" y="354" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.47 s</text>
+<text x="712" y="355" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.09× faster</text>
+<rect x="214" y="358" width="120.8" height="12" fill="#9ecae1"/>
+<text x="338.8" y="368" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.35 s</text>
+<text x="712" y="369" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.01× faster</text>
+<text x="0" y="409" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="214" y="384" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="394" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.92 s</text>
+<rect x="214" y="398" width="122.8" height="12" fill="#4292c6"/>
+<text x="340.8" y="408" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.02 s</text>
+<text x="712" y="409" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.02× faster</text>
+<rect x="214" y="412" width="136.0" height="12" fill="#9ecae1"/>
+<text x="354.0" y="422" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.45 s</text>
+<text x="712" y="423" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.13× faster</text>
+<text x="0" y="463" font-size="12" fill="#222">Plasma Simulator B (MI300A)</text>
+<rect x="214" y="438" width="120.0" height="12" fill="#08519c"/>
+<text x="338.0" y="448" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.11 s</text>
+<rect x="214" y="452" width="186.7" height="12" fill="#4292c6"/>
+<text x="404.7" y="462" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.29 s</text>
+<text x="712" y="463" font-size="12" font-weight="bold" fill="#08519c">vs v1.0: 1.56× faster</text>
+<rect x="214" y="466" width="121.1" height="12" fill="#9ecae1"/>
+<text x="339.1" y="476" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.13 s</text>
+<text x="712" y="477" font-size="12" font-weight="bold" fill="#08519c">vs PETSc: 1.01× faster</text>
+<rect x="214" y="494" width="12" height="12" fill="#08519c"/>
+<text x="230" y="504" font-size="12" fill="#222">v1.2</text>
+<rect x="281" y="494" width="12" height="12" fill="#4292c6"/>
+<text x="297" y="504" font-size="12" fill="#222">v1.0</text>
+<rect x="348" y="494" width="12" height="12" fill="#9ecae1"/>
+<text x="364" y="504" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+<figure class="topchart"><svg viewBox="0 0 860 522" width="100%" style="max-width:860px;font-family:sans-serif;" role="img" aria-label="Memory per device [GiB] (host on CPUs, device on GPUs)">
+<text x="0" y="16" font-size="13" fill="#222">Memory per device [GiB] (host on CPUs, device on GPUs)</text>
+<text x="0" y="40" font-size="15" font-weight="bold" fill="#006d2c">v1.2 uses up to 45% less memory than v1.0 and up to 80% less than PETSc</text>
+<line x1="334.0" y1="54" x2="334.0" y2="482" stroke="#999" stroke-dasharray="3,3"/>
+<text x="0" y="85" font-size="12" fill="#222">SGI8600 CPU (Xeon Gold 6242R)</text>
+<rect x="214" y="60" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="70" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.89 GiB</text>
+<rect x="214" y="74" width="141.4" height="12" fill="#41ab5d"/>
+<text x="359.4" y="84" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.41 GiB</text>
+<text x="712" y="85" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 15% less</text>
+<rect x="214" y="88" width="257.3" height="12" fill="#a1d99b"/>
+<text x="475.3" y="98" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6.20 GiB</text>
+<text x="712" y="99" font-size="12" font-weight="bold" fill="#006d2c">vs PETSc: 53% less</text>
+<text x="0" y="139" font-size="12" fill="#222">Odyssey (A64FX)</text>
+<rect x="214" y="114" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="124" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.97 GiB</text>
+<rect x="214" y="128" width="158.9" height="12" fill="#41ab5d"/>
+<text x="376.9" y="138" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.93 GiB</text>
+<text x="712" y="139" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 24% less</text>
+<rect x="214" y="142" width="184.0" height="12" fill="#a1d99b"/>
+<text x="402.0" y="152" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.55 GiB</text>
+<text x="712" y="153" font-size="12" font-weight="bold" fill="#006d2c">vs PETSc: 35% less</text>
+<text x="0" y="193" font-size="12" fill="#222">Miyabi-C (Xeon CPU Max 9480)</text>
+<rect x="214" y="168" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="178" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.37 GiB</text>
+<rect x="214" y="182" width="148.0" height="12" fill="#41ab5d"/>
+<text x="366.0" y="192" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.93 GiB</text>
+<text x="712" y="193" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 19% less</text>
+<rect x="214" y="196" width="360.0" height="12" fill="#a1d99b"/>
+<polygon points="558.0,210 561.0,210 565.0,194 562.0,194" fill="#fff"/>
+<polygon points="564.0,210 567.0,210 571.0,194 568.0,194" fill="#fff"/>
+<text x="578.0" y="206" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9.39 GiB</text>
+<text x="712" y="207" font-size="12" font-weight="bold" fill="#006d2c">vs PETSc: 75% less</text>
+<text x="0" y="247" font-size="12" fill="#222">Plasma Simulator A (Xeon 6980P)</text>
+<rect x="214" y="222" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="232" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.74 GiB</text>
+<rect x="214" y="236" width="117.7" height="12" fill="#41ab5d"/>
+<text x="335.7" y="246" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4.65 GiB</text>
+<text x="712" y="247" font-size="11"  fill="#888">vs v1.0: 2% more</text>
+<rect x="214" y="250" width="360.0" height="12" fill="#a1d99b"/>
+<polygon points="558.0,264 561.0,264 565.0,248 562.0,248" fill="#fff"/>
+<polygon points="564.0,264 567.0,264 571.0,248 568.0,248" fill="#fff"/>
+<text x="578.0" y="260" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">23.9 GiB</text>
+<text x="712" y="261" font-size="12" font-weight="bold" fill="#006d2c">vs PETSc: 80% less</text>
+<text x="0" y="301" font-size="12" fill="#222">SGI8600 GPU (V100)</text>
+<rect x="214" y="276" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="286" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.73 GiB</text>
+<rect x="214" y="290" width="194.7" height="12" fill="#41ab5d"/>
+<text x="412.7" y="300" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.80 GiB</text>
+<text x="712" y="301" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 38% less</text>
+<rect x="214" y="304" width="108.3" height="12" fill="#a1d99b"/>
+<text x="326.3" y="314" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.56 GiB</text>
+<text x="712" y="315" font-size="11"  fill="#888">vs PETSc: 11% more</text>
+<text x="0" y="355" font-size="12" fill="#222">Miyabi-G (GH200)</text>
+<rect x="214" y="330" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="340" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.97 GiB</text>
+<rect x="214" y="344" width="185.6" height="12" fill="#41ab5d"/>
+<text x="403.6" y="354" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3.05 GiB</text>
+<text x="712" y="355" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 35% less</text>
+<rect x="214" y="358" width="110.6" height="12" fill="#a1d99b"/>
+<text x="328.6" y="368" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.82 GiB</text>
+<text x="712" y="369" font-size="11"  fill="#888">vs PETSc: 9% more</text>
+<text x="0" y="409" font-size="12" fill="#222">Aquarius (A100)</text>
+<rect x="214" y="384" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="394" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.84 GiB</text>
+<rect x="214" y="398" width="190.1" height="12" fill="#41ab5d"/>
+<text x="408.1" y="408" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.92 GiB</text>
+<text x="712" y="409" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 37% less</text>
+<rect x="214" y="412" width="110.2" height="12" fill="#a1d99b"/>
+<text x="328.2" y="422" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.69 GiB</text>
+<text x="712" y="423" font-size="11"  fill="#888">vs PETSc: 9% more</text>
+<text x="0" y="463" font-size="12" fill="#222">Plasma Simulator B (MI300A)</text>
+<rect x="214" y="438" width="120.0" height="12" fill="#006d2c"/>
+<text x="338.0" y="448" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.46 GiB</text>
+<rect x="214" y="452" width="219.1" height="12" fill="#41ab5d"/>
+<text x="437.1" y="462" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2.67 GiB</text>
+<text x="712" y="463" font-size="12" font-weight="bold" fill="#006d2c">vs v1.0: 45% less</text>
+<rect x="214" y="466" width="123.4" height="12" fill="#a1d99b"/>
+<text x="341.4" y="476" font-size="11" fill="#222" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1.50 GiB</text>
+<text x="712" y="477" font-size="12" font-weight="bold" fill="#006d2c">vs PETSc: 3% less</text>
+<rect x="214" y="494" width="12" height="12" fill="#006d2c"/>
+<text x="230" y="504" font-size="12" fill="#222">v1.2</text>
+<rect x="281" y="494" width="12" height="12" fill="#41ab5d"/>
+<text x="297" y="504" font-size="12" fill="#222">v1.0</text>
+<rect x="348" y="494" width="12" height="12" fill="#a1d99b"/>
+<text x="364" y="504" font-size="12" fill="#222">PETSc 3.22</text>
+</svg></figure>
+</section>
+
+<section class="top-section">
+<h2>Developer</h2>
+<p>Center for Computational Science &amp; e-Systems, Japan Atomic Energy Agency</p>
+</section>
+
+<section class="top-section">
+<h2>Contact</h2>
+<p>Questions and bug reports: GitHub Issues, <a href="https://github.com/parcel-jaea/PARCEL-release/issues">https://github.com/parcel-jaea/PARCEL-release/issues</a></p>
+</section>
+</main>
+</body>
+</html>
