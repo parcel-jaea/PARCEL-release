@@ -539,4 +539,4 @@ GNU Lesser General Public License version 3 (LGPL-3.0-only). See [COPYING.LESSER
 Copyright (c) 日本原子力研究開発機構 システム計算科学センター HPC・DX基盤技術開発室
 (Japan Atomic Energy Agency, Center for Computational Science & e-Systems)
 
-Distribution site: <https://ccse.jaea.go.jp/software/PARCEL/>, public repository (Releases of the release tarball): <https://github.com/parcel-jaea/PARCEL-release>
+Distribution site: <https://ccse2.jaea.go.jp/software/parcel/>, public repository (Releases of the release tarball): <https://github.com/parcel-jaea/PARCEL-release>

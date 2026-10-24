@@ -17,7 +17,7 @@ class PyParcelSycl(PythonPackage, CudaPackage, ROCmPackage):
     """PARCEL (SYCL 版) の Python インタフェース (import parcel)。ネイティブ層 (libparcel_py.so) を
     配布パッケージの python/ (scikit-build-core) からビルドする。既定は MPI なしの 1 プロセス版。"""
 
-    homepage = "https://ccse.jaea.go.jp/software/PARCEL/"
+    homepage = "https://ccse2.jaea.go.jp/software/parcel/"
     # 配布 tarball の URL (GitHub の Release。tools/make_tarball.py が作る parcel_sycl-<版>.tar.gz)。
     #   Release に置く前は `spack develop py-parcel-sycl@1.2.0 path=<配布パッケージ>` で使うか、tarball を手元の mirror に置いて使う
     #   (spack/README.md の「配布 tarball から入れる」)。
@@ -25,7 +25,7 @@ class PyParcelSycl(PythonPackage, CudaPackage, ROCmPackage):
     # 版と tarball の sha256。sha256 は tools/make_tarball.py --pin が書く (tarball に入れるレシピではこの行を
     #   sha256 なしの形に戻すので、書いた後も tarball と sha256 は変わらない。tools/make_tarball.py --check で照合)。
     #   版は Include/parcel_version.hpp の MAJOR.MINOR.PATCH と同じにする (tests/check_version.py で照合)
-    version("1.2.0", sha256="d022ec88c1795daf1511f39ee7b0ca5b0c3e4ddfd930c56b6ac89b050ccf3efb")
+    version("1.2.0", sha256="470acf98f3b634a15fb0e866ad8633e5a3474f7c5764aa82028669fe6119a2ce")
     build_directory = "python"
 
     license("LGPL-3.0-only")

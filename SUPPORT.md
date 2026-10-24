@@ -7,7 +7,7 @@ English | [日本語](SUPPORT.ja.md)
 Send bug reports and questions to GitHub Issues of the public repository.
 
 - Contact: <https://github.com/parcel-jaea/PARCEL-release/issues>
-- Distribution site: <https://ccse.jaea.go.jp/software/PARCEL/>
+- Distribution site: <https://ccse2.jaea.go.jp/software/parcel/>
 - Public repository: <https://github.com/parcel-jaea/PARCEL-release> (the release tarball is placed in Releases)
 
 ## What to Include in a Report

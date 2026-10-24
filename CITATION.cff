@@ -17,7 +17,7 @@ abstract: >-
 version: "1.2.0"
 date-released: "2026-10-23"
 license: LGPL-3.0-only
-url: "https://ccse.jaea.go.jp/software/PARCEL/"
+url: "https://ccse2.jaea.go.jp/software/parcel/"
 repository-code: "https://github.com/parcel-jaea/PARCEL-release"
 authors:
   - name: "日本原子力研究開発機構 システム計算科学センター HPC・DX基盤技術開発室"

@@ -7,7 +7,7 @@
 不具合の報告・質問は、公開用リポジトリの GitHub の Issues へ。
 
 - 問い合わせ先: <https://github.com/parcel-jaea/PARCEL-release/issues>
-- 配布元: <https://ccse.jaea.go.jp/software/PARCEL/>
+- 配布元: <https://ccse2.jaea.go.jp/software/parcel/>
 - 公開用リポジトリ: <https://github.com/parcel-jaea/PARCEL-release> (配布 tarball は Release に置く)
 
 ## 報告に書いてほしいこと
