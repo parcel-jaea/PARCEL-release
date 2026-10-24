@@ -107,3 +107,10 @@ main .perf-table th { vertical-align: bottom; }
 .langtabbar button[aria-selected="true"] { background: #0b4f8a; border-color: #0b4f8a; color: #fff; }
 /* 使用方法の章の言語の節 (manual.py の usage_toc_inject): 「自分の行列を渡す」の 2 段目も常に見せる */
 .sidebar ul.usage-langs li > ul { display: block; }
+/* CSP (default-src 'self') のサーバで style 属性の代わりに使う class (manual.py が付ける) */
+.ta-left { text-align: left; }
+.ta-right { text-align: right; }
+.ta-center { text-align: center; }
+svg.chart { max-width: 100%; height: auto; font-family: sans-serif; }
+figure.diagram { margin: 1em 0; }
+main.searchmain { margin: 0 auto; }

@@ -232,67 +232,67 @@
 <tr>
 <th>Environment</th>
 <th>1 device</th>
-<th style="text-align: right;">PARCEL ranks × threads (per device)</th>
-<th style="text-align: right;">Ranks on 4 / 8 / 16 devices</th>
-<th style="text-align: right;">PETSc ranks (per device)</th>
+<th class="ta-right">PARCEL ranks × threads (per device)</th>
+<th class="ta-right">Ranks on 4 / 8 / 16 devices</th>
+<th class="ta-right">PETSc ranks (per device)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
 <td>1 socket of <a href="glossary.html#g-xeon">Xeon</a> Gold 6242R</td>
-<td style="text-align: right;" class="nowrap">4 × 5</td>
-<td style="text-align: right;" class="nowrap">16 / 32 / 64</td>
-<td style="text-align: right;" class="nowrap">20</td>
+<td class="nowrap ta-right">4 × 5</td>
+<td class="nowrap ta-right">16 / 32 / 64</td>
+<td class="nowrap ta-right">20</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
 <td>1 socket of <a href="glossary.html#g-xeon">Xeon</a> 6980P</td>
-<td style="text-align: right;" class="nowrap">9 × 14</td>
-<td style="text-align: right;" class="nowrap">36 / 72 / 144</td>
-<td style="text-align: right;" class="nowrap">128</td>
+<td class="nowrap ta-right">9 × 14</td>
+<td class="nowrap ta-right">36 / 72 / 144</td>
+<td class="nowrap ta-right">128</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
 <td>1 socket of <a href="glossary.html#g-xeon">Xeon</a> CPU Max 9480</td>
-<td style="text-align: right;" class="nowrap">4 × 14</td>
-<td style="text-align: right;" class="nowrap">16 / 32 / 64</td>
-<td style="text-align: right;" class="nowrap">56</td>
+<td class="nowrap ta-right">4 × 14</td>
+<td class="nowrap ta-right">16 / 32 / 64</td>
+<td class="nowrap ta-right">56</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td>1 <a href="glossary.html#g-a64fx">A64FX</a> (1 node)</td>
-<td style="text-align: right;" class="nowrap">4 × 12</td>
-<td style="text-align: right;" class="nowrap">16 / 32 / 64</td>
-<td style="text-align: right;" class="nowrap">48</td>
+<td class="nowrap ta-right">4 × 12</td>
+<td class="nowrap ta-right">16 / 32 / 64</td>
+<td class="nowrap ta-right">48</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a></td>
 <td>1 <a href="glossary.html#g-v100">V100</a></td>
-<td style="text-align: right;" class="nowrap">1 × 12</td>
-<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1 × 12</td>
+<td class="nowrap ta-right">4 / 8 / 16</td>
+<td class="nowrap ta-right">1</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-miyabi-g">Miyabi-G</a></td>
 <td>1 <a href="glossary.html#g-gh200">GH200</a></td>
-<td style="text-align: right;" class="nowrap">1 × 72</td>
-<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1 × 72</td>
+<td class="nowrap ta-right">4 / 8 / 16</td>
+<td class="nowrap ta-right">1</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-aquarius">Aquarius</a></td>
 <td>1 <a href="glossary.html#g-a100">A100</a></td>
-<td style="text-align: right;" class="nowrap">1 × 9</td>
-<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1 × 9</td>
+<td class="nowrap ta-right">4 / 8 / 16</td>
+<td class="nowrap ta-right">1</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a></td>
 <td>1 <a href="glossary.html#g-mi300a">MI300A</a></td>
-<td style="text-align: right;" class="nowrap">1 × 6</td>
-<td style="text-align: right;" class="nowrap">4 / 8 / 16</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1 × 6</td>
+<td class="nowrap ta-right">4 / 8 / 16</td>
+<td class="nowrap ta-right">1</td>
 </tr>
 </tbody>
 </table>
@@ -311,7 +311,7 @@
 <li><code>ks_arnoldi</code> converged in 122 <a href="glossary.html#g-restart">restarts</a>.</li>
 </ul>
 <p>The time [s] on 16 devices is shown for each environment, separately for the linear and the eigenvalue solvers (fastest of 3 runs; <code>pgmres</code> and <code>pcagmres</code> solve the convection-diffusion equation, the others the Poisson equation). The solvers are listed for each environment, with two bars for the linear solvers (no preconditioner and the Jacobi preconditioner). The horizontal axis is the time on a logarithmic scale, common to all environments. The values at the ends of the bars are in seconds.</p>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 1444" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="Time of the linear solvers [s] (16 devices)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 1444" width="760" height="1444" role="img" aria-label="Time of the linear solvers [s] (16 devices)">
 <text x="0" y="16" font-size="13" fill="#222">Time of the linear solvers [s] (16 devices)</text>
 <line x1="206.6" y1="42" x2="206.6" y2="1390" stroke="#eee"/>
 <line x1="281.4" y1="42" x2="281.4" y2="1390" stroke="#eee"/>
@@ -545,7 +545,7 @@
 <rect x="305" y="1432" width="12" height="12" fill="#1f77b4"/>
 <text x="321" y="1442" font-size="12" fill="#222">Jacobi preconditioner</text>
 </svg></figure>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 708" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="Time of the eigenvalue solvers [s] (16 devices)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 708" width="760" height="708" role="img" aria-label="Time of the eigenvalue solvers [s] (16 devices)">
 <text x="0" y="16" font-size="13" fill="#222">Time of the eigenvalue solvers [s] (16 devices)</text>
 <line x1="206.6" y1="42" x2="206.6" y2="654" stroke="#eee"/>
 <line x1="281.4" y1="42" x2="281.4" y2="654" stroke="#eee"/>
@@ -658,7 +658,7 @@
 <h2 data-number="14.3" id="perf-mixed"><span class="header-section-number">14.3</span> Mixed Precision (precon_dataF)</h2>
 <p>The time of the configuration that lowers only the data precision of the <a href="glossary.html#g-precon">preconditioner</a> to single (<code>precon_dataF</code>) is compared with double precision for <code>pcg</code> with the Jacobi preconditioner (Poisson equation, 16 devices). The time is split into the rest of the solver (left) and the preconditioner (its setup and application; right), stacked. The horizontal axis is the ratio to the total time in double precision of each environment, on a linear scale common to all environments. The full length of a bar is the ratio of its total time to double precision, and the lengths of the left and right parts show the shares of the time. After each bar, the total time [s], the ratio to double precision (in parentheses; below 1 means <code>precon_dataF</code> is faster) and the preconditioner time are given. The iteration counts are the same as in double precision (611) in all configurations.</p>
 <p><code>precon_dataF</code> was built with the setting that stores the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> of the Jacobi preconditioner (without on-the-fly computation; <a href="kernel-opt.html#perf-memory-options">“without H”</a>, <code>-DPARCEL_JACOBI_ONTHEFLY=0</code>) and compared with double precision built with the library defaults. With the default (values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> not stored), every application reads the double-precision values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> even if the preconditioner matrix is single precision, so lowering the precision has little effect. Builds for <a href="glossary.html#g-a64fx">A64FX</a> store the values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> by default, so on <a href="glossary.html#g-odyssey">Odyssey</a> double precision also stores them.</p>
-<figure class="topchart perfchart"><svg viewBox="0 0 820 426" width="100%" style="max-width:820px;font-family:sans-serif;" role="img" aria-label="pcg (Jacobi preconditioner): time by part (16 devices; total time in double = 1)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 820 426" width="820" height="426" role="img" aria-label="pcg (Jacobi preconditioner): time by part (16 devices; total time in double = 1)">
 <text x="0" y="16" font-size="13" fill="#222">pcg (Jacobi preconditioner): time by part (16 devices; total time in double = 1)</text>
 <line x1="292.0" y1="42" x2="292.0" y2="358" stroke="#e3e3e3"/>
 <text x="292.0" y="38" font-size="11" fill="#555" text-anchor="middle">0</text>
@@ -771,7 +771,7 @@
 <li>v1.0: solved with the library of the public v1.0 under the same conditions and the same numbers of ranks. The iteration counts are the same as those of v1.2. On the 4 GPU environments, v1.0 was built so that it does not allocate the work array of SpMV (1,792 bytes per row, not used by the GPU SpMV); the source is the same, with macros added that skip this array. With the original settings, the work array is about 60 GB per GPU on 4 devices, and v1.0 cannot run on 4 and 8 devices of <a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a> 32 GB) for lack of GPU memory. The 4 CPU environments were measured with the original settings (the SpMV of the <a href="glossary.html#g-a64fx">A64FX</a> version on <a href="glossary.html#g-odyssey">Odyssey</a> does use the array).</li>
 <li>Memory: measured with a fixed number of iterations (60 for <code>pcg</code> and <code>pgmres</code>, i.e. one <a href="glossary.html#g-restart">restart</a> cycle of <code>pgmres</code>; one cycle of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> = 40 for <code>ks_arnoldi</code>; maximum of 3 runs). The values are per device (total over all devices ÷ number of devices): host memory on CPUs (sum of the peak resident memory <code>VmHWM</code> of the ranks; <code>PetscMemoryGetMaximumUsage</code> for PETSc) and device memory on GPUs (peak read every 100 ms with <code>nvidia-smi</code>, VRAM of <code>amd-smi</code> on <a href="glossary.html#g-ps-b">PS-B</a>). On <a href="glossary.html#g-odyssey">Odyssey</a>, the values are the increase of the memory used by the whole node (the maximum increase of the used memory in <code>/proc/meminfo</code> of each node since before the start, sampled every 0.5 s, summed over the nodes), because programs built with the Fujitsu compiler place the heap in huge pages (HugeTLB) and the memory allocated by PARCEL does not appear in <code>VmHWM</code> (the verification sample also prints <code>HugetlbPages</code>; see the output example in <a href="performance.html#perf-howto">Measuring Your Own Environment</a>). These values include fluctuations of the OS and other processes, so they are measured differently from the other CPU environments.</li>
 </ul>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pcg: time [s] (16 devices; ratio to v1.2 in parentheses)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 472" width="760" height="472" role="img" aria-label="pcg: time [s] (16 devices; ratio to v1.2 in parentheses)">
 <text x="0" y="16" font-size="13" fill="#222">pcg: time [s] (16 devices; ratio to v1.2 in parentheses)</text>
 <line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
 <text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
@@ -837,7 +837,7 @@
 <rect x="364" y="444" width="12" height="12" fill="#9ecae1"/>
 <text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
 </svg></figure>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pcg: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 472" width="760" height="472" role="img" aria-label="pcg: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)">
 <text x="0" y="16" font-size="13" fill="#222">pcg: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)</text>
 <line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
 <text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
@@ -907,7 +907,7 @@
 <rect x="364" y="444" width="12" height="12" fill="#a1d99b"/>
 <text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
 </svg></figure>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pgmres: time [s] (16 devices; ratio to v1.2 in parentheses)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 472" width="760" height="472" role="img" aria-label="pgmres: time [s] (16 devices; ratio to v1.2 in parentheses)">
 <text x="0" y="16" font-size="13" fill="#222">pgmres: time [s] (16 devices; ratio to v1.2 in parentheses)</text>
 <line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
 <text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
@@ -973,7 +973,7 @@
 <rect x="364" y="444" width="12" height="12" fill="#9ecae1"/>
 <text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
 </svg></figure>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 472" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="pgmres: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 472" width="760" height="472" role="img" aria-label="pgmres: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)">
 <text x="0" y="16" font-size="13" fill="#222">pgmres: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)</text>
 <line x1="360.0" y1="28" x2="360.0" y2="432" stroke="#999" stroke-dasharray="3,3"/>
 <text x="0" y="57" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
@@ -1039,7 +1039,7 @@
 <rect x="364" y="444" width="12" height="12" fill="#a1d99b"/>
 <text x="380" y="454" font-size="12" fill="#222">PETSc 3.22</text>
 </svg></figure>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 368" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="ks_arnoldi: time [s] (16 devices; ratio to v1.2 in parentheses)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 368" width="760" height="368" role="img" aria-label="ks_arnoldi: time [s] (16 devices; ratio to v1.2 in parentheses)">
 <text x="0" y="16" font-size="13" fill="#222">ks_arnoldi: time [s] (16 devices; ratio to v1.2 in parentheses)</text>
 <line x1="360.0" y1="28" x2="360.0" y2="328" stroke="#999" stroke-dasharray="3,3"/>
 <text x="0" y="51" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>
@@ -1087,7 +1087,7 @@
 <rect x="297" y="340" width="12" height="12" fill="#9ecae1"/>
 <text x="313" y="350" font-size="12" fill="#222">SLEPc 3.22</text>
 </svg></figure>
-<figure class="topchart perfchart"><svg viewBox="0 0 760 368" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="ks_arnoldi: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)">
+<figure class="topchart perfchart"><svg class="chart" viewBox="0 0 760 368" width="760" height="368" role="img" aria-label="ks_arnoldi: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)">
 <text x="0" y="16" font-size="13" fill="#222">ks_arnoldi: memory per device [GiB] (16 devices; ratio to v1.2 in parentheses)</text>
 <line x1="360.0" y1="28" x2="360.0" y2="328" stroke="#999" stroke-dasharray="3,3"/>
 <text x="0" y="51" font-size="12" fill="#222">s86 CPU (Xeon Gold 6242R)</text>

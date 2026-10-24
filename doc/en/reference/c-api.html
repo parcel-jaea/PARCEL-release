@@ -519,34 +519,34 @@
 <thead>
 <tr>
 <th>Constant</th>
-<th style="text-align: right;">Value</th>
+<th class="ta-right">Value</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code><span class="tok">PARCEL_CONVERGED_RTOL</span></code></td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>The convergence tolerance (<code><span class="tok">tolerance</span></code>) was satisfied</td>
 </tr>
 <tr>
 <td><code><span class="tok">PARCEL_ITERATING</span></code></td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>Not run (e.g., not solved because of an argument error)</td>
 </tr>
 <tr>
 <td><code><span class="tok">PARCEL_DIVERGED_ITS</span></code></td>
-<td style="text-align: right;" class="nowrap">-1</td>
+<td class="nowrap ta-right">-1</td>
 <td>The maximum number of iterations (for ks_arnoldi, the maximum number of restarts) was reached</td>
 </tr>
 <tr>
 <td><code><span class="tok">PARCEL_DIVERGED_NANORINF</span></code></td>
-<td style="text-align: right;" class="nowrap">-2</td>
+<td class="nowrap ta-right">-2</td>
 <td>NaN / Inf appeared in the checked value (residual or eigenvalue estimate)</td>
 </tr>
 <tr>
 <td><code><span class="tok">PARCEL_DIVERGED_BREAKDOWN</span></code></td>
-<td style="text-align: right;" class="nowrap">-3</td>
+<td class="nowrap ta-right">-3</td>
 <td>Breakdown of the algorithm</td>
 </tr>
 </tbody>
@@ -1182,38 +1182,6 @@
 </nav>
 </main>
 </div>
-<script>
-(function () {
-  var K = 'parcel_api_lang', page = 'c';
-  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
-  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
-  if (page) { put(page); return; }
-  function show(l) {
-    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
-    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
-      var a = e.getAttribute('data-apilang');
-      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
-    });
-    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
-    if (!t) return;
-    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
-    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
-      a.setAttribute('href', first);
-      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
-    });
-  }
-  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
-  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
-    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
-  });
-  var cur = get();
-  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
-  show(cur);
-  tabs.forEach(function (t) {
-    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
-  });
-})();
-</script>
+<script src="../../assets/apitabs.js" data-page="c"></script>
 </body>
 </html>

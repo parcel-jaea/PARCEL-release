@@ -188,7 +188,7 @@
 <ul>
 <li>行列構造 (行番号・列番号は 0 から数える)</li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>00</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>02</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>20</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>22</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>23</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>31</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>32</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>a</mi><mn>33</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>00</mn></msub></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>01</mn></msub></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>02</mn></msub></mtd><mtd columnalign="center" class="ta-center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" class="ta-center"><mn>0</mn></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>11</mn></msub></mtd><mtd columnalign="center" class="ta-center"><mn>0</mn></mtd><mtd columnalign="center" class="ta-center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>20</mn></msub></mtd><mtd columnalign="center" class="ta-center"><mn>0</mn></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>22</mn></msub></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>23</mn></msub></mtd></mtr><mtr><mtd columnalign="center" class="ta-center"><mn>0</mn></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>31</mn></msub></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>32</mn></msub></mtd><mtd columnalign="center" class="ta-center"><msub><mi>a</mi><mn>33</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 A = \left(
 \begin{array}{cccc}
 a_{00} &amp; a_{01} &amp; a_{02} &amp; 0\\
@@ -234,8 +234,8 @@ a_{20} &amp; 0 &amp; a_{22} &amp; a_{23}\\
 <li><a href="glossary.html#g-apu">APU</a> の GPU 部 (AMD Instinct <a href="glossary.html#g-mi300a">MI300A</a>. <a href="concepts.html#gpu-rank-apu">下記</a>)</li>
 <li>CPU のコアの一群 (OpenMP バックエンド)</li>
 </ul>
-<figure class="diagram" style="margin:1em 0;">
-<svg viewBox="0 0 760 346" width="100%" style="max-width:760px;font-family:sans-serif;" role="img" aria-label="3 ランクでの行ブロック分割,ランクと GPU の対応,袖通信">
+<figure class="diagram">
+<svg class="chart" viewBox="0 0 760 346" width="760" height="346" role="img" aria-label="3 ランクでの行ブロック分割,ランクと GPU の対応,袖通信">
 <defs><marker id="gr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
 <text x="120" y="20" font-size="14" text-anchor="middle" fill="#222">大域の行列 A (n_global 行)</text>
 <rect x="20" y="30" width="200" height="80" fill="#dbe9f6" stroke="#5b7fa6"/>
@@ -329,49 +329,49 @@ a_{20} &amp; 0 &amp; a_{22} &amp; a_{23}\\
 <tr>
 <th>環境</th>
 <th>1 ランクの受け持ち</th>
-<th style="text-align: right;">ランクあたりのスレッド数</th>
+<th class="ta-right">ランクあたりのスレッド数</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a> ×4 / ノード)</td>
 <td>GPU 1 台</td>
-<td style="text-align: right;" class="nowrap">12</td>
+<td class="nowrap ta-right">12</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
 <td>GPU 1 台</td>
-<td style="text-align: right;" class="nowrap">9</td>
+<td class="nowrap ta-right">9</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>. GPU 1 台 / ノード)</td>
 <td>GPU 1 台 (= 1 ノード). <a href="glossary.html#g-mig">MIG</a> では 1 区画 (<code><span class="tok">2g.24gb</span></code>または<code><span class="tok">1g.24gb</span></code>) と 18 コア</td>
-<td style="text-align: right;" class="nowrap">72 (<a href="glossary.html#g-mig">MIG</a> では 18)</td>
+<td class="nowrap ta-right">72 (<a href="glossary.html#g-mig">MIG</a> では 18)</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a> ×4 / ノード)</td>
 <td><a href="glossary.html#g-apu">APU</a> 1 基 (GPU 部 1 台と 24 コア)</td>
-<td style="text-align: right;" class="nowrap">6</td>
+<td class="nowrap ta-right">6</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-s86">s86 CPU</a> (<a href="glossary.html#g-xeon">Xeon</a> Gold 6242R 20 コア ×2)</td>
 <td>5 コア</td>
-<td style="text-align: right;" class="nowrap">5</td>
+<td class="nowrap ta-right">5</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-miyabi-c">Miyabi-C</a> (<a href="glossary.html#g-xeon">Xeon</a> Max 9480)</td>
 <td>14 コア</td>
-<td style="text-align: right;" class="nowrap">14</td>
+<td class="nowrap ta-right">14</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-ps-a">PS-A</a> (<a href="glossary.html#g-xeon">Xeon</a> 6980P)</td>
 <td>14 コア (Intel MPI の<code><span class="tok">I_MPI_PIN_DOMAIN</span></code>で <a href="glossary.html#g-numa">NUMA</a> ノードに固定)</td>
-<td style="text-align: right;" class="nowrap">14</td>
+<td class="nowrap ta-right">14</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
 <td>1 <a href="glossary.html#g-cmg">CMG</a> (12 コア)</td>
-<td style="text-align: right;" class="nowrap">12</td>
+<td class="nowrap ta-right">12</td>
 </tr>
 </tbody>
 </table>

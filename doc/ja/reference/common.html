@@ -662,29 +662,29 @@
 <thead>
 <tr>
 <th>定数</th>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>前処理</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>NONE</td>
-<td style="text-align: right;">0</td>
+<td class="ta-right">0</td>
 <td>前処理なし</td>
 </tr>
 <tr>
 <td>POINTJACOBI</td>
-<td style="text-align: right;">1</td>
+<td class="ta-right">1</td>
 <td>ポイント Jacobi 前処理</td>
 </tr>
 <tr>
 <td>BLOCKJACOBI</td>
-<td style="text-align: right;">2</td>
+<td class="ta-right">2</td>
 <td>ブロック Jacobi 前処理</td>
 </tr>
 <tr>
 <td>JACOBI</td>
-<td style="text-align: right;">4</td>
+<td class="ta-right">4</td>
 <td>Jacobi 前処理</td>
 </tr>
 </tbody>
@@ -694,7 +694,7 @@
 <thead>
 <tr>
 <th>定数</th>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>方式</th>
 <th>使えるソルバ</th>
 </tr>
@@ -702,25 +702,25 @@
 <tbody>
 <tr>
 <td class="nowrap">CGS</td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>古典 Gram-Schmidt 法</td>
 <td>pgmres, pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る場合), ks_arnoldi (2 回適用する)</td>
 </tr>
 <tr>
 <td class="nowrap">MGS</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>修正 Gram-Schmidt 法</td>
 <td>pgmres, pcagmres (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>を作る場合), ks_arnoldi (2 回適用する)</td>
 </tr>
 <tr>
 <td class="nowrap">CHOLESKYQR</td>
-<td style="text-align: right;" class="nowrap">2</td>
+<td class="nowrap ta-right">2</td>
 <td>Cholesky QR 法</td>
 <td>pcagmres</td>
 </tr>
 <tr>
 <td class="nowrap">CAGMRES_CHOLESKYQR</td>
-<td style="text-align: right;" class="nowrap">202</td>
+<td class="nowrap ta-right">202</td>
 <td><a href="../user/glossary.html#g-moment">モーメント法</a>による Cholesky QR 法 (対称行列・前処理なし専用)</td>
 <td>pcagmres (IMPLICIT のときだけ)</td>
 </tr>
@@ -731,19 +731,19 @@
 <thead>
 <tr>
 <th>定数</th>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>ソルバ</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>PGMRES</td>
-<td style="text-align: right;">0</td>
+<td class="ta-right">0</td>
 <td>右前処理 pgmres</td>
 </tr>
 <tr>
 <td>PCG</td>
-<td style="text-align: right;">1</td>
+<td class="ta-right">1</td>
 <td>pcg</td>
 </tr>
 </tbody>
@@ -753,24 +753,24 @@
 <thead>
 <tr>
 <th>定数</th>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>動作</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>AUTO</td>
-<td style="text-align: right;">0</td>
+<td class="ta-right">0</td>
 <td><a href="common.html#common-cagmres-q">上記</a></td>
 </tr>
 <tr>
 <td>EXPLICIT</td>
-<td style="text-align: right;">1</td>
+<td class="ta-right">1</td>
 <td>同上</td>
 </tr>
 <tr>
 <td>IMPLICIT</td>
-<td style="text-align: right;">2</td>
+<td class="ta-right">2</td>
 <td>同上</td>
 </tr>
 </tbody>
@@ -826,34 +826,34 @@
 <thead>
 <tr>
 <th>定数</th>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>意味</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="nowrap">CONVERGED_RTOL</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>収束判定値を満たした</td>
 </tr>
 <tr>
 <td class="nowrap">ITERATING</td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>未実行 (求解を実行する前, または引数の誤りで解かなかった)</td>
 </tr>
 <tr>
 <td class="nowrap">DIVERGED_ITS</td>
-<td style="text-align: right;" class="nowrap">-1</td>
+<td class="nowrap ta-right">-1</td>
 <td>最大反復回数 (ks_arnoldi は最大リスタート回数) に達した</td>
 </tr>
 <tr>
 <td class="nowrap">DIVERGED_NANORINF</td>
-<td style="text-align: right;" class="nowrap">-2</td>
+<td class="nowrap ta-right">-2</td>
 <td>判定に用いる残差または固有値の推定値に NaN / Inf が現れた</td>
 </tr>
 <tr>
 <td class="nowrap">DIVERGED_BREAKDOWN</td>
-<td style="text-align: right;" class="nowrap">-3</td>
+<td class="nowrap ta-right">-3</td>
 <td>アルゴリズムの破綻 (下表)</td>
 </tr>
 </tbody>
@@ -1002,38 +1002,6 @@
 </nav>
 </main>
 </div>
-<script>
-(function () {
-  var K = 'parcel_api_lang', page = '';
-  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
-  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
-  if (page) { put(page); return; }
-  function show(l) {
-    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
-    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
-      var a = e.getAttribute('data-apilang');
-      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
-    });
-    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
-    if (!t) return;
-    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
-    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
-      a.setAttribute('href', first);
-      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
-    });
-  }
-  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
-  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
-    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
-  });
-  var cur = get();
-  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
-  show(cur);
-  tabs.forEach(function (t) {
-    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
-  });
-})();
-</script>
+<script src="../../assets/apitabs.js" data-page=""></script>
 </body>
 </html>

@@ -183,7 +183,7 @@
 <table>
 <thead>
 <tr>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>定数</th>
 <th>前処理</th>
 <th>付随する設定</th>
@@ -191,25 +191,25 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td><code><span class="tok">parcel::PRECON_NONE</span></code></td>
 <td>前処理なし (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">z = r</annotation></semantics></math>)</td>
 <td>なし</td>
 </tr>
 <tr>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td><code><span class="tok">parcel::PRECON_POINTJACOBI</span></code></td>
 <td>ポイント Jacobi 前処理</td>
 <td>なし</td>
 </tr>
 <tr>
-<td style="text-align: right;" class="nowrap">2</td>
+<td class="nowrap ta-right">2</td>
 <td><code><span class="tok">parcel::PRECON_BLOCKJACOBI</span></code></td>
 <td>ブロック Jacobi 前処理 (ブロック内 ILU(0))</td>
 <td><code><span class="tok">set_blockjacobi(nb)</span></code>, <code><span class="tok">set_scaling_matrix()</span></code>, <code><span class="tok">set_scaling_vector()</span></code></td>
 </tr>
 <tr>
-<td style="text-align: right;" class="nowrap">4</td>
+<td class="nowrap ta-right">4</td>
 <td><code><span class="tok">parcel::PRECON_JACOBI</span></code></td>
 <td>Jacobi 前処理</td>
 <td><code><span class="tok">set_jacobi(ITER)</span></code>, <code><span class="tok">set_scaling_matrix()</span></code>, <code><span class="tok">set_scaling_vector()</span></code></td>

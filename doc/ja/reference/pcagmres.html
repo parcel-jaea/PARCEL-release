@@ -403,24 +403,24 @@
 <thead>
 <tr>
 <th>定数 (<code><span class="tok">parcel::krylov::</span></code>)</th>
-<th style="text-align: right;">値</th>
+<th class="ta-right">値</th>
 <th>動作</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="nowrap"><code><span class="tok">CAGMRES_Q_AUTO</span></code></td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td><code><span class="tok">QR_CHOLESKYQR</span></code> かつ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math> のときだけ <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らず, それ以外は <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る</td>
 </tr>
 <tr>
 <td class="nowrap"><code><span class="tok">CAGMRES_Q_EXPLICIT</span></code></td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>常に <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作る (<code><span class="tok">QR_CHOLESKYQR</span></code> で <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t = 1</annotation></semantics></math> でも作る)</td>
 </tr>
 <tr>
 <td class="nowrap"><code><span class="tok">CAGMRES_Q_IMPLICIT</span></code></td>
-<td style="text-align: right;" class="nowrap">2</td>
+<td class="nowrap ta-right">2</td>
 <td>どの <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> でも <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> を作らない. QR 分解は Cholesky QR 法 (<code><span class="tok">QR_CHOLESKYQR</span></code> または <code><span class="tok">QR_CAGMRES_CHOLESKYQR</span></code>) に限る (<a href="pcagmres.html#api-pcagmres-implicit">Q を作らない場合</a>)</td>
 </tr>
 </tbody>
@@ -458,38 +458,6 @@
 </nav>
 </main>
 </div>
-<script>
-(function () {
-  var K = 'parcel_api_lang', page = 'cpp';
-  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
-  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
-  if (page) { put(page); return; }
-  function show(l) {
-    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
-    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
-      var a = e.getAttribute('data-apilang');
-      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
-    });
-    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
-    if (!t) return;
-    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
-    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
-      a.setAttribute('href', first);
-      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
-    });
-  }
-  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
-  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
-    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
-  });
-  var cur = get();
-  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
-  show(cur);
-  tabs.forEach(function (t) {
-    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
-  });
-})();
-</script>
+<script src="../../assets/apitabs.js" data-page="cpp"></script>
 </body>
 </html>

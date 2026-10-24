@@ -102,7 +102,7 @@
 <section class="top-section">
 <h2>プログラムの性能</h2>
 <p>v1.2, v1.0, PETSc 3.22 の処理時間と 1 装置あたりのメモリ (Jacobi 前処理付き共役勾配法, 3 次元 Poisson 方程式, 格子 512×512×512, 倍精度, 16 装置). 条件の詳細と他のソルバの結果は<a href="ja/user/performance.html">利用者ガイドの「性能」の章</a>に示す.</p>
-<figure class="topchart"><svg viewBox="0 0 860 522" width="100%" style="max-width:860px;font-family:sans-serif;" role="img" aria-label="処理時間 [秒]">
+<figure class="topchart"><svg class="chart" viewBox="0 0 860 522" width="860" height="522" role="img" aria-label="処理時間 [秒]">
 <text x="0" y="16" font-size="13" fill="#222">処理時間 [秒]</text>
 <text x="0" y="40" font-size="15" font-weight="bold" fill="#08519c">v1.2 は v1.0 より最大 1.56 倍, PETSc より最大 1.76 倍高速</text>
 <line x1="334.0" y1="54" x2="334.0" y2="482" stroke="#999" stroke-dasharray="3,3"/>
@@ -185,7 +185,7 @@
 <rect x="348" y="494" width="12" height="12" fill="#9ecae1"/>
 <text x="364" y="504" font-size="12" fill="#222">PETSc 3.22</text>
 </svg></figure>
-<figure class="topchart"><svg viewBox="0 0 860 522" width="100%" style="max-width:860px;font-family:sans-serif;" role="img" aria-label="1 装置あたりのメモリ [GiB] (CPU はホスト, GPU はデバイス)">
+<figure class="topchart"><svg class="chart" viewBox="0 0 860 522" width="860" height="522" role="img" aria-label="1 装置あたりのメモリ [GiB] (CPU はホスト, GPU はデバイス)">
 <text x="0" y="16" font-size="13" fill="#222">1 装置あたりのメモリ [GiB] (CPU はホスト, GPU はデバイス)</text>
 <text x="0" y="40" font-size="15" font-weight="bold" fill="#006d2c">v1.2 は v1.0 より最大 45%, PETSc より最大 80% メモリを削減</text>
 <line x1="334.0" y1="54" x2="334.0" y2="482" stroke="#999" stroke-dasharray="3,3"/>

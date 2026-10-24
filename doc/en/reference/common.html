@@ -662,29 +662,29 @@
 <thead>
 <tr>
 <th>Constant</th>
-<th style="text-align: right;">Value</th>
+<th class="ta-right">Value</th>
 <th>Preconditioner</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="nowrap">NONE</td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>No preconditioning</td>
 </tr>
 <tr>
 <td class="nowrap">POINTJACOBI</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>Point Jacobi preconditioner</td>
 </tr>
 <tr>
 <td class="nowrap">BLOCKJACOBI</td>
-<td style="text-align: right;" class="nowrap">2</td>
+<td class="nowrap ta-right">2</td>
 <td>Block Jacobi preconditioner</td>
 </tr>
 <tr>
 <td class="nowrap">JACOBI</td>
-<td style="text-align: right;" class="nowrap">4</td>
+<td class="nowrap ta-right">4</td>
 <td>Jacobi preconditioner</td>
 </tr>
 </tbody>
@@ -694,7 +694,7 @@
 <thead>
 <tr>
 <th>Constant</th>
-<th style="text-align: right;">Value</th>
+<th class="ta-right">Value</th>
 <th>Method</th>
 <th>Solvers</th>
 </tr>
@@ -702,25 +702,25 @@
 <tbody>
 <tr>
 <td class="nowrap">CGS</td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>Classical Gram-Schmidt method</td>
 <td>pgmres, pcagmres (when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed), ks_arnoldi (applied twice)</td>
 </tr>
 <tr>
 <td class="nowrap">MGS</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>Modified Gram-Schmidt method</td>
 <td>pgmres, pcagmres (when <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> is formed), ks_arnoldi (applied twice)</td>
 </tr>
 <tr>
 <td class="nowrap">CHOLESKYQR</td>
-<td style="text-align: right;" class="nowrap">2</td>
+<td class="nowrap ta-right">2</td>
 <td>Cholesky QR method</td>
 <td>pcagmres</td>
 </tr>
 <tr>
 <td class="nowrap">CAGMRES_CHOLESKYQR</td>
-<td style="text-align: right;" class="nowrap">202</td>
+<td class="nowrap ta-right">202</td>
 <td>Cholesky QR method by the <a href="../user/glossary.html#g-moment">moment method</a> (symmetric matrices without preconditioning only)</td>
 <td>pcagmres (IMPLICIT only)</td>
 </tr>
@@ -731,19 +731,19 @@
 <thead>
 <tr>
 <th>Constant</th>
-<th style="text-align: right;">Value</th>
+<th class="ta-right">Value</th>
 <th>Solver</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="nowrap">PGMRES</td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>Right-preconditioned pgmres</td>
 </tr>
 <tr>
 <td class="nowrap">PCG</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>pcg</td>
 </tr>
 </tbody>
@@ -753,24 +753,24 @@
 <thead>
 <tr>
 <th>Constant</th>
-<th style="text-align: right;">Value</th>
+<th class="ta-right">Value</th>
 <th>Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>AUTO</td>
-<td style="text-align: right;">0</td>
+<td class="ta-right">0</td>
 <td><a href="common.html#common-cagmres-q">See above</a></td>
 </tr>
 <tr>
 <td>EXPLICIT</td>
-<td style="text-align: right;">1</td>
+<td class="ta-right">1</td>
 <td>Same as above</td>
 </tr>
 <tr>
 <td>IMPLICIT</td>
-<td style="text-align: right;">2</td>
+<td class="ta-right">2</td>
 <td>Same as above</td>
 </tr>
 </tbody>
@@ -826,34 +826,34 @@
 <thead>
 <tr>
 <th>Constant</th>
-<th style="text-align: right;">Value</th>
+<th class="ta-right">Value</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="nowrap">CONVERGED_RTOL</td>
-<td style="text-align: right;" class="nowrap">1</td>
+<td class="nowrap ta-right">1</td>
 <td>The convergence tolerance was satisfied</td>
 </tr>
 <tr>
 <td class="nowrap">ITERATING</td>
-<td style="text-align: right;" class="nowrap">0</td>
+<td class="nowrap ta-right">0</td>
 <td>Not run (before a solve, or not solved because of an argument error)</td>
 </tr>
 <tr>
 <td class="nowrap">DIVERGED_ITS</td>
-<td style="text-align: right;" class="nowrap">-1</td>
+<td class="nowrap ta-right">-1</td>
 <td>The maximum number of iterations (for ks_arnoldi, the maximum number of restarts) was reached</td>
 </tr>
 <tr>
 <td class="nowrap">DIVERGED_NANORINF</td>
-<td style="text-align: right;" class="nowrap">-2</td>
+<td class="nowrap ta-right">-2</td>
 <td>NaN / Inf appeared in the residual or eigenvalue estimate used for the convergence check</td>
 </tr>
 <tr>
 <td class="nowrap">DIVERGED_BREAKDOWN</td>
-<td style="text-align: right;" class="nowrap">-3</td>
+<td class="nowrap ta-right">-3</td>
 <td>Breakdown of the algorithm (table below)</td>
 </tr>
 </tbody>
@@ -1002,38 +1002,6 @@
 </nav>
 </main>
 </div>
-<script>
-(function () {
-  var K = 'parcel_api_lang', page = '';
-  function get() { try { return localStorage.getItem(K); } catch (e) { return null; } }
-  function put(v) { try { localStorage.setItem(K, v); } catch (e) {} }
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.apilang a'));
-  if (page) { put(page); return; }
-  function show(l) {
-    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-apilang') === l ? 'true' : 'false'); });
-    Array.prototype.forEach.call(document.querySelectorAll('[data-apilang]'), function (e) {
-      var a = e.getAttribute('data-apilang');
-      if (!e.closest('.apilang')) e.hidden = (a !== l && a !== 'all');
-    });
-    var t = tabs.filter(function (x) { return x.getAttribute('data-apilang') === l; })[0];
-    if (!t) return;
-    var first = t.getAttribute('href'), side = document.querySelector('.sidebar a[href^="' + first + '#"]');
-    Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a[data-langnext]'), function (a) {
-      a.setAttribute('href', first);
-      if (side) a.textContent = side.textContent.replace(/^\s*[0-9.]+\s*/, '') + ' →';
-    });
-  }
-  var firsts = tabs.map(function (x) { return x.getAttribute('href'); });
-  Array.prototype.forEach.call(document.querySelectorAll('.pagenav .next a'), function (a) {
-    if (firsts.indexOf(a.getAttribute('href')) >= 0) a.setAttribute('data-langnext', '1');
-  });
-  var cur = get();
-  if (!tabs.some(function (t) { return t.getAttribute('data-apilang') === cur; })) cur = 'cpp';
-  show(cur);
-  tabs.forEach(function (t) {
-    t.addEventListener('click', function (ev) { ev.preventDefault(); var l = t.getAttribute('data-apilang'); put(l); show(l); });
-  });
-})();
-</script>
+<script src="../../assets/apitabs.js" data-page=""></script>
 </body>
 </html>

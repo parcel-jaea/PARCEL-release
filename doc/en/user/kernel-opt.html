@@ -254,8 +254,8 @@
 </ul>
 <h2 data-number="13.2" id="kopt-blocking"><span class="header-section-number">13.2</span> Blocking</h2>
 <p><code>_BLOCKING_LOOP_=1</code> replaces all kernels except <a href="glossary.html#g-spmv">SpMV</a> (dot products, <a href="glossary.html#g-axpy">axpy</a>, preconditioners, etc.) with blocked versions, in which one thread handles a contiguous range of rows. A reduction only sums the partial sums of the threads at the end, so no barrier within a <a href="glossary.html#g-workitem">work group</a> is needed. <code>_BLOCKING_LOOP_DOT_=1</code> replaces only the reductions (dot, dddot, max) with blocked versions.</p>
-<figure class="diagram" style="margin:1em 0;">
-<svg viewBox="0 0 720 204" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="Flat loop and blocked loop">
+<figure class="diagram">
+<svg class="chart" viewBox="0 0 720 204" width="720" height="204" role="img" aria-label="Flat loop and blocked loop">
 <defs><marker id="ko-blocking-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
 <text x="170" y="18" font-size="13" text-anchor="middle" fill="#222">Flat (default): 1 row = 1 work item</text>
 <rect x="20.0" y="32" width="18.75" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
@@ -316,9 +316,9 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">Without blocking [ms]</th>
-<th style="text-align: right;">With blocking [ms]</th>
-<th style="text-align: right;">Performance ratio</th>
+<th class="ta-right">Without blocking [ms]</th>
+<th class="ta-right">With blocking [ms]</th>
+<th class="ta-right">Performance ratio</th>
 <th>Main effect</th>
 </tr>
 </thead>
@@ -326,49 +326,49 @@
 <tr>
 <td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">172.4</td>
-<td style="text-align: right;" class="nowrap">130.5</td>
-<td style="text-align: right;" class="nowrap">1.32</td>
+<td class="nowrap ta-right">172.4</td>
+<td class="nowrap ta-right">130.5</td>
+<td class="nowrap ta-right">1.32</td>
 <td>dot 56.6 ms → 15.0 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-s86">s86 CPU</a></td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">975.0</td>
-<td style="text-align: right;" class="nowrap">422.3</td>
-<td style="text-align: right;" class="nowrap">2.31</td>
+<td class="nowrap ta-right">975.0</td>
+<td class="nowrap ta-right">422.3</td>
+<td class="nowrap ta-right">2.31</td>
 <td>Gram-Schmidt 850.3 ms → 313.1 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">40.3</td>
-<td style="text-align: right;" class="nowrap">28.4</td>
-<td style="text-align: right;" class="nowrap">1.42</td>
+<td class="nowrap ta-right">40.3</td>
+<td class="nowrap ta-right">28.4</td>
+<td class="nowrap ta-right">1.42</td>
 <td>dot 15.0 ms → 4.0 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">220.7</td>
-<td style="text-align: right;" class="nowrap">73.4</td>
-<td style="text-align: right;" class="nowrap">3.01</td>
+<td class="nowrap ta-right">220.7</td>
+<td class="nowrap ta-right">73.4</td>
+<td class="nowrap ta-right">3.01</td>
 <td>Gram-Schmidt 193.0 ms → 49.5 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">24.0</td>
-<td style="text-align: right;" class="nowrap">22.7</td>
-<td style="text-align: right;" class="nowrap">1.06</td>
+<td class="nowrap ta-right">24.0</td>
+<td class="nowrap ta-right">22.7</td>
+<td class="nowrap ta-right">1.06</td>
 <td>dot 4.7 ms → 4.1 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-ps-a">PS-A</a></td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">65.5</td>
-<td style="text-align: right;" class="nowrap">49.0</td>
-<td style="text-align: right;" class="nowrap">1.34</td>
+<td class="nowrap ta-right">65.5</td>
+<td class="nowrap ta-right">49.0</td>
+<td class="nowrap ta-right">1.34</td>
 <td>Gram-Schmidt 46.8 ms → 30.6 ms</td>
 </tr>
 </tbody>
@@ -381,9 +381,9 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">Without blocking [ms]</th>
-<th style="text-align: right;">With blocking [ms]</th>
-<th style="text-align: right;">Performance ratio</th>
+<th class="ta-right">Without blocking [ms]</th>
+<th class="ta-right">With blocking [ms]</th>
+<th class="ta-right">Performance ratio</th>
 <th>Main effect</th>
 </tr>
 </thead>
@@ -391,17 +391,17 @@
 <tr>
 <td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">1603.0</td>
-<td style="text-align: right;" class="nowrap">40.0</td>
-<td style="text-align: right;" class="nowrap">40.1</td>
+<td class="nowrap ta-right">1603.0</td>
+<td class="nowrap ta-right">40.0</td>
+<td class="nowrap ta-right">40.1</td>
 <td>dot 1546.2 ms → 7.7 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">16437.4</td>
-<td style="text-align: right;" class="nowrap">82.0</td>
-<td style="text-align: right;" class="nowrap">200</td>
+<td class="nowrap ta-right">16437.4</td>
+<td class="nowrap ta-right">82.0</td>
+<td class="nowrap ta-right">200</td>
 <td>Gram-Schmidt 15848.4 ms → 48.8 ms</td>
 </tr>
 </tbody>
@@ -417,8 +417,8 @@
 <p>With blocked reductions, the number of partial sums depends on the run configuration (number of <a href="glossary.html#g-rank">ranks</a> × number of threads), and so does the order of the reduction. This does not affect results in double precision, but when comparing low-precision configurations across environments, use the same setting of this flag and the same run configuration.</p>
 <h2 data-number="13.3" id="kopt-ladder"><span class="header-section-number">13.3</span> Ladder Splitting</h2>
 <p>The iteration count of the inner loop of <a href="glossary.html#g-crs">CRS</a> <a href="glossary.html#g-spmv">SpMV</a> is given by the number of nonzeros of each row, so the compiler does not know it and cannot unroll or prefetch. <code>PARCEL_SPMV_LADDER=1</code> splits the inner loop into fixed-length stages of 4, 2 and 1 elements so that, for any number of nonzeros, all of them go into fixed-length bodies (4+2+1 for 7 nonzeros). The number of nonzeros may differ per row, and no extra memory is needed. <code>PARCEL_PRECON_LADDER</code> applies the same splitting to the iteration loops of the Jacobi preconditioner (<code>PRECON_JACOBI</code>).</p>
-<figure class="diagram" style="margin:1em 0;">
-<svg viewBox="0 0 720 148" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="Ladder splitting of the inner loop of SpMV">
+<figure class="diagram">
+<svg class="chart" viewBox="0 0 720 148" width="720" height="148" role="img" aria-label="Ladder splitting of the inner loop of SpMV">
 <defs><marker id="ko-ladder-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
 <text x="20" y="18" font-size="12" text-anchor="start" fill="#222">Default: 7 iterations of 1 element (count unknown until run time)</text>
 <rect x="20" y="28" width="40" height="26" fill="#dbe9f6" stroke="#5b7fa6"/>
@@ -470,9 +470,9 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">Without ladder splitting [ms]</th>
-<th style="text-align: right;">With ladder splitting [ms]</th>
-<th style="text-align: right;">Performance ratio</th>
+<th class="ta-right">Without ladder splitting [ms]</th>
+<th class="ta-right">With ladder splitting [ms]</th>
+<th class="ta-right">Performance ratio</th>
 <th>Main effect</th>
 </tr>
 </thead>
@@ -480,33 +480,33 @@
 <tr>
 <td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">11.62</td>
-<td style="text-align: right;" class="nowrap">6.95</td>
-<td style="text-align: right;" class="nowrap">1.67</td>
+<td class="nowrap ta-right">11.62</td>
+<td class="nowrap ta-right">6.95</td>
+<td class="nowrap ta-right">1.67</td>
 <td>SpMV 4.9 ms → 2.6 ms<br />Preconditioner 4.7 ms → 2.4 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">24.81</td>
-<td style="text-align: right;" class="nowrap">19.88</td>
-<td style="text-align: right;" class="nowrap">1.25</td>
+<td class="nowrap ta-right">24.81</td>
+<td class="nowrap ta-right">19.88</td>
+<td class="nowrap ta-right">1.25</td>
 <td>SpMV 5.1 ms → 2.9 ms<br />Preconditioner 4.9 ms → 2.4 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">49.35</td>
-<td style="text-align: right;" class="nowrap">40.01</td>
-<td style="text-align: right;" class="nowrap">1.23</td>
+<td class="nowrap ta-right">49.35</td>
+<td class="nowrap ta-right">40.01</td>
+<td class="nowrap ta-right">1.23</td>
 <td>SpMV 23.6 ms → 14.3 ms<br />Preconditioner 15.2 ms → 15.3 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-odyssey">Odyssey</a> (<a href="glossary.html#g-a64fx">A64FX</a>)</td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">91.41</td>
-<td style="text-align: right;" class="nowrap">82.01</td>
-<td style="text-align: right;" class="nowrap">1.11</td>
+<td class="nowrap ta-right">91.41</td>
+<td class="nowrap ta-right">82.01</td>
+<td class="nowrap ta-right">1.11</td>
 <td>SpMV 24.2 ms → 14.8 ms<br />Preconditioner 15.3 ms → 15.4 ms</td>
 </tr>
 </tbody>
@@ -520,8 +520,8 @@
 </ul>
 <h2 data-number="13.4" id="kopt-gemv"><span class="header-section-number">13.4</span> Decomposing gemv</h2>
 <p><a href="glossary.html#g-gemv">gemv</a> (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>y</mi><mo>+</mo><mi>V</mi><mi>c</mi><mo>=</mo><mi>y</mi><mo>+</mo><msub><mo>∑</mo><mi>j</mi></msub><msub><mi>c</mi><mi>j</mi></msub><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y \leftarrow y + Vc = y + \sum_{j} c_j v_j</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics></math> is a matrix of M columns and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mi>j</mi></msub><annotation encoding="application/x-tex">v_j</annotation></semantics></math> its <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>-th column) reads M columns at the same time and reads and writes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> only once. <code>PARCEL_GEMV_AS_AXPY=1</code> decomposes it into M <a href="glossary.html#g-axpy">axpy</a> operations (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>←</mo><mi>y</mi><mo>+</mo><msub><mi>c</mi><mi>j</mi></msub><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">y \leftarrow y + c_j v_j</annotation></semantics></math>).</p>
-<figure class="diagram" style="margin:1em 0;">
-<svg viewBox="0 0 720 174" width="100%" style="max-width:720px;font-family:sans-serif;" role="img" aria-label="gemv and its decomposition into axpy">
+<figure class="diagram">
+<svg class="chart" viewBox="0 0 720 174" width="720" height="174" role="img" aria-label="gemv and its decomposition into axpy">
 <defs><marker id="ko-gemv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
 <text x="170" y="18" font-size="12" text-anchor="middle" fill="#222">gemv (default): y ← y + Σ c<tspan baseline-shift="sub" font-size="8">j</tspan> v<tspan baseline-shift="sub" font-size="8">j</tspan> at once</text>
 <rect x="40" y="34" width="22" height="90" fill="#dbe9f6" stroke="#5b7fa6"/>
@@ -575,9 +575,9 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">Not decomposed [ms]</th>
-<th style="text-align: right;">Decomposed [ms]</th>
-<th style="text-align: right;">Performance ratio</th>
+<th class="ta-right">Not decomposed [ms]</th>
+<th class="ta-right">Decomposed [ms]</th>
+<th class="ta-right">Performance ratio</th>
 <th>Main effect</th>
 </tr>
 </thead>
@@ -585,17 +585,17 @@
 <tr>
 <td><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td><code><span class="tok">ks_arnoldi</span></code> (per restart)</td>
-<td style="text-align: right;">2760.9</td>
-<td style="text-align: right;">2645.7</td>
-<td style="text-align: right;">1.04</td>
+<td class="ta-right">2760.9</td>
+<td class="ta-right">2645.7</td>
+<td class="ta-right">1.04</td>
 <td>gemv 888.1 ms → 738.9 ms</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td><code><span class="tok">pcagmres</span></code> (per iteration)</td>
-<td style="text-align: right;">65.9</td>
-<td style="text-align: right;">65.6</td>
-<td style="text-align: right;">1.00</td>
+<td class="ta-right">65.9</td>
+<td class="ta-right">65.6</td>
+<td class="ta-right">1.00</td>
 <td>gemv 0.55 ms → 0.45 ms</td>
 </tr>
 </tbody>
@@ -657,39 +657,39 @@
 <tr>
 <th>Precision</th>
 <th>Solver</th>
-<th style="text-align: right;">Without optimization [ms]</th>
-<th style="text-align: right;">A+B+C+D [ms] (performance ratio)</th>
-<th style="text-align: right;">A+B+C+D+E+F [ms] (performance ratio)</th>
+<th class="ta-right">Without optimization [ms]</th>
+<th class="ta-right">A+B+C+D [ms] (performance ratio)</th>
+<th class="ta-right">A+B+C+D+E+F [ms] (performance ratio)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Double</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">46.64</td>
-<td style="text-align: right;">44.68 (1.04)</td>
-<td style="text-align: right;">39.97 (1.17)</td>
+<td class="ta-right">46.64</td>
+<td class="ta-right">44.68 (1.04)</td>
+<td class="ta-right">39.97 (1.17)</td>
 </tr>
 <tr>
 <td>Double</td>
 <td><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;">90.32</td>
-<td style="text-align: right;">86.85 (1.04)</td>
-<td style="text-align: right;">82.03 (1.10)</td>
+<td class="ta-right">90.32</td>
+<td class="ta-right">86.85 (1.04)</td>
+<td class="ta-right">82.03 (1.10)</td>
 </tr>
 <tr>
 <td><code><span class="tok">precon_dataF</span></code></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">50.41</td>
-<td style="text-align: right;">48.10 (1.05)</td>
-<td style="text-align: right;">41.06 (1.23)</td>
+<td class="ta-right">50.41</td>
+<td class="ta-right">48.10 (1.05)</td>
+<td class="ta-right">41.06 (1.23)</td>
 </tr>
 <tr>
 <td><code><span class="tok">precon_dataF</span></code></td>
 <td><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;">93.69</td>
-<td style="text-align: right;">90.08 (1.04)</td>
-<td style="text-align: right;">83.21 (1.13)</td>
+<td class="ta-right">93.69</td>
+<td class="ta-right">90.08 (1.04)</td>
+<td class="ta-right">83.21 (1.13)</td>
 </tr>
 </tbody>
 </table>
@@ -715,9 +715,9 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">Without the flag [ms]</th>
-<th style="text-align: right;">With the flag [ms]</th>
-<th style="text-align: right;">Performance ratio</th>
+<th class="ta-right">Without the flag [ms]</th>
+<th class="ta-right">With the flag [ms]</th>
+<th class="ta-right">Performance ratio</th>
 <th>Main effect</th>
 </tr>
 </thead>
@@ -725,17 +725,17 @@
 <tr>
 <td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
 <td class="nowrap"><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;" class="nowrap">45.53</td>
-<td style="text-align: right;" class="nowrap">25.17</td>
-<td style="text-align: right;" class="nowrap">1.81</td>
+<td class="nowrap ta-right">45.53</td>
+<td class="nowrap ta-right">25.17</td>
+<td class="nowrap ta-right">1.81</td>
 <td>SpMV 18.0 ms → 8.7 ms<br />Preconditioner 20.8 ms → 9.9 ms</td>
 </tr>
 <tr>
 <td class="nowrap"><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
 <td class="nowrap"><code><span class="tok">pgmres</span></code></td>
-<td style="text-align: right;" class="nowrap">94.63</td>
-<td style="text-align: right;" class="nowrap">74.29</td>
-<td style="text-align: right;" class="nowrap">1.27</td>
+<td class="nowrap ta-right">94.63</td>
+<td class="nowrap ta-right">74.29</td>
+<td class="nowrap ta-right">1.27</td>
 <td>SpMV 18.7 ms → 9.3 ms<br />Preconditioner 21.2 ms → 10.1 ms</td>
 </tr>
 </tbody>
@@ -792,85 +792,85 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">G+H [ms]</th>
-<th style="text-align: right;">G [ms]</th>
-<th style="text-align: right;">H [ms]</th>
-<th style="text-align: right;">off [ms]</th>
-<th style="text-align: right;">Performance ratio (off/G+H)</th>
+<th class="ta-right">G+H [ms]</th>
+<th class="ta-right">G [ms]</th>
+<th class="ta-right">H [ms]</th>
+<th class="ta-right">off [ms]</th>
+<th class="ta-right">Performance ratio (off/G+H)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="glossary.html#g-s86">s86 CPU</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">130.5</td>
-<td style="text-align: right;">129.3</td>
-<td style="text-align: right;">128.6</td>
-<td style="text-align: right;">126.3</td>
-<td style="text-align: right;">0.97</td>
+<td class="ta-right">130.5</td>
+<td class="ta-right">129.3</td>
+<td class="ta-right">128.6</td>
+<td class="ta-right">126.3</td>
+<td class="ta-right">0.97</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">28.38</td>
-<td style="text-align: right;">27.94</td>
-<td style="text-align: right;">27.93</td>
-<td style="text-align: right;">26.41</td>
-<td style="text-align: right;">0.93</td>
+<td class="ta-right">28.38</td>
+<td class="ta-right">27.94</td>
+<td class="ta-right">27.93</td>
+<td class="ta-right">26.41</td>
+<td class="ta-right">0.93</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-ps-a">PS-A</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">22.69</td>
-<td style="text-align: right;">22.31</td>
-<td style="text-align: right;">22.16</td>
-<td style="text-align: right;">21.93</td>
-<td style="text-align: right;">0.97</td>
+<td class="ta-right">22.69</td>
+<td class="ta-right">22.31</td>
+<td class="ta-right">22.16</td>
+<td class="ta-right">21.93</td>
+<td class="ta-right">0.97</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">44.32</td>
-<td style="text-align: right;">40.01</td>
-<td style="text-align: right;">44.07</td>
-<td style="text-align: right;">39.59</td>
-<td style="text-align: right;">0.89</td>
+<td class="ta-right">44.32</td>
+<td class="ta-right">40.01</td>
+<td class="ta-right">44.07</td>
+<td class="ta-right">39.59</td>
+<td class="ta-right">0.89</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">25.17</td>
-<td style="text-align: right;">24.69</td>
-<td style="text-align: right;">24.65</td>
-<td style="text-align: right;">24.04</td>
-<td style="text-align: right;">0.95</td>
+<td class="ta-right">25.17</td>
+<td class="ta-right">24.69</td>
+<td class="ta-right">24.65</td>
+<td class="ta-right">24.04</td>
+<td class="ta-right">0.95</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">4.72</td>
-<td style="text-align: right;">4.60</td>
-<td style="text-align: right;">4.55</td>
-<td style="text-align: right;">4.55</td>
-<td style="text-align: right;">0.97</td>
+<td class="ta-right">4.72</td>
+<td class="ta-right">4.60</td>
+<td class="ta-right">4.55</td>
+<td class="ta-right">4.55</td>
+<td class="ta-right">0.97</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">12.91</td>
-<td style="text-align: right;">12.61</td>
-<td style="text-align: right;">12.47</td>
-<td style="text-align: right;">12.36</td>
-<td style="text-align: right;">0.96</td>
+<td class="ta-right">12.91</td>
+<td class="ta-right">12.61</td>
+<td class="ta-right">12.47</td>
+<td class="ta-right">12.36</td>
+<td class="ta-right">0.96</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">6.67</td>
-<td style="text-align: right;">6.48</td>
-<td style="text-align: right;">6.59</td>
-<td style="text-align: right;">6.35</td>
-<td style="text-align: right;">0.95</td>
+<td class="ta-right">6.67</td>
+<td class="ta-right">6.48</td>
+<td class="ta-right">6.59</td>
+<td class="ta-right">6.35</td>
+<td class="ta-right">0.95</td>
 </tr>
 </tbody>
 </table>
@@ -887,85 +887,85 @@
 <tr>
 <th>Environment</th>
 <th>Solver</th>
-<th style="text-align: right;">G+H [GiB]</th>
-<th style="text-align: right;">G [GiB]</th>
-<th style="text-align: right;">H [GiB]</th>
-<th style="text-align: right;">off [GiB]</th>
-<th style="text-align: right;">Memory ratio (off/G+H)</th>
+<th class="ta-right">G+H [GiB]</th>
+<th class="ta-right">G [GiB]</th>
+<th class="ta-right">H [GiB]</th>
+<th class="ta-right">off [GiB]</th>
+<th class="ta-right">Memory ratio (off/G+H)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="glossary.html#g-s86">s86 CPU</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">9.08</td>
-<td style="text-align: right;">9.61</td>
-<td style="text-align: right;">9.08</td>
-<td style="text-align: right;">10.40</td>
-<td style="text-align: right;">1.15</td>
+<td class="ta-right">9.08</td>
+<td class="ta-right">9.61</td>
+<td class="ta-right">9.08</td>
+<td class="ta-right">10.40</td>
+<td class="ta-right">1.15</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-miyabi-c">Miyabi-C</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">8.11</td>
-<td style="text-align: right;">8.64</td>
-<td style="text-align: right;">8.10</td>
-<td style="text-align: right;">9.43</td>
-<td style="text-align: right;">1.16</td>
+<td class="ta-right">8.11</td>
+<td class="ta-right">8.64</td>
+<td class="ta-right">8.10</td>
+<td class="ta-right">9.43</td>
+<td class="ta-right">1.16</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-ps-a">PS-A</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">10.31</td>
-<td style="text-align: right;">11.10</td>
-<td style="text-align: right;">10.26</td>
-<td style="text-align: right;">11.91</td>
-<td style="text-align: right;">1.15</td>
+<td class="ta-right">10.31</td>
+<td class="ta-right">11.10</td>
+<td class="ta-right">10.26</td>
+<td class="ta-right">11.91</td>
+<td class="ta-right">1.15</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-odyssey">Odyssey</a></td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">5.68</td>
-<td style="text-align: right;">7.42</td>
-<td style="text-align: right;">6.47</td>
-<td style="text-align: right;">8.22</td>
-<td style="text-align: right;">1.45</td>
+<td class="ta-right">5.68</td>
+<td class="ta-right">7.42</td>
+<td class="ta-right">6.47</td>
+<td class="ta-right">8.22</td>
+<td class="ta-right">1.45</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-s86">s86 GPU</a> (<a href="glossary.html#g-v100">V100</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">5.88</td>
-<td style="text-align: right;">7.62</td>
-<td style="text-align: right;">6.64</td>
-<td style="text-align: right;">8.39</td>
-<td style="text-align: right;">1.43</td>
+<td class="ta-right">5.88</td>
+<td class="ta-right">7.62</td>
+<td class="ta-right">6.64</td>
+<td class="ta-right">8.39</td>
+<td class="ta-right">1.43</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-miyabi-g">Miyabi-G</a> (<a href="glossary.html#g-gh200">GH200</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">5.57</td>
-<td style="text-align: right;">7.32</td>
-<td style="text-align: right;">6.33</td>
-<td style="text-align: right;">8.08</td>
-<td style="text-align: right;">1.45</td>
+<td class="ta-right">5.57</td>
+<td class="ta-right">7.32</td>
+<td class="ta-right">6.33</td>
+<td class="ta-right">8.08</td>
+<td class="ta-right">1.45</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-aquarius">Aquarius</a> (<a href="glossary.html#g-a100">A100</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">5.99</td>
-<td style="text-align: right;">7.74</td>
-<td style="text-align: right;">6.75</td>
-<td style="text-align: right;">8.50</td>
-<td style="text-align: right;">1.42</td>
+<td class="ta-right">5.99</td>
+<td class="ta-right">7.74</td>
+<td class="ta-right">6.75</td>
+<td class="ta-right">8.50</td>
+<td class="ta-right">1.42</td>
 </tr>
 <tr>
 <td><a href="glossary.html#g-ps-b">PS-B</a> (<a href="glossary.html#g-mi300a">MI300A</a>)</td>
 <td><code><span class="tok">pcg</span></code></td>
-<td style="text-align: right;">5.57</td>
-<td style="text-align: right;">7.32</td>
-<td style="text-align: right;">6.33</td>
-<td style="text-align: right;">8.08</td>
-<td style="text-align: right;">1.45</td>
+<td class="ta-right">5.57</td>
+<td class="ta-right">7.32</td>
+<td class="ta-right">6.33</td>
+<td class="ta-right">8.08</td>
+<td class="ta-right">1.45</td>
 </tr>
 </tbody>
 </table>
