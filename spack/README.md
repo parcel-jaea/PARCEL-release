@@ -28,7 +28,7 @@ Variants (common to both):
 | (neither) | | `--acpp-targets=omp` (CPU) |
 | `native` | on | `-march=native -mtune=native` |
 | `kernel` | auto | Kernel optimization: auto (blocking_dot on CPUs, none on NVIDIA GPUs (`+cuda`), ladder on AMD GPUs (`+rocm`), a64fx on A64FX), blocking_dot, a64fx, ladder, none |
-| `fj` | off | A64FX: compiles the host side with the Fujitsu compiler (FCC) and builds the Fortran module with frt (confirmed with the Wisteria-Odyssey definition `envs/wis_ody`). Adds `-std=c++17 -ffp-contract=fast` (the clang mode of FCC does not fuse multiply-adds into FMA by default; the "Build" section of README.md) |
+| `fj` | off | A64FX: compiles the host side with the Fujitsu compiler (FCC) and builds the Fortran module with frt (confirmed with the Wisteria-Odyssey definition `envs/wis_ody`). Adds `-std=c++17 -ffp-contract=fast` (the clang mode of FCC does not fuse multiply-adds into FMA by default; "Recommended Options" in the manual, `doc/en/user/installation.html#install-recommended-flags`) |
 | `ks_ortho` | cgs2 | Default orthogonalization of `ks_arnoldi` (when the program does not call `set_qr_algo()`). `mgs` adds `-DPARCEL_KS_ORTHO_DEFAULT=mgs` (also included in `PARCEL_CXXFLAGS`). `envs/psa` (PS-A) uses `ks_ortho=mgs` |
 | `capi` (`parcel-sycl` only) | on | Builds the C / Fortran APIs |
 | `scipy` (`py-parcel-sycl` only) | on | Also installs SciPy (used by `DistributedCSR.from_scipy` / `from_global` and `examples/quick_start.py`; corresponds to `parcel[scipy]` of pip) |

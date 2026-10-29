@@ -394,7 +394,7 @@ REGRESSION = {
         select="node=1", mpi="proc=4", thread="12",
         target="--acpp-targets=omp.library-only -std=c++17",
         # A64FX 専用。-ffp-contract=fast は積和を FMA にまとめさせる (富士通コンパイラの clang モードは既定でまとめず、
-        #   acpp が -Kfast の後ろに -O3 を付けるので -Kfast も効かない。README の「ビルド」)。wis_odyspack も同じ
+        #   acpp が -Kfast の後ろに -O3 を付けるので -Kfast も効かない。マニュアルの「推奨オプション」)。wis_odyspack も同じ
         extra="-D_BLOCKING_LOOP_=1 -ffp-contract=fast",
         lapack="-I/usr/include/openblas -lfjlapack",
         per_rank=dict(ompthreads=12, tcs="node=1"),   # 1 ノードに 4 ランクまで載る

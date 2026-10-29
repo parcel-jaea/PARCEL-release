@@ -28,7 +28,7 @@
 | (どちらも無し) | | `--acpp-targets=omp` (CPU) |
 | `native` | on | `-march=native -mtune=native` |
 | `kernel` | auto | カーネル最適化: auto (CPU は blocking_dot、NVIDIA の GPU (`+cuda`) は none、AMD の GPU (`+rocm`) は ladder、A64FX は a64fx)、blocking_dot、a64fx、ladder、none |
-| `fj` | off | A64FX: ホスト側を富士通コンパイラ (FCC) でコンパイルし、Fortran のモジュールを frt で作る (Wisteria-Odyssey の定義 `envs/wis_ody` で確認)。`-std=c++17 -ffp-contract=fast` を付ける (FCC の clang モードは既定で積和を FMA にまとめない。README の「ビルド」) |
+| `fj` | off | A64FX: ホスト側を富士通コンパイラ (FCC) でコンパイルし、Fortran のモジュールを frt で作る (Wisteria-Odyssey の定義 `envs/wis_ody` で確認)。`-std=c++17 -ffp-contract=fast` を付ける (FCC の clang モードは既定で積和を FMA にまとめない。マニュアルの「推奨オプション」、`doc/ja/user/installation.html#install-recommended-flags`) |
 | `ks_ortho` | cgs2 | `ks_arnoldi` の直交化の既定 (プログラムが `set_qr_algo()` を呼ばないとき)。`mgs` で `-DPARCEL_KS_ORTHO_DEFAULT=mgs` を付ける (`PARCEL_CXXFLAGS` にも入る)。`envs/psa` (PS-A) は `ks_ortho=mgs` |
 | `capi` (`parcel-sycl` のみ) | on | C / Fortran の API をビルドする |
 | `scipy` (`py-parcel-sycl` のみ) | on | SciPy も入れる (`DistributedCSR.from_scipy` / `from_global` と `examples/quick_start.py` が使う。pip の `parcel[scipy]` に当たる) |

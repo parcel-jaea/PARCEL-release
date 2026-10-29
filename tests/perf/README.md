@@ -70,7 +70,7 @@ Names of the regression test precision configurations can be listed, as in `--pr
 The executables are built with `tests/perf/sub_build_prec_<plat>.sh`, written by `gen_perf_prec.py` (the same environment, compile line and precision flags as the regression test build
 `sub_build_<plat>.sh`, plus `PERF_EXTRA_FLAGS` of `gen_perf_prec.py`).
 **`precon_dataF` is built without on-the-fly computation of the Jacobi preconditioner (`-DPARCEL_JACOBI_ONTHEFLY=0`).** With the default (on-the-fly computation enabled,
-`PARCEL_JACOBI_ONTHEFLY=1`; the "Memory and Speed" section of README.md), even if the preconditioner matrix is in single precision, each preconditioner application reads the double-precision
+`PARCEL_JACOBI_ONTHEFLY=1`; "Choosing Between Memory and Speed" in the manual, `doc/en/user/kernel-opt.html#perf-memory-options`), even if the preconditioner matrix is in single precision, each preconditioner application reads the double-precision
 values of the original matrix A, so the benefit of single-precision data hardly appears. Without on-the-fly computation, the preconditioner matrix (D⁻¹)(L+U) is stored and
 read in single precision. Memory increases accordingly (4 bytes per nonzero of A; with a 7-point grid of NX=512 and 4 devices, about 0.9 GB per device).
 The double precision being compared against (the results of `gen_perf.py`, `bin/<plat>/verify_double`) and `precon_dataF` of the regression tests

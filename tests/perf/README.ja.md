@@ -70,7 +70,7 @@ pgmres m=60 (移流拡散) を測る。既定の精度は `precon_dataF` (前処
 実行ファイルは `gen_perf_prec.py` が書く `tests/perf/sub_build_prec_<plat>.sh` で作る (回帰試験のビルド
 `sub_build_<plat>.sh` と同じ環境・コンパイル行・精度フラグに、`gen_perf_prec.py` の `PERF_EXTRA_FLAGS` を足したもの)。
 **`precon_dataF` はヤコビ前処理のその場計算なし (`-DPARCEL_JACOBI_ONTHEFLY=0`) で作る。** 既定 (その場計算あり、
-`PARCEL_JACOBI_ONTHEFLY=1`。README の「メモリと速さ」) では、前処理の行列を単精度にしても前処理のたびに元の行列 A の
+`PARCEL_JACOBI_ONTHEFLY=1`。マニュアルの「メモリと速さの選択」、`doc/ja/user/kernel-opt.html#perf-memory-options`) では、前処理の行列を単精度にしても前処理のたびに元の行列 A の
 倍精度の値を読むので、データを単精度にする利点が出にくい。その場計算なしでは前処理の行列 (D⁻¹)(L+U) を単精度で保存して
 読む。そのぶんメモリが増える (A の非零 1 個あたり 4 バイト。NX=512 の 7 点の格子で装置数 4 なら 1 台あたり約 0.9 GB)。
 比べる相手の倍精度 (`gen_perf.py` の結果、`bin/<plat>/verify_double`) と回帰試験の `precon_dataF`

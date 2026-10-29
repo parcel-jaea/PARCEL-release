@@ -25,7 +25,7 @@ class PyParcelSycl(PythonPackage, CudaPackage, ROCmPackage):
     # 版と tarball の sha256。sha256 は tools/make_tarball.py --pin が書く (tarball に入れるレシピではこの行を
     #   sha256 なしの形に戻すので、書いた後も tarball と sha256 は変わらない。tools/make_tarball.py --check で照合)。
     #   版は Include/parcel_version.hpp の MAJOR.MINOR.PATCH と同じにする (tests/check_version.py で照合)
-    version("1.2.0", sha256="470acf98f3b634a15fb0e866ad8633e5a3474f7c5764aa82028669fe6119a2ce")
+    version("1.2.0", sha256="7cc834fb068a1c01c55f30463b16577d852273e24ad18874719f03a93a5ee81f")
     build_directory = "python"
 
     license("LGPL-3.0-only")
