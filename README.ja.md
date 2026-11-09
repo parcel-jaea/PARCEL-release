@@ -9,7 +9,7 @@ CPU (OpenMP バックエンド) と NVIDIA / AMD の GPU で動き、プロセ�
 
 | | |
 |---|---|
-| **マニュアル (HTML)** | **<https://ccse2.jaea.go.jp/software/parcel/index.html>** ([English](https://ccse2.jaea.go.jp/software/parcel/index_en.html)) — tarball の `doc/` にも同梱 |
+| **マニュアル (HTML)** | **<https://ccse.jaea.go.jp/software/parcel/latest/ja/user/index.html>** ([English](https://ccse.jaea.go.jp/software/parcel/latest/en/user/index.html)) — tarball の `doc/` にも同梱 |
 | ダウンロード | [最新リリース (v1.2.0)](https://github.com/parcel-jaea/PARCEL-release/releases/latest) |
 | ライセンス | LGPL-3.0 |
 | 問い合わせ | [GitHub Issues](https://github.com/parcel-jaea/PARCEL-release/issues) |
@@ -35,7 +35,7 @@ API: C++ (ヘッダだけのライブラリ)、C言語・Fortran (API のライ�
 
 必要なもの: SYCL の実装 ([AdaptiveCpp](https://github.com/AdaptiveCpp/AdaptiveCpp))、LAPACKE (OpenBLAS など)、
 MPI 版では MPI ライブラリ。入れ方 (spack でゼロから、既存の spack へ、macOS は Homebrew) は
-[SYCL 対応コンパイラの導入](https://ccse2.jaea.go.jp/software/parcel/latest/ja/user/quickstart.html#qs-compiler) にある。
+[SYCL 対応コンパイラの導入](https://ccse.jaea.go.jp/software/parcel/latest/ja/user/quickstart.html#qs-compiler) にある。
 
 `examples/quick_start.cpp` は 1 次元ラプラシアン (三重対角、n = 1000、b = 1) を共役勾配法で解き、
 厳密解と照合する。CPU (OpenMP バックエンド) では、パッケージのトップディレクトリで次のとおり。
@@ -78,7 +78,7 @@ x.getValue(x_h);  q.wait();
 if (!cg.is_converged()) { /* cg.get_converged_reason() */ }
 ```
 
-C言語・Fortran・Python で同じ問題を解く例は [クイックスタート](https://ccse2.jaea.go.jp/software/parcel/latest/ja/user/quickstart.html) にある。
+C言語・Fortran・Python で同じ問題を解く例は [クイックスタート](https://ccse.jaea.go.jp/software/parcel/latest/ja/user/quickstart.html) にある。
 `bash examples/run_quick_checks.sh` でこれらをまとめてビルド・実行し、`PASS n / FAIL m` を表示する。
 
 ## 基本構成
@@ -93,15 +93,15 @@ C言語・Fortran・Python で同じ問題を解く例は [クイックスター
 - **精度**: データの精度と演算の精度を別々に選べる (`parcel_fp16`、`parcel_float`、`parcel_double`、
   `parcel_doubledouble`)。省略した精度は倍精度になる。
 
-詳しくは: [基本構成](https://ccse2.jaea.go.jp/software/parcel/latest/ja/user/concepts.html) /
-[ソルバの選び方](https://ccse2.jaea.go.jp/software/parcel/latest/ja/user/choosing-solver.html) /
-[API リファレンス](https://ccse2.jaea.go.jp/software/parcel/latest/ja/reference/index.html)
+詳しくは: [基本構成](https://ccse.jaea.go.jp/software/parcel/latest/ja/user/concepts.html) /
+[ソルバの選び方](https://ccse.jaea.go.jp/software/parcel/latest/ja/user/choosing-solver.html) /
+[API リファレンス](https://ccse.jaea.go.jp/software/parcel/latest/ja/reference/index.html)
 
 ## 動作確認環境
 
 Intel と Arm の CPU (Xeon、A64FX、Apple M4) と NVIDIA / AMD の GPU (V100、A100、GH200、RTX A6000、MI300A)、
 AdaptiveCpp 24.10 (macOS は 25.10)。OS・コンパイラ・MPI を含む一覧と、PETSc との性能比較は
-[マニュアルのトップページ](https://ccse2.jaea.go.jp/software/parcel/index.html) にある。
+[マニュアルのトップページ](https://ccse.jaea.go.jp/software/parcel/index.html) にある。
 
 ## 改変履歴
 

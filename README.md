@@ -9,7 +9,7 @@ and supports mixed precision (half, single, double, double-double).
 
 | | |
 |---|---|
-| **Manual (HTML)** | **<https://ccse2.jaea.go.jp/software/parcel/index_en.html>** ([日本語](https://ccse2.jaea.go.jp/software/parcel/index.html)) — also included in the tarball as `doc/` |
+| **Manual (HTML)** | **<https://ccse.jaea.go.jp/software/parcel/latest/en/user/index.html>** ([日本語](https://ccse.jaea.go.jp/software/parcel/latest/ja/user/index.html)) — also included in the tarball as `doc/` |
 | Download | [Latest release (v1.2.0)](https://github.com/parcel-jaea/PARCEL-release/releases/latest) |
 | License | LGPL-3.0 |
 | Contact | [GitHub Issues](https://github.com/parcel-jaea/PARCEL-release/issues) |
@@ -35,7 +35,7 @@ APIs: C++ (header-only), C and Fortran (API library), Python (package `parcel`).
 
 Requirements: a SYCL implementation ([AdaptiveCpp](https://github.com/AdaptiveCpp/AdaptiveCpp)), LAPACKE (e.g. OpenBLAS),
 and an MPI library for the MPI version. How to install them (spack from scratch, an existing spack, Homebrew on macOS) is in
-[Installing a SYCL Compiler](https://ccse2.jaea.go.jp/software/parcel/latest/en/user/quickstart.html#qs-compiler).
+[Installing a SYCL Compiler](https://ccse.jaea.go.jp/software/parcel/latest/en/user/quickstart.html#qs-compiler).
 
 `examples/quick_start.cpp` solves the 1D Laplacian (tridiagonal, n = 1000, b = 1) with the conjugate gradient method
 and checks the result against the exact solution. On a CPU (OpenMP backend), in the top directory of the package:
@@ -78,7 +78,7 @@ x.getValue(x_h);  q.wait();
 if (!cg.is_converged()) { /* cg.get_converged_reason() */ }
 ```
 
-The same problem in C, Fortran and Python: [Quick Start](https://ccse2.jaea.go.jp/software/parcel/latest/en/user/quickstart.html).
+The same problem in C, Fortran and Python: [Quick Start](https://ccse.jaea.go.jp/software/parcel/latest/en/user/quickstart.html).
 `bash examples/run_quick_checks.sh` builds and runs all of them and prints `PASS n / FAIL m`.
 
 ## Basic Structure
@@ -93,15 +93,15 @@ The same problem in C, Fortran and Python: [Quick Start](https://ccse2.jaea.go.j
 - **Precision**: the data precision and the computation precision can be chosen separately (`parcel_fp16`, `parcel_float`,
   `parcel_double`, `parcel_doubledouble`); omitted precisions are double.
 
-Details: [Basic Structure](https://ccse2.jaea.go.jp/software/parcel/latest/en/user/concepts.html) /
-[Choosing a Solver](https://ccse2.jaea.go.jp/software/parcel/latest/en/user/choosing-solver.html) /
-[API Reference](https://ccse2.jaea.go.jp/software/parcel/latest/en/reference/index.html)
+Details: [Basic Structure](https://ccse.jaea.go.jp/software/parcel/latest/en/user/concepts.html) /
+[Choosing a Solver](https://ccse.jaea.go.jp/software/parcel/latest/en/user/choosing-solver.html) /
+[API Reference](https://ccse.jaea.go.jp/software/parcel/latest/en/reference/index.html)
 
 ## Tested Environments
 
 Intel and Arm CPUs (Xeon, A64FX, Apple M4) and NVIDIA / AMD GPUs (V100, A100, GH200, RTX A6000, MI300A),
 with AdaptiveCpp 24.10 (25.10 on macOS). The list with OS, compilers and MPI, and performance comparisons with PETSc, are on the
-[manual top page](https://ccse2.jaea.go.jp/software/parcel/index_en.html).
+[manual top page](https://ccse.jaea.go.jp/software/parcel/index_en.html).
 
 ## Release History
 
